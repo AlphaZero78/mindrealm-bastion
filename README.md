@@ -16,10 +16,11 @@
 ```powershell
 .\tools\test.ps1
 .\tools\verify_assets.ps1
+.\tools\capture_visuals.ps1
 .\tools\build_windows.ps1
 ```
 
-发布包会写入仓库外的 `D:\game_build_release\心域防线`。测试使用隔离存档，不读取、修改或删除玩家真实存档。
+发布包会写入仓库外的 `D:\game_build_release\心域防线`。测试使用隔离存档，不读取、修改或删除玩家真实存档。视觉脚本实际渲染 1920×1080、1366×768，以及 1080p 桌面在 Windows 125%/150% 缩放下的有效区域，并输出菜单、路线、战前、地形、战斗和六名首领截图供检查。
 
 ## 架构边界
 

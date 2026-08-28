@@ -35,7 +35,11 @@ func capture_all() -> void:
 	await settle_frames(90)
 	await capture("battle")
 	await capture_boss_gallery()
-	print("VISUAL_CAPTURE_OK %s" % ProjectSettings.globalize_path("user://visual_checks"))
+	print("VISUAL_CAPTURE_OK %s" % ProjectSettings.globalize_path(capture_directory()))
+	main.audio.shutdown()
+	# Keep the players in-tree briefly so the audio thread releases Ogg playback
+	# objects before their owning nodes are destroyed.
+	await settle_frames(12)
 	main.free()
 	main = null
 	catalog = null
@@ -47,7 +51,7 @@ func settle_frames(count: int) -> void:
 		await process_frame
 
 func capture(name: String) -> void:
-	var directory := "user://visual_checks"
+	var directory := capture_directory()
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(directory))
 	var image := root.get_texture().get_image()
 	if image == null:
@@ -58,6 +62,12 @@ func capture(name: String) -> void:
 	if error != OK:
 		printerr("VISUAL_CAPTURE_FAILED %s error=%d" % [name, error])
 	await process_frame
+
+func capture_directory() -> String:
+	var variant := OS.get_environment("MINDREALM_VISUAL_VARIANT").strip_edges()
+	if variant.is_empty():
+		variant = "default"
+	return "user://visual_checks/%s" % variant
 
 func auto_deploy(run: RunState) -> void:
 	var ordered := run.towers.duplicate()
