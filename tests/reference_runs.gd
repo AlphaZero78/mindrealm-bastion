@@ -9,9 +9,11 @@ var total_battles := 0
 
 func _initialize() -> void:
 	catalog = ContentCatalog.create_default()
-	for seed_index in SEED_IDS:
+	var requested_seeds := selected_seeds()
+	for seed_index in requested_seeds:
 		var run := RunState.create_new("参考策略-%d" % seed_index, 0, catalog)
 		var terminal := play_run(run)
+		print("REFERENCE_SEED seed=%d terminal=%s victory=%s battles=%d" % [seed_index, terminal, run.victory, total_battles])
 		if not terminal or not run.victory:
 			var deployed := run.towers.filter(func(tower: Dictionary) -> bool: return bool(tower.get("deployed", false))).size()
 			var formation: Array[String] = []
@@ -20,13 +22,25 @@ func _initialize() -> void:
 					formation.append("%s:%s@%s" % [tower["instance_id"], tower["role"], str(tower["cell"])])
 			failures.append("参考种子%d未通关：幕%d层%d，精神%.1f，部署%d/%d，专注%d，突破伤害%.1f，压力伤害%.1f，摧毁%d，首领%s，输出%s，阵型%s" % [seed_index, run.act_index + 1, run.current_floor + 1, run.spirit, deployed, run.towers.size(), run.focus, run.stats["spirit_breakthrough"], run.stats["spirit_death_pressure"], run.stats["towers_destroyed"], run.current_act().get("boss_id", ""), str(run.stats["damage_by_tower"]), ";".join(formation)])
 	if failures.is_empty():
-		print("REFERENCE_RUNS_OK runs=%d battles=%d" % [SEED_IDS.size(), total_battles])
+		print("REFERENCE_RUNS_OK runs=%d battles=%d" % [requested_seeds.size(), total_battles])
 		quit(0)
 	else:
 		for failure in failures:
 			printerr("REFERENCE_FAILURE: %s" % failure)
 		printerr("REFERENCE_RUNS_FAILED failures=%d battles=%d" % [failures.size(), total_battles])
 		quit(1)
+
+func selected_seeds() -> Array[int]:
+	var result: Array[int] = []
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--seed="):
+			var value := argument.trim_prefix("--seed=")
+			if value.is_valid_int():
+				result.append(value.to_int())
+	if result.is_empty():
+		for seed_index in SEED_IDS:
+			result.append(seed_index)
+	return result
 
 func play_run(run: RunState) -> bool:
 	var node_guard := 0
@@ -175,7 +189,9 @@ func position_score(cell: Vector2i, tower: Dictionary, run: RunState) -> float:
 			role_index += 1
 	var target: Vector2 = active_entries[role_index % active_entries.size()]
 	var boss_id := str(run.pending_node.get("boss_id", ""))
-	var boss_central := run.resolved_node_type(run.pending_node) == "boss" and (boss_id != "zero_frequency_mind" or role_index < 4)
+	# Zero-frequency survives at the core and keeps attacking. Concentrate six
+	# ranged constructs there while preserving at least one ranged lane anchor.
+	var boss_central := run.resolved_node_type(run.pending_node) == "boss" and (boss_id != "zero_frequency_mind" or role_index < 6)
 	if role == "ranged" and (boss_central or role_index < run.act_index + 1):
 		target = Vector2(12, 14)
 	if role == "melee":
