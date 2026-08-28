@@ -1,8 +1,9 @@
 $ErrorActionPreference = 'Stop'
-$projectRoot = Split-Path -Parent $PSScriptRoot
-$versions = Import-PowerShellDataFile (Join-Path $PSScriptRoot 'versions.psd1')
+$developmentRoot = Split-Path -Parent $PSScriptRoot
+$projectRoot = Split-Path -Parent $developmentRoot
+$versions = & (Join-Path $PSScriptRoot 'versions.ps1')
 $godot = Join-Path $env:LOCALAPPDATA "MindrealmTools\Godot\$($versions.GodotVersion)\Godot_v4.7.2-stable_win64_console.exe"
-if (-not (Test-Path -LiteralPath $godot)) { throw '请先运行 tools/setup_godot.ps1。' }
+if (-not (Test-Path -LiteralPath $godot)) { throw 'Run development/tools/setup_godot.ps1 first.' }
 $visualUser = Join-Path $env:TEMP 'mindrealm_bastion_visual_user'
 New-Item -ItemType Directory -Force -Path $visualUser | Out-Null
 $originalAppData = $env:APPDATA
@@ -20,7 +21,7 @@ try {
     $env:APPDATA = $visualUser
     foreach ($case in $cases) {
         $env:MINDREALM_VISUAL_VARIANT = $case.Name
-        & $godot --display-driver windows --rendering-driver opengl3 --audio-driver Dummy --resolution $case.Resolution --path $projectRoot --script 'res://tests/visual/capture_visuals.gd'
+        & $godot --display-driver windows --rendering-driver opengl3 --audio-driver Dummy --resolution $case.Resolution --path $projectRoot --script 'res://development/tests/visual/capture_visuals.gd'
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     }
     exit 0

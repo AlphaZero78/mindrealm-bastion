@@ -3,7 +3,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$versions = Import-PowerShellDataFile -LiteralPath (Join-Path $PSScriptRoot 'versions.psd1')
+$versions = & (Join-Path $PSScriptRoot 'versions.ps1')
 $toolRoot = $versions.GodotFolder
 $downloadRoot = Split-Path -Parent $toolRoot
 $zipPath = Join-Path $downloadRoot ("Godot_v{0}-stable_win64.exe.zip" -f $versions.GodotVersion)
@@ -12,7 +12,7 @@ $godot = Join-Path $toolRoot $versions.GodotExe
 if (-not (Test-Path -LiteralPath $godot)) {
     if (-not (Test-Path -LiteralPath $zipPath)) {
         curl.exe -L --fail --retry 3 --output $zipPath $versions.GodotZipUrl
-        if ($LASTEXITCODE -ne 0) { throw 'Godot 下载失败。' }
+        if ($LASTEXITCODE -ne 0) { throw 'Godot download failed.' }
     }
     Expand-Archive -LiteralPath $zipPath -DestinationPath $toolRoot -Force
     if (-not (Test-Path -LiteralPath $godot)) {
@@ -30,7 +30,7 @@ if (-not $SkipExportTemplates) {
         # curl resumes an interrupted 1+ GB template archive; extraction below is
         # the integrity check, so a truncated download can never be installed.
         curl.exe -L --fail --retry 3 --continue-at - --output $templateArchive $versions.ExportTemplatesUrl
-        if ($LASTEXITCODE -ne 0) { throw 'Godot 导出模板下载失败。' }
+        if ($LASTEXITCODE -ne 0) { throw 'Godot export template download failed.' }
         $templateTemp = Join-Path $env:TEMP ("mindrealm_templates_{0}" -f ([Guid]::NewGuid().ToString('N')))
         New-Item -ItemType Directory -Force -Path $templateTemp | Out-Null
         try {

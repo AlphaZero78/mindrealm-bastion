@@ -1,5 +1,5 @@
 ; Engine configuration file.
-; Edit through Godot when possible. The project is pinned by tools/setup_godot.ps1.
+; Edit through Godot when possible. The project is pinned by development/tools/setup_godot.ps1.
 
 config_version=5
 
@@ -63,4 +63,3 @@ cancel_action={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"physical_keycode":4194305)]
 }
-

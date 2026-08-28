@@ -64,10 +64,10 @@ func _ready() -> void:
 		await get_tree().process_frame
 		await get_tree().process_frame
 		audio.shutdown()
-		await get_tree().process_frame
-		await get_tree().process_frame
+		var tree := get_tree()
 		print("MINDREALM_RELEASE_SMOKE_OK")
-		get_tree().quit()
+		tree.create_timer(0.1).timeout.connect(tree.quit, CONNECT_ONE_SHOT)
+		tree.current_scene.queue_free()
 
 func _process(delta: float) -> void:
 	if battlefield != null and is_instance_valid(battlefield) and screen_state in [GameDefs.ScreenState.PREBATTLE, GameDefs.ScreenState.BATTLE]:
