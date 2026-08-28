@@ -1,6 +1,6 @@
 # 第三方资源与授权
 
-只提交被运行时引用的文件。所有文件的 SHA-256 位于 `assets/third_party/ASSET_MANIFEST.sha256`，构建前由 `tools/verify_assets.ps1` 逐项校验；源压缩包和导入缓存不进入仓库。
+只提交被运行时引用的文件。所有文件的 SHA-256 位于 `assets/third_party/ASSET_MANIFEST.sha256`，构建前由 `development/tools/verify_assets.ps1` 逐项校验；源压缩包和导入缓存不进入仓库。
 
 | 来源/作者 | 资源与原页面 | 许可 | 下载日期 | 原包 SHA-256 | 项目内用途 |
 |---|---|---|---|---|---|
