@@ -1,0 +1,98 @@
+{
+  "relics": [
+    {"id":"elevated_lens","name":"高台透镜","theme":"高地远程","description":"高度2以上远程伤害提高15%。","effect":"highground_damage","value":0.15},
+    {"id":"clear_horizon","name":"澄明地平线","theme":"高地远程","description":"直接射击射程提高8%。","effect":"direct_range","value":0.08},
+    {"id":"skyhook_rounds","name":"天钩弹芯","theme":"高地远程","description":"对飞行目标伤害提高25%。","effect":"anti_air_damage","value":0.25},
+    {"id":"calibrated_scope","name":"校准瞄具","theme":"高地远程","description":"远程攻击忽略2点护甲。","effect":"ranged_pierce","value":2},
+    {"id":"overlook_protocol","name":"俯瞰协议","theme":"高地远程","description":"高度3单位攻击间隔降低12%。","effect":"height_rate","value":0.12},
+
+    {"id":"impact_lattice","name":"冲击晶格","theme":"近战承伤","description":"近战最大耐久提高18%。","effect":"melee_hp","value":0.18},
+    {"id":"return_current","name":"回流电流","theme":"近战承伤","description":"近战承伤时反射8%伤害。","effect":"melee_reflect","value":0.08},
+    {"id":"cheap_relocation","name":"柔性基座","theme":"近战承伤","description":"搬迁和撤回费用降低40%。","effect":"relocate_discount","value":0.4},
+    {"id":"repair_reserve","name":"维修储备","theme":"近战承伤","description":"维修费用降低25%。","effect":"repair_discount","value":0.25},
+    {"id":"lasting_anchor","name":"恒定锚","theme":"近战承伤","description":"低于35%耐久时护甲提高5。","effect":"low_hp_armor","value":5},
+
+    {"id":"mesh_network","name":"网状心智","theme":"支援网络","description":"支援范围提高15%。","effect":"support_range","value":0.15},
+    {"id":"shared_clock","name":"共享时钟","theme":"支援网络","description":"受支援单位攻击间隔降低8%。","effect":"support_rate","value":0.08},
+    {"id":"maintenance_loop","name":"维护回路","theme":"支援网络","description":"每场战斗结束维修最受损单位8%。","effect":"post_repair","value":0.08},
+    {"id":"redundant_relay","name":"冗余中继","theme":"支援网络","description":"带宽中继被禁用时仍保留一半增益。","effect":"relay_redundancy","value":0.5},
+    {"id":"local_shield","name":"局部屏蔽","theme":"支援网络","description":"支援单位附近友军获得2点护甲。","effect":"support_armor","value":2},
+
+    {"id":"distant_silence","name":"远端静默","theme":"远距压力控制","description":"距离火种12格外死亡压力降低20%。","effect":"far_pressure","value":0.2},
+    {"id":"resistance_prism","name":"抗性棱镜","theme":"远距压力控制","description":"精神抗性提高4。","effect":"resistance","value":4},
+    {"id":"slow_decay","name":"缓释衰减","theme":"远距压力控制","description":"减速目标死亡压力降低15%。","effect":"slow_pressure","value":0.15},
+    {"id":"clean_kill","name":"洁净终止","theme":"远距压力控制","description":"单次过量伤害超过目标生命25%时压力降低20%。","effect":"overkill_pressure","value":0.2},
+    {"id":"pulse_absorber","name":"脉冲吸收器","theme":"远距压力控制","description":"每10秒完全吸收一次不高于8的压力伤害。","effect":"pressure_absorb","value":8},
+
+    {"id":"redline_amplifier","name":"红线放大器","theme":"低精神爆发","description":"精神稳定低于35%时伤害提高20%。","effect":"low_spirit_damage","value":0.2},
+    {"id":"crisis_focus","name":"危机专注","theme":"低精神爆发","description":"精神稳定首次低于50%时获得30专注。","effect":"crisis_focus","value":30},
+    {"id":"pain_filter","name":"疼痛滤波器","theme":"低精神爆发","description":"精神稳定低于25%时抗性提高5。","effect":"crisis_resistance","value":5},
+    {"id":"final_resolve","name":"最终决意","theme":"低精神爆发","description":"每场战斗首次致命伤害改为保留1点精神稳定。","effect":"death_guard","value":1},
+    {"id":"volatile_clarity","name":"易爆清醒","theme":"低精神爆发","description":"低精神时攻击提高但维修费用增加15%。","effect":"volatile","value":0.15},
+
+    {"id":"wide_channel","name":"宽信道","theme":"带宽扩张","description":"带宽上限提高4。","effect":"bandwidth","value":4},
+    {"id":"compact_encoding","name":"紧凑编码","theme":"带宽扩张","description":"T1单位占用带宽减少1，最低1。","effect":"t1_bandwidth","value":1},
+    {"id":"overload_buffer","name":"过载缓冲","theme":"带宽扩张","description":"战斗中带宽下降先由3点缓冲吸收。","effect":"overload_buffer","value":3},
+    {"id":"signal_dividend","name":"信号红利","theme":"带宽扩张","description":"战斗结束时每5点未使用带宽获得4专注。","effect":"unused_bandwidth_focus","value":4},
+    {"id":"relay_efficiency","name":"中继效率","theme":"带宽扩张","description":"带宽中继自身占用减少1。","effect":"relay_cost","value":1}
+  ],
+  "talents": [
+    {"id":"height_mastery","name":"高差掌握","theme":"高地远程","description":"高度加成每级额外提高3%。","effect":"height_bonus","value":0.03},
+    {"id":"target_solution","name":"目标解算","theme":"高地远程","description":"远程单位对最高生命目标伤害提高12%。","effect":"high_hp_damage","value":0.12},
+    {"id":"clear_line","name":"清晰射界","theme":"高地远程","description":"直接射击可忽略一次边缘遮挡。","effect":"los_grace","value":1},
+    {"id":"mortar_math","name":"弹道数学","theme":"高地远程","description":"间接攻击范围提高18%。","effect":"indirect_radius","value":0.18},
+
+    {"id":"unbroken_line","name":"不破阵线","theme":"近战承伤","description":"近战单位受到普通攻击至少保留1点耐久。","effect":"melee_guard","value":1},
+    {"id":"counter_rhythm","name":"反击节律","theme":"近战承伤","description":"近战每承受5次攻击立即反击。","effect":"counter_hits","value":5},
+    {"id":"hardened_footing","name":"硬化立足","theme":"近战承伤","description":"近战单位不会被位移或传送。","effect":"anchor","value":1},
+    {"id":"field_patch","name":"现场补片","theme":"近战承伤","description":"战斗结束时存活近战恢复5%耐久。","effect":"melee_post_repair","value":0.05},
+
+    {"id":"linked_support","name":"支援链接","theme":"支援网络","description":"两个支援范围重叠时效果提高15%。","effect":"support_overlap","value":0.15},
+    {"id":"triage_logic","name":"分诊逻辑","theme":"支援网络","description":"维修优先级额外考虑即将受到的威胁。","effect":"triage","value":1},
+    {"id":"shield_memory","name":"护盾记忆","theme":"支援网络","description":"支援护盾失效后保留2秒残响。","effect":"shield_linger","value":2},
+    {"id":"distributed_clock","name":"分布时钟","theme":"支援网络","description":"支援单位自身不再受到友方攻速光环。","effect":"support_efficiency","value":0.1},
+
+    {"id":"distance_doctrine","name":"距离教义","theme":"远距压力控制","description":"击杀距离每超过10格，额外降低2%压力。","effect":"distance_pressure","value":0.02},
+    {"id":"resistance_memory","name":"抗性记忆","theme":"远距压力控制","description":"完全吸收压力后临时提高1抗性，可叠3层。","effect":"resistance_stack","value":3},
+    {"id":"early_warning","name":"早期预警","theme":"远距压力控制","description":"高压力敌人出现时自动标记。","effect":"pressure_mark","value":1},
+    {"id":"soft_impact","name":"柔性冲击","theme":"远距压力控制","description":"范围击杀造成的总压力降低10%。","effect":"aoe_pressure","value":0.1},
+
+    {"id":"crisis_accuracy","name":"危机精度","theme":"低精神爆发","description":"低精神时射程提高10%。","effect":"crisis_range","value":0.1},
+    {"id":"calm_aftershock","name":"余震平复","theme":"低精神爆发","description":"精英死亡后恢复3精神稳定。","effect":"elite_spirit","value":3},
+    {"id":"risk_conversion","name":"风险转化","theme":"低精神爆发","description":"低精神时击杀奖励专注提高20%。","effect":"crisis_reward","value":0.2},
+    {"id":"wakeful_rage","name":"清醒之怒","theme":"低精神爆发","description":"每损失10精神稳定，本场伤害提高2%。","effect":"lost_spirit_damage","value":0.02},
+
+    {"id":"expanded_bus","name":"扩展总线","theme":"带宽扩张","description":"深度升级额外增加1带宽。","effect":"level_bandwidth","value":1},
+    {"id":"graceful_overload","name":"优雅过载","theme":"带宽扩张","description":"单位被过载禁用前仍完成当前动作。","effect":"overload_grace","value":1},
+    {"id":"priority_channel","name":"优先信道","theme":"带宽扩张","description":"最早部署的三个单位不会优先被干扰。","effect":"priority_channel","value":3},
+    {"id":"relay_feedback","name":"中继反馈","theme":"带宽扩张","description":"恢复过载单位时使其下一次攻击强化30%。","effect":"reactivate_damage","value":0.3}
+  ],
+  "events": [
+    {"id":"noise_market","act":1,"title":"噪声黑市","text":"一段违规频率提出交换。","choices":[{"label":"承受12精神伤害，获得60专注","effects":{"spirit":-12,"focus":60}},{"label":"拒绝交易，获得2抗性","effects":{"resistance":2}}]},
+    {"id":"false_memory","act":1,"title":"伪造记忆","text":"一段温暖回忆的校验值不正确。","choices":[{"label":"删除它，免费升级一个单位","effects":{"free_upgrade":1}},{"label":"保留它，恢复18精神稳定","effects":{"spirit":18}}]},
+    {"id":"narrow_channel","act":1,"title":"窄带通道","text":"压缩协议可以换取即时清晰。","choices":[{"label":"永久失去2带宽，恢复30精神","effects":{"bandwidth":-2,"spirit":30}},{"label":"绕行，获得25专注","effects":{"focus":25}}]},
+    {"id":"abandoned_relay","act":1,"title":"废弃中继","text":"中继仍保留少量可用组件。","choices":[{"label":"拆取组件，获得45专注","effects":{"focus":45}},{"label":"重写固件，获得2带宽","effects":{"bandwidth":2}}]},
+    {"id":"quiet_room","act":1,"title":"静默室","text":"这里没有统治信号，只有自己的呼吸。","choices":[{"label":"停留，恢复25精神稳定","effects":{"spirit":25}},{"label":"记录结构，获得80经验","effects":{"xp":80}}]},
+    {"id":"stress_test","act":1,"title":"压力测试","text":"旧设备要求用痛觉证明身份。","choices":[{"label":"支付10精神，随机单位永久+10%耐久","effects":{"spirit":-10,"tower_hp":0.1}},{"label":"拆除设备，获得30专注","effects":{"focus":30}}]},
+    {"id":"frequency_twin","act":1,"title":"频率双生","text":"一个与你相近的偏频信号请求同步。","choices":[{"label":"同步，获得一个随机T1单位","effects":{"unit":1}},{"label":"保持独立，获得3抗性","effects":{"resistance":3}}]},
+    {"id":"clean_signal","act":1,"title":"清洁信号","text":"短暂的无噪声窗口出现。","choices":[{"label":"修复所有单位10%耐久","effects":{"repair_all":0.1}},{"label":"集中解码，获得50专注","effects":{"focus":50}}]},
+
+    {"id":"memory_tax","act":2,"title":"记忆税站","text":"工厂要求缴纳可验证的自我片段。","choices":[{"label":"失去15精神，获得100专注","effects":{"spirit":-15,"focus":100}},{"label":"强行通过，随机单位损失20%耐久","effects":{"tower_damage":0.2}}]},
+    {"id":"assembly_line","act":2,"title":"构造流水线","text":"空置生产线还能完成一次指令。","choices":[{"label":"复制一个T1单位","effects":{"duplicate_t1":1}},{"label":"免费维修两个单位","effects":{"free_repairs":2}}]},
+    {"id":"archived_voice","act":2,"title":"归档之声","text":"被删除的人留下了维护口诀。","choices":[{"label":"记住口诀，维修费永久降低10%","effects":{"repair_discount":0.1}},{"label":"公开归档，获得120经验","effects":{"xp":120}}]},
+    {"id":"unstable_lift","act":2,"title":"不稳定升降机","text":"它能跨越精神层级，也可能撕裂防线。","choices":[{"label":"乘坐，获得收藏品但损失20精神","effects":{"relic":1,"spirit":-20}},{"label":"拆取动力，获得70专注","effects":{"focus":70}}]},
+    {"id":"resistance_pool","act":2,"title":"抗性池","text":"凝固的抗性可以永久吸收或临时出售。","choices":[{"label":"吸收，获得4抗性","effects":{"resistance":4}},{"label":"出售，获得90专注","effects":{"focus":90}}]},
+    {"id":"maintenance_strike","act":2,"title":"维护罢工","text":"自动维修机拒绝继续为统治服务。","choices":[{"label":"协助罢工，所有受损单位恢复15%","effects":{"repair_all":0.15}},{"label":"接管机器，免费升级一个单位","effects":{"free_upgrade":1}}]},
+    {"id":"split_identity","act":2,"title":"分裂身份","text":"两个版本的你争夺同一段带宽。","choices":[{"label":"保留谨慎版本，获得2带宽和2抗性","effects":{"bandwidth":2,"resistance":2}},{"label":"保留激进版本，单位伤害永久+5%","effects":{"tower_damage_bonus":0.05}}]},
+    {"id":"closed_shop","act":2,"title":"关闭的商店","text":"货架被封存，但价格标签仍在闪烁。","choices":[{"label":"支付80专注，取得随机收藏品","effects":{"focus":-80,"relic":1}},{"label":"拆掉货架，获得随机单位","effects":{"unit":1}}]},
+
+    {"id":"final_broadcast","act":3,"title":"最终广播","text":"统治者承诺交出安宁，条件是停止抵抗。","choices":[{"label":"拒绝，获得5抗性","effects":{"resistance":5}},{"label":"伪装接受，恢复35精神但失去2带宽","effects":{"spirit":35,"bandwidth":-2}}]},
+    {"id":"mass_memory","act":3,"title":"大众记忆库","text":"无数未被抹除的意志在等待出口。","choices":[{"label":"释放它们，获得200经验","effects":{"xp":200}},{"label":"借用力量，获得150专注","effects":{"focus":150}}]},
+    {"id":"control_key","act":3,"title":"控制密钥","text":"密钥可以解除干扰，也能强化火力。","choices":[{"label":"解除干扰，获得4带宽","effects":{"bandwidth":4}},{"label":"改写武器，单位伤害永久+8%","effects":{"tower_damage_bonus":0.08}}]},
+    {"id":"last_workshop","act":3,"title":"最后工坊","text":"工坊只够执行一次全局维护。","choices":[{"label":"所有单位恢复25%耐久","effects":{"repair_all":0.25}},{"label":"随机两个单位免费升级","effects":{"free_upgrades":2}}]},
+    {"id":"identity_checkpoint","act":3,"title":"身份检查点","text":"检查点无法同时处理意志与构造。","choices":[{"label":"证明意志，恢复40精神","effects":{"spirit":40}},{"label":"证明构造，获得一个T2单位","effects":{"unit_t2":1}}]},
+    {"id":"resonance_storm","act":3,"title":"共振风暴","text":"风暴能擦除损伤，也会削弱清醒。","choices":[{"label":"进入风暴，单位全部修满但损失25精神","effects":{"repair_all":1.0,"spirit":-25}},{"label":"收集边缘能量，获得100专注","effects":{"focus":100}}]},
+    {"id":"forbidden_archive","act":3,"title":"禁用档案","text":"档案记录了首领机制的原始版本。","choices":[{"label":"阅读，完全公开本幕首领并获得收藏品","effects":{"boss_reveal":1,"relic":1}},{"label":"销毁，获得6抗性","effects":{"resistance":6}}]},
+    {"id":"many_voices","act":3,"title":"众声协议","text":"许多偏频者愿意共享最后一段信道。","choices":[{"label":"接入，获得5带宽但敌人压力+10%","effects":{"bandwidth":5,"pressure_mult":0.1}},{"label":"保持独立，恢复30精神并获得60专注","effects":{"spirit":30,"focus":60}}]}
+  ]
+}
