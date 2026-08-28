@@ -1,0 +1,15 @@
+.godot/
+*.import
+.cache/
+.temp/
+out/
+output/
+logs/
+screenshots/
+*.log
+*.tmp
+*.zip
+*.7z
+*.pck
+*.exe
+test-results/

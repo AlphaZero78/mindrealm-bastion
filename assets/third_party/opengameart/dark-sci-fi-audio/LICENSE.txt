@@ -1,0 +1,12 @@
+Dark Sci-Fi Audio Pack
+
+Source: https://opengameart.org/content/dark-sci-fi-audio-pack
+Author: SRG774
+License: CC0 1.0 Universal (public-domain dedication)
+License URL: https://creativecommons.org/publicdomain/zero/1.0/
+Downloaded: 2026-08-27
+Project use: menu, route, node, battle, danger, boss, defeat and victory loops.
+
+The source page marks this pack CC0. Attribution is not legally required, but
+the project retains the author and source as provenance. Only the OGG files
+referenced by AssetRegistry are included; the source archive is not committed.
