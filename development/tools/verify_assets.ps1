@@ -26,12 +26,16 @@ foreach ($line in Get-Content -LiteralPath $manifestPath -Encoding UTF8) {
 }
 
 $licenseRoots = @(
-    'assets\third_party\kenney\space-kit\License.txt',
-    'assets\third_party\kenney\modular-space-kit\License.txt',
-    'assets\third_party\kenney\tower-defense-kit\License.txt',
-    'assets\third_party\kenney\ui-sci-fi\License.txt',
+    'development\assets\model_sources\kenney\space-kit\License.txt',
+    'development\assets\model_sources\kenney\modular-space-kit\License.txt',
+    'development\assets\model_sources\kenney\tower-defense-kit\License.txt',
+    'assets\third_party\kenney\pixel-ui\LICENSE.txt',
+    'assets\third_party\kenney\game-icons\LICENSE.txt',
+    'assets\third_party\kenney\input-prompts-pixel\LICENSE.txt',
     'assets\third_party\kenney\sci-fi-sounds\License.txt',
-    'assets\third_party\opengameart\dark-sci-fi-audio\LICENSE.txt'
+    'assets\third_party\opengameart\dark-sci-fi-audio\LICENSE.txt',
+    'assets\third_party\opengameart\singularity\LICENSE.txt',
+    'assets\third_party\fusion-pixel-font\OFL.txt'
 )
 foreach ($relative in $licenseRoots) {
     if (-not (Test-Path -LiteralPath (Join-Path $projectRoot $relative))) {

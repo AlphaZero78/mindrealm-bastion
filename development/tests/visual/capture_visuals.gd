@@ -37,13 +37,15 @@ func capture_all() -> void:
 	await capture_boss_gallery()
 	print("VISUAL_CAPTURE_OK %s" % ProjectSettings.globalize_path(capture_directory()))
 	main.audio.shutdown()
-	# Keep the players in-tree briefly so the audio thread releases Ogg playback
-	# objects before their owning nodes are destroyed.
-	await settle_frames(12)
-	main.free()
+	main.clear_world()
+	main.clear_ui()
+	# Release queued battlefield/UI nodes before removing the owning scene. Audio
+	# playback also needs a few frames to hand its decoded streams back.
+	await settle_frames(16)
+	main.queue_free()
+	await settle_frames(16)
 	main = null
 	catalog = null
-	await settle_frames(8)
 	quit(0)
 
 func settle_frames(count: int) -> void:
@@ -75,27 +77,36 @@ func auto_deploy(run: RunState) -> void:
 		return str(a.get("ability", "")) == "bandwidth_plus"
 	)
 	for tower in ordered:
+		var candidates: Array[Vector2i] = []
 		for y in GameDefs.BOARD_SIZE:
-			var placed := false
 			for x in GameDefs.BOARD_SIZE:
 				var cell := Vector2i(x, y)
-				var reason := RuleService.deployment_error(tower, cell, run.heights, run.towers, run.deployed_bandwidth(), run.effective_bandwidth(), str(tower["instance_id"]))
+				var reason := RuleService.deployment_error(tower, cell, run.terrain_grid, run.towers, run.deployed_bandwidth(), run.effective_bandwidth(), str(tower["instance_id"]))
 				if reason.is_empty():
-					tower["deployed"] = true
-					tower["ever_deployed"] = true
-					tower["cell"] = [x, y]
-					run.deployment_counter += 1
-					tower["deployment_order"] = run.deployment_counter
-					placed = true
-					break
-			if placed:
-				break
+					candidates.append(cell)
+		if candidates.is_empty():
+			continue
+		var role := str(tower.get("role", "support"))
+		var deployed_role := run.towers.filter(func(item: Dictionary) -> bool: return bool(item.get("deployed", false)) and str(item.get("role", "")) == role).size()
+		var targets := {
+			"melee":[Vector2i(20, 13), Vector2i(13, 20), Vector2i(27, 20), Vector2i(20, 25)],
+			"ranged":[Vector2i(14, 24), Vector2i(24, 24), Vector2i(9, 25), Vector2i(29, 25)],
+			"support":[Vector2i(20, 23), Vector2i(17, 23), Vector2i(23, 23)],
+		}
+		var target: Vector2i = targets.get(role, targets["support"])[deployed_role % targets.get(role, targets["support"]).size()]
+		candidates.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return Vector2(a).distance_to(target) < Vector2(b).distance_to(target))
+		var best := candidates[0]
+		tower["deployed"] = true
+		tower["ever_deployed"] = true
+		tower["cell"] = [best.x, best.y]
+		run.deployment_counter += 1
+		tower["deployment_order"] = run.deployment_counter
 
 func find_terrain_preview_cell(run: RunState) -> Vector2i:
 	for y in GameDefs.BOARD_SIZE:
 		for x in GameDefs.BOARD_SIZE:
 			var cell := Vector2i(x, y)
-			if bool(RuleService.can_change_terrain(run.heights, cell, 1, run.towers).get("ok", false)):
+			if bool(RuleService.can_change_terrain(run.terrain_grid, cell, 1, run.towers).get("ok", false)):
 				return cell
 	return Vector2i(-1, -1)
 
@@ -110,7 +121,7 @@ func capture_boss_gallery() -> void:
 		sim.planned.clear()
 		sim.enemies.clear()
 		sim._spawn_enemy({"id": str(boss_id), "entry": "north", "kind": "boss"})
-		sim.enemies[0]["position"] = Vector2(12, 12)
+		sim.enemies[0]["position"] = Vector2(20, 23)
 		main.simulation = sim
 		main.battlefield.set_simulation(sim)
 		main.battlefield.refresh_all()
