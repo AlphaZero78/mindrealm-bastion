@@ -24,13 +24,24 @@ var encounter_xp := 0
 var encounter_focus := 0
 var result := {}
 var _enemy_number := 1
+var group_count := 3
+var current_group_index := 0
+var next_group_countdown := 0.0
+var danger_level := 0.0
+var group_preview: Array = []
+var _group_transition_active := false
+var _planned_total := 0
 
 func initialize(run_state: RunState, content: ContentCatalog, battle_node: Dictionary) -> void:
 	run = run_state
 	catalog = content
 	node = battle_node
 	active_entries = _entries_for_progress()
+	var node_type := run.resolved_node_type(node)
+	group_count = 5 if node_type == "boss" else (4 if node_type == "elite" else 3)
 	planned = _generate_encounter()
+	_planned_total = planned.size()
+	group_preview = _build_group_preview()
 	reinforcement_budget = ceili(float(planned.size()) * GameDefs.REINFORCEMENT_RATIO)
 	spawn_interval = maxf(0.48, 1.18 - float(run.act_index) * 0.14)
 	result = {
@@ -45,17 +56,15 @@ func initialize(run_state: RunState, content: ContentCatalog, battle_node: Dicti
 		"focus": 0,
 	}
 	_recalculate_paths()
-	_emit("battle_started", {"planned": planned.size(), "entries": active_entries, "reinforcement_budget": reinforcement_budget})
+	_emit("battle_started", {"planned": planned.size(), "entries": active_entries, "reinforcement_budget": reinforcement_budget, "groups": group_preview})
+	_emit("group_started", {"group_index": 0, "group_count": group_count, "preview": group_preview[0]})
 
 func step(delta: float) -> void:
 	if finished:
 		return
 	var bounded_delta := minf(delta, 0.1)
 	elapsed += bounded_delta
-	spawn_timer -= bounded_delta
-	if spawn_timer <= 0.0 and not planned.is_empty() and enemies.size() < GameDefs.ACTIVE_ENEMY_CAP:
-		_spawn_enemy(planned.pop_front())
-		spawn_timer = spawn_interval
+	_update_group_spawning(bounded_delta)
 	if elapsed >= jam_until:
 		jam_amount = 0
 	var effective := run.effective_bandwidth(_effective_jam())
@@ -65,6 +74,7 @@ func step(delta: float) -> void:
 	_update_support(bounded_delta)
 	_update_towers(bounded_delta)
 	_update_enemies(bounded_delta)
+	_update_danger(bounded_delta)
 	if run.spirit <= 0.0:
 		_finish(false)
 	elif planned.is_empty() and enemies.is_empty():
@@ -84,6 +94,8 @@ func get_enemy_render_data() -> Array:
 				"boss": bool(enemy.get("boss", false)),
 				"elite": bool(enemy.get("elite", false)),
 				"telegraph": str(enemy.get("telegraph", "")),
+				"facing": float(enemy.get("facing", 0.0)),
+				"height": TerrainGenerator.height_at(run.terrain_grid, Vector2i(roundi(Vector2(enemy["position"]).x), roundi(Vector2(enemy["position"]).y))),
 			})
 	return data
 
@@ -119,15 +131,68 @@ func _generate_encounter() -> Array:
 		if pool.is_empty():
 			pool = available
 		var enemy_id := str(pool[generator.randi_range(0, pool.size() - 1)])
-		queue.append({"id": enemy_id, "entry": active_entries[index % active_entries.size()], "kind": "normal"})
-	var insert_index := clampi(int(queue.size() * 0.55), 1, maxi(1, queue.size() - 1))
+		var group_index := mini(group_count - 1, int(float(index) * float(group_count) / maxf(1.0, float(count))))
+		queue.append({"id": enemy_id, "entry": active_entries[(index + group_index) % active_entries.size()], "kind": "normal", "group": group_index})
 	if node_type == "elite":
 		var elites := catalog.elite_pool_for_act(act)
 		var elite_id := str(elites[generator.randi_range(0, elites.size() - 1)])
-		queue.insert(insert_index, {"id": elite_id, "entry": active_entries[insert_index % active_entries.size()], "kind": "elite"})
+		queue.append({"id": elite_id, "entry": active_entries[(group_count - 2) % active_entries.size()], "kind": "elite", "group": group_count - 2})
 	if node_type == "boss":
-		queue.insert(insert_index, {"id": str(node.get("boss_id", "noise_hive")), "entry": active_entries[insert_index % active_entries.size()], "kind": "boss"})
+		queue.append({"id": str(node.get("boss_id", "noise_hive")), "entry": active_entries[3 % active_entries.size()], "kind": "boss", "group": 3})
+	queue.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.get("group", 0)) < int(b.get("group", 0)))
 	return queue
+
+func _build_group_preview() -> Array:
+	var previews: Array = []
+	for group_index in group_count:
+		previews.append({"index": group_index, "count": 0, "entries": [], "kinds": []})
+	for item in planned:
+		var group_index := clampi(int(item.get("group", 0)), 0, group_count - 1)
+		var preview: Dictionary = previews[group_index]
+		preview["count"] = int(preview["count"]) + 1
+		var entry := str(item.get("entry", "north"))
+		if not preview["entries"].has(entry):
+			preview["entries"].append(entry)
+		var kind := str(item.get("kind", "normal"))
+		if not preview["kinds"].has(kind):
+			preview["kinds"].append(kind)
+	return previews
+
+func _update_group_spawning(delta: float) -> void:
+	if planned.is_empty():
+		next_group_countdown = 0.0
+		return
+	var next_group := int(planned[0].get("group", 0))
+	if next_group > current_group_index:
+		if not _group_transition_active:
+			_group_transition_active = true
+			next_group_countdown = 4.0 + float((next_group + run.act_index) % 3)
+			_emit("group_incoming", {"group_index": next_group, "countdown": next_group_countdown, "preview": group_preview[next_group]})
+		next_group_countdown = maxf(0.0, next_group_countdown - delta)
+		if next_group_countdown > 0.0:
+			return
+		current_group_index = next_group
+		_group_transition_active = false
+		_emit("group_started", {"group_index": current_group_index, "group_count": group_count, "preview": group_preview[current_group_index]})
+	spawn_timer -= delta
+	if spawn_timer <= 0.0 and not planned.is_empty() and int(planned[0].get("group", 0)) == current_group_index and enemies.size() < GameDefs.ACTIVE_ENEMY_CAP:
+		_spawn_enemy(planned.pop_front())
+		spawn_timer = spawn_interval
+
+func _update_danger(delta: float) -> void:
+	var target := clampf(float(enemies.size()) / maxf(12.0, float(_planned_total) * 0.55), 0.0, 0.55)
+	for enemy in enemies:
+		if bool(enemy.get("boss", false)):
+			target += 0.28
+		elif bool(enemy.get("elite", false)):
+			target += 0.12
+		var distance := Vector2(enemy.get("position", GameDefs.CORE_CENTER)).distance_to(GameDefs.CORE_CENTER)
+		if distance < 8.0 * GameDefs.MICROGRID_SCALE:
+			target += 0.008
+	target += (1.0 - run.spirit / maxf(1.0, run.max_spirit)) * 0.30
+	target = clampf(target, 0.0, 1.0)
+	var duration := 1.5 if target > danger_level else 4.0
+	danger_level = move_toward(danger_level, target, delta / duration)
 
 func _entries_for_progress() -> Array[String]:
 	var floor_index := int(node.get("floor", 0))
@@ -174,6 +239,7 @@ func _spawn_enemy(item: Dictionary, is_reinforcement: bool = false) -> void:
 	enemy["max_hp"] = max_hp
 	enemy["hp"] = max_hp
 	enemy["attack"] = float(definition.get("attack", 10.0)) * attack_scale
+	enemy["speed"] = float(definition.get("speed", 1.0)) * GameDefs.MICROGRID_SCALE
 	enemy["instance_id"] = "E%05d" % _enemy_number
 	_enemy_number += 1
 	enemy["entry"] = entry_name
@@ -190,9 +256,10 @@ func _spawn_enemy(item: Dictionary, is_reinforcement: bool = false) -> void:
 	enemy["boss"] = kind == "boss"
 	enemy["elite"] = kind == "elite"
 	enemy["reinforcement"] = is_reinforcement
+	enemy["facing"] = 0.0
 	enemies.append(enemy)
 	_assign_path(enemy)
-	_emit("enemy_spawned", {"id": id, "name": definition.get("name", id), "entry": entry_name, "boss": enemy["boss"], "elite": enemy["elite"]})
+	_emit("enemy_spawned", {"id": id, "enemy": definition.get("name", id), "name": definition.get("name", id), "entry": entry_name, "group_index": current_group_index, "boss": enemy["boss"], "elite": enemy["elite"]})
 
 func _update_support(delta: float) -> void:
 	for tower in run.towers:
@@ -246,7 +313,7 @@ func _update_towers(delta: float) -> void:
 		if branch_effect == "extra_drone":
 			attack *= 1.45
 		var tower_cell := _tower_origin(tower)
-		var height := int(run.heights[tower_cell.y][tower_cell.x])
+		var height := TerrainGenerator.height_at(run.terrain_grid, tower_cell)
 		if height >= 2:
 			attack *= 1.0 + run.relic_value("highground_damage")
 			attack *= 1.0 + run.talent_value("height_bonus") * float(height)
@@ -265,6 +332,8 @@ func _update_towers(delta: float) -> void:
 		var pierce := run.relic_value("ranged_pierce") if str(tower.get("role", "")) == "ranged" else 0.0
 		if branch_effect == "pierce":
 			pierce += 12.0
+		var attack_solution := RuleService.solve_attack(tower, tower_cell, Vector2(target["position"]), 0, run.terrain_grid, {"pierce": pierce})
+		attack *= float(attack_solution.get("height_damage_multiplier", 1.0))
 		var damage := RuleService.damage_after_armor(attack, armor, pierce)
 		_damage_enemy(target, damage, tower)
 		_apply_tower_effect(tower, target, damage)
@@ -278,15 +347,12 @@ func _update_towers(delta: float) -> void:
 
 func _select_target(tower: Dictionary) -> Dictionary:
 	var candidates: Array = []
-	var tower_pos := _tower_center(tower)
 	var tower_cell := _tower_origin(tower)
-	var height := int(run.heights[tower_cell.y][tower_cell.x])
 	var range_bonus := run.relic_value("direct_range")
 	if str(tower.get("attack_kind", "direct")) != "direct":
 		range_bonus += run.talent_value("indirect_radius")
 	if run.spirit / run.max_spirit < 0.35:
 		range_bonus += run.talent_value("crisis_range")
-	var range_value := RuleService.attack_range(tower, height, {"range_mult": range_bonus})
 	for enemy in enemies:
 		if not bool(enemy.get("alive", true)):
 			continue
@@ -296,9 +362,8 @@ func _select_target(tower: Dictionary) -> Dictionary:
 		if targets == "air" and not bool(enemy.get("air", false)):
 			continue
 		var enemy_pos: Vector2 = enemy["position"]
-		if tower_pos.distance_to(enemy_pos) > range_value:
-			continue
-		if str(tower.get("attack_kind", "direct")) == "direct" and not RuleService.has_line_of_sight(tower_cell, enemy_pos, run.heights, height):
+		var solution := RuleService.solve_attack(tower, tower_cell, enemy_pos, 0, run.terrain_grid, {"range_mult": range_bonus})
+		if not bool(solution.get("can_attack", false)):
 			continue
 		candidates.append(enemy)
 	if candidates.is_empty():
@@ -376,6 +441,7 @@ func _move_enemy(enemy: Dictionary, delta: float) -> void:
 	if bool(enemy.get("air", false)):
 		var position: Vector2 = enemy["position"]
 		var direction := position.direction_to(GameDefs.CORE_CENTER)
+		enemy["facing"] = atan2(direction.x, direction.y)
 		var speed := float(enemy.get("speed", 1.0)) * (0.65 if float(enemy.get("slow", 0.0)) > 0.0 else 1.0)
 		if _enemy_in_slow_aura(position):
 			speed *= 0.78
@@ -398,14 +464,18 @@ func _move_enemy(enemy: Dictionary, delta: float) -> void:
 			_attack_tower(enemy, blocking_tower)
 			enemy["attack_timer"] = 1.0
 		return
-	var height := int(run.heights[next_cell.y][next_cell.x])
-	if height > 0:
+	var position: Vector2 = enemy["position"]
+	var current_cell := Vector2i(roundi(position.x), roundi(position.y))
+	var edge := RuleService.path_edge_info(current_cell, next_cell, run.terrain_grid)
+	if not bool(edge.get("passable", false)):
 		if float(enemy["attack_timer"]) <= 0.0:
-			_attack_barrier(enemy, next_cell)
+			_attack_barrier(enemy, Vector2i(int(edge["high_cell"][0]), int(edge["high_cell"][1])))
 			enemy["attack_timer"] = 1.0
 		return
-	var position: Vector2 = enemy["position"]
 	var target := Vector2(next_cell.x, next_cell.y)
+	var facing_direction := position.direction_to(target)
+	if facing_direction.length_squared() > 0.0:
+		enemy["facing"] = atan2(facing_direction.x, facing_direction.y)
 	var speed := float(enemy.get("speed", 1.0))
 	if _enemy_in_slow_aura(position):
 		speed *= 0.78
@@ -503,7 +573,7 @@ func _attempt_reinforcement(source: Dictionary, ability: String) -> void:
 
 func _attack_tower(enemy: Dictionary, tower: Dictionary) -> void:
 	var cell := _tower_origin(tower)
-	var height := int(run.heights[cell.y][cell.x])
+	var height := TerrainGenerator.height_at(run.terrain_grid, cell)
 	var pierce := 8.0 if str(enemy.get("ability", "")) in ["siege", "tower_hunter"] else 0.0
 	var armor := float(tower.get("armor", 0.0)) + _defensive_armor_bonus(tower)
 	if float(tower.get("repair_armor_until", 0.0)) > elapsed:
@@ -526,14 +596,17 @@ func _attack_tower(enemy: Dictionary, tower: Dictionary) -> void:
 func _attack_barrier(enemy: Dictionary, cell: Vector2i) -> void:
 	var key := GameDefs.cell_key(cell)
 	if not barrier_hp.has(key):
-		barrier_hp[key] = 45.0 + float(run.heights[cell.y][cell.x]) * 40.0
+		barrier_hp[key] = 45.0 + float(TerrainGenerator.height_at(run.terrain_grid, cell)) * 40.0
 	var multiplier := 2.0 if str(enemy.get("ability", "")) == "siege" else 1.0
 	barrier_hp[key] = float(barrier_hp[key]) - float(enemy["attack"]) * multiplier
 	_emit("barrier_damaged", {"cell": [cell.x, cell.y], "enemy": enemy["name"], "remaining": maxf(0.0, float(barrier_hp[key]))})
 	if float(barrier_hp[key]) <= 0.0:
-		run.heights[cell.y][cell.x] = maxi(0, int(run.heights[cell.y][cell.x]) - 1)
+		var terrain_cell: Dictionary = run.terrain_grid[cell.y][cell.x]
+		terrain_cell["height"] = maxi(0, int(terrain_cell.get("height", 0)) - 1)
+		terrain_cell["slope"] = ""
+		run.terrain_revision += 1
 		barrier_hp.erase(key)
-		_emit("barrier_broken", {"cell": [cell.x, cell.y], "new_height": run.heights[cell.y][cell.x]})
+		_emit("barrier_broken", {"cell": [cell.x, cell.y], "new_height": terrain_cell["height"]})
 		_recalculate_paths()
 
 func _damage_enemy(enemy: Dictionary, amount: float, tower: Dictionary) -> void:
@@ -662,7 +735,7 @@ func _assign_path(enemy: Dictionary) -> void:
 	var start := Vector2i(roundi(Vector2(enemy["position"]).x), roundi(Vector2(enemy["position"]).y))
 	if start.x < 0 or start.y < 0 or start.x >= GameDefs.BOARD_SIZE or start.y >= GameDefs.BOARD_SIZE:
 		start = GameDefs.ENTRY_CELLS[entry_name]
-	var path := RuleService.path_to_core(start, run.heights, run.towers)
+	var path := RuleService.path_to_core(start, run.terrain_grid, run.towers)
 	enemy["path"] = path
 	enemy["path_index"] = 1 if path.size() > 1 else 0
 

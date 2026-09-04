@@ -38,6 +38,7 @@ func load_catalog() -> bool:
 	_index_entries(progression.get("relics", []), relics, "收藏品")
 	_index_entries(progression.get("talents", []), talents, "天赋")
 	_index_entries(progression.get("events", []), events, "事件")
+	_apply_v2_runtime_fields()
 	_validate_counts()
 	_validate_references()
 	return errors.is_empty()
@@ -134,3 +135,23 @@ func _validate_references() -> void:
 			errors.append("单位职责无效：%s" % tower_id)
 		if typeof(tower.get("branches", {})) != TYPE_DICTIONARY or tower.get("branches", {}).size() != 2:
 			errors.append("单位必须有A/B两个分支：%s" % tower_id)
+
+func _apply_v2_runtime_fields() -> void:
+	for tower_id in towers:
+		var tower: Dictionary = towers[tower_id]
+		tower["sprite_id"] = str(tower.get("sprite_id", tower_id))
+		tower["range"] = float(tower.get("range", 1.0)) * GameDefs.MICROGRID_SCALE
+		var old: Array = tower.get("footprint", [1, 1])
+		var width := int(old[0])
+		var height := int(old[1])
+		if width == 1 and height == 1:
+			tower["footprint"] = [2, 2]
+		elif width == 2 and height == 1:
+			tower["footprint"] = [3, 2]
+		elif width == 1 and height == 2:
+			tower["footprint"] = [2, 3]
+		else:
+			tower["footprint"] = [3, 3]
+	for source in [enemies, elites, bosses]:
+		for id in source:
+			source[id]["sprite_id"] = str(source[id].get("sprite_id", id))

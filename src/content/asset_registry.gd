@@ -1,78 +1,48 @@
 class_name AssetRegistry
 extends RefCounted
 
-const KENNEY_SPACE := "res://assets/third_party/kenney/space-kit/"
-const KENNEY_TOWER := "res://assets/third_party/kenney/tower-defense-kit/"
-const KENNEY_MODULAR := "res://assets/third_party/kenney/modular-space-kit/"
-const MUSIC := "res://assets/third_party/opengameart/dark-sci-fi-audio/"
+const SPRITES := "res://assets/game/sprites/"
+const MUSIC_AMBIENT := "res://assets/third_party/opengameart/dark-sci-fi-audio/"
+const MUSIC_ADAPTIVE := "res://assets/third_party/opengameart/singularity/"
 const SFX := "res://assets/third_party/kenney/sci-fi-sounds/"
-const UI := "res://assets/third_party/kenney/ui-sci-fi/"
+const PIXEL_UI := "res://assets/third_party/kenney/pixel-ui/"
+const GAME_ICONS := "res://assets/third_party/kenney/game-icons/"
+const PIXEL_FONT := "res://assets/third_party/fusion-pixel-font/fusion-pixel-10px-zh_hans.ttf"
 
-const UI_TEXTURES := {
-	"panel": UI + "button_square_header_large_rectangle_screws.png",
-	"button": UI + "button_square_header_large_rectangle.png",
-	"bar": UI + "bar_round_gloss_large.png",
+const TOWER_SPRITES := {
+	"anchor_bulwark": SPRITES + "towers/anchor_bulwark.png",
+	"phase_blade": SPRITES + "towers/phase_blade.png",
+	"boundary_riveter": SPRITES + "towers/boundary_riveter.png",
+	"resonance_guard": SPRITES + "towers/resonance_guard.png",
+	"pulse_array": SPRITES + "towers/pulse_array.png",
+	"focus_rail": SPRITES + "towers/focus_rail.png",
+	"arc_mortar": SPRITES + "towers/arc_mortar.png",
+	"drone_loom": SPRITES + "towers/drone_loom.png",
+	"bandwidth_relay": SPRITES + "towers/bandwidth_relay.png",
+	"memory_mechanic": SPRITES + "towers/memory_mechanic.png",
+	"frequency_choir": SPRITES + "towers/frequency_choir.png",
+	"resistance_beacon": SPRITES + "towers/resistance_beacon.png",
 }
 
-const TOWER_MODELS := {
-	"anchor_bulwark": KENNEY_TOWER + "tower-round-bottom-a.glb",
-	"phase_blade": KENNEY_TOWER + "tower-round-top-b.glb",
-	"boundary_riveter": KENNEY_TOWER + "tower-square-bottom-b.glb",
-	"resonance_guard": KENNEY_TOWER + "tower-round-middle-b.glb",
-	"pulse_array": KENNEY_SPACE + "turret_single.glb",
-	"focus_rail": KENNEY_SPACE + "turret_double.glb",
-	"arc_mortar": KENNEY_TOWER + "weapon-cannon.glb",
-	"drone_loom": KENNEY_SPACE + "satelliteDish_detailed.glb",
-	"bandwidth_relay": KENNEY_SPACE + "machine_wireless.glb",
-	"memory_mechanic": KENNEY_SPACE + "machine_generator.glb",
-	"frequency_choir": KENNEY_SPACE + "satelliteDish_large.glb",
-	"resistance_beacon": KENNEY_TOWER + "tower-round-top-a.glb",
-}
-
-const ENEMY_MODELS := {
-	"static_drifter": KENNEY_SPACE + "craft_cargoA.glb",
-	"spike_runner": KENNEY_SPACE + "craft_speederA.glb",
-	"shield_echo": KENNEY_SPACE + "craft_cargoB.glb",
-	"tempo_amplifier": KENNEY_SPACE + "craft_speederB.glb",
-	"fracture_seed": KENNEY_SPACE + "alien.glb",
-	"floating_noise": KENNEY_TOWER + "enemy-ufo-a.glb",
-	"remote_hunter": KENNEY_SPACE + "craft_racer.glb",
-	"siege_ram": KENNEY_SPACE + "craft_miner.glb",
-	"memory_medic": KENNEY_SPACE + "machine_generator.glb",
-	"bandwidth_jammer": KENNEY_SPACE + "machine_wireless.glb",
-	"phase_teleporter": KENNEY_SPACE + "craft_speederC.glb",
-	"replication_node": KENNEY_SPACE + "craft_cargoB.glb",
-	"pressure_cantor": KENNEY_TOWER + "enemy-ufo-b.glb",
-	"armored_worm": KENNEY_SPACE + "craft_miner.glb",
-	"shield_conductor": KENNEY_TOWER + "enemy-ufo-c.glb",
-	"signal_summoner": KENNEY_SPACE + "machine_generatorLarge.glb",
-	"resistance_corruptor": KENNEY_TOWER + "enemy-ufo-d.glb",
-	"detonation_shell": KENNEY_SPACE + "craft_speederD.glb",
-	"frequency_hunter": KENNEY_SPACE + "turret_double.glb",
-	"terrain_dismantler": KENNEY_SPACE + "craft_miner.glb",
-	"proliferation_protocol": KENNEY_SPACE + "machine_generatorLarge.glb",
-	"spirit_taxer": KENNEY_TOWER + "enemy-ufo-d.glb",
-	"noise_hive": KENNEY_SPACE + "hangar_largeA.glb",
-	"mirror_censor": KENNEY_TOWER + "enemy-ufo-c.glb",
-	"memory_reforger": KENNEY_SPACE + "machine_generatorLarge.glb",
-	"bandwidth_requisitioner": KENNEY_SPACE + "gate_complex.glb",
-	"chorus_overseer": KENNEY_SPACE + "satelliteDish_large.glb",
-	"zero_frequency_mind": KENNEY_MODULAR + "gate.glb",
-}
+const ENEMY_IDS := [
+	"static_drifter", "spike_runner", "shield_echo", "tempo_amplifier", "fracture_seed", "floating_noise",
+	"remote_hunter", "siege_ram", "memory_medic", "bandwidth_jammer", "phase_teleporter", "replication_node",
+	"pressure_cantor", "armored_worm", "shield_conductor", "signal_summoner", "resistance_corruptor", "detonation_shell",
+	"frequency_hunter", "terrain_dismantler", "proliferation_protocol", "spirit_taxer",
+	"noise_hive", "mirror_censor", "memory_reforger", "bandwidth_requisitioner", "chorus_overseer", "zero_frequency_mind",
+]
 
 const MUSIC_TRACKS := {
-	"menu": MUSIC + "title.ogg",
-	"map": MUSIC + "sector.ogg",
-	"node": MUSIC + "hover.ogg",
-	"reward": MUSIC + "transmission.ogg",
-	"calm_battle": MUSIC + "airy.ogg",
-	"prebattle": MUSIC + "airy.ogg",
-	"battle": MUSIC + "pulse.ogg",
-	"boss": MUSIC + "urgent.ogg",
-	"danger": MUSIC + "urgent.ogg",
-	"defeat": MUSIC + "transmission.ogg",
-	"ending": MUSIC + "transmission.ogg",
-	"victory": MUSIC + "victory.ogg",
+	"menu": MUSIC_AMBIENT + "title.ogg",
+	"map": MUSIC_AMBIENT + "sector.ogg",
+	"node": MUSIC_AMBIENT + "hover.ogg",
+	"reward": MUSIC_AMBIENT + "transmission.ogg",
+	"prebattle": MUSIC_ADAPTIVE + "singularity_calm.mp3",
+	"battle_calm": MUSIC_ADAPTIVE + "singularity_calm.mp3",
+	"battle_action": MUSIC_ADAPTIVE + "singularity_action.mp3",
+	"defeat": MUSIC_AMBIENT + "transmission.ogg",
+	"ending": MUSIC_AMBIENT + "transmission.ogg",
+	"victory": MUSIC_AMBIENT + "victory.ogg",
 }
 
 const SOUND_EFFECTS := {
@@ -89,26 +59,26 @@ const SOUND_EFFECTS := {
 	"deny": SFX + "lowFrequency_explosion_000.ogg",
 }
 
-static func model_for_tower(id: String) -> String:
-	return str(TOWER_MODELS.get(id, KENNEY_TOWER + "tower-round-bottom-a.glb"))
+static func sprite_for_tower(id: String) -> String:
+	return str(TOWER_SPRITES.get(id, TOWER_SPRITES["anchor_bulwark"]))
 
-static func model_for_enemy(id: String) -> String:
-	return str(ENEMY_MODELS.get(id, KENNEY_TOWER + "enemy-ufo-a.glb"))
+static func sprite_for_enemy(id: String) -> String:
+	return SPRITES + "enemies/%s.png" % id
 
 static func required_assets() -> Array[String]:
-	var result: Array[String] = [
-		KENNEY_MODULAR + "template-floor.glb",
-		KENNEY_MODULAR + "gate-lasers.glb",
-		KENNEY_TOWER + "selection-a.glb",
-	]
-	for path in TOWER_MODELS.values():
-		if not result.has(str(path)):
-			result.append(str(path))
-	for path in ENEMY_MODELS.values():
-		if not result.has(str(path)):
-			result.append(str(path))
+	var result: Array[String] = [PIXEL_FONT, PIXEL_UI + "panel.png", PIXEL_UI + "panel_inlay.png"]
+	for path in TOWER_SPRITES.values():
+		result.append(str(path))
+	for id in ENEMY_IDS:
+		result.append(sprite_for_enemy(id))
 	for path in MUSIC_TRACKS.values():
-		result.append(str(path))
+		if not result.has(str(path)):
+			result.append(str(path))
 	for path in SOUND_EFFECTS.values():
-		result.append(str(path))
+		if not result.has(str(path)):
+			result.append(str(path))
+	for type_id in PixelTheme.MAP_ICONS:
+		var icon_path := PixelTheme.ICON_ROOT + str(PixelTheme.MAP_ICONS[type_id])
+		if not result.has(icon_path):
+			result.append(icon_path)
 	return result

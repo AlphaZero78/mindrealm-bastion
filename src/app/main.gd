@@ -29,8 +29,14 @@ var battle_speed := 1.0
 var battle_paused := false
 var selected_tower_id := ""
 var terrain_delta := 0
+var terrain_tool := ""
+var terrain_brush := "single"
+var terrain_slope := "north"
+var terrain_line_start := Vector2i(-1, -1)
 var status_label: Label
 var resource_label: Label
+var resource_fields: Dictionary = {}
+var compass_label: Label
 var threat_label: RichTextLabel
 var battle_log: RichTextLabel
 var battle_progress: Label
@@ -38,6 +44,7 @@ var confirm_dialog: ConfirmationDialog
 var popup_panel: PanelContainer
 var _screen_refresh_timer := 0.0
 var _middle_pan_active := false
+var pixel_theme: Theme
 
 func _ready() -> void:
 	get_tree().auto_accept_quit = false
@@ -45,6 +52,7 @@ func _ready() -> void:
 	if not catalog.errors.is_empty():
 		push_error("内容目录校验失败：\n%s" % "\n".join(catalog.errors))
 	profile = SaveService.load_profile()
+	pixel_theme = PixelTheme.create_theme()
 	audio = AudioDirector.new()
 	add_child(audio)
 	audio.setup()
@@ -52,14 +60,22 @@ func _ready() -> void:
 	ui_layer.layer = 10
 	add_child(ui_layer)
 	ui_root = Control.new()
-	ui_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	ui_root.position = Vector2.ZERO
+	ui_root.size = Vector2(1600, 900)
+	ui_root.scale = Vector2(0.4, 0.4)
+	ui_root.theme = pixel_theme
 	ui_layer.add_child(ui_root)
 	confirm_dialog = ConfirmationDialog.new()
 	confirm_dialog.title = "确认"
 	confirm_dialog.ok_button_text = "确认"
 	confirm_dialog.cancel_button_text = "取消"
+	confirm_dialog.theme = pixel_theme
 	ui_layer.add_child(confirm_dialog)
 	show_menu()
+	if bool(profile.get("dev_reset_notice_pending", false)):
+		profile["dev_reset_notice_pending"] = false
+		SaveService.save_profile(profile)
+		call_deferred("show_message", "开发版本已更新", "地形与路线结构已升级到存档版本2，旧开发存档已清除。")
 	if "--smoke-test" in OS.get_cmdline_args() or "--smoke-test" in OS.get_cmdline_user_args():
 		await get_tree().process_frame
 		await get_tree().process_frame
@@ -74,6 +90,9 @@ func _process(delta: float) -> void:
 		var pan_input := Input.get_vector("camera_left", "camera_right", "camera_forward", "camera_back")
 		if pan_input.length_squared() > 0.0:
 			battlefield.pan_camera(pan_input * delta * 8.0)
+		var rotate_direction := int(Input.is_action_pressed("camera_rotate_right")) - int(Input.is_action_pressed("camera_rotate_left"))
+		if rotate_direction != 0:
+			battlefield.rotate_camera(rotate_direction, delta)
 	if screen_state == GameDefs.ScreenState.BATTLE and simulation != null and not simulation.finished and not battle_paused:
 		fixed_accumulator += delta * battle_speed
 		while fixed_accumulator >= FIXED_STEP:
@@ -85,6 +104,7 @@ func _process(delta: float) -> void:
 		if _screen_refresh_timer <= 0.0:
 			_screen_refresh_timer = 0.2
 			refresh_hud()
+		audio.set_battle_danger(simulation.danger_level, run.resolved_node_type(run.pending_node) == "boss")
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
@@ -111,11 +131,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 		battlefield.zoom_camera(1.8)
 		return
-	if event.is_action_pressed("camera_rotate_left"):
-		battlefield.rotate_camera(-1)
-	elif event.is_action_pressed("camera_rotate_right"):
-		battlefield.rotate_camera(1)
-	elif event.is_action_pressed("camera_focus"):
+	if event.is_action_pressed("camera_focus"):
 		battlefield.focus_core()
 	elif event.is_action_pressed("camera_zoom_in"):
 		battlefield.zoom_camera(-1.8)
@@ -148,16 +164,17 @@ func show_menu() -> void:
 	clear_ui()
 	audio.play_state("menu")
 	var background := ColorRect.new()
-	background.color = Color("09131c")
+	background.color = PixelTheme.BACKGROUND
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	ui_root.add_child(background)
-	var scan := TextureRect.new()
-	scan.texture = load(AssetRegistry.UI_TEXTURES["panel"])
-	scan.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	scan.stretch_mode = TextureRect.STRETCH_TILE
-	scan.modulate = Color(0.12, 0.48, 0.55, 0.16)
-	scan.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	ui_root.add_child(scan)
+	for band_index in 12:
+		var band := ColorRect.new()
+		var band_color := PixelTheme.FRIENDLY
+		band_color.a = 0.035 if band_index % 2 == 0 else 0.018
+		band.color = band_color
+		band.position = Vector2(0, float(band_index) * 75.0)
+		band.size = Vector2(1600, 1)
+		ui_root.add_child(band)
 	var left := VBoxContainer.new()
 	left.position = Vector2(118, 112)
 	left.size = Vector2(490, 650)
@@ -188,13 +205,14 @@ func show_menu() -> void:
 	intel_text.text = "[font_size=24][color=#48dbe1]醒觉火种信号：稳定[/color][/font_size]\n\n" + \
 		"统治网络正在用审查噪声覆盖大众意识。你是能够改变精神频率的偏频者。\n\n" + \
 		"三幕战区 · 持久防线 · 路线构筑\n" + \
-		"25×25阶梯战场 · 六种首领协议\n" + \
+		"41×41微网格地形 · 六种首领协议\n" + \
 		"一局约48层，失败原因可完整复盘\n\n" + \
 		"[color=#d5a24f]首要原则[/color]\n威胁必须可读，选择必须有代价，失败必须能解释。"
 	intel.add_child(intel_text)
 
 func start_new_dialog() -> void:
 	var dialog := AcceptDialog.new()
+	dialog.theme = pixel_theme
 	dialog.title = "建立新的精神频率"
 	dialog.ok_button_text = "开始新游戏"
 	var body := VBoxContainer.new()
@@ -257,7 +275,7 @@ func show_map() -> void:
 	clear_ui()
 	audio.play_state("map")
 	var background := ColorRect.new()
-	background.color = Color("07141b")
+	background.color = PixelTheme.BACKGROUND
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	ui_root.add_child(background)
 	var header := make_header("路线 / %s" % run.current_act().get("name", ""), "地图种子 %s" % run.seed_text)
@@ -281,10 +299,25 @@ func show_map() -> void:
 	scroll.scroll_vertical = maxi(0, int(map_view.custom_minimum_size.y - scroll.size.y))
 	var right := panel_box(Vector2(1260, 112), Vector2(300, 720))
 	ui_root.add_child(right)
-	var route_help := RichTextLabel.new()
-	route_help.bbcode_enabled = true
-	route_help.text = "[font_size=20][color=#d5a24f]路线判读[/color][/font_size]\n\n悬停节点查看已知风险、收益与连接方向。\n\n[color=#57b7ca]战[/color] 普通战斗\n[color=#e95479]精[/color] 精英战斗\n[color=#63ca8a]营[/color] 营地\n[color=#d29b55]工[/color] 工坊\n[color=#cfb04b]店[/color] 商店\n[color=#a47be0]藏[/color] 宝库\n[color=#6694dc]事[/color] 事件\n[color=#7d8994]？[/color] 未知\n[color=#ff365f]首[/color] 首领\n\n路线确认后不能返回。"
+	var route_help := VBoxContainer.new()
+	route_help.add_theme_constant_override("separation", 8)
 	right.add_child(route_help)
+	route_help.add_child(label("路线图例", 22, PixelTheme.RESOURCE))
+	route_help.add_child(label("悬停图标查看风险、收益和后续连接。", 14, PixelTheme.MUTED))
+	for type_id in ["combat", "elite", "camp", "workshop", "shop", "treasure", "event", "unknown", "boss"]:
+		var row := HBoxContainer.new()
+		var icon := TextureRect.new()
+		icon.texture = PixelTheme.icon(type_id)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.custom_minimum_size = Vector2(36, 36)
+		row.add_child(icon)
+		var legend_label := label(node_type_name(type_id), 15, PixelTheme.TEXT)
+		legend_label.custom_minimum_size.x = 190
+		legend_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+		row.add_child(legend_label)
+		route_help.add_child(row)
+	route_help.add_child(label("虚线：未走路径  ·  实线：已完成\n路线确认后不能返回。", 13, PixelTheme.MUTED))
 
 func select_map_node(node_id: String) -> void:
 	var node := run.find_node(node_id)
@@ -309,7 +342,7 @@ func show_prebattle() -> void:
 	run.phase = "prebattle"
 	clear_world()
 	clear_ui()
-	audio.play_state("calm_battle")
+	audio.play_state("prebattle")
 	battlefield = BattlefieldView.new()
 	add_child(battlefield)
 	battlefield.setup(run, catalog)
@@ -319,8 +352,12 @@ func show_prebattle() -> void:
 func build_prebattle_ui() -> void:
 	var top := panel_box(Vector2(24, 18), Vector2(1552, 72))
 	ui_root.add_child(top)
-	resource_label = label("", 18, Color("e7f3f3"))
-	top.add_child(resource_label)
+	top.add_child(build_resource_strip())
+	compass_label = label("", 18, PixelTheme.FRIENDLY)
+	compass_label.position = Vector2(1388, 24)
+	compass_label.size = Vector2(160, 34)
+	compass_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	ui_root.add_child(compass_label)
 	var left := panel_box(Vector2(24, 106), Vector2(286, 520))
 	ui_root.add_child(left)
 	threat_label = RichTextLabel.new()
@@ -333,12 +370,23 @@ func build_prebattle_ui() -> void:
 	inspector.name = "Inspector"
 	inspector.add_theme_constant_override("separation", 8)
 	right.add_child(inspector)
-	inspector.add_child(label("构造检查器", 22, Color("48dbe1")))
+	inspector.add_child(label("构造 / 地形", 22, PixelTheme.FRIENDLY))
 	inspector.add_child(label("从仓库选择构造，再点击战场格位。\n右键或 Esc 取消当前操作。", 14, Color("a5bac0")))
-	inspector.add_child(action_button("地形升高 +1（5专注）", func() -> void: choose_terrain_mode(1)))
-	inspector.add_child(action_button("地形降低 -1（5专注）", func() -> void: choose_terrain_mode(-1)))
-	inspector.add_child(action_button("取消当前操作", cancel_action))
-	inspector.add_child(action_button("开始战斗", confirm_start_battle, true))
+	var brush_row := HBoxContainer.new()
+	brush_row.add_child(compact_button("1格", func() -> void: choose_terrain_brush("single")))
+	brush_row.add_child(compact_button("3×3", func() -> void: choose_terrain_brush("square")))
+	brush_row.add_child(compact_button("直线", func() -> void: choose_terrain_brush("line")))
+	inspector.add_child(brush_row)
+	var tool_grid := GridContainer.new()
+	tool_grid.columns = 2
+	tool_grid.add_child(compact_button("升高 ·2/格", func() -> void: choose_terrain_tool("raise")))
+	tool_grid.add_child(compact_button("降低 ·2/格", func() -> void: choose_terrain_tool("lower")))
+	tool_grid.add_child(compact_button("斜坡 ↻", func() -> void: choose_terrain_tool("slope")))
+	tool_grid.add_child(compact_button("铲平", func() -> void: choose_terrain_tool("flatten")))
+	inspector.add_child(tool_grid)
+	inspector.add_child(compact_button("撤销地形并退款", undo_terrain))
+	inspector.add_child(compact_button("取消操作", cancel_action))
+	inspector.add_child(action_button("锁定防线 · 开战", confirm_start_battle, true))
 	var bottom := panel_box(Vector2(330, 692), Vector2(928, 184))
 	ui_root.add_child(bottom)
 	var warehouse := VBoxContainer.new()
@@ -353,6 +401,8 @@ func build_prebattle_ui() -> void:
 	for tower in run.towers:
 		var card := Button.new()
 		card.custom_minimum_size = Vector2(144, 112)
+		card.icon = atlas_frame_icon(AssetRegistry.sprite_for_tower(str(tower.get("sprite_id", tower["id"]))))
+		card.expand_icon = true
 		card.text = "%s\nT%d %s\n耐久 %.0f/%.0f\n带宽 %d%s" % [
 			tower["name"], tower["tier"], role_name(str(tower["role"])),
 			tower["durability"], tower["max_durability"], tower["bandwidth"],
@@ -372,8 +422,10 @@ func build_prebattle_ui() -> void:
 func select_tower(instance_id: String) -> void:
 	selected_tower_id = instance_id
 	terrain_delta = 0
+	terrain_tool = ""
+	terrain_line_start = Vector2i(-1, -1)
 	battlefield.set_selected_tower(instance_id)
-	battlefield.set_terrain_preview_delta(0)
+	battlefield.set_terrain_preview_command({})
 	var tower := run.get_tower(instance_id)
 	status("已选择 %s：移动鼠标预览完整占地、射程和合法性。" % tower.get("name", ""), true)
 	show_tower_inspector(tower)
@@ -404,39 +456,60 @@ func show_tower_inspector(tower: Dictionary) -> void:
 	inspector.add_child(action_button("开始战斗", confirm_start_battle, true))
 
 func choose_terrain_mode(delta: int) -> void:
+	choose_terrain_tool("raise" if delta > 0 else "lower")
+
+func choose_terrain_tool(tool: String) -> void:
 	selected_tower_id = ""
-	terrain_delta = delta
+	terrain_tool = tool
+	terrain_delta = 1 if tool == "raise" else (-1 if tool == "lower" else 0)
+	terrain_line_start = Vector2i(-1, -1)
+	if tool == "slope":
+		var directions := ["north", "east", "south", "west"]
+		terrain_slope = directions[(directions.find(terrain_slope) + 1) % directions.size()]
 	battlefield.set_selected_tower("")
-	battlefield.set_terrain_preview_delta(delta)
-	status("地形%s模式：每次只改变一级，点击前显示结果、费用与失败原因。" % ("升高" if delta > 0 else "降低"), true)
+	battlefield.set_terrain_preview_command({"tool": tool, "cells": [], "slope": terrain_slope})
+	var names := {"raise":"升高", "lower":"降低", "slope":"铺设斜坡（朝%s）" % terrain_slope, "flatten":"铲平"}
+	status("%s工具 · %s笔刷：确认前显示费用、路径、峭壁和射程变化。" % [names.get(tool, tool), terrain_brush], true)
+
+func choose_terrain_brush(brush: String) -> void:
+	terrain_brush = brush
+	terrain_line_start = Vector2i(-1, -1)
+	status("地形笔刷：%s" % {"single":"单格", "square":"3×3", "line":"直线"}.get(brush, brush), true)
 
 func update_board_preview(screen_position: Vector2) -> void:
 	var cell := battlefield.screen_to_cell(screen_position)
-	if selected_tower_id.is_empty() and terrain_delta == 0:
+	if selected_tower_id.is_empty() and terrain_tool.is_empty():
 		battlefield.clear_preview()
 		return
 	if not selected_tower_id.is_empty():
 		var tower := run.get_tower(selected_tower_id)
-		var error := RuleService.deployment_error(tower, cell, run.heights, run.towers, run.deployed_bandwidth(), run.effective_bandwidth(), selected_tower_id)
+		var error := RuleService.deployment_error(tower, cell, run.terrain_grid, run.towers, run.deployed_bandwidth(), run.effective_bandwidth(), selected_tower_id)
 		battlefield.set_preview(cell, error.is_empty(), error)
 		status("格位 %d,%d：%s；部署后带宽 %d/%d" % [cell.x, cell.y, "合法" if error.is_empty() else error, run.deployed_bandwidth() + int(tower.get("bandwidth", 0)), run.effective_bandwidth()], error.is_empty())
 	else:
-		var check := RuleService.can_change_terrain(run.heights, cell, terrain_delta, run.towers)
+		var command := terrain_command_for_cell(cell)
+		var check := RuleService.validate_terrain_command(run.terrain_grid, command, run.towers)
+		battlefield.set_terrain_preview_command(command)
 		battlefield.set_preview(cell, bool(check.get("ok", false)), str(check.get("reason", "")))
-		status("格位 %d,%d：%s" % [cell.x, cell.y, "高度将变为%d，费用5专注；路径与视线会立即重算" % check.get("height", 0) if check.get("ok", false) else check.get("reason", "不可修改")], bool(check.get("ok", false)))
+		status("格位 %d,%d：%s" % [cell.x, cell.y, "修改%d格 · %d专注 · 路径含%d处峭壁" % [check.get("changes", []).size(), check.get("cost", 0), check.get("barrier_count", 0)] if check.get("ok", false) else check.get("reason", "不可修改")], bool(check.get("ok", false)))
 
 func apply_board_action(screen_position: Vector2) -> void:
 	var cell := battlefield.screen_to_cell(screen_position)
 	if not selected_tower_id.is_empty():
 		deploy_selected(cell)
-	elif terrain_delta != 0:
-		change_terrain(cell)
+	elif not terrain_tool.is_empty():
+		if terrain_brush == "line" and terrain_line_start.x < 0:
+			terrain_line_start = cell
+			status("直线起点：%d,%d；点击终点确认预览。" % [cell.x, cell.y], true)
+			return
+		change_terrain(terrain_command_for_cell(cell))
+		terrain_line_start = Vector2i(-1, -1)
 
 func deploy_selected(cell: Vector2i) -> void:
 	var tower := run.get_tower(selected_tower_id)
 	if tower.is_empty():
 		return
-	var error := RuleService.deployment_error(tower, cell, run.heights, run.towers, run.deployed_bandwidth(), run.effective_bandwidth(), selected_tower_id)
+	var error := RuleService.deployment_error(tower, cell, run.terrain_grid, run.towers, run.deployed_bandwidth(), run.effective_bandwidth(), selected_tower_id)
 	if not error.is_empty():
 		status("部署失败：%s" % error, false)
 		audio.play_sfx("deny")
@@ -459,24 +532,57 @@ func deploy_selected(cell: Vector2i) -> void:
 	battlefield.refresh_all()
 	rebuild_prebattle_ui_preserving_world()
 
-func change_terrain(cell: Vector2i) -> void:
-	var check := RuleService.can_change_terrain(run.heights, cell, terrain_delta, run.towers)
-	if not bool(check.get("ok", false)):
-		status("地形改造失败：%s" % check.get("reason", "不可修改"), false)
+func change_terrain(command: Dictionary) -> void:
+	var result := run.apply_terrain_command(command)
+	if not bool(result.get("ok", false)):
+		status("地形改造失败：%s" % result.get("reason", "不可修改"), false)
+		audio.play_sfx("deny")
 		return
-	if run.focus < 5:
-		status("地形改造失败：专注不足，需要5。", false)
-		return
-	run.focus -= 5
-	run.heights[cell.y][cell.x] = int(check["height"])
-	status("地形已更新：%d,%d 现在为高度%d；路径、屏障、射程与视线已刷新。" % [cell.x, cell.y, check["height"]], true)
+	status("地形已更新：修改%d格，消耗%d专注；路径、峭壁、射程与视线已同步刷新。" % [result.get("changes", []).size(), result.get("cost", 0)], true)
 	audio.play_sfx("terrain")
 	battlefield.refresh_all(true)
 	refresh_hud()
 
+func undo_terrain() -> void:
+	var result := run.undo_terrain_command()
+	status("已撤销最近地形操作并退还%d专注。" % result.get("refund", 0) if result.get("ok", false) else str(result.get("reason", "无法撤销")), bool(result.get("ok", false)))
+	if result.get("ok", false):
+		battlefield.refresh_all(true)
+		refresh_hud()
+
+func terrain_command_for_cell(cell: Vector2i) -> Dictionary:
+	var cells: Array = []
+	if terrain_brush == "square":
+		for y in range(cell.y - 1, cell.y + 2):
+			for x in range(cell.x - 1, cell.x + 2):
+				cells.append([x, y])
+	elif terrain_brush == "line" and terrain_line_start.x >= 0:
+		for point in grid_line(terrain_line_start, cell):
+			cells.append([point.x, point.y])
+	else:
+		cells.append([cell.x, cell.y])
+	var command := {"tool": terrain_tool, "cells": cells, "slope": terrain_slope}
+	if terrain_tool == "flatten":
+		command["target_height"] = TerrainGenerator.height_at(run.terrain_grid, cell)
+	return command
+
+func grid_line(from: Vector2i, to: Vector2i) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	var steps := maxi(absi(to.x - from.x), absi(to.y - from.y))
+	if steps == 0:
+		return [from]
+	for index in range(steps + 1):
+		var progress := float(index) / float(steps)
+		var point := Vector2(from).lerp(Vector2(to), progress)
+		var cell := Vector2i(roundi(point.x), roundi(point.y))
+		if not result.has(cell):
+			result.append(cell)
+	return result
+
 func prepare_relocation(instance_id: String) -> void:
 	selected_tower_id = instance_id
 	terrain_delta = 0
+	terrain_tool = ""
 	battlefield.set_selected_tower(instance_id)
 	status("搬迁预览已开启。取消不会扣费，确认合法新位置后才支付维护费。", true)
 
@@ -564,9 +670,11 @@ func cycle_priority(instance_id: String) -> void:
 func cancel_action() -> void:
 	selected_tower_id = ""
 	terrain_delta = 0
+	terrain_tool = ""
+	terrain_line_start = Vector2i(-1, -1)
 	if battlefield != null:
 		battlefield.set_selected_tower("")
-		battlefield.set_terrain_preview_delta(0)
+		battlefield.set_terrain_preview_command({})
 		battlefield.clear_preview()
 	status("操作已取消；未扣除资源，原位置和地形保持不变。", true)
 
@@ -600,6 +708,7 @@ func confirm_start_battle() -> void:
 	confirm_dialog.popup_centered()
 
 func start_battle() -> void:
+	run.lock_prebattle_edits()
 	run.snapshot_before_battle()
 	run.phase = "battle"
 	SaveService.save_run(run)
@@ -617,8 +726,12 @@ func start_battle() -> void:
 func build_battle_ui() -> void:
 	var top := panel_box(Vector2(24, 18), Vector2(1552, 72))
 	ui_root.add_child(top)
-	resource_label = label("", 18, Color("e7f3f3"))
-	top.add_child(resource_label)
+	top.add_child(build_resource_strip())
+	compass_label = label("", 18, PixelTheme.FRIENDLY)
+	compass_label.position = Vector2(1388, 24)
+	compass_label.size = Vector2(160, 34)
+	compass_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	ui_root.add_child(compass_label)
 	var left := panel_box(Vector2(24, 108), Vector2(330, 344))
 	ui_root.add_child(left)
 	battle_log = RichTextLabel.new()
@@ -653,8 +766,8 @@ func add_tutorial_banner(in_battle: bool) -> void:
 	if battle_index >= 3:
 		return
 	var lessons := [
-		"教学 1/3：WASD 或中键拖动镜头，Q/E 旋转，滚轮缩放，F 回到火种。先部署近战阻挡，再把远程放到高台；留意带宽。",
-		"教学 2/3：战前可用 5 专注逐级改造地形。蓝色射程预览与实战共用同一套高度、射程和视线规则。",
+		"教学 1/3：WASD 永远按屏幕方向平移；按住 Q/E 可连续360°旋转，滚轮缩放，F 回到火种。先部署近战，再把远程放到高台。",
+		"教学 2/3：战前可用单格、3×3或直线笔刷改造地形，每个实际变化格消耗2专注；可在开战前逐步撤销并退款。",
 		"教学 3/3：敌人死亡也会造成精神压力。距离火种越远，平方衰减越强；让高压力敌人在远处被消灭。",
 	]
 	var banner := PanelContainer.new()
@@ -707,6 +820,8 @@ func on_battle_event(event: Dictionary) -> void:
 	var line := ""
 	match kind:
 		"enemy_spawned": line = "%s 从%s入口出现" % [data.get("enemy", "敌人"), entry_name(str(data.get("entry", "north")))]
+		"group_incoming": line = "[color=#f1c75b]第%d敌群将在 %.1f 秒后抵达[/color]" % [int(data.get("group_index", 0)) + 1, data.get("countdown", 0.0)]
+		"group_started": line = "[color=#67e3c1]第%d/%d敌群开始进场[/color]" % [int(data.get("group_index", 0)) + 1, data.get("group_count", 1)]
 		"enemy_killed": line = "%s 已消灭" % data.get("enemy", "敌人")
 		"death_pressure": line = "[color=#e78fae]死亡压力 %.1f → 距离后 %.1f - 抗性 %.1f = 伤害 %.1f[/color]" % [data.get("raw", 0), data.get("transmitted", 0), data.get("resisted", 0), data.get("damage", 0)]
 		"enemy_breached": line = "[color=#ff6c81]%s突破，造成%.1f精神伤害[/color]" % [data.get("enemy", "敌人"), data.get("damage", 0)]
@@ -1046,11 +1161,11 @@ func show_settings() -> void:
 		slider.value_changed.connect(func(value: float) -> void: audio.set_bus_volume(bus, value))
 		row.add_child(slider)
 		list.add_child(row)
-	list.add_child(label("镜头：WASD/中键平移 · Q/E四方向吸附旋转 · 滚轮缩放 · F回到火种\n战前：左键确认 · 右键/Esc取消\n战斗：暂停及1×/2×/3×固定逻辑步长", 16, Color("9db6be")))
+	list.add_child(label("镜头：WASD按屏幕方向平移 · 按住Q/E连续360°旋转 · 滚轮缩放 · F回到火种\n战前：左键确认 · 右键/Esc取消 · 地形可逐步撤销\n战斗：暂停及1×/2×/3×固定逻辑步长", 16, PixelTheme.MUTED))
 	list.add_child(action_button("返回", show_menu))
 
 func show_credits() -> void:
-	show_message("制作人员与资源", "《心域防线》首发实现\n\n游戏设计与开发：偏频者项目组\n引擎：Godot 4.7.2\n3D、UI与音效：Kenney CC0\n音乐：SRG774 / Dark Sci-Fi Audio Pack（CC0）\n\n详细来源、哈希和用途见 docs/THIRD_PARTY_ASSETS.md。")
+	show_message("制作人员与资源", "《心域防线》2.5D像素重制\n\n游戏设计与开发：偏频者项目组\n引擎：Godot 4.7.2\n像素UI、图标与音效：Kenney CC0\n单位像素图集：由Kenney CC0模型八方向烘焙\n中文字体：缝合像素字体 OFL-1.1\n自适应音乐：Vitalezzz / Singularity（CC0）\n\n详细来源、哈希和用途见 docs/THIRD_PARTY_ASSETS.md。")
 
 func route_intel_text() -> String:
 	var act := run.current_act()
@@ -1079,22 +1194,30 @@ func threat_text() -> String:
 	var node_type := run.resolved_node_type(run.pending_node)
 	var encounter_ranges: Array = [[16, 28], [24, 38], [32, 50]]
 	var ranges: Array = encounter_ranges[run.act_index]
-	return "[font_size=22][color=#e95479]入口威胁[/color][/font_size]\n\n节点：%s\n预计总量：%d–%d\n启用入口：%s\n首批到达：约1.2秒\n\n[color=#d5a24f]敌人类别[/color]\n基础推进 / 功能型 ≥25%%%s\n\n敌人增援共享预算：初始编队10%%\n同时活动上限：100" % [node_type_name(node_type), ranges[0], ranges[1], "、".join(entries), "\n包含精英信号" if node_type == "elite" else ("\n包含首领多阶段信号" if node_type == "boss" else "")]
+	var group_total := 5 if node_type == "boss" else (4 if node_type == "elite" else 3)
+	return "[font_size=22][color=#f06b67]入口威胁[/color][/font_size]\n\n节点：%s\n预计总量：%d–%d\n连续敌群：%d群（间隔4–6秒）\n启用入口：%s\n首批到达：约1.2秒\n\n[color=#f1c75b]敌人类别[/color]\n基础推进 / 功能型 ≥25%%%s\n\n敌人增援共享预算：初始编队10%%\n同时活动上限：100" % [node_type_name(node_type), ranges[0], ranges[1], group_total, "、".join(entries), "\n精英位于倒数第二群" if node_type == "elite" else ("\n首领位于第四群" if node_type == "boss" else "")]
 
 func refresh_hud() -> void:
 	if run == null:
 		return
-	if resource_label != null and is_instance_valid(resource_label):
+	if not resource_fields.is_empty():
 		var jam := simulation._effective_jam() if simulation != null and screen_state == GameDefs.ScreenState.BATTLE else 0
-		resource_label.text = "  精神稳定 %.1f/%.0f     专注 %d     带宽 %d/%d     抗性 %.0f     深度 %d     %s 第%d层" % [run.spirit, run.max_spirit, run.focus, run.deployed_bandwidth(), run.effective_bandwidth(jam), run.effective_resistance(), run.depth, run.current_act().get("name", ""), run.current_floor + 1]
+		resource_fields["spirit"].text = "精神 %.1f/%.0f" % [run.spirit, run.max_spirit]
+		resource_fields["focus"].text = "专注 %d" % run.focus
+		resource_fields["bandwidth"].text = "带宽 %d/%d" % [run.deployed_bandwidth(), run.effective_bandwidth(jam)]
+		resource_fields["progress"].text = "%s · 深度%d · 第%d层" % [run.current_act().get("name", ""), run.depth, run.current_floor + 1]
+	if compass_label != null and is_instance_valid(compass_label) and battlefield != null:
+		compass_label.text = battlefield.compass_text()
 	if battle_progress != null and is_instance_valid(battle_progress) and simulation != null:
-		battle_progress.text = "%s  %.0f秒\n计划剩余 %d · 场上 %d · 增援 %d/%d" % ["已暂停" if battle_paused else "%d×" % int(battle_speed), simulation.elapsed, simulation.planned.size(), simulation.enemies.size(), simulation.reinforcements_used, simulation.reinforcement_budget]
+		battle_progress.text = "%s · 敌群 %d/%d · 危险 %d%%\n下一群 %.1fs · 场上 %d · 增援 %d/%d" % ["已暂停" if battle_paused else "%d×" % int(battle_speed), simulation.current_group_index + 1, simulation.group_count, roundi(simulation.danger_level * 100.0), simulation.next_group_countdown, simulation.enemies.size(), simulation.reinforcements_used, simulation.reinforcement_budget]
 
 func clear_ui() -> void:
 	for child in ui_root.get_children():
 		child.queue_free()
 	status_label = null
 	resource_label = null
+	resource_fields.clear()
+	compass_label = null
 	threat_label = null
 	battle_log = null
 	battle_progress = null
@@ -1126,23 +1249,49 @@ func make_header(title_text: String, subtitle: String) -> PanelContainer:
 	row.add_child(sub)
 	return header
 
+func build_resource_strip() -> HBoxContainer:
+	resource_fields.clear()
+	var row := HBoxContainer.new()
+	row.custom_minimum_size = Vector2(1320, 40)
+	row.add_theme_constant_override("separation", 22)
+	add_resource_badge(row, "home.png", "spirit", PixelTheme.FRIENDLY)
+	add_resource_badge(row, "star.png", "focus", PixelTheme.RESOURCE)
+	add_resource_badge(row, "signal3.png", "bandwidth", PixelTheme.FRIENDLY)
+	add_resource_badge(row, "target.png", "progress", PixelTheme.TEXT, 390)
+	return row
+
+func add_resource_badge(row: HBoxContainer, icon_name: String, key: String, color: Color, width: float = 190.0) -> void:
+	var badge := HBoxContainer.new()
+	badge.custom_minimum_size.x = width
+	badge.add_theme_constant_override("separation", 8)
+	var icon := TextureRect.new()
+	var path := PixelTheme.ICON_ROOT + icon_name
+	icon.texture = load(path) as Texture2D if ResourceLoader.exists(path) else null
+	icon.modulate = color
+	icon.custom_minimum_size = Vector2(28, 28)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	badge.add_child(icon)
+	var value := label("", 17, color)
+	value.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	value.custom_minimum_size.x = width - 36.0
+	badge.add_child(value)
+	resource_fields[key] = value
+	row.add_child(badge)
+
+func atlas_frame_icon(path: String, frame_index: int = 0) -> Texture2D:
+	if not ResourceLoader.exists(path):
+		return null
+	var atlas := AtlasTexture.new()
+	atlas.atlas = load(path) as Texture2D
+	atlas.region = Rect2(frame_index * 48, 0, 48, 48)
+	return atlas
+
 func panel_box(position_value: Vector2, size_value: Vector2) -> PanelContainer:
 	var panel := PanelContainer.new()
 	panel.position = position_value
 	panel.size = size_value
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.045, 0.09, 0.12, 0.94)
-	style.border_color = Color("246b76")
-	style.set_border_width_all(1)
-	style.corner_radius_top_left = 5
-	style.corner_radius_top_right = 5
-	style.corner_radius_bottom_left = 5
-	style.corner_radius_bottom_right = 5
-	style.content_margin_left = 18
-	style.content_margin_right = 18
-	style.content_margin_top = 16
-	style.content_margin_bottom = 16
-	panel.add_theme_stylebox_override("panel", style)
+	panel.add_theme_stylebox_override("panel", PixelTheme.panel_style())
 	return panel
 
 func action_button(text_value: String, callback: Callable, primary: bool = false) -> Button:
@@ -1150,16 +1299,16 @@ func action_button(text_value: String, callback: Callable, primary: bool = false
 	button.text = text_value
 	button.custom_minimum_size = Vector2(300, 50)
 	button.add_theme_font_size_override("font_size", 17)
-	var normal := StyleBoxFlat.new()
-	normal.bg_color = Color("17333d") if not primary else Color("8d6130")
-	normal.border_color = Color("398998") if not primary else Color("e5b356")
-	normal.set_border_width_all(1)
-	normal.set_corner_radius_all(4)
-	var hover := normal.duplicate()
-	hover.bg_color = Color("245465") if not primary else Color("b67b35")
-	button.add_theme_stylebox_override("normal", normal)
-	button.add_theme_stylebox_override("hover", hover)
+	button.add_theme_stylebox_override("normal", PixelTheme.button_style("yellow" if primary else "blue"))
+	button.add_theme_stylebox_override("hover", PixelTheme.button_style("yellow" if primary else "green"))
+	button.add_theme_stylebox_override("pressed", PixelTheme.button_style("yellow" if primary else "green", true))
 	button.pressed.connect(callback)
+	return button
+
+func compact_button(text_value: String, callback: Callable) -> Button:
+	var button := action_button(text_value, callback)
+	button.custom_minimum_size = Vector2(132, 40)
+	button.add_theme_font_size_override("font_size", 14)
 	return button
 
 func label(text_value: String, font_size: int, color: Color) -> Label:
@@ -1177,6 +1326,7 @@ func status(text_value: String, positive: bool) -> void:
 
 func show_message(title: String, text_value: String, after: Callable = Callable()) -> void:
 	var dialog := AcceptDialog.new()
+	dialog.theme = pixel_theme
 	dialog.title = title
 	dialog.dialog_text = text_value
 	dialog.ok_button_text = "确认"
