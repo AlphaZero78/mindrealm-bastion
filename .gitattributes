@@ -1,0 +1,4 @@
+# Third-party files are verified byte-for-byte against ASSET_MANIFEST.sha256.
+# Prevent Windows checkout from rewriting license/source line endings.
+assets/third_party/** -text
+development/assets/model_sources/** -text
