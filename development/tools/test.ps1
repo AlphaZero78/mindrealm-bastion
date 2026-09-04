@@ -25,6 +25,8 @@ try {
     }
     & $godot --headless --path $projectRoot --script 'res://development/tests/test_runner.gd'
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+	& $godot --headless --path $projectRoot --script 'res://development/tests/full_run_terminals.gd'
+	if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     & $godot --headless --path $projectRoot --script 'res://development/tests/reference_runs.gd'
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     & $godot --headless --path $projectRoot --script 'res://development/tests/simulation/performance_test.gd'
