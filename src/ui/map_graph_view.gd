@@ -3,8 +3,9 @@ extends Control
 
 signal node_selected(node_id: String)
 
-const LANE_X := [110.0, 250.0, 390.0, 530.0, 670.0]
-const FLOOR_GAP := 92.0
+const LANE_X := [92.0, 236.0, 380.0, 524.0, 668.0]
+const FLOOR_GAP := 94.0
+const NODE_SIZE := Vector2(54.0, 54.0)
 
 var run: RunState
 var catalog: ContentCatalog
@@ -21,84 +22,94 @@ func _rebuild() -> void:
 		child.queue_free()
 	node_positions.clear()
 	node_buttons.clear()
-	if run == null or run.current_act().is_empty():
-		return
 	var act := run.current_act()
-	var floors: Array = act["floors"]
-	custom_minimum_size = Vector2(800.0, 150.0 + float(floors.size()) * FLOOR_GAP)
-	for floor_nodes in floors:
-		for node in floor_nodes:
-			var floor_index := int(node["floor"])
-			var lane := int(node["lane"])
+	var floors: Array = act.get("floors", [])
+	custom_minimum_size = Vector2(760.0, 150.0 + float(floors.size()) * FLOOR_GAP)
+	for floor_index in floors.size():
+		for node in floors[floor_index]:
+			var lane := int(node.get("lane", 2))
 			var position := Vector2(LANE_X[lane], custom_minimum_size.y - 90.0 - float(floor_index) * FLOOR_GAP)
-			node_positions[str(node["id"])] = position + Vector2(30.0, 26.0)
-			var button := Button.new()
-			button.name = str(node["id"])
+			node_positions[str(node["id"])] = position + NODE_SIZE * 0.5
+			var button := TextureButton.new()
+			button.name = "Node_%d_%d" % [floor_index, lane]
 			button.position = position
-			button.size = Vector2(62.0, 54.0)
-			button.text = _node_symbol(node)
-			button.tooltip_text = _node_tooltip(node)
+			button.size = NODE_SIZE
+			button.ignore_texture_size = true
+			button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+			button.texture_normal = PixelTheme.icon(str(node.get("map_icon_id", node.get("display_type", "unknown"))))
+			button.texture_hover = button.texture_normal
 			button.disabled = not bool(node.get("available", false)) or bool(node.get("completed", false))
-			button.modulate = _node_color(node)
-			if bool(node.get("completed", false)):
-				button.text = "✓"
+			button.self_modulate = _node_color(node)
+			button.tooltip_text = _node_tooltip(node)
+			button.mouse_entered.connect(func() -> void:
+				button.scale = Vector2(1.12, 1.12)
+				button.pivot_offset = NODE_SIZE * 0.5
+			)
+			button.mouse_exited.connect(func() -> void: button.scale = Vector2.ONE)
 			button.pressed.connect(func() -> void: node_selected.emit(str(node["id"])))
 			add_child(button)
 			node_buttons[str(node["id"])] = button
+			_add_state_badge(button, node)
 	queue_redraw()
+
+func _add_state_badge(button: TextureButton, node: Dictionary) -> void:
+	var state := ""
+	if bool(node.get("completed", false)):
+		state = "completed"
+	elif not bool(node.get("available", false)):
+		state = "locked"
+	if state.is_empty():
+		return
+	var badge := TextureRect.new()
+	badge.texture = PixelTheme.icon(state)
+	badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	badge.position = Vector2(34, 34)
+	badge.size = Vector2(20, 20)
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	button.add_child(badge)
 
 func _draw() -> void:
 	if run == null:
 		return
 	for floor_nodes in run.current_act().get("floors", []):
 		for node in floor_nodes:
-			var from: Vector2 = node_positions.get(str(node["id"]), Vector2.ZERO)
-			for connection in node.get("connections", []):
-				var to: Vector2 = node_positions.get(str(connection), Vector2.ZERO)
-				if to == Vector2.ZERO:
+			var from_id := str(node["id"])
+			if not node_positions.has(from_id):
+				continue
+			for target_id in node.get("connections", []):
+				if not node_positions.has(str(target_id)):
 					continue
-				var color: Color = Color(0.22, 0.8, 0.83, 0.75) if bool(node.get("completed", false)) or bool(node.get("available", false)) else Color(0.28, 0.36, 0.42, 0.48)
-				draw_line(from, to, color, 3.0, true)
+				var target := run.find_node(str(target_id))
+				var available_path := bool(target.get("available", false)) or bool(node.get("completed", false))
+				var color := PixelTheme.FRIENDLY if available_path else PixelTheme.MUTED
+				color.a = 0.95 if available_path else 0.22
+				if bool(node.get("completed", false)):
+					draw_line(node_positions[from_id], node_positions[str(target_id)], color, 4.0)
+				else:
+					_draw_dotted_line(node_positions[from_id], node_positions[str(target_id)], color)
 
-func _node_symbol(node: Dictionary) -> String:
-	var type_id := str(node.get("display_type", node.get("type", "unknown")))
-	return {
-		"combat": "战",
-		"elite": "精",
-		"camp": "营",
-		"workshop": "工",
-		"shop": "店",
-		"treasure": "藏",
-		"event": "事",
-		"unknown": "？",
-		"boss": "首",
-	}.get(type_id, "？")
+func _draw_dotted_line(from: Vector2, to: Vector2, color: Color) -> void:
+	var distance := from.distance_to(to)
+	var direction := from.direction_to(to)
+	var cursor := 0.0
+	while cursor < distance:
+		var segment_end := minf(distance, cursor + 7.0)
+		draw_line(from + direction * cursor, from + direction * segment_end, color, 3.0)
+		cursor += 13.0
 
 func _node_color(node: Dictionary) -> Color:
-	var type_id := str(node.get("display_type", node.get("type", "unknown")))
-	return {
-		"combat": Color("57b7ca"),
-		"elite": Color("e95479"),
-		"camp": Color("63ca8a"),
-		"workshop": Color("d29b55"),
-		"shop": Color("cfb04b"),
-		"treasure": Color("a47be0"),
-		"event": Color("6694dc"),
-		"unknown": Color("7d8994"),
-		"boss": Color("ff365f"),
-	}.get(type_id, Color.WHITE)
+	if bool(node.get("completed", false)):
+		return PixelTheme.MUTED.darkened(0.15)
+	if bool(node.get("available", false)):
+		return PixelTheme.RESOURCE if str(node.get("type", "")) in ["elite", "boss"] else PixelTheme.FRIENDLY
+	return Color(0.42, 0.52, 0.52, 0.38)
 
 func _node_tooltip(node: Dictionary) -> String:
 	var type_id := str(node.get("display_type", node.get("type", "unknown")))
-	var descriptions := {
-		"combat": "普通战斗\n风险：标准编队\n收益：单位选择、专注、8精神恢复，20%收藏品机会",
-		"elite": "精英战斗\n风险：包含一名功能精英\n收益：大量专注、12精神恢复、保证收藏品",
-		"camp": "营地\n恢复30%精神、免费维修或免费升级，三选一",
-		"workshop": "工坊\n可反复支付专注维修或升级，主动离开",
-		"shop": "商店\n三个单位与三个未持有收藏品，可购买多个",
-		"treasure": "宝库\n免费选择一件收藏品",
-		"event": "事件\n两个结果清楚的交换选择",
-		"unknown": "未知节点\n只公开：可能为事件、战斗、商店或宝库\n结果已由本局种子确定",
-		"boss": "首领战\n综合检验本幕构筑，机制情报会逐步公开",
+	var names := {
+		"combat":"普通战斗", "elite":"精英战斗", "camp":"营地", "workshop":"工坊",
+		"shop":"商店", "treasure":"宝库", "event":"事件", "unknown":"未知", "boss":"首领战",
 	}
-	return "%s\n连接：%s" % [descriptions.get(type_id, "未知"), ", ".join(node.get("connections", []))]
+	var connection_count: int = int(node.get("connections", []).size())
+	return "%s\n风险：%s\n主要收益：%s\n后续分支：%d" % [names.get(type_id, "未知节点"), node.get("risk_text", "未知"), node.get("reward_text", "未知"), connection_count]

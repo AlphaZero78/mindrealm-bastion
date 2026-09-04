@@ -1,88 +1,96 @@
 class_name TerrainGenerator
 extends RefCounted
 
+const CARDINALS := [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
+
 static func generate(seed_streams: SeedStreams) -> Array:
-	var generator := seed_streams.rng_at("terrain", 0)
-	var heights: Array = []
+	var generator := seed_streams.rng_at("terrain_v2", 0)
+	var grid: Array = []
 	for y in GameDefs.BOARD_SIZE:
 		var row: Array = []
 		for x in GameDefs.BOARD_SIZE:
-			var edge_distance := mini(mini(x, y), mini(GameDefs.BOARD_SIZE - 1 - x, GameDefs.BOARD_SIZE - 1 - y))
-			var ridge := 0
-			if edge_distance > 3:
-				ridge = generator.randi_range(0, 3)
-			if abs(x - 5) <= 2 or abs(x - 19) <= 2 or abs(y - 5) <= 2 or abs(y - 20) <= 2:
-				ridge = mini(3, ridge + 1)
-			row.append(ridge)
-		heights.append(row)
-	_carve_guaranteed_routes(heights)
-	_build_guaranteed_platforms(heights)
-	_relax_slopes(heights, 10)
-	_lock_special_cells(heights)
-	_relax_slopes(heights, 4)
-	_lock_special_cells(heights)
-	return heights
+			row.append(_cell(0, "", false))
+		grid.append(row)
+	# Broad mesas provide readable firing positions. Their stepped rims and sparse
+	# ramps make height useful without turning the board into visual noise.
+	_build_platform(grid, Rect2i(8, 7, 8, 8), 2, "south")
+	_build_platform(grid, Rect2i(25, 7, 8, 8), 3, "west")
+	_build_platform(grid, Rect2i(5, 24, 8, 8), 2, "east")
+	_build_platform(grid, Rect2i(28, 25, 8, 8), 3, "north")
+	# Two compact firebases overlook the final approach. They create enough
+	# readable 2x2 ranged slots for a mature build without sealing the central
+	# seven-cell corridor around the fire core.
+	_build_platform(grid, Rect2i(12, 23, 7, 6), 2, "east")
+	_build_platform(grid, Rect2i(22, 23, 7, 6), 2, "west")
+	for patch_index in 14:
+		var width := generator.randi_range(2, 5)
+		var height := generator.randi_range(2, 5)
+		var origin := Vector2i(generator.randi_range(2, GameDefs.BOARD_SIZE - width - 3), generator.randi_range(2, GameDefs.BOARD_SIZE - height - 3))
+		var level := generator.randi_range(1, GameDefs.MAX_TERRAIN_HEIGHT)
+		for y in range(origin.y, origin.y + height):
+			for x in range(origin.x, origin.x + width):
+				if abs(x - 20) <= 2 or abs(y - 20) <= 2 or (x >= 17 and x <= 23 and y >= 27):
+					continue
+				grid[y][x]["height"] = maxi(int(grid[y][x]["height"]), level)
+	_carve_guaranteed_routes(grid)
+	_mark_protected_cells(grid)
+	return grid
 
-static func _carve_guaranteed_routes(heights: Array) -> void:
-	for y in range(0, 18):
-		heights[y][12] = 0
-	for x in range(0, 14):
-		heights[12][x] = 0
-	for x in range(12, GameDefs.BOARD_SIZE):
-		heights[12][x] = 0
-	for y in range(18, GameDefs.BOARD_SIZE):
-		heights[y][12] = 0
-	for y in range(13, 17):
-		for x in range(11, 14):
-			heights[y][x] = 0
-	# Readable one-cell chokepoints make 1x1 melee constructs meaningful blockers.
-	for y in range(6, 11):
-		heights[y][11] = 1
-		heights[y][13] = 1
-	for y in range(20, 24):
-		heights[y][11] = 1
-		heights[y][13] = 1
-	for x in range(6, 11):
-		heights[11][x] = 1
-		heights[13][x] = 1
-	for x in range(15, 20):
-		heights[11][x] = 1
-		heights[13][x] = 1
+static func height_at(grid: Array, cell: Vector2i) -> int:
+	if not in_bounds(cell) or grid.is_empty():
+		return 0
+	var value: Variant = grid[cell.y][cell.x]
+	return int(value.get("height", 0)) if value is Dictionary else int(value)
 
-static func _relax_slopes(heights: Array, passes: int) -> void:
-	for _pass in passes:
-		var changed := false
-		for y in GameDefs.BOARD_SIZE:
-			for x in GameDefs.BOARD_SIZE:
-				var current := int(heights[y][x])
-				for direction in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
-					var neighbor: Vector2i = Vector2i(x, y) + direction
-					if neighbor.x < 0 or neighbor.y < 0 or neighbor.x >= GameDefs.BOARD_SIZE or neighbor.y >= GameDefs.BOARD_SIZE:
-						continue
-					var other := int(heights[neighbor.y][neighbor.x])
-					if current > other + 1:
-						heights[y][x] = other + 1
-						current = other + 1
-						changed = true
-		if not changed:
-			break
+static func slope_at(grid: Array, cell: Vector2i) -> String:
+	if not in_bounds(cell) or grid.is_empty():
+		return ""
+	var value: Variant = grid[cell.y][cell.x]
+	return str(value.get("slope", "")) if value is Dictionary else ""
 
-static func _lock_special_cells(heights: Array) -> void:
+static func protected_at(grid: Array, cell: Vector2i) -> bool:
+	if not in_bounds(cell) or grid.is_empty():
+		return false
+	var value: Variant = grid[cell.y][cell.x]
+	return bool(value.get("protected", false)) if value is Dictionary else GameDefs.is_core_cell(cell) or GameDefs.is_entry_cell(cell)
+
+static func in_bounds(cell: Vector2i) -> bool:
+	return cell.x >= 0 and cell.y >= 0 and cell.x < GameDefs.BOARD_SIZE and cell.y < GameDefs.BOARD_SIZE
+
+static func _cell(height: int, slope: String = "", protected: bool = false) -> Dictionary:
+	return {"height": clampi(height, 0, GameDefs.MAX_TERRAIN_HEIGHT), "slope": slope, "protected": protected}
+
+static func _build_platform(grid: Array, rect: Rect2i, level: int, ramp_side: String) -> void:
+	for y in range(rect.position.y, rect.end.y):
+		for x in range(rect.position.x, rect.end.x):
+			var edge := mini(mini(x - rect.position.x, rect.end.x - 1 - x), mini(y - rect.position.y, rect.end.y - 1 - y))
+			grid[y][x]["height"] = mini(level, edge + 1)
+	# A two-step stair reaches each major platform while the other edges remain
+	# destructible cliffs. A slope points from its high cell toward its lower cell.
+	var center := rect.position + rect.size / 2
+	var outward: Vector2i = GameDefs.SLOPE_DIRECTIONS[ramp_side]
+	for step in range(1, level + 1):
+		var high_cell := center - outward * (level - step)
+		if in_bounds(high_cell):
+			grid[high_cell.y][high_cell.x]["height"] = step
+			grid[high_cell.y][high_cell.x]["slope"] = ramp_side
+
+static func _carve_guaranteed_routes(grid: Array) -> void:
+	for y in GameDefs.BOARD_SIZE:
+		for x in range(19, 22):
+			grid[y][x] = _cell(0)
+	for x in GameDefs.BOARD_SIZE:
+		for y in range(19, 22):
+			grid[y][x] = _cell(0)
+	# A wider approach around the 5x5 core prevents a multi-cell melee construct
+	# from accidentally making every entry rely on breach routing.
+	for y in range(21, GameDefs.CORE_MAX.y + 1):
+		for x in range(17, 24):
+			grid[y][x] = _cell(0)
+
+static func _mark_protected_cells(grid: Array) -> void:
 	for y in range(GameDefs.CORE_MIN.y, GameDefs.CORE_MAX.y + 1):
 		for x in range(GameDefs.CORE_MIN.x, GameDefs.CORE_MAX.x + 1):
-			heights[y][x] = 0
+			grid[y][x] = _cell(0, "", true)
 	for entry in GameDefs.ENTRY_CELLS.values():
-		heights[entry.y][entry.x] = 0
-
-static func _build_guaranteed_platforms(heights: Array) -> void:
-	# Four readable 2x2 firing pads ensure every seed supports the full ranged roster.
-	# They sit beside, not on, the guaranteed ground lanes so they never become blockers.
-	var origins := [Vector2i(8, 5), Vector2i(5, 8), Vector2i(18, 8), Vector2i(15, 20)]
-	for origin in origins:
-		for y in range(origin.y - 1, origin.y + 3):
-			for x in range(origin.x - 1, origin.x + 3):
-				if x >= 0 and y >= 0 and x < GameDefs.BOARD_SIZE and y < GameDefs.BOARD_SIZE:
-					heights[y][x] = mini(int(heights[y][x]), 2)
-		for y in range(origin.y, origin.y + 2):
-			for x in range(origin.x, origin.x + 2):
-				heights[y][x] = 1
+		grid[entry.y][entry.x] = _cell(0, "", true)

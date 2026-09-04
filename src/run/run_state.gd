@@ -15,7 +15,9 @@ var current_floor := -1
 var current_node_id := ""
 var phase := "map"
 var maps: Array = []
-var heights: Array = []
+var terrain_grid: Array = []
+var terrain_revision := 0
+var terrain_undo_stack: Array = []
 var towers: Array = []
 var relic_ids: Array[String] = []
 var talent_ids: Array[String] = []
@@ -53,7 +55,7 @@ static func create_new(seed: String, pressure: int, catalog: ContentCatalog) -> 
 	run.pressure_level = clampi(pressure, 0, 10)
 	run.seed_streams = SeedStreams.new(run.seed_text)
 	run.maps = MapGenerator.generate_all(run.seed_streams, catalog)
-	run.heights = TerrainGenerator.generate(run.seed_streams)
+	run.terrain_grid = TerrainGenerator.generate(run.seed_streams)
 	run._apply_pressure_rules()
 	var starters := [
 		"anchor_bulwark", "phase_blade", "resonance_guard",
@@ -430,8 +432,42 @@ func make_talent_choices(catalog: ContentCatalog, count: int = 3) -> Array[Strin
 	return result
 
 func snapshot_before_battle() -> void:
+	terrain_undo_stack.clear()
 	prebattle_snapshot = {}
 	prebattle_snapshot = to_dict(false)
+
+func apply_terrain_command(command: Dictionary) -> Dictionary:
+	if phase != "prebattle":
+		return {"ok": false, "reason": "只能在战前阶段改造地形"}
+	var validation := RuleService.validate_terrain_command(terrain_grid, command, towers)
+	if not bool(validation.get("ok", false)):
+		return validation
+	var cost := int(validation.get("cost", 0))
+	if focus < cost:
+		return {"ok": false, "reason": "专注不足，需要%d" % cost, "cost": cost}
+	var result := RuleService.apply_terrain_command(terrain_grid, command, towers)
+	if not bool(result.get("ok", false)):
+		return result
+	focus -= cost
+	terrain_undo_stack.append({"changes": result.get("changes", []).duplicate(true), "refund": cost})
+	terrain_revision += 1
+	result["remaining_focus"] = focus
+	return result
+
+func undo_terrain_command() -> Dictionary:
+	if phase != "prebattle":
+		return {"ok": false, "reason": "战斗开始后不能撤销地形"}
+	if terrain_undo_stack.is_empty():
+		return {"ok": false, "reason": "没有可撤销的地形操作"}
+	var transaction: Dictionary = terrain_undo_stack.pop_back()
+	RuleService.undo_terrain_changes(terrain_grid, transaction.get("changes", []))
+	var refund := int(transaction.get("refund", 0))
+	focus += refund
+	terrain_revision += 1
+	return {"ok": true, "refund": refund, "remaining_focus": focus}
+
+func lock_prebattle_edits() -> void:
+	terrain_undo_stack.clear()
 
 func restore_prebattle() -> RunState:
 	if prebattle_snapshot.is_empty():
@@ -460,7 +496,9 @@ func to_dict(include_snapshot: bool = true) -> Dictionary:
 		"current_node_id": current_node_id,
 		"phase": phase,
 		"maps": maps,
-		"heights": heights,
+		"terrain_grid": terrain_grid,
+		"terrain_revision": terrain_revision,
+		"terrain_undo_stack": terrain_undo_stack,
 		"towers": towers,
 		"relic_ids": relic_ids,
 		"talent_ids": talent_ids,
@@ -484,7 +522,7 @@ static func from_dict(data: Dictionary) -> RunState:
 	var run := RunState.new()
 	for property_name in [
 		"seed_text", "pressure_level", "spirit", "max_spirit", "focus", "base_bandwidth", "resistance",
-		"depth", "experience", "act_index", "current_floor", "current_node_id", "phase", "maps", "heights",
+		"depth", "experience", "act_index", "current_floor", "current_node_id", "phase", "maps", "terrain_grid", "terrain_revision", "terrain_undo_stack",
 		"towers", "relic_ids", "talent_ids", "reward_queue", "deployment_counter", "next_tower_number",
 		"pending_node", "prebattle_snapshot", "run_complete", "victory", "pressure_multiplier",
 		"tower_damage_bonus", "repair_discount", "stats"

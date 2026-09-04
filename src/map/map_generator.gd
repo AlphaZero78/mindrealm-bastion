@@ -10,6 +10,18 @@ const NODE_WEIGHTS := {
 	"event": 11,
 	"unknown": 16,
 }
+const SERVICE_TYPES := ["camp", "workshop", "shop"]
+const NODE_INFO := {
+	"combat": ["常规威胁", "单位选择，可能发现收藏品"],
+	"elite": ["高威胁 · 含精英", "保证收藏品与大量专注"],
+	"camp": ["安全", "恢复、维修或免费升阶三选一"],
+	"workshop": ["安全", "反复维修或升级后主动离开"],
+	"shop": ["安全", "购买单位与未持有收藏品"],
+	"treasure": ["未知守护", "免费收藏品三选一"],
+	"event": ["结果预先说明", "用资源交换永久机会"],
+	"unknown": ["部分情报隐藏", "事件、战斗、商店或宝库"],
+	"boss": ["极高威胁", "击败本幕控制信号"],
+}
 
 static func generate_all(streams: SeedStreams, catalog: ContentCatalog) -> Array:
 	var result: Array = []
@@ -24,27 +36,30 @@ static func _generate_act(act_index: int, streams: SeedStreams, catalog: Content
 	var boss_options: Array = act_data["bosses"]
 	var boss_id := str(boss_options[streams.rng_at("boss_%d" % act_index, 0).randi_range(0, boss_options.size() - 1)])
 	var floors: Array = []
-	var used_events: Array[String] = []
+	# Topology is generated before type assignment. Stable node ids then own their
+	# random stream, so adding a tooltip or hovering never changes later results.
 	for floor_index in floor_count:
 		var floor_nodes: Array = []
-		var lanes: Array[int] = _lanes_for_floor(act_index, floor_index, floor_count, streams)
-		for lane in lanes:
-			var node_type: String = _node_type_for(act_index, floor_index, floor_count, streams)
-			var node := {
+		for lane in _lanes_for_floor(act_index, floor_index, floor_count, streams):
+			floor_nodes.append({
 				"id": "a%d_f%d_l%d" % [act_index + 1, floor_index + 1, lane],
 				"act": act_index,
 				"floor": floor_index,
 				"lane": lane,
-				"type": node_type,
-				"display_type": node_type,
+				"type": "",
+				"display_type": "",
+				"map_icon_id": "",
 				"connections": [],
 				"completed": false,
 				"available": floor_index == 0,
-			}
-			_populate_payload(node, boss_id, streams, catalog, used_events)
-			floor_nodes.append(node)
+			})
 		floors.append(floor_nodes)
 	_connect_floors(floors)
+	_assign_node_types(floors, act_index, streams)
+	var used_events: Array[String] = []
+	for floor_nodes in floors:
+		for node in floor_nodes:
+			_populate_payload(node, boss_id, streams, catalog, used_events)
 	return {
 		"id": act_id,
 		"name": GameDefs.ACT_NAMES[act_index],
@@ -56,7 +71,7 @@ static func _generate_act(act_index: int, streams: SeedStreams, catalog: Content
 	}
 
 static func _lanes_for_floor(act_index: int, floor_index: int, floor_count: int, streams: SeedStreams) -> Array[int]:
-	if floor_index == floor_count - 1:
+	if floor_index >= floor_count - 2:
 		return [2]
 	if act_index == 0 and floor_index == 0:
 		return [0, 1, 3, 4]
@@ -74,17 +89,36 @@ static func _lanes_for_floor(act_index: int, floor_index: int, floor_count: int,
 	selected.sort()
 	return selected
 
-static func _node_type_for(act_index: int, floor_index: int, floor_count: int, streams: SeedStreams) -> String:
-	if floor_index == floor_count - 1:
-		return "boss"
-	if floor_index == floor_count - 2:
-		return "camp"
-	var treasure_floor := int(floor(float(floor_count) * 0.48))
-	if floor_index == treasure_floor:
-		return "treasure"
-	if floor_index == 0:
-		return "combat"
-	var generator := streams.rng_at("map_type_%d" % act_index, floor_index * 7 + generator_offset(act_index))
+static func _assign_node_types(floors: Array, act_index: int, streams: SeedStreams) -> void:
+	var floor_count := floors.size()
+	var treasure_floor := clampi(int(floor(float(floor_count) * 0.48)), 5, floor_count - 4)
+	for floor_index in floor_count:
+		var nodes: Array = floors[floor_index]
+		if floor_index == floor_count - 1:
+			_set_node_type(nodes[0], "boss")
+			continue
+		if floor_index == floor_count - 2:
+			_set_node_type(nodes[0], "camp")
+			continue
+		if act_index == 0 and floor_index == 0:
+			for node in nodes:
+				_set_node_type(node, "combat")
+			continue
+		for node in nodes:
+			var type_id := _sample_node_type(node, floor_index, streams)
+			# The mandatory pre-boss camp must never be preceded by another service
+			# node on any legal route.
+			if floor_index == floor_count - 3 and type_id in SERVICE_TYPES:
+				type_id = "combat" if int(node["lane"]) % 2 == 0 else "event"
+			if type_id in SERVICE_TYPES and _has_incoming_service(node, floors, floor_index):
+				type_id = "combat" if int(node["lane"]) % 2 == 0 else "event"
+			_set_node_type(node, type_id)
+		if floor_index == treasure_floor:
+			var treasure_index := streams.rng_at("treasure_node_%d" % act_index, 0).randi_range(0, nodes.size() - 1)
+			_set_node_type(nodes[treasure_index], "treasure")
+		_ensure_floor_diversity(nodes, floor_index, treasure_floor)
+
+static func _sample_node_type(node: Dictionary, floor_index: int, streams: SeedStreams) -> String:
 	var filtered := NODE_WEIGHTS.duplicate()
 	if floor_index < 4:
 		filtered.erase("elite")
@@ -93,7 +127,8 @@ static func _node_type_for(act_index: int, floor_index: int, floor_count: int, s
 	var total := 0
 	for weight in filtered.values():
 		total += int(weight)
-	var roll := generator.randi_range(1, total)
+	var node_id := str(node["id"])
+	var roll := streams.rng_at("map_type_%s" % node_id, 0).randi_range(1, total)
 	var running := 0
 	for type_id in filtered:
 		running += int(filtered[type_id])
@@ -101,8 +136,37 @@ static func _node_type_for(act_index: int, floor_index: int, floor_count: int, s
 			return str(type_id)
 	return "combat"
 
-static func generator_offset(act_index: int) -> int:
-	return 101 + act_index * 1009
+static func _has_incoming_service(node: Dictionary, floors: Array, floor_index: int) -> bool:
+	if floor_index <= 0:
+		return false
+	for previous in floors[floor_index - 1]:
+		if previous["connections"].has(node["id"]) and str(previous.get("type", "")) in SERVICE_TYPES:
+			return true
+	return false
+
+static func _ensure_floor_diversity(nodes: Array, floor_index: int, treasure_floor: int) -> void:
+	if nodes.size() < 2:
+		return
+	var first_type := str(nodes[0]["type"])
+	var all_same := true
+	for node in nodes:
+		if str(node["type"]) != first_type:
+			all_same = false
+			break
+	if not all_same:
+		return
+	var replacement := "event" if first_type != "event" else "combat"
+	if floor_index == treasure_floor and first_type == "treasure":
+		replacement = "combat"
+	_set_node_type(nodes[-1], replacement)
+
+static func _set_node_type(node: Dictionary, type_id: String) -> void:
+	node["type"] = type_id
+	node["display_type"] = type_id
+	node["map_icon_id"] = type_id
+	var info: Array = NODE_INFO.get(type_id, ["未知", "未知收益"])
+	node["risk_text"] = info[0]
+	node["reward_text"] = info[1]
 
 static func _populate_payload(node: Dictionary, boss_id: String, streams: SeedStreams, catalog: ContentCatalog, used_events: Array[String]) -> void:
 	var act_number := int(node["act"]) + 1
@@ -158,16 +222,13 @@ static func _connect_floors(floors: Array) -> void:
 			incoming[str(next_node["id"])] = 0
 		for node in current:
 			var ranked := next.duplicate()
-			ranked.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-				return abs(int(a["lane"]) - int(node["lane"])) < abs(int(b["lane"]) - int(node["lane"]))
-			)
-			var link_count := 1
-			if ranked.size() > 1 and abs(int(ranked[1]["lane"]) - int(node["lane"])) <= 1:
-				link_count = 2
+			ranked.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return abs(int(a["lane"]) - int(node["lane"])) < abs(int(b["lane"]) - int(node["lane"])))
+			var link_count := 2 if ranked.size() > 1 and abs(int(ranked[1]["lane"]) - int(node["lane"])) <= 1 else 1
 			for i in link_count:
 				var target_id := str(ranked[i]["id"])
-				node["connections"].append(target_id)
-				incoming[target_id] = int(incoming[target_id]) + 1
+				if not node["connections"].has(target_id):
+					node["connections"].append(target_id)
+					incoming[target_id] = int(incoming[target_id]) + 1
 		for next_node in next:
 			var target_id := str(next_node["id"])
 			if int(incoming[target_id]) > 0:

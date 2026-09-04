@@ -20,7 +20,7 @@ static func load_run(path: String = RUN_PATH) -> RunState:
 	if envelope.is_empty():
 		return null
 	if int(envelope.get("schema_version", 0)) != GameDefs.SAVE_SCHEMA_VERSION:
-		push_error("不支持的存档版本：%s" % envelope.get("schema_version", 0))
+		clear_run(path)
 		return null
 	var payload: Dictionary = envelope.get("payload", {})
 	var payload_text := JSON.stringify(payload)
@@ -37,9 +37,20 @@ static func clear_run(path: String = RUN_PATH) -> void:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
 static func load_profile(path: String = PROFILE_PATH) -> Dictionary:
-	var defaults := {"memory_shards": 0, "max_pressure": 0, "discovered": {}, "boss_archives": [], "tutorial_skipped": false}
+	var defaults := {"schema_version": GameDefs.SAVE_SCHEMA_VERSION, "memory_shards": 0, "max_pressure": 0, "discovered": {}, "boss_archives": [], "tutorial_skipped": false, "dev_reset_notice_pending": false}
 	var data := _read_dictionary(path)
 	if data.is_empty():
+		var run_envelope := _read_dictionary(RUN_PATH)
+		if not run_envelope.is_empty() and int(run_envelope.get("schema_version", 0)) != GameDefs.SAVE_SCHEMA_VERSION:
+			clear_run()
+			defaults["dev_reset_notice_pending"] = true
+			save_profile(defaults, path)
+		return defaults
+	if int(data.get("schema_version", 0)) != GameDefs.SAVE_SCHEMA_VERSION:
+		clear_run()
+		clear_profile(path)
+		defaults["dev_reset_notice_pending"] = true
+		save_profile(defaults, path)
 		return defaults
 	for key in defaults:
 		if not data.has(key):
@@ -47,7 +58,12 @@ static func load_profile(path: String = PROFILE_PATH) -> Dictionary:
 	return data
 
 static func save_profile(profile: Dictionary, path: String = PROFILE_PATH) -> bool:
+	profile["schema_version"] = GameDefs.SAVE_SCHEMA_VERSION
 	return _atomic_write(path, JSON.stringify(profile, "  "))
+
+static func clear_profile(path: String = PROFILE_PATH) -> void:
+	if FileAccess.file_exists(path):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
 static func _atomic_write(path: String, text: String) -> bool:
 	var absolute := ProjectSettings.globalize_path(path)
