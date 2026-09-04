@@ -46,6 +46,10 @@ foreach ($relative in $licenseRoots) {
 if (-not $SkipGodotLoad) {
     $versions = & (Join-Path $PSScriptRoot 'versions.ps1')
     $godot = Join-Path $versions.GodotFolder $versions.GodotExe
+	# A clean checkout has no global-script-class cache yet. Import first so the
+	# standalone asset test resolves class_name dependencies deterministically.
+	& $godot --headless --path $projectRoot --editor --quit
+	if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     & $godot --headless --path $projectRoot --script 'res://development/tests/asset_test.gd'
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 }
