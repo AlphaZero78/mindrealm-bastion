@@ -17,7 +17,9 @@ New-Item -ItemType Directory -Force -Path $testUser | Out-Null
 $originalAppData = $env:APPDATA
 $env:APPDATA = $testUser
 try {
-    if (-not $SkipImport) {
+	& (Join-Path $PSScriptRoot 'verify_audio.ps1')
+	if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+	if (-not $SkipImport) {
         & $godot --headless --path $projectRoot --editor --quit
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     }

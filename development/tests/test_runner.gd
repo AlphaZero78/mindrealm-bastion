@@ -12,6 +12,8 @@ func _initialize() -> void:
 	test_terrain_and_paths()
 	test_deployment_rules()
 	test_los_and_combat_math()
+	test_enemy_groups_and_danger()
+	test_camera_controls()
 	test_bandwidth_order()
 	test_maintenance_upgrade_and_fusion()
 	test_reward_order()
@@ -58,10 +60,10 @@ func test_seed_reproduction() -> void:
 	var first := RunState.create_new("固定复现-42", 0, catalog)
 	var second := RunState.create_new("固定复现-42", 0, catalog)
 	expect(JSON.stringify(first.maps) == JSON.stringify(second.maps), "同种子地图不一致")
-	expect(JSON.stringify(first.heights) == JSON.stringify(second.heights), "同种子地形不一致")
+	expect(JSON.stringify(first.terrain_grid) == JSON.stringify(second.terrain_grid), "同种子地形不一致")
 	expect(first.current_act()["boss_id"] == second.current_act()["boss_id"], "同种子首领不一致")
 	var third := RunState.create_new("固定复现-43", 0, catalog)
-	expect(JSON.stringify(first.maps) != JSON.stringify(third.maps) or JSON.stringify(first.heights) != JSON.stringify(third.heights), "不同种子应产生差异")
+	expect(JSON.stringify(first.maps) != JSON.stringify(third.maps) or JSON.stringify(first.terrain_grid) != JSON.stringify(third.terrain_grid), "不同种子应产生差异")
 
 func test_maps_1000_seeds() -> void:
 	for seed_index in 1000:
@@ -73,13 +75,19 @@ func test_maps_1000_seeds() -> void:
 			var floors: Array = act["floors"]
 			expect(floors.size() == GameDefs.ACT_FLOORS[act_index], "种子%d第%d幕层数错误" % [seed_index, act_index + 1])
 			expect(floors[-1].size() == 1 and floors[-1][0]["type"] == "boss", "种子%d第%d幕末层不是唯一首领" % [seed_index, act_index + 1])
-			expect(floors[-2].size() >= 2 and floors[-2][0]["type"] == "camp", "种子%d第%d幕首领前不是营地" % [seed_index, act_index + 1])
+			expect(floors[-2].size() == 1 and floors[-2][0]["type"] == "camp", "种子%d第%d幕首领前不是唯一营地" % [seed_index, act_index + 1])
 			var treasure_found := false
 			for floor_index in floors.size():
 				var floor_nodes: Array = floors[floor_index]
-				if floor_index < floors.size() - 1:
+				if floor_index < floors.size() - 2:
 					expect(floor_nodes.size() >= 2 and floor_nodes.size() <= 4, "种子%d第%d幕第%d层节点数越界" % [seed_index, act_index + 1, floor_index + 1])
+				if floor_nodes.size() > 1 and not (act_index == 0 and floor_index == 0):
+					var types: Dictionary = {}
+					for diversity_node in floor_nodes:
+						types[str(diversity_node["type"])] = true
+					expect(types.size() >= 2, "种子%d第%d幕第%d层节点类型完全相同" % [seed_index, act_index + 1, floor_index + 1])
 				for node in floor_nodes:
+					expect(not str(node.get("map_icon_id", "")).is_empty(), "路线节点缺少图标ID")
 					if floor_index < 4:
 						expect(str(node["type"]) != "elite", "前四层出现精英")
 					if str(node["type"]) == "treasure":
@@ -93,6 +101,13 @@ func test_maps_1000_seeds() -> void:
 							if previous["connections"].has(node["id"]):
 								incoming = true
 						expect(incoming, "节点没有上层入口")
+				if floor_index > 0:
+					for previous in floors[floor_index - 1]:
+						for node in floor_nodes:
+							if previous["connections"].has(node["id"]):
+								var previous_service := str(previous["type"]) in MapGenerator.SERVICE_TYPES
+								var current_service := str(node["type"]) in MapGenerator.SERVICE_TYPES
+								expect(not (previous_service and current_service), "同一路线连续出现服务节点")
 			expect(treasure_found, "种子%d第%d幕缺少保证宝库" % [seed_index, act_index + 1])
 		expect(maps[0]["floors"][0].size() == 4, "第一幕第一层必须有四节点")
 		for node in maps[0]["floors"][0]:
@@ -100,56 +115,134 @@ func test_maps_1000_seeds() -> void:
 
 func test_terrain_and_paths() -> void:
 	for seed_index in 50:
-		var heights := TerrainGenerator.generate(SeedStreams.new("地形-%d" % seed_index))
-		expect(heights.size() == 25 and heights[0].size() == 25, "地形必须为25×25")
+		var grid := TerrainGenerator.generate(SeedStreams.new("地形-%d" % seed_index))
+		expect(grid.size() == 41 and grid[0].size() == 41, "地形必须为41×41")
 		for y in GameDefs.BOARD_SIZE:
 			for x in GameDefs.BOARD_SIZE:
-				var height := int(heights[y][x])
-				expect(height >= 0 and height <= 3, "地形高度越界")
-				for direction in [Vector2i.RIGHT, Vector2i.DOWN]:
-					var neighbor: Vector2i = Vector2i(x, y) + direction
-					if neighbor.x < 25 and neighbor.y < 25:
-						expect(absi(height - int(heights[neighbor.y][neighbor.x])) <= 1, "相邻高度差超过1")
+				var height := TerrainGenerator.height_at(grid, Vector2i(x, y))
+				expect(height >= 0 and height <= 4, "地形高度越界")
 		for entry in GameDefs.ENTRY_CELLS.values():
-			var path := RuleService.path_to_core(entry, heights, [])
+			var path := RuleService.path_to_core(entry, grid, [])
 			expect(not path.is_empty() and GameDefs.is_core_cell(path[-1]), "入口必须可达火种")
+	var command_run := RunState.create_new("地形事务", 0, catalog)
+	command_run.phase = "prebattle"
+	var brush_cells := [[2, 2], [3, 2], [2, 3], [3, 3]]
+	var before := command_run.terrain_grid.duplicate(true)
+	var preview := RuleService.validate_terrain_command(command_run.terrain_grid, {"tool":"raise", "cells":brush_cells}, command_run.towers)
+	expect(preview.get("ok", false) and int(preview.get("cost", 0)) == 8, "批量地形事务应按实际四格计费")
+	var applied := command_run.apply_terrain_command({"tool":"raise", "cells":brush_cells})
+	expect(applied.get("ok", false) and command_run.terrain_revision == 1, "地形事务应一次提交并更新版本")
+	var undone := command_run.undo_terrain_command()
+	expect(undone.get("ok", false) and command_run.terrain_grid == before and command_run.focus == 99, "撤销地形事务应原额退款")
+	expect(not RuleService.validate_terrain_command(command_run.terrain_grid, {"tool":"raise", "cells":[[GameDefs.CORE_MIN.x, GameDefs.CORE_MIN.y]]}, command_run.towers).get("ok", false), "保护格不能被笔刷修改")
+	var edge_grid := make_flat_grid()
+	edge_grid[10][10]["height"] = 1
+	edge_grid[10][10]["slope"] = "east"
+	var ramp_edge := RuleService.path_edge_info(Vector2i(10, 10), Vector2i(11, 10), edge_grid)
+	expect(ramp_edge["passable"] and is_equal_approx(float(ramp_edge["cost"]), 1.25), "正确朝向的一级斜坡应双向通行")
+	edge_grid[10][10]["slope"] = "north"
+	var cliff_edge := RuleService.path_edge_info(Vector2i(10, 10), Vector2i(11, 10), edge_grid)
+	expect(not cliff_edge["passable"] and cliff_edge["high_cell"] == [10, 10], "错误朝向的高差边缘应形成可破坏峭壁")
+	var barrier_run := RunState.create_new("峭壁永久损坏", 0, catalog)
+	barrier_run.terrain_grid[10][10]["height"] = 2
+	barrier_run.terrain_grid[10][10]["slope"] = ""
+	var barrier_sim := BattleSimulation.new()
+	barrier_sim.initialize(barrier_run, catalog, barrier_run.maps[0]["floors"][0][0])
+	var revision_before := barrier_run.terrain_revision
+	barrier_sim._attack_barrier({"attack":1000.0, "ability":"siege", "name":"测试攻城体"}, Vector2i(10, 10))
+	expect(TerrainGenerator.height_at(barrier_run.terrain_grid, Vector2i(10, 10)) == 1 and barrier_run.terrain_revision == revision_before + 1, "峭壁被击毁后应永久降低高侧地形并刷新路径")
 
 func test_deployment_rules() -> void:
 	var run := RunState.create_new("部署规则", 0, catalog)
 	var melee: Dictionary = run.towers[0]
 	var ranged: Dictionary = run.towers[3]
-	expect(RuleService.deployment_error(melee, Vector2i(-1, 0), run.heights, run.towers, 0, 20) == "占地超出战场", "越界原因错误")
-	expect(RuleService.deployment_error(melee, GameDefs.CORE_MIN, run.heights, run.towers, 0, 20) == "醒觉火种保护区域不可部署", "火种保护原因错误")
-	expect(RuleService.deployment_error(melee, GameDefs.ENTRY_CELLS["north"], run.heights, run.towers, 0, 20) == "敌人入口不可部署", "入口原因错误")
-	var high_cell := find_cell_with_height(run.heights, 1)
+	expect(RuleService.deployment_error(melee, Vector2i(-1, 0), run.terrain_grid, run.towers, 0, 20) == "占地超出战场", "越界原因错误")
+	expect(RuleService.deployment_error(melee, GameDefs.CORE_MIN, run.terrain_grid, run.towers, 0, 20) == "醒觉火种保护区域不可部署", "火种保护原因错误")
+	expect(RuleService.deployment_error(melee, GameDefs.ENTRY_CELLS["north"], run.terrain_grid, run.towers, 0, 20) == "敌人入口不可部署", "入口原因错误")
+	var high_cell := find_cell_with_height(run.terrain_grid, 1, melee.get("footprint", [2, 2]))
 	expect(high_cell != Vector2i(-1, -1), "应存在高台")
-	expect(RuleService.deployment_error(melee, high_cell, run.heights, run.towers, 0, 20).contains("近战"), "近战高台原因错误")
-	var zero_cell := Vector2i(12, 5)
-	expect(RuleService.deployment_error(ranged, zero_cell, run.heights, run.towers, 0, 20).contains("远程"), "远程地面原因错误")
-	expect(RuleService.deployment_error(melee, zero_cell, run.heights, run.towers, 19, 20).contains("带宽不足"), "带宽不足原因错误")
+	expect(RuleService.deployment_error(melee, high_cell, run.terrain_grid, run.towers, 0, 20).contains("近战"), "近战高台原因错误")
+	var zero_cell := find_cell_with_height(run.terrain_grid, 0, melee.get("footprint", [2, 2]))
+	expect(RuleService.deployment_error(ranged, zero_cell, run.terrain_grid, run.towers, 0, 20).contains("远程"), "远程地面原因错误")
+	expect(RuleService.deployment_error(melee, zero_cell, run.terrain_grid, run.towers, 19, 20).contains("带宽不足"), "带宽不足原因错误")
 	melee["deployed"] = true
 	melee["cell"] = [zero_cell.x, zero_cell.y]
-	expect(RuleService.deployment_error(run.towers[1], zero_cell, run.heights, run.towers, 3, 20).contains("占用"), "重叠占用原因错误")
-	var terrain_check := RuleService.can_change_terrain(run.heights, zero_cell, 1, run.towers)
+	expect(RuleService.deployment_error(run.towers[1], zero_cell, run.terrain_grid, run.towers, 3, 20).contains("占用"), "重叠占用原因错误")
+	var terrain_check := RuleService.can_change_terrain(run.terrain_grid, zero_cell, 1, run.towers)
 	expect(not terrain_check["ok"] and str(terrain_check["reason"]).contains("占用"), "占用格不能改地形")
-	expect(not RuleService.can_change_terrain(run.heights, GameDefs.CORE_MIN, 1, run.towers)["ok"], "火种不能改地形")
+	expect(not RuleService.can_change_terrain(run.terrain_grid, GameDefs.CORE_MIN, 1, run.towers)["ok"], "火种不能改地形")
 
 func test_los_and_combat_math() -> void:
-	var flat: Array = []
-	for _y in 25:
-		var row: Array = []
-		row.resize(25)
-		row.fill(0)
-		flat.append(row)
+	var flat := make_flat_grid()
 	expect(RuleService.has_line_of_sight(Vector2i(2, 2), Vector2(8, 2), flat, 1), "平地视线应畅通")
-	flat[2][5] = 3
+	flat[2][5]["height"] = 3
 	expect(not RuleService.has_line_of_sight(Vector2i(2, 2), Vector2(8, 2), flat, 1), "更高地形应遮挡直射")
 	var ranged := {"role":"ranged", "range":10.0}
-	expect(is_equal_approx(RuleService.attack_range(ranged, 3), 13.0), "高度3射程应加30%")
+	expect(is_equal_approx(RuleService.attack_range(ranged, 4), 13.2), "高地四级射程应加32%")
+	flat[2][5]["height"] = 0
+	flat[2][2]["height"] = 4
+	var high_solution := RuleService.solve_attack({"range":10.0, "attack_kind":"direct"}, Vector2i(2, 2), Vector2(8, 2), 0, flat)
+	expect(high_solution["can_attack"] and is_equal_approx(float(high_solution["range"]), 13.2) and is_equal_approx(float(high_solution["height_damage_multiplier"]), 1.4), "统一攻击判定应应用四级高地射程和伤害")
+	var low_solution := RuleService.solve_attack({"range":20.0, "attack_kind":"indirect"}, Vector2i(8, 2), Vector2(2, 2), 4, flat, {"pierce":1.0})
+	expect(is_equal_approx(float(low_solution["protection"]), 0.24), "穿甲应只减半低打高保护")
 	expect(is_equal_approx(RuleService.damage_after_armor(100, 999, 0), 5.0), "有效攻击至少造成攻击力5%")
 	expect(RuleService.enemy_damage_to_tower(20, 999, 0, 3) >= 1.0, "攻击单位至少造成1伤害")
 	var pressure := RuleService.death_pressure(20.0, 6.0, 3.0)
 	expect(is_equal_approx(float(pressure["transmitted"]), 10.0) and is_equal_approx(float(pressure["damage"]), 7.0), "死亡压力平方衰减计算错误")
+
+func make_flat_grid() -> Array:
+	var grid: Array = []
+	for _y in GameDefs.BOARD_SIZE:
+		var row: Array = []
+		for _x in GameDefs.BOARD_SIZE:
+			row.append({"height":0, "slope":"", "protected":false})
+		grid.append(row)
+	return grid
+
+func test_enemy_groups_and_danger() -> void:
+	var cases := [
+		{"type":"combat", "groups":3, "special":"", "special_group":-1},
+		{"type":"elite", "groups":4, "special":"elite", "special_group":2},
+		{"type":"boss", "groups":5, "special":"boss", "special_group":3},
+	]
+	for battle_case in cases:
+		var group_run := RunState.create_new("敌群-%s" % battle_case["type"], 0, catalog)
+		var battle_node := {"id":"group_%s" % battle_case["type"], "type":battle_case["type"], "floor":16, "boss_id":"noise_hive"}
+		var group_sim := BattleSimulation.new()
+		group_sim.initialize(group_run, catalog, battle_node)
+		expect(group_sim.group_count == battle_case["groups"] and group_sim.group_preview.size() == battle_case["groups"], "%s战敌群数量错误" % battle_case["type"])
+		for preview in group_sim.group_preview:
+			expect(int(preview["count"]) > 0 and not preview["entries"].is_empty(), "%s战的每群都应提前显示数量与入口" % battle_case["type"])
+		if not str(battle_case["special"]).is_empty():
+			var special_items := group_sim.planned.filter(func(item: Dictionary) -> bool: return str(item.get("kind", "")) == battle_case["special"])
+			expect(special_items.size() == 1 and int(special_items[0]["group"]) == battle_case["special_group"], "%s应出现在指定敌群" % battle_case["special"])
+	var danger_run := RunState.create_new("危险度平滑", 0, catalog)
+	var danger_sim := BattleSimulation.new()
+	danger_sim.initialize(danger_run, catalog, {"id":"danger", "type":"combat", "floor":0})
+	danger_sim.enemies.clear()
+	for _index in 60:
+		danger_sim.enemies.append({"position":GameDefs.CORE_CENTER, "boss":false, "elite":false})
+	danger_run.spirit = 0.0
+	danger_sim._update_danger(1.5)
+	expect(is_equal_approx(danger_sim.danger_level, 1.0), "危险度上升应在1.5秒内平滑到目标")
+	danger_sim.enemies.clear()
+	danger_run.spirit = danger_run.max_spirit
+	danger_sim._update_danger(1.0)
+	expect(is_equal_approx(danger_sim.danger_level, 0.75), "危险度下降应按4秒缓慢回落")
+
+func test_camera_controls() -> void:
+	var view := BattlefieldView.new()
+	for yaw in [0.0, 45.0, 90.0, 225.0, 359.0]:
+		var vectors := BattlefieldView.screen_pan_vectors(yaw)
+		var right := BattlefieldView.screen_relative_pan_delta(yaw, Vector2(1.0, 0.0))
+		var up := BattlefieldView.screen_relative_pan_delta(yaw, Vector2(0.0, -1.0))
+		expect(right.dot(vectors["right"]) > 0.999, "视角%.0f°时D应始终向屏幕右方移动" % yaw)
+		expect(up.dot(vectors["up"]) > 0.999, "视角%.0f°时W应始终向屏幕上方移动" % yaw)
+		expect(absf(right.dot(up)) < 0.001, "视角%.0f°时屏幕移动轴应保持正交" % yaw)
+	view.set_camera_yaw(359.0)
+	view.rotate_camera(1, 2.0 / 90.0)
+	expect(is_equal_approx(view.camera_yaw_degrees, 1.0), "Q/E连续旋转应在360°正确环绕")
+	view.free()
 
 func test_bandwidth_order() -> void:
 	var towers: Array = []
@@ -282,7 +375,7 @@ func find_legal_cell(tower: Dictionary, run: RunState) -> Vector2i:
 	for y in GameDefs.BOARD_SIZE:
 		for x in GameDefs.BOARD_SIZE:
 			var cell := Vector2i(x, y)
-			if RuleService.deployment_error(tower, cell, run.heights, run.towers, run.deployed_bandwidth(), run.effective_bandwidth(), str(tower.get("instance_id", ""))).is_empty():
+			if RuleService.deployment_error(tower, cell, run.terrain_grid, run.towers, run.deployed_bandwidth(), run.effective_bandwidth(), str(tower.get("instance_id", ""))).is_empty():
 				candidates.append(cell)
 	if candidates.is_empty():
 		return Vector2i(-1, -1)
@@ -291,9 +384,16 @@ func find_legal_cell(tower: Dictionary, run: RunState) -> Vector2i:
 	)
 	return candidates[0]
 
-func find_cell_with_height(heights: Array, wanted: int) -> Vector2i:
+func find_cell_with_height(terrain_grid: Array, wanted: int, footprint: Array = [1, 1]) -> Vector2i:
 	for y in GameDefs.BOARD_SIZE:
 		for x in GameDefs.BOARD_SIZE:
-			if int(heights[y][x]) == wanted and not GameDefs.is_entry_cell(Vector2i(x, y)) and not GameDefs.is_core_cell(Vector2i(x, y)):
-				return Vector2i(x, y)
+			var origin := Vector2i(x, y)
+			var valid := true
+			for footprint_y in int(footprint[1]):
+				for footprint_x in int(footprint[0]):
+					var cell := origin + Vector2i(footprint_x, footprint_y)
+					if not TerrainGenerator.in_bounds(cell) or TerrainGenerator.height_at(terrain_grid, cell) != wanted or TerrainGenerator.protected_at(terrain_grid, cell):
+						valid = false
+			if valid:
+				return origin
 	return Vector2i(-1, -1)

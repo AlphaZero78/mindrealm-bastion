@@ -11,9 +11,10 @@ func _initialize() -> void:
 	catalog = ContentCatalog.create_default()
 	var requested_seeds := selected_seeds()
 	for seed_index in requested_seeds:
+		var battles_before := total_battles
 		var run := RunState.create_new("参考策略-%d" % seed_index, 0, catalog)
 		var terminal := play_run(run)
-		print("REFERENCE_SEED seed=%d terminal=%s victory=%s battles=%d" % [seed_index, terminal, run.victory, total_battles])
+		print("REFERENCE_SEED seed=%d terminal=%s victory=%s battles=%d" % [seed_index, terminal, run.victory, total_battles - battles_before])
 		if not terminal or not run.victory:
 			var deployed := run.towers.filter(func(tower: Dictionary) -> bool: return bool(tower.get("deployed", false))).size()
 			var formation: Array[String] = []
@@ -78,9 +79,17 @@ func choose_best_node(nodes: Array, run: RunState) -> Dictionary:
 	var best_score := -999
 	for node in nodes:
 		var type_id := run.resolved_node_type(node)
-		var score: int = int({"camp":90, "treasure":82, "workshop":74, "event":66, "shop":58, "unknown":52, "combat":44, "elite":24, "boss":100}.get(type_id, 0))
-		if run.spirit < run.max_spirit * 0.55 and type_id == "camp":
-			score += 100
+		# A viable standard build must deliberately earn units and depth. Safe
+		# services are valuable when they solve a current problem, not by default.
+		var score: int = int({"camp":30, "treasure":92, "workshop":54, "event":62, "shop":56, "unknown":50, "combat":76, "elite":42, "boss":100}.get(type_id, 0))
+		if type_id == "camp" and run.spirit < run.max_spirit * 0.70:
+			score += 110
+		if type_id == "workshop" and run.towers.any(func(tower: Dictionary) -> bool: return float(tower.get("durability", 0.0)) < float(tower.get("max_durability", 1.0)) * 0.75):
+			score += 55
+		if type_id == "shop" and run.focus >= 120:
+			score += 25
+		if type_id == "elite" and run.spirit >= run.max_spirit * 0.82:
+			score += 46
 		if score > best_score:
 			best_score = score
 			best = node
@@ -167,7 +176,7 @@ func find_legal_cell(tower: Dictionary, run: RunState) -> Vector2i:
 	for y in GameDefs.BOARD_SIZE:
 		for x in GameDefs.BOARD_SIZE:
 			var cell := Vector2i(x, y)
-			if RuleService.deployment_error(tower, cell, run.heights, run.towers, run.deployed_bandwidth(), run.effective_bandwidth(), str(tower.get("instance_id", ""))).is_empty():
+			if RuleService.deployment_error(tower, cell, run.terrain_grid, run.towers, run.deployed_bandwidth(), run.effective_bandwidth(), str(tower.get("instance_id", ""))).is_empty():
 				candidates.append(cell)
 	if candidates.is_empty():
 		return Vector2i(-1, -1)
@@ -181,7 +190,7 @@ func find_legal_cell(tower: Dictionary, run: RunState) -> Vector2i:
 func position_score(cell: Vector2i, tower: Dictionary, run: RunState) -> float:
 	var role := str(tower.get("role", ""))
 	if role == "support":
-		return 80.0 - Vector2(cell).distance_to(Vector2(12, 13)) * 4.0
+		return 80.0 - Vector2(cell).distance_to(micro_position(Vector2(12, 13))) * 4.0
 	var active_entries := entry_targets(run, role == "melee")
 	var role_index := 0
 	for other in run.towers:
@@ -193,34 +202,37 @@ func position_score(cell: Vector2i, tower: Dictionary, run: RunState) -> float:
 	# ranged constructs there while preserving at least one ranged lane anchor.
 	var boss_central := run.resolved_node_type(run.pending_node) == "boss" and (boss_id != "zero_frequency_mind" or role_index < 6)
 	if role == "ranged" and (boss_central or role_index < run.act_index + 1):
-		target = Vector2(12, 14)
+		target = micro_position(Vector2(12, 14))
 	if role == "melee":
 		return 120.0 - Vector2(cell).distance_to(target) * 9.0
-	var height := int(run.heights[cell.y][cell.x])
+	var height := TerrainGenerator.height_at(run.terrain_grid, cell)
 	var los_bonus := 0.0
-	if str(tower.get("attack_kind", "direct")) != "direct" or RuleService.has_line_of_sight(cell, target, run.heights, height):
+	if str(tower.get("attack_kind", "direct")) != "direct" or RuleService.has_line_of_sight(cell, target, run.terrain_grid, height):
 		los_bonus = 200.0
 	return los_bonus + float(height) * 8.0 - Vector2(cell).distance_to(target) * 7.0 + Vector2(cell).distance_to(GameDefs.CORE_CENTER)
 
 func entry_targets(run: RunState, melee: bool) -> Array[Vector2]:
 	var near := 8.0 if melee else 5.0
 	var far := 16.0 if melee else 19.0
-	var result: Array[Vector2] = [Vector2(12, near)]
+	var result: Array[Vector2] = [micro_position(Vector2(12, near))]
 	if run.act_index == 0 and run.current_floor >= 4:
 		var side_is_west := run.seed_streams.rng_at("entry_side", 0).randi_range(0, 1) == 0
-		result.append(Vector2(near, 12) if side_is_west else Vector2(far, 12))
+		result.append(micro_position(Vector2(near, 12) if side_is_west else Vector2(far, 12)))
 	if run.act_index == 0 and run.current_floor >= 10:
-		if not result.has(Vector2(near, 12)):
-			result.append(Vector2(near, 12))
-		if not result.has(Vector2(far, 12)):
-			result.append(Vector2(far, 12))
+		if not result.has(micro_position(Vector2(near, 12))):
+			result.append(micro_position(Vector2(near, 12)))
+		if not result.has(micro_position(Vector2(far, 12))):
+			result.append(micro_position(Vector2(far, 12)))
 	if run.act_index == 1:
-		result = [Vector2(12, near), Vector2(near, 12), Vector2(far, 12)]
+		result = [micro_position(Vector2(12, near)), micro_position(Vector2(near, 12)), micro_position(Vector2(far, 12))]
 		if run.current_floor >= 7:
-			result.append(Vector2(12, far))
+			result.append(micro_position(Vector2(12, far)))
 	if run.act_index >= 2:
-		result = [Vector2(12, near), Vector2(near, 12), Vector2(far, 12), Vector2(12, far)]
+		result = [micro_position(Vector2(12, near)), micro_position(Vector2(near, 12)), micro_position(Vector2(far, 12)), micro_position(Vector2(12, far))]
 	return result
+
+func micro_position(legacy_position: Vector2) -> Vector2:
+	return legacy_position * GameDefs.MICROGRID_SCALE
 
 func consume_rewards(run: RunState) -> void:
 	while not run.reward_queue.is_empty():

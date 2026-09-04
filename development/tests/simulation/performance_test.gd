@@ -48,7 +48,7 @@ func _auto_deploy(run: RunState) -> void:
 			var placed := false
 			for x in GameDefs.BOARD_SIZE:
 				var cell := Vector2i(x, y)
-				var error := RuleService.deployment_error(tower, cell, run.heights, run.towers, run.deployed_bandwidth(), run.effective_bandwidth(), str(tower["instance_id"]))
+				var error := RuleService.deployment_error(tower, cell, run.terrain_grid, run.towers, run.deployed_bandwidth(), run.effective_bandwidth(), str(tower["instance_id"]))
 				if error.is_empty():
 					tower["deployed"] = true
 					tower["ever_deployed"] = true
