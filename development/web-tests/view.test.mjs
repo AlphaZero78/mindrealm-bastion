@@ -14,7 +14,7 @@ test('orthographic picking and screen-relative WASD agree at all planned camera 
   for(const angle of [0,45,90,225,359])for(const h of [0,1,2,3,4]){
     const camera={x:20,z:24,yaw:angle*Math.PI/180,scale:8,width:640,height:360},target={x:9.3,z:30.75};
     const p=worldToScreen(target.x,target.z,h,camera),q=screenToGround(p.x,p.y,h,camera);near(q.x,target.x);near(q.z,target.z);
-    for(const [key,dx,dy]of [['w',0,6],['s',0,-6],['a',6,0],['d',-6,0]]){
+    for(const [key,dx,dy]of [['w',0,7.5],['s',0,-7.5],['a',7.5,0],['d',-7.5,0]]){
       const moved={...camera};cameraStep(moved,new Set([key]),.05);const after=worldToScreen(target.x,target.z,h,moved);near(after.x-p.x,dx);near(after.y-p.y,dy);
     }
     const drag={...camera};panScreen(drag,30,-20);const after=worldToScreen(target.x,target.z,h,drag);near(after.x-p.x,-30);near(after.y-p.y,20);
@@ -40,7 +40,7 @@ test('hidden views and modals release camera/canvas input; buttons retain rotate
   const dom=mockDOM(),canvas=new Surface();let clicks=0,cancels=0;const field=new Battlefield(canvas,{onCell:()=>clicks++,onCancel:()=>cancels++});try{
     const state=newRun('view-input');state.phase='prep';field.setState(state);field.setEncounter(makeEncounter(state));field.setInteractive(true);field.focus();
     const before=field.zoomLevel;field.zoom('in');assert.ok(field.zoomLevel>before);field.zoom('out');near(field.zoomLevel,before);field.rotate(Math.PI/8);near(field.camera.yaw,3*Math.PI/8);
-    const world=field.project(20.5,24.5),rect=canvas.getBoundingClientRect();canvas.fire('pointerdown',{clientX:world.x+rect.left,clientY:world.y+rect.top});assert.equal(clicks,1);
+    const world=field.project(20.5,24.5),rect=canvas.getBoundingClientRect();canvas.fire('pointerdown',{clientX:world.x+rect.left,clientY:world.y+rect.top});assert.equal(clicks,0);canvas.fire('pointerup',{clientX:world.x+rect.left,clientY:world.y+rect.top});assert.equal(clicks,1);
     dom.window.fire('keydown',{key:'w'});assert.equal(field.keys.size,1);field.setInteractive(false);assert.equal(field.keys.size,0);assert.equal(field.hover,null);assert.equal(canvas.tabIndex,-1);
     const camera={...field.camera};dom.window.fire('keydown',{key:'e'});canvas.fire('wheel',{deltaY:100});canvas.fire('pointerdown',{clientX:world.x+rect.left,clientY:world.y+rect.top});canvas.fire('contextmenu');field.render(100);assert.deepEqual(field.camera,camera);assert.equal(clicks,1);assert.equal(cancels,0);
     field.setInteractive(true);dom.window.fire('keydown',{key:'w',target:{tagName:'INPUT'}});assert.equal(field.keys.size,0);dom.window.fire('keydown',{key:'e',ctrlKey:true});assert.equal(field.keys.size,0);canvas.fire('contextmenu');assert.equal(cancels,1);
@@ -53,8 +53,8 @@ test('live state contract renders airborne string IDs and six bosses, caches pat
     field.rotate(.1);field.render(116);assert.equal(field.paths,paths,'camera rotation must not recalculate navigation');
     state.terrain.cells[10*41+10].h=0;state.terrain.revision++;field.render(132);assert.notEqual(field.paths,paths);assert.equal(field.tiles.find(t=>t.x===10&&t.z===10).h,0);
     state.phase='battle';state.battle={time:1,entries:Rules.entriesOf(state),enemies:Object.values(enemies).filter(e=>e.air||e.kind==='boss').map((e,i)=>({...e,id:`e${i+1}`,type:e.id,x:8+i,z:18,maxHp:e.hp,warningUntil:2,pressureMarked:true}))};field.hover={x:8,z:18};field.render(148);
-    assert.equal(Rules.entriesOf(state).filter(e=>field.entryStatus(e).active).length,4);const draws=canvas.ctx.calls.filter(c=>c.method==='drawImage');assert.ok(draws.length>6,'actual sprite atlas frames were drawn');assert.ok(canvas.ctx.calls.some(c=>c.method==='fillText'&&String(c.args[0]).includes('能力蓄力')));
-    assert.ok(canvas.ctx.calls.some(c=>c.method==='fillText'&&String(c.args[0]).includes('高压力目标')));field.setInteractive(true);field.keys.add('e');field.render(180);assert.equal(field.fastTerrain,true);field.keys.clear();field.render(212);assert.equal(field.fastTerrain,false,'decorative grid must return after camera movement stops');
+    assert.equal(Rules.entriesOf(state).filter(e=>field.entryStatus(e).active).length,4);const draws=canvas.ctx.calls.filter(c=>c.method==='drawImage');assert.ok(draws.length>6,'actual sprite atlas frames were drawn');assert.ok([...canvas.ctx.calls,...(field.entityLayer?.ctx.calls||[])].some(c=>c.method==='fillText'&&String(c.args[0]).includes('能力蓄力')));
+    assert.ok([...canvas.ctx.calls,...(field.entityLayer?.ctx.calls||[])].some(c=>c.method==='fillText'&&String(c.args[0]).includes('高压力目标')));field.setInteractive(true);field.keys.add('e');field.render(180);assert.equal(field.fastTerrain,true);field.keys.clear();field.render(212);assert.equal(field.fastTerrain,false,'decorative grid must return after camera movement stops');
   }finally{field.destroy();dom.restore();}
 });
 test('all 40 entities have transparent eight-direction models and complete authored pose and variant sheets',async()=>{

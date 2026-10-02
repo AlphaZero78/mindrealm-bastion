@@ -3,6 +3,32 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+# FFmpeg writes measurement data to stderr even on success. Read its native
+# streams directly so Windows PowerShell 5.1 does not turn them into exceptions.
+function Invoke-AudioTool([string]$Executable, [string[]]$Arguments) {
+    $info = New-Object Diagnostics.ProcessStartInfo
+    $info.FileName = $Executable
+    foreach ($argument in $Arguments) {
+        if ($argument.Contains('"') -or $argument.EndsWith('\')) { throw 'Unsupported audio tool argument quoting.' }
+    }
+    $info.Arguments = ($Arguments | ForEach-Object { '"' + $_ + '"' }) -join ' '
+    $info.UseShellExecute = $false
+    $info.CreateNoWindow = $true
+    $info.RedirectStandardOutput = $true
+    $info.RedirectStandardError = $true
+    $process = New-Object Diagnostics.Process
+    $process.StartInfo = $info
+    try {
+        if (-not $process.Start()) { throw 'Audio analysis process did not start.' }
+        $stdout = $process.StandardOutput.ReadToEndAsync()
+        $stderr = $process.StandardError.ReadToEndAsync()
+        $process.WaitForExit()
+        $output = $stdout.GetAwaiter().GetResult()
+        $diagnostics = $stderr.GetAwaiter().GetResult()
+        if ($process.ExitCode -ne 0) { throw "Audio tool failed ($($process.ExitCode)): $diagnostics" }
+        return ($output + $diagnostics)
+    } finally { $process.Dispose() }
+}
 # The script is independent of the caller's current directory.
 $projectRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
 $toolRoot = Join-Path $env:LOCALAPPDATA 'MindrealmTools\ffmpeg'
@@ -25,11 +51,9 @@ $durations = @()
 foreach ($name in @('singularity_calm.mp3', 'singularity_action.mp3')) {
     $path = Join-Path $audioRoot $name
     if (-not (Test-Path -LiteralPath $path)) { throw "Adaptive music layer is missing: $name" }
-    $durationText = & $ffprobe.FullName -v error -select_streams 'a:0' -show_entries 'stream=duration' -of 'default=noprint_wrappers=1:nokey=1' $path
-    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    $durationText = Invoke-AudioTool $ffprobe.FullName @('-v','error','-select_streams','a:0','-show_entries','stream=duration','-of','default=noprint_wrappers=1:nokey=1',$path)
     $durations += [double]::Parse($durationText.Trim(), [Globalization.CultureInfo]::InvariantCulture)
-    $analysis = (& $ffmpeg.FullName -hide_banner -nostats -i $path -af 'loudnorm=I=-18:TP=-1:LRA=11:print_format=summary' -f null NUL 2>&1 | Out-String)
-    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    $analysis = Invoke-AudioTool $ffmpeg.FullName @('-hide_banner','-nostats','-i',$path,'-af','loudnorm=I=-18:TP=-1:LRA=11:print_format=summary','-f','null','NUL')
     $integratedMatch = [regex]::Match($analysis, 'Input Integrated:\s+([-+0-9.]+) LUFS')
     $peakMatch = [regex]::Match($analysis, 'Input True Peak:\s+([-+0-9.]+) dBTP')
     if (-not $integratedMatch.Success -or -not $peakMatch.Success) { throw "Could not parse EBU R128 result for $name" }

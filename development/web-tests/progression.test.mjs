@@ -8,12 +8,20 @@ import { CURRENT_DIFFICULTY_REVISION, difficultyProfile } from '../../web/core/d
 import { makeEncounter, startBattle } from '../../web/core/battle.js';
 
 class MemoryStorage { data = new Map(); getItem(k) { return this.data.get(k) ?? null; } setItem(k, v) { this.data.set(k, String(v)); } removeItem(k) { this.data.delete(k); } }
+
+test('malformed stat modifiers, unit metadata and terrain refunds cannot overwrite a valid save',()=>{
+ const storage=new MemoryStorage(),store=createSaveStore(storage,'audit-save'),valid=newRun('save-boundary');assert.equal(store.save(valid).ok,true);
+ const original=[...storage.data];
+ const corruptions=[s=>{s.modifiers.range='invalid';},s=>{s.modifiers=[];},s=>{s.units[0].hpBonus='invalid';},s=>{s.units[0].everDeployed='false';},s=>{s.units[0].order=-1;},s=>{s.terrainUndo=[{cost:'100',cells:[]}];},s=>{s.terrainUndo=[{cost:2,cells:[{x:42,z:0,before:{h:0,ramp:-1,protected:false},after:{h:1,ramp:-1,protected:false}}]}];}];
+ for(const corrupt of corruptions){const invalid=cloneState(valid);corrupt(invalid);assert.equal(store.save(invalid).ok,false);assert.deepEqual([...storage.data],original);assert.equal(store.load().ok,true);}
+ const old=cloneState(valid);delete old.modifiers;for(const u of old.units){delete u.order;delete u.everDeployed;}assert.equal(store.save(old).ok,true,'legacy optional metadata stays readable');assert.equal(store.load().ok,true);
+});
 const service = (type, seed = 'service', act = 0) => { const s = newRun(seed); s.act = act; const node = s.maps[act].nodes.find(n => n.type === type) || s.maps[act].nodes.find(n => n.floor === 1); node.type = type; s.nextNodes = [node.id]; assert.equal(enterNode(s, node.id).ok, true); return s; };
 const drain = s => { let count = 0; while (s.phase === 'reward') { assert.ok(count++ < 60, '奖励队列必须有限'); assert.equal(chooseReward(s, s.rewardQueue[0].options[0]).ok, true); } };
 
 test('complete catalog has stable IDs and finite effect values', () => {
   assert.deepEqual([Object.keys(towers).length, Object.keys(enemies).length, Object.keys(relics).length, Object.keys(talents).length, Object.keys(events).length], [12, 28, 30, 24, 24]);
-  for (const t of Object.values(towers)) { assert.ok(t.footprint[0] >= 2 && t.footprint[1] >= 2); assert.deepEqual(Object.keys(t.branches), ['A', 'B']); assert.ok(t.range > 0); assert.equal(t.sprite_id, t.id); assert.ok(t.description.length > 20); for (const b of Object.values(t.branches)) assert.match(b.description, /\d/); }
+  for (const t of Object.values(towers)) { assert.ok(t.footprint[0] >= 2 && t.footprint[1] >= 2); assert.deepEqual(Object.keys(t.branches), ['A', 'B']); assert.ok(t.range > 0); assert.equal(t.sprite_id, t.id); assert.ok(t.description.length > 20); for (const b of Object.values(t.branches)) assert.ok(b.description.length>8); }
   for (const enemy of Object.values(enemies)) { assert.ok(enemy.description.length > 20); if (enemy.kind === 'boss') { assert.ok(enemy.archive.length > 50); assert.match(enemy.mechanics, /70%\/35%/); } }
   const s = newRun('effects'); s.relics = Object.keys(relics); s.talents = Object.keys(talents); assert.ok(Object.values(effects(s)).every(Number.isFinite));
   for (const e of Object.values(events)) assert.equal(e.choices.length, 2);

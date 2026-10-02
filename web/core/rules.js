@@ -4,7 +4,8 @@ import { difficultyProfile } from './difficulty.js';
 // This module is the single authority for previews, orders, and combat geometry.
 export const DIRECTIONS = [{x:0,z:-1},{x:1,z:0},{x:0,z:1},{x:-1,z:0}];
 export const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
-// Battle owns a short-lived frame context. Previews and commands remain uncached,
+// Each synchronous simulation step or render pass owns a short-lived context.
+// Standalone previews and commands remain uncached,
 // so a UI mutation can never leave behind stale placement or damage results.
 const frames=new WeakMap();
 export function beginRulesFrame(state){frames.set(state,{key:null,mods:null,stats:new Map()});}
@@ -26,13 +27,17 @@ export function cellAt(state,x,z) {
   return x>=0&&z>=0&&x<n&&z<n ? state.terrain.cells[z*n+x] : null;
 }
 export const onField = u => Number.isFinite(u.x)&&Number.isFinite(u.z);
+export function unitFootprint(unit) {
+  const base=towers[unit.type]?.footprint||[2,2];
+  return (unit.rotation||0)%2?[base[1],base[0]]:[...base];
+}
 export function footprint(state,unit,x=unit.x,z=unit.z) {
-  const [w,d]=towers[unit.type]?.footprint||[2,2], cells=[];
+  const [w,d]=unitFootprint(unit), cells=[];
   for(let dz=0;dz<d;dz++) for(let dx=0;dx<w;dx++) cells.push({x:x+dx,z:z+dz});
   return cells;
 }
 export function unitCenter(unit) {
-  const [w,d]=towers[unit.type]?.footprint||[2,2];
+  const [w,d]=unitFootprint(unit);
   return {x:unit.x+(w-1)/2,z:unit.z+(d-1)/2};
 }
 export function unitStats(state,unit) {
@@ -41,7 +46,7 @@ export function unitStats(state,unit) {
   if(cached?.health===unit.hp)return cached.value;
   const tier=clamp(unit.tier||1,1,3), b=base.branches?.[unit.branch];
   const growth=tier===1?1:tier===2?1.5:2.35;
-  const result={...base, effect:tier>1&&b?b.effect:null};
+  const result={...base, footprint:unitFootprint(unit), effect:tier>1&&b?b.effect:null};
   const roleBonus=mods[`${base.role}_attack`]||0;
   result.hp=Math.round(base.hp*growth*(tier>1&&b?b.hp_mult||1:1)*(1+(mods.hp||0)+(mods[`${base.role}_hp`]||0)+(unit.hpBonus||0)));
   result.maxHp=result.hp;
@@ -83,6 +88,19 @@ export function bandwidthState(state) {
   if(cap>base) sources.push(`中继 +${cap-base}`);
   return {used:allUsed,activeUsed:used,cap,disabled,shortfall:Math.max(0,allUsed-startingCap),sources};
 }
+export function supportInRange(state,source,target) {
+  const a=unitCenter(source),b=unitCenter(target);
+  return Math.hypot(a.x-b.x,a.z-b.z)<=unitStats(state,source).range;
+}
+export function supportCoverage(state,source,{preview=false}={}) {
+  const stats=unitStats(state,source),disabled=bandwidthState(state).disabled;
+  const active=source.hp>0&&onField(source)&&(preview||!disabled.includes(source.uid));
+  const global=['bandwidth_plus','resistance_plus'].includes(stats.ability);
+  const targets=active?state.units.filter(u=>onField(u)&&u.hp>0&&u.uid!==source.uid&&supportInRange(state,source,u)):[];
+  const m=ruleEffects(state),localBuff=stats.ability==='haste_aura'||!!(m.support_armor||m.support_rate);
+  const affected=targets.filter(u=>stats.ability==='repair'||localBuff&&!disabled.includes(u.uid));
+  return {active,global,range:stats.range,targets,affected};
+}
 const failure = reason => ({ok:false,reason});
 const canManage = s => ['prep','node'].includes(s.phase);
 const getUnit = (s,id) => typeof id==='object'?id:s.units.find(u=>u.uid===id);
@@ -118,10 +136,12 @@ export function placement(state,unit,x,z) {
   if(state.focus<result.cost)return fail(`搬迁需要 ${result.cost} 专注`);
   return {...result,ok:true,reason:result.cost?`可部署 · 维护 ${result.cost} 专注`:'可部署 · 首次免费'};
 }
-export function deploy(state,uid,x,z) {
+export function deploy(state,uid,x,z,rotation) {
   const u=getUnit(state,uid); if(!u)return failure('未找到构造');
-  const p=placement(state,u,x,z); if(!p.ok)return p;
-  state.focus-=p.cost; u.x=x;u.z=z;u.everDeployed=true;u.order=Math.max(0,...state.units.map(t=>t.order||0))+1;
+  if(rotation!==undefined&&(!Number.isInteger(rotation)||rotation<0||rotation>3))return failure('无效的旋转方向');
+  const trial=rotation===undefined?u:{...u,rotation};
+  const p=placement(state,trial,x,z); if(!p.ok)return p;
+  state.focus-=p.cost; u.x=x;u.z=z;if(rotation!==undefined)u.rotation=rotation;u.everDeployed=true;u.order=Math.max(0,...state.units.map(t=>t.order||0))+1;
   return {ok:true,reason:'构造已部署',cost:p.cost};
 }
 export function withdraw(state,uid) {
@@ -228,7 +248,7 @@ export function previewTerrain(state,command) {
     if(after.h!==cell.h||after.ramp!==cell.ramp)result.cells.push({...p,before:{...cell},after,h:after.h,ramp:after.ramp});
   }
   if(!result.cells.length)return fail('没有可改变的格子（高度范围 0–4）');
-  result.cost=Math.ceil(result.cells.length*2*(1-clamp(effects(state).terrain_discount||0,0,1)));
+  result.cost=terrainCost(state,result.cells.length);
   const terrain={...state.terrain,cells:state.terrain.cells.slice(),revision:0};for(const c of result.cells)terrain.cells[c.z*terrain.size+c.x]=c.after;
   const trial={...state,terrain};
   for(const c of result.cells)for(const d of DIRECTIONS){const b={x:c.x+d.x,z:c.z+d.z};const e=edgeInfo(trial,c,b);if(e.barrier)result.barriers.push({from:{x:c.x,z:c.z},to:b,...e.barrier});}
@@ -240,7 +260,27 @@ export function applyTerrain(state,command) {
   const p=previewTerrain(state,command);if(!p.ok)return p;
   for(const c of p.cells)state.terrain.cells[c.z*state.terrain.size+c.x]={...c.after};
   state.focus-=p.cost;state.terrain.revision=(state.terrain.revision||0)+1;
-  (state.terrainUndo ||= []).push({cells:p.cells,cost:p.cost});return p;
+  (state.terrainUndo ||= []).push({cells:p.cells,cost:p.cost,editsBefore:state.terrainEdits||0});
+  state.terrainEdits=(state.terrainEdits||0)+p.cells.length;return p;
+}
+// Cumulative per preparation phase, so splitting a batch cannot reset its price.
+export function terrainCost(state,count) {
+  let cost=0;for(let i=0;i<count;i++)cost+=2+Math.floor(((state.terrainEdits||0)+i)/20);
+  return Math.ceil(cost*(1-clamp(effects(state).terrain_discount||0,0,1)));
+}
+export function previewTerrainBatch(state,commands) {
+  if(!Array.isArray(commands)||!commands.length)return failure('先在战场上添加地形修改');
+  const trial={...state,terrain:{...state.terrain,cells:state.terrain.cells.map(c=>({...c}))},terrainUndo:[]};
+  let cost=0,count=0,last;const changed=new Map();
+  for(const command of commands){last=applyTerrain(trial,command);if(!last.ok)return {...last,cost:cost+last.cost};cost+=last.cost;count+=last.cells.length;
+    for(const c of last.cells){const key=c.z*trial.terrain.size+c.x;changed.set(key,{...c,before:changed.get(key)?.before||c.before});}}
+  return {ok:true,cost,count,cells:[...changed.values()],paths:last.paths,barriers:last.barriers,trial,reason:`${commands.length} 笔 / ${count} 格次 · ${cost} 专注`};
+}
+export function applyTerrainBatch(state,commands) {
+  const p=previewTerrainBatch(state,commands);if(!p.ok)return p;
+  (state.terrainUndo ||= []).push({cells:p.cells,cost:p.cost,editsBefore:state.terrainEdits||0});
+  state.terrain=p.trial.terrain;state.focus=p.trial.focus;state.terrainEdits=p.trial.terrainEdits;
+  return {...p,trial:undefined};
 }
 export function undoTerrain(state) {
   if(state.phase!=='prep')return failure('只能在战前撤销');
@@ -248,7 +288,7 @@ export function undoTerrain(state) {
   const occupied=new Set(state.units.filter(u=>onField(u)&&u.hp>0).flatMap(u=>footprint(state,u).map(c=>`${c.x},${c.z}`)));
   if(last.cells.some(c=>occupied.has(`${c.x},${c.z}`)))return failure('改造格已有构造，请先撤回再撤销');
   for(const c of last.cells)state.terrain.cells[c.z*state.terrain.size+c.x]={...c.before};
-  state.terrainUndo.pop();state.focus+=last.cost;state.terrain.revision=(state.terrain.revision||0)+1;
+  state.terrainUndo.pop();state.focus+=last.cost;state.terrainEdits=last.editsBefore??Math.max(0,(state.terrainEdits||0)-last.cells.length);state.terrain.revision=(state.terrain.revision||0)+1;
   return {ok:true,reason:`已撤销，退回 ${last.cost} 专注`,cost:-last.cost};
 }
 export function solveAttack(state,unit,target) {
@@ -265,9 +305,9 @@ export function solveAttack(state,unit,target) {
   const penetration=(s.effect==='pierce'?0.6:0)+(mods.armor_pierce||0);
   damage=Math.max(s.attack*0.05,damage-Math.max(0,(target.armor||0)-(s.role==='ranged'?mods.ranged_pierce||0:0))*(1-clamp(penetration,0,0.9)));
   let blocked=false;
-  if(s.attack_kind==='direct'&&dist>0){const startH=originH+1.05,endH=targetH+(target.air?2.4:0.7),steps=Math.ceil(dist*3),own=new Set(footprint(state,unit).map(c=>`${c.x},${c.z}`));
+  if(s.attack_kind==='direct'&&dist>0){const startH=originH+1.05,endH=targetH+(target.air?2.4:0.7),steps=Math.ceil(dist*3),w=s.footprint[0],d=s.footprint[1],gridAligned=Number.isInteger(unit.x)&&Number.isInteger(unit.z),own=gridAligned?null:new Set(footprint(state,unit).map(c=>`${c.x},${c.z}`)),tx=Math.round(target.x),tz=Math.round(target.z);
     for(let i=1;i<steps;i++){const t=i/steps,x=Math.round(origin.x+(target.x-origin.x)*t),z=Math.round(origin.z+(target.z-origin.z)*t);
-      if(own.has(`${x},${z}`)||x===Math.round(target.x)&&z===Math.round(target.z))continue;
+      if((gridAligned?x>=unit.x&&x<unit.x+w&&z>=unit.z&&z<unit.z+d:own.has(`${x},${z}`))||x===tx&&z===tz)continue;
       const cell=cellAt(state,x,z);if(cell&&cell.h>startH+(endH-startH)*t+0.03){blocked=true;break;}}
   }
   const matches=s.targets==='all'||s.targets==='ground'&&!target.air||s.targets==='air'&&target.air;

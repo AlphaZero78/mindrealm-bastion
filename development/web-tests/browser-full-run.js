@@ -8,11 +8,11 @@ async page=>{
  const verifyBossMap=async act=>{
   const original=page.viewportSize(),layouts=[];
   for(const size of [{width:1920,height:1080},{width:960,height:540}]){
-   await page.setViewportSize(size);await page.locator('[data-action="enter"]').click({trial:true});
-   const layout=await page.evaluate(()=>{const detail=document.querySelector('.node-detail'),enter=detail.querySelector('[data-action="enter"]'),intel=document.querySelector('.intel'),side=detail.parentElement,d=detail.getBoundingClientRect(),b=enter.getBoundingClientRect(),i=intel.getBoundingClientRect();return{width:innerWidth,detailBottom:d.bottom,buttonBottom:b.bottom,intelTop:i.top,scrollHeight:side.scrollHeight,clientHeight:side.clientHeight};});
-   if(layout.buttonBottom>layout.detailBottom+1||layout.detailBottom>layout.intelTop+1)throw Error(`Map detail overlaps boss intel: ${JSON.stringify(layout)}`);
+   await page.setViewportSize(size);const node=page.locator('.map-node.available').first();await node.hover();
+   const layout=await page.evaluate(()=>{const detail=document.querySelector('#route-tooltip'),rect=detail.getBoundingClientRect();return{width:innerWidth,tooltipVisible:!detail.hidden,left:rect.left,right:rect.right,top:rect.top,bottom:rect.bottom};});
+   if(!layout.tooltipVisible||layout.left<0||layout.right>size.width+1||layout.top<0||layout.bottom>size.height+1)throw Error(`Map tooltip exceeds viewport: ${JSON.stringify(layout)}`);
    await capture(`full-act-${act+1}-boss-map-${size.width}`);
-   await page.locator('[data-boss-preview="true"]').click();
+   await page.locator('[data-action="boss-intel"]').click();await page.locator('#modal-root [data-boss-preview="true"]').click();
    const scroll=await page.locator('.modal').evaluate(element=>{element.scrollTop=element.scrollHeight;return{height:element.clientHeight,content:element.scrollHeight,end:element.scrollTop};});
    if(scroll.content>scroll.height+1&&scroll.end<=0)throw Error('Boss intel cannot scroll');
    await page.locator('[data-modal="close"]').click();layouts.push({...layout,modal:scroll});
@@ -48,9 +48,8 @@ async page=>{
   if(['won','lost'].includes(status.phase)||status.act>startedAct)break;
   if(status.phase==='map'){
    const id=await page.evaluate(async()=>{const R=await import('/web/core/state.js'),s=window.__mindrealm.getState();const value=n=>({camp:s.spirit<s.maxSpirit*.6?120:75,treasure:100,event:85,unknown:65,shop:s.focus>240?65:15,workshop:15,battle:45,elite:s.act===0?25:40,boss:50}[n.type]||0);return [...R.availableNodes(s)].sort((a,b)=>value(b)-value(a))[0].id;});
-   await page.locator(`[data-action="map-node"][data-id="${id}"]`).click();
    if(await page.evaluate(id=>window.__mindrealm.getState().maps[window.__mindrealm.getState().act].nodes.find(node=>node.id===id)?.type==='boss',id))await verifyBossMap(status.act);
-   await click('enter');
+   await page.locator(`[data-action="map-node"][data-id="${id}"]`).click();
    await page.evaluate(()=>{const s=window.__mindrealm.getState();window.__fullRunAudit.nodes.push({act:s.act,floor:s.floor,type:s.currentNode.type,focus:s.focus,spirit:s.spirit});});
   }else if(status.phase==='prep'){
    await page.evaluate(async()=>{const q=window.__mindrealm,H=await import('/development/web-tests/helpers/reference-strategy.mjs');H.prepareReference(q.getState());q.render();});

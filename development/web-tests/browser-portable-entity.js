@@ -12,7 +12,7 @@ async page=>{
   check('40 animated atlases decode from the portable package',atlas.length===40&&atlas.every(a=>a.width===a.expectedWidth&&a.height===a.expectedHeight&&a.source.includes('/animations/')),atlas.length);
   await click('new');await page.locator('#seed-input').fill('reference-0');await page.locator('.modal-footer .primary').click();await stable();
   check('real new game uses normal initial resources',await page.evaluate(()=>{const s=window.__mindrealm.getState();return s.spirit===100&&s.focus===99&&s.bandwidth===20&&s.units.length===7&&s.difficultyRevision===2;}));
-  await page.locator('.map-node.available').first().click();await click('enter');await stable();
+  await page.locator('.map-node.available').first().click();await stable();
   const beforeCancel=await page.evaluate(()=>JSON.stringify(window.__mindrealm.getState()));await page.locator('[data-action="select-unit"][data-uid="u1"]').click();
   const protectedCell=await page.evaluate(()=>{const q=window.__mindrealm,r=q.field.canvas.getBoundingClientRect(),p=q.field.p(20.5,24.5,0);return{x:r.left+p.x,y:r.top+p.y};});await page.mouse.click(protectedCell.x,protectedCell.y);await page.keyboard.press('Escape');
   check('illegal protected placement and cancellation do not change the run',beforeCancel===await page.evaluate(()=>JSON.stringify(window.__mindrealm.getState())));

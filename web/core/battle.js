@@ -1,5 +1,5 @@
 import {towers,enemies,acts,seededRandom} from './content.js';
-import {unitStats,unitCenter,onField,cellAt,coreOf,entriesOf,pathToCore,distanceToCore,edgeInfo,bandwidthState,solveAttack,incomingDamage,clamp,ruleEffects as effects,beginRulesFrame,endRulesFrame,invalidateRulesFrame} from './rules.js';
+import {unitStats,unitCenter,onField,cellAt,coreOf,entriesOf,pathToCore,distanceToCore,edgeInfo,bandwidthState,solveAttack,incomingDamage,clamp,ruleEffects as effects,beginRulesFrame,endRulesFrame,invalidateRulesFrame,supportInRange} from './rules.js';
 import {addXP} from './state.js';
 import {difficultyProfile,enemyStats,enemyAbilityProfile,enemyRecoveryBase} from './difficulty.js';
 
@@ -294,7 +294,7 @@ function towerActions(state,active,dt) {
   for(const u of [...active]){
     if(state.spirit<=0||b.bossKilled)break;
     if(u.hp<=0||b.disabled.includes(u.uid))continue;
-    const s=unitStats(state,u),origin=unitCenter(u),cover=supports.filter(t=>t.hp>0&&!b.disabled.includes(t.uid)&&t.uid!==u.uid&&distance(origin,unitCenter(t))<=unitStats(state,t).range);
+    const s=unitStats(state,u),origin=unitCenter(u),cover=supports.filter(t=>t.hp>0&&!b.disabled.includes(t.uid)&&t.uid!==u.uid&&supportInRange(state,t,u));
     const overlap=cover.length>=2?1+(m.support_overlap||0):1;
     u.temporaryArmor=(cover.length?(m.support_armor||0)*overlap:0)+(u.armorBuffUntil>b.time?3:0);
     const choirs=cover.filter(t=>unitStats(state,t).ability==='haste_aura'),haste=choirs.reduce((sum,t)=>sum+unitStats(state,t).support_value+(unitStats(state,t).effect==='strong_haste'?.12:0),0)*overlap;
@@ -303,12 +303,12 @@ function towerActions(state,active,dt) {
     if(u.cooldown>0)continue;
     if(s.attack_kind==='support'){
       if(s.ability==='repair'){
-        const targets=aliveUnits(state).filter(t=>t.hp<unitStats(state,t).hp&&distance(origin,unitCenter(t))<=s.range);
+        const targets=aliveUnits(state).filter(t=>t.hp<unitStats(state,t).hp&&supportInRange(state,u,t));
         targets.sort((a,c)=>{
           const threat=t=>m.triage&&b.enemies.some(e=>!e.dead&&distance(e,unitCenter(t))<4)?40:0;
           return (unitStats(state,c).hp-c.hp+threat(c))-(unitStats(state,a).hp-a.hp+threat(a));
         });
-        const t=targets[0];if(t){const overlap=supports.some(other=>other.hp>0&&other.uid!==u.uid&&!b.disabled.includes(other.uid)&&distance(unitCenter(t),unitCenter(other))<=unitStats(state,other).range);let amount=s.attack*(1+(m.support_efficiency||0))*(overlap?1+(m.support_overlap||0):1);
+        const t=targets[0];if(t){const overlap=supports.some(other=>other.hp>0&&other.uid!==u.uid&&!b.disabled.includes(other.uid)&&supportInRange(state,other,t));let amount=s.attack*(1+(m.support_efficiency||0))*(overlap?1+(m.support_overlap||0):1);
           if(s.effect==='critical_repair'&&t.hp<unitStats(state,t).hp*.35)amount*=1.6;
           const before=t.hp;t.hp=Math.min(unitStats(state,t).hp,t.hp+amount);if(s.effect==='armor_repair')t.armorBuffUntil=b.time+3;
           emit(state,{type:'heal',actionKind:'repair',stage:'release',ability:s.ability,effect:s.effect,targetId:t.uid,targetKind:'unit',...origin,tx:unitCenter(t).x,tz:unitCenter(t).z,unit:u.uid,amount,healed:t.hp-before,armorUntil:t.armorBuffUntil||0});u.cooldown=s.rate;
@@ -317,7 +317,7 @@ function towerActions(state,active,dt) {
         // A support pulse shares its existing cooldown; continuous aura rules
         // above remain authoritative and this silent event cannot change them.
         const global=s.ability==='bandwidth_plus'||s.ability==='resistance_plus';
-        const targets=global?[]:active.filter(t=>t.uid!==u.uid&&t.hp>0&&!b.disabled.includes(t.uid)&&distance(origin,unitCenter(t))<=s.range);
+        const targets=global?[]:active.filter(t=>t.uid!==u.uid&&t.hp>0&&!b.disabled.includes(t.uid)&&supportInRange(state,u,t));
         emit(state,{type:'support',sourceKind:'unit',sourceId:u.uid,unit:u.uid,...origin,actionKind:'buff',ability:s.ability,effect:s.effect,radius:global?null:s.range,global,value:s.support_value,targets:targets.map(t=>t.uid),targetKind:global?'core':'unit',targetId:global?'core':null});
         u.cooldown=s.rate;
       }

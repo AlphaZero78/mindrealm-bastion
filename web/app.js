@@ -22,7 +22,7 @@ const store=Saves.createSaveStore(storage,qa?'mindrealm.qa.v2':'mindrealm.web.v2
 let settings=store.loadSettings(),profile=store.loadProfile(),state=null,screen='menu',backScreen='menu';
 let dialogCallbacks=new Map(),dialogFocus=null,pendingDialogFocus=null,toastTimer,lastTime=0,accumulator=0,lastHud=0;
 const navigation=[];
-const ctx={selectedUid:null,deployUid:null,warehouseTab:'stored',toolTab:'units',terrainTool:null,brush:'single',direction:0,hover:null,preview:null,speed:1,paused:false,threatOpen:true,tutorial:settings.tutorial,codexTab:'towers'};
+const ctx={selectedUid:null,deployUid:null,warehouseTab:'stored',toolTab:'units',terrainTool:null,terrainCommands:[],terrainBatch:null,deployRotation:0,footerCollapsed:false,brush:'single',direction:0,hover:null,preview:null,speed:1,paused:false,threatOpen:true,tutorial:settings.tutorial,codexTab:'towers'};
 const audio=new AudioDirector({onError:message=>toast(message,true)});
 const field=new Battlefield(canvas,{onCell:cell=>cellClick(cell),onHover:cell=>hoverCell(cell),onCancel:()=>cancelSelection(),onError:message=>toast(message,true)});
 let renderedScene=null;
@@ -48,7 +48,9 @@ function sceneIdentity(){
  const reward=state?.rewardQueue?.[0];
  return JSON.stringify([screen,state?.seed,state?.phase,state?.act,state?.currentNode?.id,state?.stats.completedNodes,state?.phase==='reward'?[state.rewardQueue.length,reward?.kind,reward?.options]:null]);
 }
-function activeSelection(){return {unit:state?.units.find(u=>u.uid===ctx.deployUid),selectedUid:ctx.selectedUid,terrainTool:ctx.terrainTool,brush:ctx.brush,direction:ctx.direction,preview:ctx.preview,previewOrigin:modalRoot.children.length?ctx.hover:null,reducedMotion:settings.reducedMotion};}
+function deploymentUnit(){const u=state?.units.find(u=>u.uid===ctx.deployUid);return u?{...u,rotation:ctx.deployRotation}:null;}
+function displayState(){return ctx.terrainBatch?.trial||state;}
+function activeSelection(){return {unit:deploymentUnit(),selectedUid:ctx.selectedUid,terrainTool:ctx.terrainTool,brush:ctx.brush,direction:ctx.direction,preview:ctx.preview,previewOrigin:modalRoot.children.length?ctx.hover:null,reducedMotion:settings.reducedMotion};}
 function render(){
  ctx.tutorial=settings.tutorial;
  if(screen==='run'&&!state)screen='menu';
@@ -72,13 +74,13 @@ function render(){
  const tutorial=app.querySelector('.tutorial');if(tutorial)app.querySelector('.battle-sidebar')?.append(tutorial);
  const battle=visibleBattle();
  document.body.dataset.screen=battle?'battle':screen;
- field.setState(battle?state:demo);
+ field.setState(battle?displayState():demo);
  field.setEncounter?.(battle?(state.phase==='battle'?state.battle:makeEncounter(state,state.currentNode)):null);
  field.setSelection(battle?activeSelection():{});
  updateInteraction();
  audio.setScene(screen==='run'?state.phase:screen);audio.update({danger:state?.battle?.danger||0,boss:state?.currentNode?.type==='boss',paused:state?.phase==='battle'&&(ctx.paused||screen!=='run')});
  applyScale();
- if(state?.phase==='map'&&screen==='run'){const sc=document.querySelector('#map-scroll'),node=Run.availableNodes(state)[0];if(sc)sc.scrollTop=Math.max(0,sc.scrollHeight-160-(node?.floor||0)*100-sc.clientHeight*.6);}
+ if(state?.phase==='map'&&screen==='run'){bindRouteMap();const sc=document.querySelector('#map-scroll'),node=Run.availableNodes(state)[0];if(sc)sc.scrollTop=Math.max(0,sc.scrollHeight-160-(node?.floor||0)*100-sc.clientHeight*.6);}
  updateHud();updatePlacementStatus();
  field.render(performance.now());
  transitions.commit(ticket);
@@ -103,38 +105,60 @@ function modal(title,body,buttons=[{text:'关闭'}],wide=false){
  field.setSelection(visibleBattle()?activeSelection():{});field.setInteractive?.(false);dialogs.open();const dialog=modalRoot.querySelector('.modal');requestAnimationFrame(()=>{if(!dialog?.isConnected)return;dialog.scrollTop=0;dialog.querySelector('input, select')?.focus({preventScroll:true});if(!dialog.contains(document.activeElement))dialog.querySelector('[data-modal="close"]')?.focus({preventScroll:true});});
 }
 function confirm(title,body,run,text='确认'){modal(title,body,[{text:'取消'},{text,primary:true,run}]);}
-function clearInput(){ctx.deployUid=null;ctx.terrainTool=null;ctx.hover=null;ctx.preview=null;ctx.selectedUid=null;field.setSelection({});updatePlacementStatus();}
-function cancelSelection(){if(modalRoot.children.length){closeDialog();return;}clearTimeout(toastTimer);toastNode.className='';clearInput();if(visibleBattle())document.querySelector('#inspector').innerHTML='';audio.play('cancel');}
+function clearInput(){ctx.terrainCommands=[];ctx.terrainBatch=null;ctx.deployRotation=0;ctx.deployUid=null;ctx.terrainTool=null;ctx.hover=null;ctx.preview=null;ctx.selectedUid=null;field.setSelection({});updatePlacementStatus();}
+function cancelSelection(){if(modalRoot.children.length){closeDialog();return;}const hadDraft=!!ctx.terrainBatch;clearTimeout(toastTimer);toastNode.className='';clearInput();if(visibleBattle()){if(hadDraft)render();else document.querySelector('#inspector').innerHTML='';}audio.play('cancel');}
 function startNew(){
  modal('开始新的远征',`<p>控制压力通过敌人强度和机制提升挑战；敌群数量、奖励、开局资源和服务费用不随等级改变。通关当前压力后解锁下一级。</p><p class="muted">相同种子、内容池与难度规则会产生相同的战场、路线和奖励。</p>${store.has()?'<div class="danger-line">确认后将替换当前浏览器中的单局进度。图鉴、碎片与已解锁内容会保留。</div>':''}<label class="field">远征种子<input id="seed-input" maxlength="64" value="${new Date().toISOString().slice(0,10)}" autocomplete="off"></label><label class="field">控制压力<select id="pressure-input">${Screens.pressureOptions(profile.unlockedPressure)}</select></label>${Screens.pressurePreviewLevels(profile.unlockedPressure)}<small>开局：100 精神稳定 · 99 专注 · 20 带宽<br>仓库：3 近战 · 3 远程 · 1 支援</small>`,[{text:'取消'},{text:'建立清醒信号',primary:true,run:()=>{const seed=document.querySelector('#seed-input').value.trim()||'CLEAR-SIGNAL',pressure=normalizeDifficulty(Number(document.querySelector('#pressure-input').value));if(pressure>normalizeDifficulty(profile.unlockedPressure)){toast('请先通关已开放的压力等级。',true);return false;}state=Run.newRun(seed,pressure,profile);clearInput();ctx.paused=false;ctx.speed=1;ctx.mapHover=null;screen='run';save();render();}}]);
 }
-function selectUnit(uid,move=false){const u=state?.units.find(x=>x.uid===uid);if(!u)return;ctx.selectedUid=uid;ctx.terrainTool=null;ctx.toolTab='units';ctx.deployUid=state.phase==='prep'&&u.hp>0&&(u.x===null||move)?uid:null;ctx.preview=null;if(visibleBattle()){document.querySelector('#inspector').innerHTML=Screens.inspector(state,ctx);field.setSelection(activeSelection());for(const card of app.querySelectorAll('.unit-card'))card.classList.toggle('selected',card.dataset.uid===uid);}updatePlacementStatus();audio.play('select');}
+function selectUnit(uid,move=false){const u=state?.units.find(x=>x.uid===uid);if(!u)return;if(ctx.terrainBatch){toast('先确认或取消地形草稿，再选择构造。',true);return;}ctx.selectedUid=uid;ctx.deployRotation=u.rotation||0;ctx.terrainTool=null;ctx.toolTab='units';ctx.deployUid=state.phase==='prep'&&u.hp>0&&(u.x===null||move)?uid:null;ctx.preview=null;if(visibleBattle()){document.querySelector('#inspector').innerHTML=Screens.inspector(state,ctx);field.setSelection(activeSelection());for(const card of app.querySelectorAll('.unit-card'))card.classList.toggle('selected',card.dataset.uid===uid);}updatePlacementStatus();audio.play('select');}
 // Keep explanations outside the playfield; selection never changes its geometry.
 function updatePlacementStatus(){
  const status=document.querySelector('#placement-status');if(!status||!visibleBattle())return;
  document.querySelector('.battle-screen').dataset.placing=String(!!(ctx.deployUid||ctx.terrainTool));
  const unit=state.units.find(u=>u.uid===(ctx.deployUid||ctx.selectedUid)),p=ctx.preview;
  let detail=state.phase==='battle'?'战斗中防线已锁定 · 点击构造查看射程与状态':'选择构造或拖到战场 · 滚轮缩放 · 右键 / Esc 取消';
- if(ctx.deployUid&&unit){const stats=Rules.unitStats(state,unit);detail=p?`${Catalog.towers[unit.type].name} · ${p.reason} · 带宽 ${p.used??Rules.bandwidthState(state).used}/${p.cap??Rules.bandwidthState(state).cap}`:`${Catalog.towers[unit.type].name} · ${stats.footprint.join('×')} 占地 · 需要 ${stats.bandwidth} 带宽 · ${Catalog.towers[unit.type].role==='ranged'?'放在等高高台':Catalog.towers[unit.type].role==='melee'?'放在等高地面':'放在等高空地'}`;}
- else if(ctx.terrainTool)detail=p?`${p.reason}${p.ok?` · ${p.cells.length} 格 / ${p.cost} 专注 · ${p.barriers.length} 处屏障`:''}`:'移动到地形查看修改预览 · 确认后支付费用';
+ if(ctx.deployUid&&unit){const stats=Rules.unitStats(state,deploymentUnit()||unit);detail=p?`${Catalog.towers[unit.type].name} · ${p.reason} · 带宽 ${p.used??Rules.bandwidthState(state).used}/${p.cap??Rules.bandwidthState(state).cap}`:`${Catalog.towers[unit.type].name} · ${stats.footprint.join('×')} 占地 · 需要 ${stats.bandwidth} 带宽 · ${Catalog.towers[unit.type].role==='ranged'?'放在等高高台':Catalog.towers[unit.type].role==='melee'?'放在等高地面':'放在等高空地'}`;}
+ else if(ctx.terrainTool)detail=`${ctx.terrainBatch?`草稿 ${ctx.terrainCommands.length} 笔 / ${ctx.terrainBatch.cost} 专注 · `:''}${p?p.reason:'点击连续改造 · 拖动移动视角'} · 确认全部后支付`;
  else if(unit)detail=`${Catalog.towers[unit.type].name} · 已显示实际覆盖范围 · 详细属性与操作在左栏`;
+ if(ctx.deployUid&&unit&&Catalog.towers[unit.type].footprint[0]!==Catalog.towers[unit.type].footprint[1])detail+=` · R 转向 ${ctx.deployRotation*90}°`;
+ if(unit&&Catalog.towers[unit.type].role==='support')detail+=' · 青色轮廓：范围内可维修 / 受增益构造'+(['bandwidth_plus','resistance_plus'].includes(Catalog.towers[unit.type].ability)?' · 带宽 / 抗性对全局生效':'');
+
  const showRange=!!unit&&(unit.x!==null||ctx.hover);
  const html=`<div class="placement-status ${p&&!p.ok?'invalid':''}">${icon(p?(p.ok?'check':'close'):unit?'range':'info')}<span>${e(detail)}</span>${showRange?'<span class="range-legend"><i></i>实线：可作用区域 · 虚线：视线遮挡</span>':''}</div>`;
  if(status.innerHTML!==html)status.innerHTML=html;
 }
 const dragImage=document.createElement('canvas');dragImage.width=dragImage.height=1;dragImage.setAttribute('aria-hidden','true');Object.assign(dragImage.style,{position:'fixed',left:'-10px',top:'0',pointerEvents:'none'});document.body.append(dragImage);
 function hoverCell(cell){if(modalRoot.children.length&&!cell)return;ctx.hover=cell;if(!visibleBattle())return;let p=null;if(cell&&state.phase==='prep'){
- if(ctx.deployUid){const unit=state.units.find(x=>x.uid===ctx.deployUid);if(unit)p=Rules.placement(state,unit,cell.x,cell.z);}
- else if(ctx.terrainTool)p=Rules.previewTerrain(state,{...cell,tool:ctx.terrainTool,brush:ctx.brush,direction:ctx.direction});
+ if(ctx.deployUid){const unit=deploymentUnit();if(unit)p=Rules.placement(state,unit,cell.x,cell.z);}
+ else if(ctx.terrainTool)p=Rules.previewTerrain(displayState(),{...cell,tool:ctx.terrainTool,brush:ctx.brush,direction:ctx.direction});
  }ctx.preview=p;updatePlacementStatus();field.selection={...activeSelection()};}
-function cellClick(cell){if(!visibleBattle()||modalRoot.children.length||interactionLocked()||!cell)return;if(state.phase==='prep'&&ctx.deployUid){const uid=ctx.deployUid,unit=state.units.find(u=>u.uid===uid),p=Rules.placement(state,unit,cell.x,cell.z);if(!p.ok){audio.play('error');return;}const deploy=()=>{if(complete(Rules.deploy(state,uid,cell.x,cell.z),undefined,'deploy')){ctx.deployUid=null;ctx.preview=null;render();}};if(p.cost>0)confirm('确认维护与部署',`<p>${Catalog.towers[unit.type].name} → 坐标 ${cell.x}, ${cell.z}</p><div class="cost-line">消耗 ${p.cost} 专注 · 剩余 ${n(state.focus-p.cost)}<br>部署后带宽 ${p.used} / ${p.cap}</div><small>取消不扣费，构造保留当前位置。</small>`,deploy,'支付并部署');else deploy();return;}
- if(state.phase==='prep'&&ctx.terrainTool){const command={...cell,tool:ctx.terrainTool,brush:ctx.brush,direction:ctx.direction},p=Rules.previewTerrain(state,command);if(!p.ok){toast(p.reason,true);return;}confirm('确认地形改造',`<p>本次修改 ${p.cells.length} 格地形。</p><div class="cost-line">消耗 ${p.cost} 专注 · 剩余 ${n(state.focus-p.cost)}<br>预计形成 ${p.barriers.length} 处屏障</div><small>路径预览已更新。敌人可破坏封闭通路；战前可撤销并原额退款。</small>`,()=>{complete(Rules.applyTerrain(state,command),'地形已更新，可以继续改造或撤销。','terrain');},'确认改造');return;}
+function cellClick(cell){if(!visibleBattle()||modalRoot.children.length||interactionLocked()||!cell)return;if(state.phase==='prep'&&ctx.deployUid){const uid=ctx.deployUid,unit=deploymentUnit(),p=Rules.placement(state,unit,cell.x,cell.z);if(!p.ok){audio.play('error');return;}const deploy=()=>{if(complete(Rules.deploy(state,uid,cell.x,cell.z,unit.rotation),undefined,'deploy')){ctx.deployUid=null;ctx.preview=null;render();}};if(p.cost>0)confirm('确认维护与部署',`<p>${Catalog.towers[unit.type].name} → 坐标 ${cell.x}, ${cell.z}</p><div class="cost-line">消耗 ${p.cost} 专注 · 剩余 ${n(state.focus-p.cost)}<br>部署后带宽 ${p.used} / ${p.cap}</div><small>取消不扣费，构造保留当前位置。</small>`,deploy,'支付并部署');else deploy();return;}
+ if(state.phase==='prep'&&ctx.terrainTool){const command={...cell,tool:ctx.terrainTool,brush:ctx.brush,direction:ctx.direction};setTerrainDraft([...ctx.terrainCommands,command]);return;}
  const u=state.units.find(u=>u.x!==null&&Rules.footprint(state,u).some(c=>c.x===cell.x&&c.z===cell.z));if(u)selectUnit(u.uid);else cancelSelection();
+}
+function setTerrainDraft(commands){
+ const batch=commands.length?Rules.previewTerrainBatch(state,commands):null;
+ if(batch&&!batch.ok){toast(batch.reason,true);audio.play('error');return false;}
+ ctx.terrainCommands=commands;ctx.terrainBatch=batch;ctx.preview=null;render();return true;
+}
+function bindRouteMap(){
+ const sc=app.querySelector('#map-scroll'),tip=app.querySelector('#route-tooltip');if(!sc||!tip)return;
+ let drag=null,suppress=false;
+ const hide=()=>{tip.hidden=true;};
+ const show=node=>{if(!node||drag)return;tip.innerHTML=Screens.mapDetail(state,node.dataset.id);tip.hidden=false;const rect=node.getBoundingClientRect(),scale=app.getBoundingClientRect().width/app.offsetWidth,box=tip.getBoundingClientRect(),left=Math.min(innerWidth-box.width-14,Math.max(14,rect.right+14)),top=Math.max(12,Math.min(innerHeight-box.height-12,rect.top-box.height/2+rect.height/2));tip.style.left=`${left/scale}px`;tip.style.top=`${top/scale}px`;};
+ sc.addEventListener('pointerover',event=>show(event.target.closest('.map-node')));
+ sc.addEventListener('pointerout',event=>{if(event.target.closest('.map-node')!==event.relatedTarget?.closest?.('.map-node'))hide();});
+ sc.addEventListener('focusin',event=>show(event.target.closest('.map-node')));sc.addEventListener('focusout',hide);sc.addEventListener('scroll',hide);
+ sc.addEventListener('pointerdown',event=>{if(event.button!==0)return;drag={x:event.clientX,y:event.clientY,left:sc.scrollLeft,top:sc.scrollTop,pointer:event.pointerId,moved:false};suppress=false;});
+ sc.addEventListener('pointermove',event=>{if(!drag)return;const dx=event.clientX-drag.x,dy=event.clientY-drag.y;if(drag.moved||Math.hypot(dx,dy)>5){drag.moved=true;hide();sc.setPointerCapture(event.pointerId);sc.scrollLeft=drag.left-dx;sc.scrollTop=drag.top-dy;sc.classList.add('dragging');}});
+ sc.addEventListener('pointerup',event=>{if(!drag)return;suppress=drag.moved;drag=null;sc.classList.remove('dragging');if(sc.hasPointerCapture(event.pointerId))sc.releasePointerCapture(event.pointerId);});
+ sc.addEventListener('pointercancel',()=>{drag=null;suppress=true;sc.classList.remove('dragging');});
+ sc.addEventListener('click',event=>{if(suppress){event.preventDefault();event.stopPropagation();suppress=false;}},true);
 }
 function unitDialog(uid){const u=state.units.find(u=>u.uid===uid);if(!u)return;const t=Catalog.towers[u.type],s=Rules.unitStats(state,u);modal(`${t.name} · T${u.tier}${u.branch||''}`,`${sprite(u.type,'towers','big',u)}<p>${t.description}</p><div class="stats-grid"><div>耐久 ${n(u.hp)} / ${n(s.maxHp)}</div><div>攻击 ${n(s.attack)}</div><div>射程 ${n(s.range)}</div><div>带宽 ${s.bandwidth}</div></div><p>${u.branch?t.branches[u.branch].description:'尚未选择成长分支'}</p>`);}
 function upgradeDialog(uid,{free=false,fusion=false}={}){const u=state.units.find(u=>u.uid===uid);if(!u)return;const t=Catalog.towers[u.type];if(u.tier>=3){toast('该构造已达到最高阶。',true);return;}const materials=fusion?state.units.filter(x=>x.uid!==uid&&x.type===u.type&&x.tier===u.tier&&(u.tier===1||x.branch===u.branch)).slice(0,2):[];if(fusion&&materials.length<2){toast('融合需要另外两个同类型、同阶、同分支构造。',true);return;}
  const branches=u.tier===1?['A','B']:[u.branch],cost=free||fusion?0:Rules.upgradeCost(state,u);
- const body=`<p>${fusion?'以当前构造为核心，消耗另外两个匹配构造。':'比较升级后的属性和效果，选择这座构造的发展方向。'}</p>${fusion?`<div class="danger-line">材料：${materials.map(x=>`${t.name} T${x.tier}${x.branch||''} · ${n(x.hp)} 耐久`).join('<br>')}<br>继承材料总耐久比例，核心保留原位置。</div>`:`<div class="cost-line">${free?'本次升阶免费':`消耗 ${cost} 专注 · 当前 ${n(state.focus)}`}</div>`}<div class="choice-grid">${branches.map(branch=>{const s=Rules.unitStats(state,{...u,tier:u.tier+1,branch});return `<article class="choice-card"><span class="tag">T${u.tier+1} · ${branch}</span>${sprite(u.type,'towers','big',{...u,tier:u.tier+1,branch})}<h3>${t.branches[branch].name}</h3><p>${t.branches[branch].description}</p><small>耐久上限 ${n(s.maxHp)} · 攻击 ${n(s.attack)}<br>攻击间隔 ${n(s.rate)}s · 射程 ${n(s.range)}<br>带宽 ${s.bandwidth}</small><button class="btn primary wide" data-dialog-upgrade="${branch}" ${cost>state.focus?'disabled':''}>确认 ${branch} 分支</button></article>`;}).join('')}</div>`;
+ const body=`<p>${fusion?'以当前构造为核心，消耗另外两个匹配构造。':'比较升级后的属性和效果，选择这座构造的发展方向。'}</p>${fusion?`<div class="danger-line">材料：${materials.map(x=>`${t.name} T${x.tier}${x.branch||''} · ${n(x.hp)} 耐久`).join('<br>')}<br>继承材料总耐久比例，核心保留原位置。</div>`:`<div class="cost-line">${free?'本次升阶免费':`消耗 ${cost} 专注 · 当前 ${n(state.focus)}`}</div>`}<div class="choice-grid">${branches.map(branch=>{const s=Rules.unitStats(state,{...u,tier:u.tier+1,branch});return `<article class="choice-card"><span class="tag">T${u.tier+1} · ${branch}</span>${sprite(u.type,'towers','big',{...u,tier:u.tier+1,branch})}<h3>${t.branches[branch].name}</h3>${Screens.upgradeComparison(state,u,branch)}<button class="btn primary wide" data-dialog-upgrade="${branch}" ${cost>state.focus?'disabled':''}>确认 ${branch} 分支</button></article>`;}).join('')}</div>`;
  modal(fusion?'确认三件融合':'选择升级分支',body,[{text:'取消'}],true);
  for(const b of modalRoot.querySelectorAll('[data-dialog-upgrade]'))b.addEventListener('click',()=>{const branch=b.dataset.dialogUpgrade,result=fusion?Rules.fuse(state,uid,branch):state.phase==='node'?Run.nodeAction(state,'upgrade',{uid,branch}):Rules.upgrade(state,uid,branch,{free});if(complete(result,undefined,'upgrade'))closeDialog();});
 }
@@ -149,33 +173,36 @@ async function dispatch(action,target){
  if(interactionLocked())return;
  const d=target?.dataset||{};
  if(action==='new'){startNew();return;}
- if(action==='continue'){const loaded=store.load();if(!loaded.ok){toast(loaded.reason,true);return;}state=loaded.state;screen='run';navigation.length=0;clearInput();ctx.paused=false;settle();render();if(loaded.recovered)toast(loaded.reason,true);else if(difficultyProfile(state).legacy)toast('这次远征沿用旧难度规则；新建远征将采用新的敌人强度与机制。');return;}
+ if(action==='continue'){const loaded=store.load();if(!loaded.ok){toast(loaded.reason,true);return;}state=loaded.state;screen='run';navigation.length=0;clearInput();ctx.footerCollapsed=false;ctx.paused=false;settle();render();if(loaded.recovered)toast(loaded.reason,true);else if(difficultyProfile(state).legacy)toast('这次远征沿用旧难度规则；新建远征将采用新的敌人强度与机制。');return;}
  if(action==='menu'){if(screen==='run'&&state?.phase==='battle'){confirm('返回主菜单',`<p>本场战斗的部署已保存。下次继续将回到开战前，重新开始这一场战斗。</p>`,()=>{save();ctx.paused=true;screen='menu';clearInput();render();},'保存并返回');}else{save();screen='menu';clearInput();render();}return;}
  if(['settings','help','credits','codex'].includes(action)){if(screen!==action)navigation.push(screen);backScreen=screen;screen=action;render();return;}
  if(action==='back'){screen=navigation.pop()||'menu';render();return;}
  if(action==='refresh'){render();return;}
+ if(action==='boss-intel'){modal('控制信号情报',Screens.bossIntel(state));return;}
  if(action==='build'){openBuild();return;}
  if(action==='log'){openLog();return;}
  if(action==='codex-tab'){ctx.codexTab=d.tab;render();return;}
  if(action==='catalog-info'){catalogInfo(d.kind,d.id);return;}
  if(action==='enemy-info'){catalogInfo('enemies',d.id,d.bossPreview?{...state,floor:Catalog.acts[state.act].floors-1}:state);return;}
  if(action==='unit-info'){unitDialog(d.uid);return;}
- if(action==='map-node'){ctx.mapHover=d.id;document.querySelector('#node-detail').innerHTML=Screens.mapDetail(state,d.id);return;}
- if(action==='enter'){clearInput();const result=Run.enterNode(state,d.id);if(result.ok){ctx.mapHover=null;ctx.warehouseTab='stored';ctx.toolTab='units';ctx.threatOpen=true;field.setState(state);field.focus();}complete(result);return;}
+ if(action==='map-node'||action==='enter'){clearInput();const result=Run.enterNode(state,d.id);if(result.ok){ctx.mapHover=null;ctx.footerCollapsed=false;ctx.warehouseTab='stored';ctx.toolTab='units';ctx.threatOpen=true;field.setState(state);field.focus();}complete(result);return;}
  if(action==='select-unit'){selectUnit(d.uid);return;}
  if(action==='clear-selection'){cancelSelection();return;}
  if(action==='move'){selectUnit(d.uid,true);return;}
  if(action==='withdraw'){const u=state.units.find(u=>u.uid===d.uid),cost=Rules.moveCost(state,u);confirm('确认撤回构造',`<p>${Catalog.towers[u.type].name} 将返回仓库。</p><div class="cost-line">消耗 ${cost} 专注 · 剩余 ${n(state.focus-cost)}</div>`,()=>complete(Rules.withdraw(state,d.uid)),'支付并撤回');return;}
  if(action==='repair'){repairDialog(d.uid);return;}
  if(action==='upgrade'||action==='fuse'){upgradeDialog(d.uid,{fusion:action==='fuse'});return;}
- if(action==='tab-units'){ctx.toolTab='units';ctx.terrainTool=null;ctx.preview=null;render();return;}
+ if(action==='tab-units'){if(ctx.terrainBatch){toast('先确认或取消地形草稿。',true);return;}ctx.toolTab='units';ctx.terrainTool=null;ctx.preview=null;render();return;}
  if(action==='tab-terrain'){ctx.deployUid=null;ctx.preview=null;ctx.toolTab='terrain';ctx.terrainTool='raise';render();return;}
  if(action==='warehouse-tab'){ctx.warehouseTab=d.tab;render();return;}
  if(action==='terrain-tool'){ctx.terrainTool=d.tool;ctx.deployUid=null;ctx.preview=null;render();return;}
- if(action==='undo'){complete(Rules.undoTerrain(state),'已撤销上次地形操作并退还专注。');return;}
+ if(action==='undo'){if(ctx.terrainCommands.length)setTerrainDraft(ctx.terrainCommands.slice(0,-1));else complete(Rules.undoTerrain(state),'已撤销上次地形操作并退还专注。');return;}
+ if(action==='terrain-cancel'){setTerrainDraft([]);toast('草稿已取消，地形和专注保持原样。');return;}
+ if(action==='terrain-commit'){const batch=Rules.previewTerrainBatch(state,ctx.terrainCommands);if(!batch.ok){toast(batch.reason,true);return;}const commands=ctx.terrainCommands.map(c=>({...c}));confirm('确认整批地形改造',`<p>${commands.length} 笔 · ${batch.count} 格次，合并修改 ${batch.cells.length} 格。</p><div class="cost-line">合计 ${batch.cost} 专注 · 确认后剩余 ${n(state.focus-batch.cost)}<br>本场累计 ${batch.trial.terrainEdits} 格次 · 下一格 ${Rules.terrainCost(batch.trial,1)} 专注</div><p>草稿中的地形与路径将一次生效。返回后可继续编辑。</p>`,()=>{const result=Rules.applyTerrainBatch(state,commands);if(result.ok){ctx.terrainCommands=[];ctx.terrainBatch=null;ctx.preview=null;}complete(result,'整批地形已确认。','terrain');},'支付并确认全部');return;}
+ if(action==='toggle-footer'){ctx.footerCollapsed=!ctx.footerCollapsed;render();return;}
  if(action==='camera'){if(d.dir==='focus')field.focus();else if(d.dir==='left'||d.dir==='right')field.rotate?.((d.dir==='left'?-1:1)*Math.PI/4);else field.zoom?.(d.dir);return;}
  if(action==='encounter'){openEncounter();return;}
- if(action==='start'){const live=state.units.filter(u=>u.x!==null&&u.hp>0),bw=Rules.bandwidthState(state);confirm('锁定防线并开始战斗',`<p>${live.length} 个构造已部署，带宽 ${bw.used} / ${bw.cap}。</p>${live.length?'':'<div class="danger-line">当前没有部署任何构造，敌人将直接威胁火种。</div>'}<p>战斗中可暂停和调整速度。部署、维修、成长与地形将在本场战斗中锁定。</p>`,()=>{clearInput();if(!save())return;const result=startBattle(state);if(result.ok){ctx.paused=false;ctx.toolTab='units';save();render();audio.play('heavy');}else toast(result.reason,true);},'开始战斗');return;}
+ if(action==='start'){if(ctx.terrainBatch){toast('先确认或取消地形草稿，再开始战斗。',true);return;}const live=state.units.filter(u=>u.x!==null&&u.hp>0),bw=Rules.bandwidthState(state);confirm('锁定防线并开始战斗',`<p>${live.length} 个构造已部署，带宽 ${bw.used} / ${bw.cap}。</p>${live.length?'':'<div class="danger-line">当前没有部署任何构造，敌人将直接威胁火种。</div>'}<p>战斗中可暂停和调整速度。部署、维修、成长与地形将在本场战斗中锁定。</p>`,()=>{clearInput();if(!save())return;const result=startBattle(state);if(result.ok){ctx.paused=false;ctx.footerCollapsed=true;ctx.toolTab='units';save();render();audio.play('heavy');}else toast(result.reason,true);},'开始战斗');return;}
  if(action==='pause'){ctx.paused=!ctx.paused;render();return;}
  if(action==='speed'){ctx.speed=Number(d.speed);render();return;}
  if(action==='skip-tutorial'){settings.tutorial=false;persistSettings();render();return;}
@@ -201,20 +228,20 @@ app.addEventListener('change',event=>{const t=event.target,d=t.dataset;try{
  else if(d.action==='ui-scale'){settings.uiScale=Number(t.value);persistSettings();applyScale();}
  }catch(error){reportError(error);}});
 app.addEventListener('input',event=>{const t=event.target,d=t.dataset;if(d.action==='volume'){const key=d.key==='sfx'?'effects':d.key;settings[key]=Number(t.value)/100;document.querySelector(`#value-${d.key}`).textContent=t.value;audio.setVolumes({master:settings.master,music:settings.music,sfx:settings.effects,ui:settings.ui});persistSettings();}});
-app.addEventListener('pointerover',event=>{const node=event.target.closest('.map-node');if(node&&state?.phase==='map')document.querySelector('#node-detail').innerHTML=Screens.mapDetail(state,node.dataset.id);});
+
 app.addEventListener('dragstart',event=>{const card=event.target.closest('.unit-card');if(interactionLocked()||!card||state?.phase!=='prep'){event.preventDefault();return;}selectUnit(card.dataset.uid,true);event.dataTransfer.setData('text/plain',card.dataset.uid);event.dataTransfer.effectAllowed='move';event.dataTransfer.setDragImage(dragImage,0,0);});
 // Native HTML dragging can suspend requestAnimationFrame in Chromium. Draw the
 // current preview from dragover as well, so its footprint and range track input.
 canvas.addEventListener('dragover',event=>{if(interactionLocked()||!ctx.deployUid)return;event.preventDefault();field.pointer=field.pointerPosition(event);field.updateHover();field.render(performance.now());});
 canvas.addEventListener('drop',event=>{event.preventDefault();field.pointer=field.pointerPosition(event);field.updateHover();if(ctx.hover)cellClick(ctx.hover);});
 app.addEventListener('dragend',()=>{if(ctx.deployUid&&!modalRoot.children.length){ctx.deployUid=null;ctx.preview=null;ctx.hover=null;field.setSelection(activeSelection());updatePlacementStatus();}});
-modalRoot.addEventListener('click',event=>{const t=event.target.closest('[data-modal]');if(transitions.active||!t)return;const callback=dialogCallbacks.get(t.dataset.modal);if(callback){const result=callback();if(result!==false)closeDialog();}else closeDialog();});
+modalRoot.addEventListener('click',event=>{const action=event.target.closest('[data-action]');if(action&&!interactionLocked()){Promise.resolve(dispatch(action.dataset.action,action)).catch(reportError);return;}const t=event.target.closest('[data-modal]');if(transitions.active||!t)return;const callback=dialogCallbacks.get(t.dataset.modal);if(callback){const result=callback();if(result!==false)closeDialog();}else closeDialog();});
 document.addEventListener('keydown',event=>{
  const editing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName);
  if(event.key==='Escape'){transitions.finish('escape');dialogs.finish();if(modalRoot.children.length)closeDialog();else if(visibleBattle())cancelSelection();else if(screen!=='menu'){screen=navigation.pop()||'menu';render();}return;}
  if(interactionLocked())return;
  if(modalRoot.children.length){if(event.key==='Tab'){const focusable=[...modalRoot.querySelectorAll('button:not(:disabled),input,select,a,[tabindex="0"]')],first=focusable[0],last=focusable.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}}return;}
- if(editing)return;if(visibleBattle()&&state.phase==='battle'&&event.code==='Space'){event.preventDefault();ctx.paused=!ctx.paused;render();}else if(visibleBattle()&&state.phase==='battle'&&['1','2','3'].includes(event.key)){ctx.speed=Number(event.key);render();}
+ if(editing)return;if(visibleBattle()&&state.phase==='prep'&&event.key.toLowerCase()==='r'&&(ctx.deployUid||ctx.selectedUid)){event.preventDefault();const selected=state.units.find(u=>u.uid===(ctx.deployUid||ctx.selectedUid));if(ctx.terrainBatch){toast('先确认或取消地形草稿。',true);return;}if(!selected||selected.hp<=0||Catalog.towers[selected.type].footprint[0]===Catalog.towers[selected.type].footprint[1])return;if(!ctx.deployUid)selectUnit(selected.uid,true);const u=deploymentUnit(),fp=Catalog.towers[u.type].footprint;if(fp[0]!==fp[1]){ctx.deployRotation=(ctx.deployRotation+1)%4;ctx.preview=null;field.setSelection(activeSelection());if(ctx.hover)hoverCell(ctx.hover);field.render(performance.now());}return;}if(visibleBattle()&&state.phase==='battle'&&event.code==='Space'){event.preventDefault();ctx.paused=!ctx.paused;render();}else if(visibleBattle()&&state.phase==='battle'&&['1','2','3'].includes(event.key)){ctx.speed=Number(event.key);render();}
 });
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&state?.phase==='battle'){ctx.paused=true;save();if(visibleBattle())render();}});
 window.addEventListener('beforeunload',()=>save());

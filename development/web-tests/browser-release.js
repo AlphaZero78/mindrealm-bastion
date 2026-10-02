@@ -4,7 +4,7 @@ async page=>{
  await page.route('**/*',route=>route.request().url().startsWith('http://127.0.0.1:4186/')?route.continue():route.abort());
  await page.setViewportSize({width:1366,height:768});await page.goto('http://127.0.0.1:4186/?qa=1');await page.waitForFunction(()=>window.__mindrealm);
  const click=a=>page.locator(`[data-action="${a}"]`).first().click(),approve=()=>page.locator('.modal-footer .primary').click();
- await click('new');await page.locator('#seed-input').fill('release-ui');await approve();await click('enter');await page.evaluate(()=>document.fonts.ready);await page.waitForTimeout(100);
+ await click('new');await page.locator('#seed-input').fill('release-ui');await approve();await page.evaluate(()=>document.fonts.ready);await page.waitForTimeout(100);
  const target=await page.evaluate(async()=>{const R=await import('/web/core/rules.js'),q=window.__mindrealm,s=q.getState(),u=s.units[0],choices=[];for(let z=15;z<24;z++)for(let x=15;x<27;x++)if(R.placement(s,u,x,z).ok)choices.push({x,z,d:Math.hypot(x-20,z-18)});choices.sort((a,b)=>a.d-b.d);return choices[0];});
  async function point(cell){return page.evaluate(c=>{const q=window.__mindrealm,r=document.querySelector('canvas').getBoundingClientRect(),s=q.getState(),p=q.field.project(c.x+.5,c.z+.5,s.terrain.cells[c.z*41+c.x].h);return{x:r.x+p.x,y:r.y+p.y};},cell);}
  const card=await page.locator('[data-action="select-unit"][data-uid="u1"]').boundingBox();
@@ -35,7 +35,7 @@ async page=>{
  await click('menu');await click('new');await page.locator('#seed-input').fill('empty-0');await approve();
  for(let i=0;i<40;i++){
   const phase=await page.evaluate(()=>window.__mindrealm.getState().phase);if(phase==='lost')break;
-  if(phase==='map'){const id=await page.evaluate(async()=>{const R=await import('/web/core/state.js'),s=window.__mindrealm.getState();return[...R.availableNodes(s)].sort((a,b)=>(b.type==='battle')-(a.type==='battle'))[0].id;});await page.locator(`[data-action="map-node"][data-id="${id}"]`).click();await click('enter');}
+  if(phase==='map'){const id=await page.evaluate(async()=>{const R=await import('/web/core/state.js'),s=window.__mindrealm.getState();return[...R.availableNodes(s)].sort((a,b)=>(b.type==='battle')-(a.type==='battle'))[0].id;});await page.locator(`[data-action="map-node"][data-id="${id}"]`).click();}
   else if(phase==='prep'){await click('start');await approve();for(const speed of ['2','3','1'])await page.locator(`[data-action="speed"][data-speed="${speed}"]`).click();await page.evaluate(()=>window.__mindrealm.advance(360));}
   else if(phase==='reward')await click('reward');
   else if(phase==='node'){
