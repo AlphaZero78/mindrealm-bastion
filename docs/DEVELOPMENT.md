@@ -43,7 +43,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\development\web-tests\
 
 默认输出在仓库同级的 `game_build_release` 目录，文件名为 `心域防线-Windows.zip`，旁边是 ZIP 的 SHA-256 文件。ZIP 内保留一个游戏文件夹。文件夹顶层放 `启动游戏.exe`、备用 CMD、`README.txt` 和 `MANIFEST.sha256`；`game/` 集中存放 `web/`、`assets/`、`launcher/`、`runtime/`、`licenses/` 与 `version.json`。
 
-`build-launcher.ps1 -OutputExe <绝对路径>` 可单独编译启动器，输出必须位于源码目录外。`package-windows.ps1` 支持 `-ReleaseDirectory` 和 `-OutputZip`。版本化发布可以使用独立目录，例如 `v0.1.0/Mindrealm-Bastion`，并输出 `Mindrealm-Bastion-v0.1.0-windows-x64.zip`。打包前逐项校验文件清单，打包后再次核对所有 ZIP 条目的哈希。
+`build-launcher.ps1 -OutputExe <绝对路径>` 可单独编译启动器，输出必须位于源码目录外。`package-windows.ps1` 支持 `-ReleaseDirectory` 和 `-OutputZip`。版本化发布可以使用独立目录，例如 `v0.1.1/Mindrealm-Bastion`，并输出 `Mindrealm-Bastion-v0.1.1-windows-x64.zip`。打包前逐项校验文件清单，打包后再次核对所有 ZIP 条目的哈希。
 
 `portable-zip.test.ps1` 将 ZIP 解压到临时中文与空格路径，从其他工作目录启动，并从子进程 PATH 中排除全局 Node.js。测试使用隔离端口与内存存档，结束后关闭自己启动的服务。实际浏览器验收同样使用 `MINDREALM_QA=1` 与独立端口。
 
@@ -215,3 +215,13 @@ npm run build
 历史显示与转场构建的 118 项源码测试、源码和便携版各 38 项显示/交互验证，以及独立浏览器的 48 节点胜利和空阵失败，见[分辨率与转场验收](DISPLAY_TRANSITIONS.md)。此前 120 局、2003 场战斗和清晰画布压力证据见[体验更新验收](CLARITY_UPDATE.md)；本次已修改核心难度与战斗，不能沿用旧哈希与旧完整流程结果。旧压力样本平均 67.66 FPS、1% low 33.31 FPS，不能宣称稳定 60 FPS，也不能用转场耗时代替战斗帧率。
 
 压力复现：在独立QA服务器和浏览器中先运行`development/web-tests/browser-perf-clarity-setup.js`，再运行`browser-perf-clarity-sample.js`，将返回结果保存在仓库外，并注明硬件与同期其他负载。
+
+## 2026-10-02 交互更新
+
+[交互与画面验收](EXPERIENCE_UPDATE.md) 记录本轮十项改动及验证范围。部署朝向、地形批次和支援距离继续由 `rules.js` 统一判断。新增单元测试在 `experience.test.mjs`；实际浏览器检查使用 `browser-experience.js`、`browser-terrain-batch.js` 和 `browser-occlusion.js`，通过 Playwright CLI 的 `run-code --filename` 执行。
+
+这些浏览器脚本使用独立的 `4191` 端口与 `?qa=1` 内存存档。`browser-experience.js` 也可复用当前页面所属的其他独立本机端口，并拒绝玩家使用的 `4173`。截图和结果输出到执行目录下的 `mindrealm-experience-qa`，执行目录应设为系统临时目录。完整界面通关仍使用 `browser-full-run.js`，每次检查一幕，三次运行延续同一个浏览器页面。
+
+## v0.1.1 性能与项目审计
+
+本轮覆盖规则、渲染、存档、本地服务、音频与发布流程。具体修复、测量边界和复验命令见[审计报告](PERFORMANCE_AUDIT_V011.md)。浏览器性能对照需要分别保留优化前、后的独立服务；使用临时目录保存基线与结果。

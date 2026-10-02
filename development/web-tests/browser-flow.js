@@ -9,7 +9,7 @@ async (page) => {
  await page.waitForFunction(()=>!!window.__mindrealm);
  await click('new');await page.locator('#seed-input').fill('reference-0');await approve();
  check(await page.locator('.map-node.available').count()===4,'开局四个战斗节点');
- await click('enter');
+ await page.locator('.map-node.available').first().click();
  const opening=await page.evaluate(()=>window.__mindrealm.getState());
  check(opening.phase==='prep'&&opening.focus===99&&opening.units.every(u=>u.x===null),'开局战前与资源');
  await page.locator('[data-action="select-unit"][data-uid="u4"]').click();
@@ -29,9 +29,9 @@ async (page) => {
  await click('tab-terrain');
  const terrain=await page.evaluate(async()=>{const R=await import('/web/core/rules.js'),q=window.__mindrealm,s=q.getState();const cell={x:18,z:16};const p=R.previewTerrain(s,{...cell,tool:'raise',brush:'single'}),r=document.querySelector('canvas').getBoundingClientRect(),screen=q.field.project(cell.x+.5,cell.z+.5,s.terrain.cells[cell.z*41+cell.x].h);return{cell,before:s.terrain.cells[cell.z*41+cell.x].h,p,point:{x:screen.x+r.x,y:screen.y+r.y}};});
  check(terrain.p.ok,'地形测试点合法');
- await page.mouse.click(terrain.point.x,terrain.point.y);await cancel();
+ await page.mouse.click(terrain.point.x,terrain.point.y);await click('terrain-cancel');
  check(await page.evaluate(()=>window.__mindrealm.getState().focus===99),'取消地形预览不扣费');
- await page.mouse.click(terrain.point.x,terrain.point.y);await approve();
+ await page.mouse.click(terrain.point.x,terrain.point.y);await click('terrain-commit');await approve();
  check(await page.evaluate(()=>window.__mindrealm.getState().focus===97),'地形确认按实际格扣费');
  await click('undo');
  check(await page.evaluate(t=>{const s=window.__mindrealm.getState();return s.focus===99&&s.terrain.cells[t.cell.z*41+t.cell.x].h===t.before;},terrain),'撤销地形原额退款');

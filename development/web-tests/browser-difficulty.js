@@ -52,7 +52,7 @@ async page=>{
   await close();check(await page.evaluate(()=>window.__mindrealm.getState().seed==='difficulty-ui-standard'),'取消新远征保留原单局');
   await click('new');await page.locator('#pressure-input').selectOption('10');await page.locator('#seed-input').fill('difficulty-ui-high');await approve();
   check(await page.evaluate(()=>{const q=window.__mindrealm,s=q.getState();return s.pressureLevel===10&&s.difficultyRevision===2&&s.spirit===100&&s.focus===99&&q.store.load().state.pressureLevel===10;}),'真实菜单确认建立压力 10 新规则存档');
-  await click('enter');await click('encounter');
+  await page.locator('.map-node.available').first().click();await click('encounter');
   check(await page.locator('.modal-body').innerText().then(text=>text.includes('控制压力 10')&&text.includes('16 个计划敌人')&&text.includes('增援总预算 1')),'压力 10 战前情报显示同数量编队及增援预算');await close();
 
   // Same in-memory profile; no localStorage or player settings are accessed.
@@ -90,7 +90,7 @@ async page=>{
     if(type==='memory_reforger')await shot('difficulty-memory-detail-960-bottom.png');
     await close();bossDetails.push(expected);
     await page.evaluate(()=>{const q=window.__mindrealm,s=q.getState();s.phase='map';s.bossReveal=3;q.render();});await settle();
-    await act(page.locator('[data-action="enemy-info"][data-boss-preview="true"]'));
+    await click('boss-intel');await act(page.locator('#modal-root [data-action="enemy-info"][data-boss-preview="true"]'));
     const intel=await page.locator('.modal-body').innerText();check(expected.fields.every(field=>intel.includes(field))&&intel.includes(expected.cycle),`${expected.name} 完整路线情报采用首领层实际强度`);await close();
   }
 

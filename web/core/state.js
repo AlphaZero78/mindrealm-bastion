@@ -196,6 +196,7 @@ export function enterNode(state, id) {
     node.eventData = { id: node.event, unit: pick(state.contentPool.towers, rng), relic: pick(state.contentPool.relics.filter(id => !state.relics.includes(id)), rng) || null, targets: shuffle(state.units.map(u => u.uid), rng), branch: rng() < .5 ? 'A' : 'B' };
   }
   state.phase = ['battle', 'elite', 'boss'].includes(node.type) ? 'prep' : 'node';
+  if(state.phase==='prep'){state.terrainEdits=0;state.terrainUndo=[];}
   state.battle = null; state.preBattle = null; return ok({ node });
 }
 

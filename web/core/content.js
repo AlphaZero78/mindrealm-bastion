@@ -62,14 +62,14 @@ const data = {
       "branches": {
         "A": {
           "name": "反震锚",
-          "description": "每次承伤后若仍存活，立即以65%攻击力反击攻击者；反震伤害忽略护甲。T2耐久倍率1.80、攻击倍率1.88；T3耐久倍率2.82、攻击倍率2.94。",
+          "description": "每次承伤后若仍存活，立即以65%攻击力反击攻击者；反震伤害忽略护甲。",
           "hp_mult": 1.2,
           "attack_mult": 1.25,
           "effect": "counter"
         },
         "B": {
           "name": "深层基座",
-          "description": "额外护甲：T2 +10、T3 +15；3格内其他构造承伤降低18%。T2耐久倍率2.18、攻击倍率1.35；T3耐久倍率3.41、攻击倍率2.12。",
+          "description": "获得额外护甲；3格内其他构造承伤降低18%。",
           "hp_mult": 1.45,
           "attack_mult": 0.9,
           "effect": "guard"
@@ -99,14 +99,14 @@ const data = {
       "branches": {
         "A": {
           "name": "吸能刃",
-          "description": "吸血由10%提高到22%攻击伤害。T2耐久倍率1.73、攻击倍率1.77；T3耐久倍率2.70、攻击倍率2.77。",
+          "description": "吸血由10%提高到22%攻击伤害。",
           "hp_mult": 1.15,
           "attack_mult": 1.18,
           "effect": "lifesteal_plus"
         },
         "B": {
           "name": "解甲刃",
-          "description": "每次命中永久削去目标2点护甲，最低0。T2耐久倍率1.50、攻击倍率2.03；T3耐久倍率2.35、攻击倍率3.17。",
+          "description": "每次命中永久削去目标2点护甲，最低0。",
           "hp_mult": 1,
           "attack_mult": 1.35,
           "effect": "armor_break"
@@ -136,14 +136,14 @@ const data = {
       "branches": {
         "A": {
           "name": "自修铆钉",
-          "description": "连续4秒未受攻击后，每秒恢复2.5%最大耐久。T2耐久倍率1.95、攻击倍率1.50；T3耐久倍率3.06、攻击倍率2.35。",
+          "description": "连续4秒未受攻击后，每秒恢复2.5%最大耐久。",
           "hp_mult": 1.3,
           "attack_mult": 1,
           "effect": "self_repair"
         },
         "B": {
           "name": "束缚铆钉",
-          "description": "每次攻击将目标定身0.65秒。T2耐久倍率1.68、攻击倍率1.73；T3耐久倍率2.63、攻击倍率2.70。",
+          "description": "每次攻击将目标定身0.65秒。",
           "hp_mult": 1.12,
           "attack_mult": 1.15,
           "effect": "root"
@@ -173,14 +173,14 @@ const data = {
       "branches": {
         "A": {
           "name": "群体共振",
-          "description": "盟友减伤覆盖从3格扩大到6格，仍降低18%承伤。T2耐久倍率1.77、攻击倍率1.50；T3耐久倍率2.77、攻击倍率2.35。",
+          "description": "盟友减伤覆盖从3格扩大到6格，仍降低18%承伤。",
           "hp_mult": 1.18,
           "attack_mult": 1,
           "effect": "wide_shield"
         },
         "B": {
           "name": "压力导流",
-          "description": "射程内敌人死亡时，原始精神压力降低30%。T2耐久倍率1.65、攻击倍率1.80；T3耐久倍率2.59、攻击倍率2.82。",
+          "description": "射程内敌人死亡时，原始精神压力降低30%。",
           "hp_mult": 1.1,
           "attack_mult": 1.2,
           "effect": "pressure_sink"
@@ -210,14 +210,14 @@ const data = {
       "branches": {
         "A": {
           "name": "连锁针列",
-          "description": "命中后向目标3.5格内另一名敌人连锁一次，造成60%伤害并单独结算护甲。T2攻击倍率1.73；T3攻击倍率2.70。",
+          "description": "命中后向目标3.5格内另一名敌人连锁一次，造成60%伤害并单独结算护甲。",
           "hp_mult": 1,
           "attack_mult": 1.15,
           "effect": "chain"
         },
         "B": {
           "name": "防空针列",
-          "description": "对空伤害额外提高80%，对地仍可攻击。T2攻击倍率1.88；T3攻击倍率2.94。",
+          "description": "对空伤害额外提高80%，对地仍可攻击。",
           "hp_mult": 1.05,
           "attack_mult": 1.25,
           "effect": "anti_air"
@@ -247,14 +247,14 @@ const data = {
       "branches": {
         "A": {
           "name": "穿透轨",
-          "description": "忽略60%护甲，贯穿弹道后方敌人造成65%伤害；每名目标独立检查高度、视线与护甲。T2攻击倍率1.80；T3攻击倍率2.82。",
+          "description": "忽略60%护甲，贯穿弹道后方敌人造成65%伤害；每名目标独立检查高度、视线与护甲。",
           "hp_mult": 1,
           "attack_mult": 1.2,
           "effect": "pierce"
         },
         "B": {
           "name": "处决轨",
-          "description": "目标生命低于30%时伤害额外提高65%。T2攻击倍率2.03；T3攻击倍率3.17。",
+          "description": "目标生命低于30%时伤害额外提高65%。",
           "hp_mult": 1.05,
           "attack_mult": 1.35,
           "effect": "execute"
@@ -284,14 +284,14 @@ const data = {
       "branches": {
         "A": {
           "name": "扩散弹",
-          "description": "爆炸半径从2.3扩大到3.4格，减速持续从1.2提高到2.5秒。T2攻击倍率1.68；T3攻击倍率2.63。",
+          "description": "爆炸半径从2.3扩大到3.4格，减速持续从1.2提高到2.5秒。",
           "hp_mult": 1,
           "attack_mult": 1.12,
           "effect": "large_splash"
         },
         "B": {
           "name": "腐蚀弹",
-          "description": "每次爆炸命中使目标永久失去2点护甲，最低0。T2攻击倍率1.88；T3攻击倍率2.94。",
+          "description": "每次爆炸命中使目标永久失去2点护甲，最低0。",
           "hp_mult": 1.05,
           "attack_mult": 1.25,
           "effect": "corrosion"
@@ -321,14 +321,14 @@ const data = {
       "branches": {
         "A": {
           "name": "蜂群织机",
-          "description": "每轮派出第二架无人机，攻击另一名射程内目标并造成60%伤害。T2攻击倍率1.65；T3攻击倍率2.59。",
+          "description": "每轮派出第二架无人机，攻击另一名射程内目标并造成60%伤害。",
           "hp_mult": 1,
           "attack_mult": 1.1,
           "effect": "extra_drone"
         },
         "B": {
           "name": "标记织机",
-          "description": "命中后标记目标4秒，使其受到的后续伤害提高15%。T2攻击倍率1.73；T3攻击倍率2.70。",
+          "description": "命中后标记目标4秒，使其受到的后续伤害提高15%。",
           "hp_mult": 1.1,
           "attack_mult": 1.15,
           "effect": "mark"
@@ -359,14 +359,14 @@ const data = {
       "branches": {
         "A": {
           "name": "宽域中继",
-          "description": "在阶级基础增益上额外提供带宽：T2 +4、T3 +6。最终提供约11/14带宽；禁用时全部停止。",
+          "description": "强化全局带宽供给；禁用时停止提供带宽。",
           "hp_mult": 1.15,
           "attack_mult": 1,
           "effect": "bandwidth_plus_more"
         },
         "B": {
           "name": "抗扰中继",
-          "description": "启用时吸收3点临时带宽干扰；同分支中继不叠加该缓冲。T2耐久倍率2.03；T3耐久倍率3.17。",
+          "description": "启用时吸收3点临时带宽干扰；同分支中继不叠加该缓冲。",
           "hp_mult": 1.35,
           "attack_mult": 1,
           "effect": "jam_resist"
@@ -396,14 +396,14 @@ const data = {
       "branches": {
         "A": {
           "name": "紧急维修",
-          "description": "对耐久低于35%的目标，每次维修量提高60%。T2基础维修倍率2.10；T3基础维修倍率3.29。",
+          "description": "对耐久低于35%的目标，每次维修量提高60%。",
           "hp_mult": 1.1,
           "attack_mult": 1.4,
           "effect": "critical_repair"
         },
         "B": {
           "name": "装甲覆写",
-          "description": "被维修者获得3点护甲，持续3秒。T2基础维修倍率1.73；T3基础维修倍率2.70。",
+          "description": "被维修者获得3点护甲，持续3秒。",
           "hp_mult": 1.2,
           "attack_mult": 1.15,
           "effect": "armor_repair"
@@ -434,7 +434,7 @@ const data = {
       "branches": {
         "A": {
           "name": "激励合唱",
-          "description": "友军攻击频率额外提高12%，伤害额外提高6%；与本体阶级增益相加。T2/3本体频率增益15.6%/19.2%。",
+          "description": "友军攻击频率额外提高12%，伤害额外提高6%；与本体阶级增益相加。",
           "hp_mult": 1.1,
           "attack_mult": 1,
           "effect": "strong_haste"
@@ -472,7 +472,7 @@ const data = {
       "branches": {
         "A": {
           "name": "深层抗性",
-          "description": "在本体阶级抗性之外，T2额外提供2抗性、T3额外提供3抗性；启用时总计5.9/7.8抗性。",
+          "description": "强化全局精神抗性；启用时持续生效。",
           "hp_mult": 1.25,
           "attack_mult": 1,
           "effect": "resistance_plus_more"
@@ -1945,9 +1945,10 @@ export function contentPool(profile = {}) {
 export function hashSeed(input){let h=2166136261;for(const c of String(input)){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
 export function seededRandom(seed){let s=hashSeed(seed);return ()=>{s+=0x6D2B79F5;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
 export function shuffle(items,random){const out=[...items];for(let i=out.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[out[i],out[j]]=[out[j],out[i]];}return out;}
+const effectKeys=Object.freeze([...new Set([...Object.values(relics),...Object.values(talents)].map(item=>item.effect))]);
 export function effects(state){
  const result={attack:0,ranged_attack:0,melee_attack:0,armor:0,hp:0,range:0,haste:0,repair_discount:0,move_discount:0,terrain_discount:0,upgrade_discount:0,bandwidth:0,resistance:0,pressure_reduction:0};
- for(const item of [...Object.values(relics),...Object.values(talents)])result[item.effect]??=0;
+ for(const key of effectKeys)result[key]??=0;
  for(const id of [...(state.relics||[]),...(state.talents||[])]){const item=relics[id]||talents[id];if(item)result[item.effect]=(result[item.effect]||0)+item.value;}
  for(const [key,value]of Object.entries(state.modifiers||{}))result[key]=(result[key]||0)+value;
  result.attack+=result.tower_damage_bonus||0;result.move_discount+=result.relocate_discount||0;

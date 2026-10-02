@@ -63,10 +63,10 @@ test('renderer uses branch and phase poses, freezes action effects, and stops ov
  const event={type:'shot',action:'attack',actionKind:'melee',sourceKind:'unit',sourceId:u.uid,sourceType:u.type,targetKind:'enemy',targetId:e.id,targetType:e.type,time:10,from:{x:18,z:16,h:0},to:{x:19,z:15,h:0}};
  field.render(1000,[event]);const frames=structuredClone(field.entityFrames),clock=field.entityMotion.clock;
  assert.equal(frames.find(f=>f.key===`unit:${u.uid}`).row,46);assert.equal(frames.find(f=>f.key==='enemy:e-art').row,28);assert.equal(field.effects.length,1);
- const modelCalls=()=>canvas.ctx.calls.filter(c=>c.method==='drawImage'&&[...field.images.values()].includes(c.args[0]));
- for(const call of modelCalls()){const type=[...field.images].find(([,img])=>img===call.args[0])[0],art=ENTITY_ART[type],[,x,y,w,h]=call.args;assert.equal(w,art.cell);assert.equal(h,art.cell);assert.ok(x>=0&&x+w<=art.cell*8);assert.ok(y>=0&&y+h<=art.cell*art.rows);}
+ const modelCalls=()=>[...canvas.ctx.calls,...(field.entityLayer?.ctx.calls||[])].filter(c=>c.method==='drawImage'&&[...field.images.values()].includes(c.args[0]));
+ assert.ok(modelCalls().length>0);for(const call of modelCalls()){const type=[...field.images].find(([,img])=>img===call.args[0])[0],art=ENTITY_ART[type],[,x,y,w,h]=call.args;assert.equal(w,art.cell);assert.equal(h,art.cell);assert.ok(x>=0&&x+w<=art.cell*8);assert.ok(y>=0&&y+h<=art.cell*art.rows);}
  field.render(100000);assert.deepEqual(field.entityFrames,frames);assert.equal(field.entityMotion.clock,clock);assert.equal(field.effects.length,1,'wall time does not expire paused impacts');
- state.battle.disabled=[u.uid];field.render(100016);const disabled=field.entityFrames.find(f=>f.key===`unit:${u.uid}`);assert.equal(disabled.action,'disabled');assert.equal(disabled.row,40);assert.ok(canvas.ctx.calls.some(c=>c.method==='fillText'&&c.args[0]==='Ⅱ 停机'));
+ state.battle.disabled=[u.uid];field.render(100016);const disabled=field.entityFrames.find(f=>f.key===`unit:${u.uid}`);assert.equal(disabled.action,'disabled');assert.equal(disabled.row,40);assert.ok([...canvas.ctx.calls,...(field.entityLayer?.ctx.calls||[])].some(c=>c.method==='fillText'&&c.args[0]==='Ⅱ 停机'));
  state.battle.time=11.1;field.render(100033);assert.equal(field.effects.length,0);assert.equal(field.entityFrames.find(f=>f.key==='enemy:e-art').pose,0);
  }finally{qa.restore();}
 });
@@ -94,5 +94,32 @@ test('selection corners enclose the enlarged body and airborne entities keep the
  const corners=canvas.ctx.calls.filter(c=>c.method==='lineTo').map(c=>c.args);assert.ok(corners.some(([x,y])=>x<box.left&&y<box.top));assert.ok(corners.some(([x,y])=>x>box.right&&y>box.bottom));
  state.terrain.cells[1*41+2].h=0;state.terrain.cells[1*41+3].h=1;const e={id:'floating-edge',type:'floating_noise',x:2.8,z:1.2,air:true,h:0};assert.equal(field.entityGeometry(e,true).h,1.3);assert.equal(field.entityGeometry({...e,h:undefined},true).h,1.3,'fractional coordinates use the same floor cell as rules');
  state.terrain.cells[1*41+2].h=3;assert.equal(field.entityGeometry({...e,hp:0},true).h,1.3,'a death snapshot keeps its recorded height');
+ }finally{qa.restore();}
+});
+
+test('entity occlusion masks an isolated surface and never repaints rear terrain over the scene',()=>{
+ const qa=setup();try{const {field,state,canvas}=qa;const u=state.units[0];Object.assign(u,{x:18,z:17});
+ for(const cell of state.terrain.cells)cell.h=0;for(let z=19;z<22;z++)for(let x=18;x<22;x++)state.terrain.cells[z*41+x].h=3;state.terrain.revision++;
+ const drawTile=field.drawTile.bind(field),occlude=field.occlude.bind(field);let entityPass=false,masked=0;
+ field.drawTile=(ctx,tile)=>{assert.equal(entityPass,false,'terrain may only paint during its cache build');drawTile(ctx,tile);};
+ field.occlude=(...args)=>{if(field.maskingEntity){assert.notEqual(field.ctx,canvas.ctx,'a terrain mask cannot erase the composed scene');masked++;}entityPass=true;try{occlude(...args);}finally{entityPass=false;}};
+ for(const yaw of [0,Math.PI/4,Math.PI*.75,Math.PI*1.25,Math.PI*1.75]){field.camera.yaw=yaw;field.dirty=true;field.render(100);}
+ assert.ok(masked>=1);assert.ok(field.entityLayer.width<canvas.width,'mask allocation is bounded to model rectangles');
+ }finally{qa.restore();}
+});
+
+test('rectangular model keeps its placement direction on battle entry before aiming its first shot',()=>{
+ const qa=setup();try{const {field,state}=qa,u=state.units.find(u=>u.type==='focus_rail');Object.assign(u,{x:18,z:15,rotation:1,lastActionAt:null,facing:0});
+ state.phase='prep';field.render(100);const preview=field.entityFrames.find(f=>f.key===`unit:${u.uid}`);assert.equal(preview.facing,Math.PI/2);
+ state.phase='battle';state.battle={time:0,enemies:[],disabled:[]};field.render(200);assert.equal(field.entityFrames.find(f=>f.key===`unit:${u.uid}`).facing,Math.PI/2);
+ u.lastActionAt=0;u.facing=Math.PI;state.battle.time=.1;field.render(300);assert.equal(field.entityFrames.find(f=>f.key===`unit:${u.uid}`).facing,Math.PI);
+ }finally{qa.restore();}
+});
+
+test('render rule caches expire after success and exceptions so later upgrades cannot reuse stale stats',()=>{
+ const qa=setup();try{const {field,state}=qa,u=state.units[0];Object.assign(u,{x:18,z:15});field.render(100);
+ const before=Rules.unitStats(state,u).attack;state.modifiers.attack=.5;assert.ok(Rules.unitStats(state,u).attack>before);
+ const draw=field.drawBackground;field.drawBackground=()=>{Rules.unitStats(state,u);throw Error('controlled draw failure');};assert.throws(()=>field.render(200),/controlled draw failure/);
+ state.modifiers.attack=1;assert.equal(Rules.unitStats(state,u).attack,before*2);field.drawBackground=draw;field.render(300);
  }finally{qa.restore();}
 });

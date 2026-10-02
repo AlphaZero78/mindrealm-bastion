@@ -67,3 +67,54 @@ body[data-screen=battle] #toast{left:8px;top:var(--battle-toast-top,84px);bottom
 .setting-help{display:block;margin-top:12px;font-size:11px;line-height:1.8}.resolution-status{display:block;margin-top:7px;font-size:11px;color:var(--gold)}.setting-row select{min-width:125px;max-width:55%}.setting-row label{flex-shrink:0}
 .difficulty-preview-info{height:clamp(150px,24vh,240px);overflow:auto;scrollbar-width:thin;scrollbar-gutter:stable;border:1px solid var(--line);border-radius:4px;margin:12px 0}.difficulty-preview-info .cost-line{margin:0;border:0;min-height:100%}.difficulty-preview-info:focus-visible{outline:2px solid var(--mint);outline-offset:2px}
 .sprite>svg{width:100%;height:100%;display:block;overflow:hidden;image-rendering:pixelated}.codex-entry>.sprite{width:76px;height:70px}
+
+/* Rounded signal surfaces, with hexagonal route markers and circular controls. */
+:root{--surface-radius:20px;--control-radius:12px}
+.btn,button,input,select{border-radius:var(--control-radius)}
+.icon-btn,.camera-controls button,.speed-controls button{border-radius:50%}
+.panel,.modal,.choice-card,.help-card,.codex-entry,.summary-number,.service-unit{border-radius:var(--surface-radius);overflow:hidden}
+.modal{border:1px solid #64998a66;box-shadow:0 24px 90px #0009;overflow:auto;scrollbar-width:thin}
+.modal-head{background:linear-gradient(115deg,#21483c80,transparent)}
+.tag,.enemy-chips button,.chapter-number,.tabs .btn,.service-status{border-radius:999px}
+.unit-card{border-radius:16px;background:linear-gradient(155deg,#21433f,#112d35);border-color:#46695d;box-shadow:inset 0 1px #ace6cf0a}
+.unit-card.selected{box-shadow:inset 0 0 0 1px var(--mint),0 0 16px #63cfb21c}
+.threat-panel,.tutorial,.cost-line,.danger-line,.event-result,.difficulty-preview-info{border-radius:14px}
+.battle-sidebar{border-radius:0 0 24px 0}
+.battle-sidebar .tutorial{position:relative}.act-step,.intel{border-radius:16px}
+.battle-footer{border-radius:24px 24px 0 0}
+.node-illustration{border-radius:28px}.node-illustration:before{border-radius:50%;transform:none}.node-illustration:after{border-radius:50%}
+.menu-actions .btn{border-radius:18px}.menu-content{position:relative}.signal-dot{box-shadow:0 0 22px #8cecc0}
+.map-screen .map-body{grid-template-columns:260px minmax(0,1fr);gap:28px;padding:22px 32px}
+.map-screen .map-scroll{border:1px solid #50786555;border-radius:28px;background-color:#10292cec;cursor:grab;touch-action:none;user-select:none;box-shadow:inset 0 0 100px #081e28}
+.map-scroll.dragging{cursor:grabbing}
+.map-screen .route-map{max-width:860px;margin:auto}
+.map-node{width:56px;height:56px;clip-path:polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%);border-radius:0;border:0;background:#456259}
+.map-node:before{content:'';position:absolute;inset:2px;clip-path:inherit;background:#153038;z-index:-1}
+.map-node.available{background:var(--mint);filter:drop-shadow(0 0 9px #75dfbd55)}
+.map-node.available:before{background:linear-gradient(135deg,#305a4a,#194437)}
+.map-node:focus-visible{outline:0;background:#fff1ad;filter:drop-shadow(0 0 10px #f8df99)}
+.map-node.boss{width:72px;height:72px}.node-check{border-radius:50%;right:8px;bottom:6px}
+.route-tooltip{position:fixed;z-index:35;pointer-events:none;width:300px;max-width:calc(100vw - 28px);padding:20px;border:1px solid #82c6ae88;border-radius:20px;background:#102b33f5;box-shadow:0 18px 50px #0007;animation:appear .16s ease-out}
+.route-tooltip[hidden]{display:none}.route-tooltip>.icon{width:25px;height:25px;color:var(--gold);float:right}
+.route-tooltip h3{font-size:20px;margin:8px 0}.route-tooltip p{font-size:12px;line-height:1.75;margin:6px 0 13px}.route-tooltip small{font-size:11px}.route-tooltip .eyebrow{font-size:10px}.route-entry-hint{color:var(--mint);border-top:1px solid #477562;padding-top:12px;margin-bottom:0!important}
+.service-unit.is-deployed{border-color:#78d8b4;background:linear-gradient(135deg,#285845,#15333b);box-shadow:inset 4px 0 #8be6c1,0 5px 24px #06181944}
+.service-status{display:inline-block;padding:4px 10px;margin-bottom:12px;font-size:11px;color:var(--muted);background:#0b232b}
+.is-deployed .service-status{color:var(--mint);background:#0e322b}
+.upgrade-effects{display:grid;gap:12px}.upgrade-effects section{padding:12px;border-radius:14px;background:#0d252e;border:1px solid #31534b}
+.upgrade-effects section+section{border-color:#64bca0;background:#203d35}
+.upgrade-comparison table{width:100%;border-collapse:collapse;font-size:11px;margin:12px 0;text-align:left}
+.upgrade-comparison th,.upgrade-comparison td{padding:8px 4px;border-bottom:1px solid #3e5f51;white-space:nowrap}.upgrade-comparison th{font-weight:400;color:var(--muted)}.upgrade-comparison .changed{color:var(--mint)}
+.modal .upgrade-comparison p{font-size:11px;line-height:1.8;margin:7px 0 0}
+.footer-toggle{white-space:nowrap;flex-shrink:0;border-color:#72ba9d;padding:7px 12px;font-size:11px}
+.battle-footer .toolbar{justify-content:flex-start;flex-wrap:wrap}.battle-footer .toolbar-hint{margin-left:auto}
+.footer-drawer[hidden]{display:none}.battle-footer .terrain-toolbar{max-width:calc(100% - 245px);gap:8px;align-items:flex-start}.terrain-batch-actions{display:flex;align-items:center;flex-wrap:wrap;gap:6px;flex:1;min-width:260px}.terrain-batch-actions .btn{font-size:11px;padding:8px 10px}.terrain-batch-actions small{width:100%;font-size:10px;line-height:1.5;color:var(--muted)}
+.battle-screen[data-footer-collapsed=true] .battle-footer{min-height:100px;padding-top:9px;padding-bottom:9px}
+.battle-screen[data-footer-collapsed=true] .toolbar{margin:0;max-width:calc(100% - 300px)}
+.battle-screen[data-footer-collapsed=true] .toolbar .tabs,.battle-screen[data-footer-collapsed=true] .toolbar-hint{display:none}
+.battle-screen[data-footer-collapsed=true] .battle-go{bottom:10px;right:24px;display:flex;align-items:center;gap:10px;width:390px}
+.battle-screen[data-footer-collapsed=true] .battle-go .speed-controls{margin:0;width:120px;flex-shrink:0}
+.battle-screen[data-footer-collapsed=true] .battle-go>.btn{padding:8px 18px;white-space:nowrap;width:auto}
+.battle-screen[data-footer-collapsed=true] .battle-go>small{display:none}
+.battle-screen[data-footer-collapsed=true] .speed-controls button{padding:7px;border-radius:10px}
+@container(max-width:1100px){.map-screen .map-body{grid-template-columns:minmax(0,1fr);padding:16px}.map-screen .map-side.left{display:none}.terrain-batch-actions{min-width:220px}.battle-footer .terrain-toolbar{max-width:calc(100% - 180px)}.battle-footer .toolbar-hint{display:none}.battle-screen[data-footer-collapsed=true] .battle-go{right:14px;width:290px}.upgrade-comparison th,.upgrade-comparison td{font-size:10px;padding:6px 2px}}
+@media(prefers-reduced-motion:reduce){.route-tooltip{animation:none}}

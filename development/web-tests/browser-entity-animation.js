@@ -12,7 +12,7 @@ async page=>{
   const initial=await page.evaluate(()=>({screen:window.__mindrealm.snapshot().screen,phase:window.__mindrealm.getState()?.phase}));
   if(initial.screen!=='menu'){await click('menu');if(initial.screen==='run'&&initial.phase==='battle')await page.locator('.modal-footer .primary').click();await stable();}
   await click('new');await page.locator('#seed-input').fill('entity-upgrade-qa');await page.locator('.modal-footer .primary').click();await stable();
-  await page.locator('.map-node.available').first().click();await click('enter');await stable();await page.setViewportSize({width:960,height:540});
+  await page.locator('.map-node.available').first().click();await stable();await page.setViewportSize({width:960,height:540});
   await page.locator('[data-action="select-unit"][data-uid="u1"]').click();
   const before=await page.evaluate(()=>JSON.stringify(window.__mindrealm.getState()));
   await page.locator('[data-action="upgrade"][data-uid="u1"]').click();await stable();
@@ -44,7 +44,7 @@ async page=>{
   await page.waitForFunction(()=>window.__mindrealm);await page.setViewportSize({width:1920,height:1080});
   if(config.mode==='upgrade'){const result=await verifyUpgrade();return{status:'MINDREALM_ENTITY_UPGRADE_UI_OK',checks,result,errors};}
   if(config.mode==='smoke'){
-   await click('new');await page.locator('#seed-input').fill('reference-0');await page.locator('.modal-footer .primary').click();await stable();await page.locator('.map-node.available').first().click();await click('enter');await stable();await page.setViewportSize({width:960,height:540});
+   await click('new');await page.locator('#seed-input').fill('reference-0');await page.locator('.modal-footer .primary').click();await stable();await page.locator('.map-node.available').first().click();await stable();await page.setViewportSize({width:960,height:540});
    await page.locator('[data-action="select-unit"][data-uid="u1"]').click();
    const untouched=await page.evaluate(()=>JSON.stringify(window.__mindrealm.getState()));
    const target=await page.evaluate(async()=>{const q=window.__mindrealm,R=await import('/web/core/rules.js'),s=q.getState(),u=s.units.find(u=>u.uid==='u1'),r=q.field.canvas.getBoundingClientRect();for(let z=18;z<25;z++)for(let x=16;x<26;x++)if(R.placement(s,u,x,z).ok){const p=q.field.p(x+.5,z+.5,0);return{x:r.left+p.x,y:r.top+p.y};}});
@@ -98,7 +98,7 @@ async page=>{
   const enemies=page.locator('.codex-entry');
   for(const [label,index]of [['top',0],['middle',12],['bosses',27]]){await enemies.nth(index).scrollIntoViewIfNeeded();await capture(`codex-enemies-${label}`);}
   await click('menu');await click('new');await page.locator('#seed-input').fill('reference-0');await page.locator('.modal-footer .primary').click();
-  await page.locator('.map-node.available').first().click();await click('enter');
+  await page.locator('.map-node.available').first().click();
   await page.evaluate(async()=>{const q=window.__mindrealm,H=await import('/development/web-tests/helpers/reference-strategy.mjs');H.prepareReference(q.getState());q.render();});
   await capture('battle-prep');await click('start');await page.locator('.modal-footer .primary').click();
   await page.waitForFunction(()=>{const s=window.__mindrealm.getState();return s.phase==='battle'&&s.battle.enemies.some(enemy=>!enemy.dead);});

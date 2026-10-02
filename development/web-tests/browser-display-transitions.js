@@ -47,7 +47,7 @@ async page=>{
  await settled();
  check(await page.evaluate(()=>document.activeElement?.dataset.action==='new'),'Dialog close restores focus to its trigger after unlocking');
  await click('new');await page.locator('#seed-input').fill('reference-0');await page.locator('.modal-footer .primary').click();await settled();
- await page.evaluate(()=>{const f=__mindrealm.field;f.camera.x=7;f.camera.z=10;f.zoomLevel=2;const render=f.render.bind(f);f.render=(...args)=>{if(!window.__enterCamera)window.__enterCamera={x:f.camera.x,z:f.camera.z,zoom:f.zoomLevel};return render(...args);};document.querySelector('[data-action="enter"]').click();});
+ await page.evaluate(()=>{const f=__mindrealm.field;f.camera.x=7;f.camera.z=10;f.zoomLevel=2;const render=f.render.bind(f);f.render=(...args)=>{if(!window.__enterCamera)window.__enterCamera={x:f.camera.x,z:f.camera.z,zoom:f.zoomLevel};return render(...args);};document.querySelector('.map-node.available').click();});
  await settled();
  check(await page.evaluate(()=>__enterCamera.x===20.5&&__enterCamera.z===24.5&&__enterCamera.zoom===1.1),'The first preparation frame uses the newly focused camera');
  check(await page.evaluate(()=>__mindrealm.getState().phase==='prep'&&!__mindrealm.getState().units.some(u=>u.x!==null)),'Entering battle preparation completes without unintended deployment');

@@ -1,6 +1,7 @@
 import { acts, towers, enemies, relics, talents, events, contentUnlocks, hashSeed } from './content.js';
 import { normalizeResolution } from '../view/display-settings.js';
 import { CURRENT_DIFFICULTY_REVISION } from './difficulty.js';
+import {unitFootprint} from './rules.js';
 
 const clone = value => JSON.parse(JSON.stringify(value));
 const defaults = () => ({ version: 2, fragments: 0, unlockedPressure: 0, runs: 0, wins: 0, settledRuns: [], discoveries: { towers: [], enemies: [], relics: [], talents: [], archives: [] }, unlockedArchives: [], unlockedContent: [] });
@@ -11,6 +12,8 @@ const distinct = values => Array.isArray(values) && new Set(values).size === val
 const idsIn = (values, catalog) => distinct(values) && values.every(id => typeof id === 'string' && Object.hasOwn(catalog, id));
 const nonnegative = n => finite(n) && n >= 0;
 const numericTree = value => typeof value === 'number' ? finite(value) : value === null || typeof value !== 'object' ? true : Object.values(value).every(numericTree);
+const record = value => !!value && typeof value === 'object' && !Array.isArray(value);
+const validCell = c => record(c) && Number.isInteger(c.h) && c.h >= 0 && c.h <= 4 && Number.isInteger(c.ramp) && c.ramp >= -1 && c.ramp <= 3 && typeof c.protected === 'boolean';
 const validDiscoveries = d => d && idsIn(d.towers, towers) && idsIn(d.enemies, enemies) && idsIn(d.relics, relics) && idsIn(d.talents, talents) && idsIn(d.archives, Object.fromEntries(Object.values(enemies).filter(e => e.kind === 'boss').map(e => [e.id, e])));
 function validRun(state) {
   if (!state || state.version !== 2 || !numericTree(state) || typeof state.seed !== 'string' || !['map', 'prep', 'reward', 'node', 'won', 'lost'].includes(state.phase)) return false;
@@ -21,7 +24,9 @@ function validRun(state) {
   if (!state.terrain || state.terrain.size !== 41 || state.terrain.cells?.length !== 1681 || !Number.isInteger(state.terrain.revision) || state.terrain.revision < 0) return false;
   if (!state.terrain.core || state.terrain.core.x !== 20 || state.terrain.core.z !== 24 || state.terrain.core.size !== 5 || state.terrain.entries?.length !== 4) return false;
   if (!['north', 'west', 'east', 'south'].every(id => state.terrain.entries.some(e => e.id === id && Number.isInteger(e.x) && Number.isInteger(e.z) && e.x >= 0 && e.z >= 0 && e.x < 41 && e.z < 41))) return false;
-  if (!state.terrain.cells.every(c => c && Number.isInteger(c.h) && c.h >= 0 && c.h <= 4 && Number.isInteger(c.ramp) && c.ramp >= -1 && c.ramp <= 3 && typeof c.protected === 'boolean')) return false;
+  if (!state.terrain.cells.every(validCell)) return false;
+  if (state.modifiers != null && (!record(state.modifiers) || !Object.values(state.modifiers).every(finite))) return false;
+  if (state.terrainUndo !== undefined && (!Array.isArray(state.terrainUndo) || !state.terrainUndo.every(item => record(item) && nonnegative(item.cost) && (item.editsBefore === undefined || Number.isSafeInteger(item.editsBefore) && item.editsBefore >= 0) && Array.isArray(item.cells) && item.cells.length > 0 && item.cells.every(c => record(c) && Number.isInteger(c.x) && Number.isInteger(c.z) && c.x >= 0 && c.z >= 0 && c.x < 41 && c.z < 41 && validCell(c.before) && validCell(c.after))))) return false;
   if (!['spirit', 'maxSpirit', 'focus', 'bandwidth', 'resistance', 'depth', 'xp'].every(key => finite(state[key]))) return false;
   if (state.spirit < 0 || state.maxSpirit <= 0 || state.spirit > state.maxSpirit || state.focus < 0 || state.bandwidth < 0 || state.depth < 1 || state.depth > 12 || !Number.isInteger(state.depth) || state.xp < 0) return false;
   if (!Number.isInteger(state.pressureLevel) || state.pressureLevel < 0 || state.pressureLevel > 10 || !Number.isInteger(state.floor) || state.floor < -1 || state.floor >= acts[state.act].floors) return false;
@@ -29,7 +34,9 @@ function validRun(state) {
   if (![1, 2, 3].every(act => state.contentPool.events.some(id => events[id].act === act))) return false;
   if (!['unitCounter', 'rewardCounter', 'pendingUnitRewards', 'pendingTalents'].every(k => Number.isInteger(state[k]) && state[k] >= 0) || !validDiscoveries(state.discoveries)) return false;
   const uids = new Set();
-  for (const u of state.units) { if (!towers[u.type] || typeof u.uid !== 'string' || !/^u[1-9]\d*$/.test(u.uid) || +u.uid.slice(1) > state.unitCounter || uids.has(u.uid) || !finite(u.hp) || u.hp < 0 || ![1, 2, 3].includes(u.tier) || !(u.tier === 1 ? u.branch === null : ['A', 'B'].includes(u.branch)) || !['near', 'far', 'hp'].includes(u.priority)) return false; uids.add(u.uid); if (![u.x, u.z].every(v => v === null || Number.isInteger(v) && v >= 0 && v < 41)) return false; if ((u.x === null) !== (u.z === null)) return false; if (u.x !== null && (u.x + towers[u.type].footprint[0] > 41 || u.z + towers[u.type].footprint[1] > 41)) return false; }
+  if (state.units.some(u => !record(u) || u.hpBonus !== undefined && !finite(u.hpBonus) || u.order !== undefined && (!Number.isSafeInteger(u.order) || u.order < 0) || u.everDeployed !== undefined && typeof u.everDeployed !== 'boolean')) return false;
+  if(state.terrainEdits!==undefined&&(!Number.isSafeInteger(state.terrainEdits)||state.terrainEdits<0))return false;
+  for (const u of state.units) { if (!towers[u.type] || typeof u.uid !== 'string' || !/^u[1-9]\d*$/.test(u.uid) || +u.uid.slice(1) > state.unitCounter || uids.has(u.uid) || !finite(u.hp) || u.hp < 0 || ![1, 2, 3].includes(u.tier) || !(u.tier === 1 ? u.branch === null : ['A', 'B'].includes(u.branch)) || !['near', 'far', 'hp'].includes(u.priority)) return false; uids.add(u.uid); if (![u.x, u.z].every(v => v === null || Number.isInteger(v) && v >= 0 && v < 41)) return false; if ((u.x === null) !== (u.z === null)) return false; if(u.rotation!==undefined&&(!Number.isInteger(u.rotation)||u.rotation<0||u.rotation>3))return false; if (u.x !== null && (u.x + unitFootprint(u)[0] > 41 || u.z + unitFootprint(u)[1] > 41)) return false; }
   for (let i = 0; i < 3; i++) {
     const map = state.maps[i]; if (!Array.isArray(map.nodes) || !acts[i].bosses.includes(map.boss) || map.floors !== acts[i].floors) return false;
     const ids = new Set(map.nodes.map(n => n.id));
