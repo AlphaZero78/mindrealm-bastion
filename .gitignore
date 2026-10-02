@@ -1,5 +1,8 @@
+node_modules/
+runtime/
 .godot/
 *.import
+.playwright-cli/
 .cache/
 .temp/
 out/
@@ -10,6 +13,5 @@ screenshots/
 *.tmp
 *.zip
 *.7z
-*.pck
 *.exe
 test-results/
