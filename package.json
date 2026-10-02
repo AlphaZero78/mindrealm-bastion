@@ -1,0 +1,15 @@
+{
+  "name": "mindrealm-bastion",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "心域防线 · 离线浏览器肉鸽塔防",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node launcher/server.mjs",
+    "test": "node --test development/web-tests/*.test.mjs",
+    "verify": "node development/web-tools/verify.mjs",
+    "build": "node development/web-tools/build.mjs",
+    "package": "npm run build && powershell.exe -NoProfile -ExecutionPolicy Bypass -File development/web-tools/package-windows.ps1"
+  }
+}
