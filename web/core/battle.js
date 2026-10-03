@@ -1,11 +1,17 @@
 import {towers,enemies,acts,seededRandom} from './content.js';
 import {unitStats,unitCenter,onField,cellAt,coreOf,entriesOf,pathToCore,distanceToCore,edgeInfo,bandwidthState,solveAttack,incomingDamage,clamp,ruleEffects as effects,beginRulesFrame,endRulesFrame,invalidateRulesFrame,supportInRange} from './rules.js';
 import {addXP} from './state.js';
-import {difficultyProfile,enemyStats,enemyAbilityProfile,enemyRecoveryBase} from './difficulty.js';
+import {difficultyProfile,enemyStats,enemyAbilityProfile,enemyRecoveryBase,killRewardScale} from './difficulty.js';
+import {items,ensureInventory} from './inventory.js';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const nodeOf=s=>typeof s.currentNode==='object'?s.currentNode:{id:s.currentNode,type:'battle'};
 const aliveUnits=s=>s.units.filter(u=>onField(u)&&u.hp>0);
+function refreshBandwidth(state){
+  const b=state.battle,result=bandwidthState(state);
+  for(const id of b.disabled)if(!result.disabled.includes(id)){const u=state.units.find(unit=>unit.uid===id);if(u&&u.hp>0)u.reactivate=true;}
+  b.disabled=result.disabled;return result;
+}
 export function makeEncounter(state,node=nodeOf(state)) {
   const act=state.act||0,floor=state.floor||0,kind=node?.type||'battle',difficulty=difficultyProfile(state);
   const rand=seededRandom(`${state.seed}:encounter:${node?.id||`${act}:${floor}`}`);
@@ -22,7 +28,8 @@ export function makeEncounter(state,node=nodeOf(state)) {
     const group=groups[g];group.at=clock;
     const members=Math.floor(count/groupCount)+(g<count%groupCount?1:0);
     for(let k=0;k<members;k++){
-      const candidates=(normalIndex%4===2||difficulty.functionalDensity>.25&&normalIndex%3===1)?functional:base;normalIndex++;
+      const isFunctional=difficulty.revision>=3?normalIndex%5>=3:(normalIndex%4===2||difficulty.functionalDensity>.25&&normalIndex%3===1);
+      const candidates=isFunctional?functional:base;normalIndex++;
       const type=candidates[Math.floor(rand()*candidates.length)].id,entry=entries[(g+k)%entries.length];
       queue.push({type,entry:entry.id,at:clock,group:g});entry.count++;group.count++;
       if(!group.entries.includes(entry.id))group.entries.push(entry.id);if(!group.types.includes(type))group.types.push(type);
@@ -47,6 +54,9 @@ export function startBattle(state) {
   for(const u of state.units){u.cooldown=.1;u.temporaryArmor=0;u.armorBuffUntil=0;u.hitsTaken=0;u.lastHitAt=-100;u.guardUsed=false;u.reactivate=false;u.destroyedThisBattle=false;resetAction(u);}
   state.stats ||= {};for(const key of ['kills','breaches','pressure','breachDamage','destroyed','elites','overloadSeconds'])state.stats[key]??=0;
   state.stats.damageByUnit ||= {};state.stats.history ||= [];state.stats.pressureLog ||= [];
+  const m=effects(state),bw=bandwidthState(state);
+  state.battle.nexusShield=(m.nexus_shield||0)+Math.min(60,Math.max(0,bw.cap-bw.used)*(m.nexus_reserve_shield||0));
+  if(state.battle.nexusShield)emit(state,{type:'heal',...coreOf(state),label:`枢纽屏障 +${state.battle.nexusShield}`});
   return {ok:true,reason:'防线已锁定，敌群开始入侵'};
 }
 // Presentation consumes facts from the simulation clock. These fields are never
@@ -91,6 +101,7 @@ function spawn(state,type,entryId,group=0,parent=null) {
     facing:0,actionTargetId:null,actionTargetKind:null,actionKind:null,lastActionAt:null,lastHitAt:null,castUntil:0,motion:{dx:0,dz:0,distance:0,time:b.time,dt:0}};
   e.h=cellAt(state,e.x,e.z)?.h||0;if(e.ability==='armored')e.pierce=.35;if(e.kind==='boss')e.pierce=.25;
   if(effects(state).pressure_mark&&e.pressure>=12)e.pressureMarked=true;
+  if(effects(state).nexus_spawn_slow)e.slow=effects(state).nexus_spawn_slow*difficultyProfile(state).controlDurationMultiplier;
   b.enemies.push(e);b.maxActive=Math.max(b.maxActive,b.enemies.filter(t=>!t.dead).length);
   if(state.discoveries?.enemies&&!state.discoveries.enemies.includes(type))state.discoveries.enemies.push(type);
   emit(state,{type:e.kind==='boss'?'boss':'spawn',action:'spawn',x:e.x,z:e.z,enemy:e.id,label:e.name,parentId:parent?.id??null});return e;
@@ -105,6 +116,10 @@ function reinforce(state,parent,type,count=1) {
 }
 function spiritHit(state,amount,source) {
   const b=state.battle,m=effects(state);let damage=Math.max(0,amount);
+  const nexusShield=Math.min(b.nexusShield||0,damage);b.nexusShield=(b.nexusShield||0)-nexusShield;damage-=nexusShield;
+  b.lastNexusAbsorbed=nexusShield;state.stats.nexusAbsorbed=(state.stats.nexusAbsorbed||0)+nexusShield;
+  const shield=Math.min(b.itemShield||0,damage);b.itemShield=(b.itemShield||0)-shield;damage-=shield;
+  b.lastItemAbsorbed=shield;state.stats.itemAbsorbed=(state.stats.itemAbsorbed||0)+shield;
   if(state.spirit-damage<=0&&m.death_guard&&!b.deathGuardUsed){damage=Math.max(0,state.spirit-1);b.deathGuardUsed=true;emit(state,{type:'heal',...coreOf(state),label:'最后清醒 · 保留 1 精神'});}
   state.spirit=Math.max(0,state.spirit-damage);b.spiritLost+=damage;
   if(source==='breach')state.stats.breachDamage+=damage;else state.stats.pressure+=damage;
@@ -121,7 +136,7 @@ function killEnemy(state,e,active,hit={}) {
   if(e.dead)return;e.dead=true;
   const b=state.battle,m=effects(state),dist=distance(e,coreOf(state));state.stats.kills++;
   const rewardMultiplier=state.spirit<state.maxSpirit*.35?1+(m.crisis_reward||0):1;
-  addXP(state,e.xp||0);state.focus+=(e.focus||0)*rewardMultiplier;
+  const rewardScale=killRewardScale(state);addXP(state,Math.round((e.xp||0)*rewardScale.xp));state.focus+=Math.round((e.focus||0)*rewardScale.focus)*rewardMultiplier;
   if(e.kind==='elite'){state.stats.elites++;state.spirit=Math.min(state.maxSpirit,state.spirit+(m.elite_spirit||0));}
   if(e.kind==='boss'){
     b.bossKilled=true;emit(state,{type:'boss',action:'death',x:e.x,z:e.z,enemy:e.id,label:'控制信号已切断'});
@@ -129,8 +144,9 @@ function killEnemy(state,e,active,hit={}) {
     return;
   }
   let raw=e.pressure;
+  if(e.kind==='normal')raw*=1+(m.nexus_normal_pressure||0);
   if(b.enemies.some(source=>source.pressureAuraUntil>b.time&&distance(e,source)<=6))raw*=1.25;
-  if(dist>=12)raw*=1-(m.far_pressure||0);
+  if(dist>=12)raw*=1-clamp(m.far_pressure||0,0,1);
   if(e.slow>0)raw*=1-(m.slow_pressure||0);
   if(hit.overkill>e.maxHp*.25)raw*=1-(m.overkill_pressure||0);
   if(hit.area)raw*=1-(m.aoe_pressure||0);
@@ -142,7 +158,7 @@ function killEnemy(state,e,active,hit={}) {
   if(m.pressure_absorb&&amount<=m.pressure_absorb&&b.time>=b.pressureAbsorbAt){absorbed=amount;amount=0;b.pressureAbsorbAt=b.time+10;}
   if(amount===0&&m.resistance_stack)b.resistanceStacks=Math.min(m.resistance_stack,b.resistanceStacks+1);
   const actual=spiritHit(state,amount,'pressure');
-  const log={source:e.name,raw:e.pressure,modified:raw,distance:dist,distanceReduction:raw-arrival,resistance,absorbed,damage:actual,time:b.time};
+  const log={source:e.name,raw:e.pressure,modified:raw,distance:dist,distanceReduction:raw-arrival,resistance,absorbed,itemAbsorbed:b.lastItemAbsorbed||0,nexusAbsorbed:b.lastNexusAbsorbed||0,damage:actual,time:b.time};
   state.stats.pressureLog.push(log);if(state.stats.pressureLog.length>600)state.stats.pressureLog.shift();
   emit(state,{type:'kill',x:e.x,z:e.z,enemy:e.id,amount:actual,label:actual>=1?`压力 −${actual.toFixed(1)}`:'压力已吸收'});
   if(e.ability==='split')reinforce(state,e,'spike_runner',2);
@@ -164,6 +180,7 @@ function hitUnit(state,enemy,unit,amount,active,detail={}) {
   const guards=active.filter(u=>u.hp>0&&!b.disabled.includes(u.uid)&&u.uid!==unit.uid&&['ally_shield','taunt'].includes(unitStats(state,u).ability)&&distance(unitCenter(u),unitCenter(unit))<= (unitStats(state,u).effect==='wide_shield'?6:3));
   if(guards.some(u=>unitStats(state,u).ability==='ally_shield'||unitStats(state,u).effect==='guard'))damage*=.82;
   if(unit.hp-damage<=0&&s.role==='melee'&&m.melee_guard&&!unit.guardUsed&&enemy.kind==='normal'){damage=Math.max(0,unit.hp-1);unit.guardUsed=true;}
+  if(unit.hp-damage<=0&&m.nexus_rebirth&&!b.nexusRebirthUsed&&!b.disabled.includes(unit.uid)){b.nexusRebirthUsed=true;unit.hp=s.maxHp*.5;damage=0;emit(state,{type:'heal',...unitCenter(unit),unit:unit.uid,label:'余烬再生 · 恢复半数耐久'});}
   unit.hp=Math.max(0,unit.hp-damage);unit.lastHitAt=b.time;unit.hitsTaken++;
   const event=emit(state,{type:'hit',stage:'release',actionKind:enemy.ability==='tower_hunter'?'ranged':enemy.ability==='siege'?'siege':'melee',...detail,x:enemy.x,z:enemy.z,tx:unitCenter(unit).x,tz:unitCenter(unit).z,unit:unit.uid,enemy:enemy.id,amount:damage,ability:enemy.ability,retaliation:[]});
   const enabled=!b.disabled.includes(unit.uid);
@@ -363,15 +380,15 @@ export function stepBattle(state,dt=.05) {
   beginRulesFrame(state);
   try {
   dt=clamp(dt,0,.25);b.events=[];b.time+=dt;
+  if(b.itemBuffs?.some(buff=>buff.until<=b.time)){b.itemBuffs=b.itemBuffs.filter(buff=>buff.until>b.time);b.itemRevision=(b.itemRevision||0)+1;invalidateRulesFrame(state);}
   while(b.spawned<b.queue.length&&b.queue[b.spawned].at<=b.time&&b.enemies.filter(e=>!e.dead).length<100){const q=b.queue[b.spawned++];spawn(state,q.type,q.entry,q.group);}
   b.groupIndex=Math.max(0,...b.groups.filter(g=>g.at<=b.time).map(g=>g.index));
   const next=b.groups.find(g=>g.at>b.time);b.nextGroupIn=next?Math.max(0,next.at-b.time):0;
   b.jam=b.enemies.reduce((sum,e)=>sum+(!e.dead&&e.jamUntil>b.time?(e.jamStrength??(e.kind==='boss'?6:2)):0),0);
   if(b.jam)b.jam+=difficultyProfile(state).jamBonus;
   b.corrosion=b.enemies.reduce((sum,e)=>sum+(!e.dead&&e.corrosionUntil>b.time?(e.kind==='elite'?4:2):0),0);
-  const bandwidth=bandwidthState(state),disabled=bandwidth.disabled;
-  for(const id of b.disabled)if(!disabled.includes(id)){const u=state.units.find(t=>t.uid===id);if(u)u.reactivate=true;}
-  b.disabled=disabled;if(disabled.length)state.stats.overloadSeconds+=dt;
+  const bandwidth=refreshBandwidth(state),disabled=bandwidth.disabled;
+  if(disabled.length)state.stats.overloadSeconds+=dt;
   const active=aliveUnits(state).filter(u=>!disabled.includes(u.uid));
   towerActions(state,active,dt);
   for(const e of [...b.enemies]){
@@ -387,4 +404,50 @@ export function stepBattle(state,dt=.05) {
   if(state.spirit<=0)b.result='lost';else if(b.bossKilled||b.spawned>=b.queue.length&&b.enemies.length===0)b.result='won';
   return {events:b.events,finished:b.result};
   } finally {endRulesFrame(state);}
+}
+
+export function itemPreview(state,uid,targetUid=null) {
+  const entry=state.inventory?.items.find(item=>item.uid===uid),item=items[entry?.type];
+  const fail=reason=>({ok:false,reason,item});
+  if(!item)return fail('道具已不存在。');
+  if(!['map','prep','node','reward','battle','nexus'].includes(state.phase)||state.battle?.result&&state.phase==='battle')return fail('当前阶段无法使用道具。');
+  const combat=state.phase==='battle',b=state.battle,live=combat?b.enemies.filter(e=>!e.dead):[];
+  if(item.stage==='battle'&&!combat)return fail('开战后使用。');
+  if(item.stage==='safe'&&combat)return fail('战斗外使用。');
+  if(item.duration&&b?.itemBuffs?.some(buff=>buff.type===item.id&&buff.until>b.time)&&combat)return fail('同种效果仍在持续。');
+  if(item.id==='clarity'&&state.spirit>=state.maxSpirit)return fail('精神稳定已满。');
+  if(['stasis','pulse_bomb'].includes(item.id)&&!live.length)return fail('等待敌人入场后使用。');
+  if(item.id==='barrier'&&(b.itemShield||0)>0)return fail('火种护膜仍有吸收量。');
+  if(item.id==='cleanser'&&!b.jam&&!b.corrosion&&!live.some(e=>e.jamUntil>b.time||e.corrosionUntil>b.time))return fail('当前没有带宽干扰或抗性腐蚀。');
+  let target=null,amount=null;
+  if(item.target==='unit'){
+    target=state.units.find(u=>u.uid===targetUid);if(!target)return fail('请选择一个受损的存活构造。');
+    if(target.hp<=0||target.hp>=unitStats(state,target).maxHp)return fail('目标需要存活且耐久未满。');
+    if(combat&&!onField(target))return fail('战斗中只能修复已部署构造。');
+    amount=Math.min(unitStats(state,target).maxHp-target.hp,unitStats(state,target).maxHp*.35);
+  }
+  if(item.id==='clarity')amount=Math.min(20,state.maxSpirit-state.spirit);
+  return {ok:true,item,entry,target,amount,reason:amount!==null?`实际恢复 ${Math.round(amount*10)/10} ${target?'耐久':'精神稳定'}`:item.description};
+}
+export function useItem(state,uid,targetUid=null){
+  const preview=itemPreview(state,uid,targetUid);if(!preview.ok)return preview;
+  const {item,target,amount}=preview,b=state.battle;
+  // Validation is complete before either inventory or the simulation changes.
+  const bag=ensureInventory(state);bag.items.splice(bag.items.findIndex(entry=>entry.uid===uid),1);
+  if(item.id==='clarity')state.spirit+=amount;
+  if(item.id==='repair_foam')target.hp+=amount;
+  if(item.id==='focus_cell')state.focus+=30;
+  if(item.id==='stasis')for(const e of b.enemies)if(!e.dead)e.slow=Math.max(e.slow,8*difficultyProfile(state).controlDurationMultiplier);
+  if(item.id==='barrier')b.itemShield=25;
+  if(item.duration){b.itemBuffs||=[];b.itemBuffs.push({type:item.id,effect:item.effect,value:item.value,until:b.time+item.duration});b.itemRevision=(b.itemRevision||0)+1;}
+  if(item.id==='cleanser'){for(const e of b.enemies){e.jamUntil=0;e.corrosionUntil=0;}b.jam=0;b.corrosion=0;refreshBandwidth(state);}
+  if(item.id==='pulse_bomb'){
+    const active=aliveUnits(state).filter(u=>!b.disabled.includes(u.uid));
+    for(const e of [...b.enemies])if(!e.dead)hitEnemy(state,e,120,null,active,{area:true});
+    if(state.spirit<=0)b.result='lost';else if(b.bossKilled)b.result='won';
+  }
+  invalidateRulesFrame(state);state.stats.itemsUsed=(state.stats.itemsUsed||0)+1;
+  state.stats.history.push({act:state.act,floor:state.floor,text:`使用${item.name}${target?` → ${towers[target.type].name}`:''}：${preview.reason}`});
+  if(state.phase==='battle')emit(state,{type:'support',...coreOf(state),label:item.name,action:'buff'});
+  return {ok:true,reason:`${item.name}已使用 · ${preview.reason}`};
 }

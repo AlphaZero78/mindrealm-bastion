@@ -1,5 +1,8 @@
 // Stable content IDs and seeded randomness are shared by browser and simulation.
 import { difficultySummary } from './difficulty.js';
+import { extraEvents } from './extra-events.js';
+import { nexusRelics } from './nexus-content.js';
+export { messengers, nexusRelics } from './nexus-content.js';
 const data = {
   "acts": [
     {
@@ -1924,9 +1927,9 @@ const bossMechanics = {
  zero_frequency_mind:'第一/二/三阶段，冲击半径10/11/12格，最多击中3/4/5座构造，造成65%/75%/85%攻击力伤害；拆障伤害为3/4/5倍攻击力。'
 };
 export const enemies=Object.fromEntries(data.enemies.map(x=>[x.id,{...x,description:enemyDescriptions[x.id]+(['tower_hunter','siege'].includes(x.ability)?' 连续射击三次后显示提示并向火种推进2.5秒；贴身近战仍可阻挡。':''),archive:bossArchives[x.id]||null,mechanics:bossMechanics[x.id] ? `${bossMechanics[x.id]} 生命低于70%/35%时进入第二/三阶段，能力间隔为6.5/5.7/4.9秒；每次能力先预警1.1秒。` : null}]));
-export const relics=Object.fromEntries(data.relics.map(x=>[x.id,x]));
+export const relics={...Object.fromEntries(data.relics.map(x=>[x.id,x])),...nexusRelics};
 export const talents=Object.fromEntries(data.talents.map(x=>[x.id,x]));
-export const events=Object.fromEntries(data.events.map(x=>[x.id,x]));
+export const events=Object.fromEntries([...data.events,...extraEvents].map(x=>[x.id,x]));
 // Unlocks expand later runs only. The active run saves its exact pool so buying a
 // discovery between sessions cannot change an already generated route or offer.
 export const contentUnlocks = [
@@ -1939,21 +1942,25 @@ export const contentUnlocks = [
 ];
 export function contentPool(profile = {}) {
  const unlocked = new Set(profile.unlockedContent || []);
- const allowed = (kind, catalog) => Object.keys(catalog).filter(id => !contentUnlocks.some(pack => pack[kind]?.includes(id) && !unlocked.has(pack.id)));
+ const allowed = (kind, catalog) => Object.keys(catalog).filter(id => !catalog[id].exclusive && !contentUnlocks.some(pack => pack[kind]?.includes(id) && !unlocked.has(pack.id)));
  return { towers:Object.keys(towers), relics:allowed('relics', relics), talents:Object.keys(talents), events:allowed('events', events) };
 }
 export function hashSeed(input){let h=2166136261;for(const c of String(input)){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
 export function seededRandom(seed){let s=hashSeed(seed);return ()=>{s+=0x6D2B79F5;let t=s;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
 export function shuffle(items,random){const out=[...items];for(let i=out.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[out[i],out[j]]=[out[j],out[i]];}return out;}
-const effectKeys=Object.freeze([...new Set([...Object.values(relics),...Object.values(talents)].map(item=>item.effect))]);
+const effectKeys=Object.freeze([...new Set([...Object.values(relics),...Object.values(talents)].flatMap(item=>item.fx?Object.keys(item.fx):[item.effect]))]);
 export function effects(state){
  const result={attack:0,ranged_attack:0,melee_attack:0,armor:0,hp:0,range:0,haste:0,repair_discount:0,move_discount:0,terrain_discount:0,upgrade_discount:0,bandwidth:0,resistance:0,pressure_reduction:0};
  for(const key of effectKeys)result[key]??=0;
- for(const id of [...(state.relics||[]),...(state.talents||[])]){const item=relics[id]||talents[id];if(item)result[item.effect]=(result[item.effect]||0)+item.value;}
+ for(const id of [...(state.relics||[]),...(state.talents||[])]){const item=relics[id]||talents[id];if(item)for(const [key,value] of Object.entries(item.fx||{[item.effect]:item.value}))result[key]=(result[key]||0)+value;}
  for(const [key,value]of Object.entries(state.modifiers||{}))result[key]=(result[key]||0)+value;
  result.attack+=result.tower_damage_bonus||0;result.move_discount+=result.relocate_discount||0;
  const ratio=state.spirit/Math.max(1,state.maxSpirit);if(ratio<.35){result.attack+=result.low_spirit_damage+result.volatile;result.range+=result.crisis_range;}if(ratio<.25)result.resistance+=result.crisis_resistance;
  result.repair_discount-=result.volatile;
+ const live=(state.units||[]).filter(u=>Number.isFinite(u.x)&&u.hp>0),active=live.filter(u=>!(state.battle?.disabled||[]).includes(u.uid));
+ if(live.length<=8){result.attack+=result.nexus_small_army||0;result.armor+=result.nexus_small_armor||0;}
+ if(new Set(active.map(u=>towers[u.type].role)).size===3)result.attack+=result.nexus_trinity||0;
+ if(state.phase==='battle')for(const buff of state.battle?.itemBuffs||[])if(buff.until>state.battle.time)result[buff.effect]=(result[buff.effect]||0)+buff.value;
  return result;
 }
 // Compatibility catalog for callers; the difficulty module owns every value.

@@ -1,5 +1,13 @@
 import {ENTITY_ART} from './view/entity-art.js';
+export const ROUTE_LAYER_GAP=136;
 const drawings={
+  heart:'<path d="M12 21 3 12C-2 4 7-1 12 6c5-7 14-2 9 6z"/>',
+  repair:'<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/>',
+  snow:'<path d="M12 2v20M3 7l18 10M3 17 21 7M8 4l4 3 4-3M8 20l4-3 4 3M3 11l5-1-1-5m10 0-1 5 5 1M3 13l5 1-1 5m10 0-1-5 5-1"/>',
+  attack:'<path d="m14 2-9 12h6l-1 8 9-12h-6z"/>',
+  resistance:'<path d="m12 2 9 4v7c0 4-6 8-9 9-3-1-9-5-9-9V6zM5 12h3l2-4 4 8 2-4h3"/>',
+  burst:'<path d="m12 1 3 7 7-3-3 7 4 5-8-1-3 7-3-7-8 1 4-5-3-7 7 3z"/>',
+  armor:'<path d="M8 2h8l1 5 4 3-2 12H5L3 10l4-3zM8 10h8m-8 5h8M12 8v11"/>',
   battle:'<path d="m6 4 14 16m-1-16L5 20M4 13l7 7m2-16 7 7M4 4l2 6 4-4zm16 0-2 6-4-4z"/>',
   elite:'<path d="m4 5 5 4 3-6 3 6 5-4-2 12H6zM8 21h8M9 13h6"/>',
   boss:'<path d="m3 5 5 3 4-5 4 5 5-3-2 12-7 5-7-5zM8 12l2 2m6-2-2 2m-4 4h4"/>',
@@ -31,8 +39,8 @@ const drawings={
 };
 export function icon(name,cls=''){return `<svg class="icon ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${drawings[name]||drawings.event}</svg>`;}
 export const escapeHTML=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export const labels={battle:'普通战斗',elite:'精英战斗',boss:'首领战',camp:'营地',workshop:'工坊',shop:'商店',treasure:'宝库',event:'事件',unknown:'未知信号',melee:'近战',ranged:'远程',support:'支援'};
-export const nodeInfo={battle:['稳定威胁','单位奖励 · 专注'],elite:['强敌与特殊机制','收藏品 · 大量专注'],boss:['本幕控制信号源','切断信号 · 深入下一幕'],camp:['安全区 · 三选一','精神恢复 / 维修 / 升级'],workshop:['安全区 · 按次付费','维修耐久 · 分支升级'],shop:['安全区 · 自由交易','3 件构造 · 3 件收藏品'],treasure:['安全区 · 免费选择','三选一收藏品'],event:['先看清代价再决定','两种明确的交换'],unknown:['进入后揭示','事件 / 战斗 / 商店 / 宝库']};
+export const labels={battle:'普通战斗',elite:'精英战斗',boss:'首领战',camp:'营地',workshop:'工坊',shop:'商店',treasure:'宝库',event:'未知信号',unknown:'未知信号',melee:'近战',ranged:'远程',support:'支援'};
+export const nodeInfo={battle:['稳定威胁','单位奖励 · 专注'],elite:['强敌与特殊机制','收藏品 · 大量专注'],boss:['本幕控制信号源','切断信号 · 深入下一幕'],camp:['安全区 · 三选一','精神恢复 / 维修 / 升级'],workshop:['安全区 · 按次付费','维修耐久 · 分支升级'],shop:['安全区 · 自由交易','构造 / 收藏品 / 道具 / 服务'],treasure:['安全区 · 免费选择','三选一收藏品'],event:['先看清代价再决定','明确得失的交换与成长'],unknown:['75% 事件 / 25% 战斗','交换与成长 / 战斗奖励']};
 export const n=value=>Number(value||0).toLocaleString('zh-CN',{maximumFractionDigits:1});
 export function sprite(type,kind='towers',extra='',entity=null){const art=ENTITY_ART[type],variant=kind==='towers'?`T${entity?.tier||1}${(entity?.tier||1)>1?entity?.branch||'A':''}`:`phase${Math.max(0,Math.min(2,entity?.phase||0))+1}`,row=Math.max(0,art?.variants.indexOf(variant)||0),rows=art?.iconRows||1,cell=art?.cell||80,b=art?.iconBounds||{x:0,y:0,width:cell,height:cell};return `<span class="sprite ${extra}" data-art-variant="${escapeHTML(art?.variants[row]||'base')}" aria-hidden="true"><svg viewBox="${b.x} ${b.y} ${b.width} ${b.height}" focusable="false"><image href="/assets/game/sprites/${kind}/${escapeHTML(type)}.png" width="${cell*8}" height="${cell*rows}" y="${-row*cell}"/></svg></span>`;}
 /** Route choices and timed combat events share one readable history format. */

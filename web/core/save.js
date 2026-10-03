@@ -1,7 +1,9 @@
-import { acts, towers, enemies, relics, talents, events, contentUnlocks, hashSeed } from './content.js';
+import { acts, towers, enemies, relics, talents, events, contentUnlocks, hashSeed, messengers } from './content.js';
 import { normalizeResolution } from '../view/display-settings.js';
 import { CURRENT_DIFFICULTY_REVISION } from './difficulty.js';
 import {unitFootprint} from './rules.js';
+import {items,ensureInventory,MAX_CAPACITY,MAX_ITEM_CAPACITY} from './inventory.js';
+import {ensureShopStock,ensureNexus} from './state.js';
 
 const clone = value => JSON.parse(JSON.stringify(value));
 const defaults = () => ({ version: 2, fragments: 0, unlockedPressure: 0, runs: 0, wins: 0, settledRuns: [], discoveries: { towers: [], enemies: [], relics: [], talents: [], archives: [] }, unlockedArchives: [], unlockedContent: [] });
@@ -16,10 +18,11 @@ const record = value => !!value && typeof value === 'object' && !Array.isArray(v
 const validCell = c => record(c) && Number.isInteger(c.h) && c.h >= 0 && c.h <= 4 && Number.isInteger(c.ramp) && c.ramp >= -1 && c.ramp <= 3 && typeof c.protected === 'boolean';
 const validDiscoveries = d => d && idsIn(d.towers, towers) && idsIn(d.enemies, enemies) && idsIn(d.relics, relics) && idsIn(d.talents, talents) && idsIn(d.archives, Object.fromEntries(Object.values(enemies).filter(e => e.kind === 'boss').map(e => [e.id, e])));
 function validRun(state) {
-  if (!state || state.version !== 2 || !numericTree(state) || typeof state.seed !== 'string' || !['map', 'prep', 'reward', 'node', 'won', 'lost'].includes(state.phase)) return false;
+  if (!state || state.version !== 2 || !numericTree(state) || typeof state.seed !== 'string' || !['map', 'prep', 'reward', 'node', 'nexus', 'won', 'lost'].includes(state.phase)) return false;
   // Earlier v2 runs have no revision: keep their original balance and payload.
   // Unknown revisions cannot be interpreted safely by this build.
-  if (state.difficultyRevision !== undefined && ![1, CURRENT_DIFFICULTY_REVISION].includes(state.difficultyRevision)) return false;
+  if (state.difficultyRevision !== undefined && ![1, 2, CURRENT_DIFFICULTY_REVISION].includes(state.difficultyRevision)) return false;
+  if(state.inventory){const bag=state.inventory;if(!Number.isInteger(bag.capacity)||bag.capacity<12||bag.capacity>MAX_CAPACITY||!Number.isInteger(bag.itemCapacity)||bag.itemCapacity<3||bag.itemCapacity>MAX_ITEM_CAPACITY||!Number.isInteger(bag.nextId)||bag.nextId<0||!Number.isInteger(bag.pity)||bag.pity<0||!Array.isArray(bag.items)||bag.items.length>bag.itemCapacity||!distinct(bag.items.map(item=>item.uid))||!bag.items.every(item=>items[item.type]&&/^p[1-9]\d*$/.test(item.uid)&&Number(item.uid.slice(1))<=bag.nextId))return false;}
   if (!Number.isInteger(state.act) || state.act < 0 || state.act > 2 || !Array.isArray(state.maps) || state.maps.length !== 3 || !Array.isArray(state.units)) return false;
   if (!state.terrain || state.terrain.size !== 41 || state.terrain.cells?.length !== 1681 || !Number.isInteger(state.terrain.revision) || state.terrain.revision < 0) return false;
   if (!state.terrain.core || state.terrain.core.x !== 20 || state.terrain.core.z !== 24 || state.terrain.core.size !== 5 || state.terrain.entries?.length !== 4) return false;
@@ -43,17 +46,22 @@ function validRun(state) {
     if (ids.size !== map.nodes.length || !map.nodes.every(n => typeof n.id === 'string' && Number.isInteger(n.floor) && n.floor >= 0 && n.floor < [17, 16, 15][i] && Number.isInteger(n.lane) && n.lane >= 0 && n.lane <= 4 && ['battle', 'elite', 'camp', 'workshop', 'shop', 'treasure', 'event', 'unknown', 'boss'].includes(n.type) && distinct(n.next) && n.next.every(id => ids.has(id) && map.nodes.find(next => next.id === id).floor === n.floor + 1))) return false;
   }
   if (!idsIn(state.relics, relics) || !idsIn(state.talents, talents) || !state.stats || !Array.isArray(state.rewardQueue) || !distinct(state.nextNodes)) return false;
+  if(state.nexus!==undefined&&(!Array.isArray(state.nexus)||state.nexus.length!==3||!state.nexus.every((room,act)=>record(room)&&room.act===act&&messengers[room.messenger]?.act===act&&JSON.stringify(room.options)===JSON.stringify(messengers[room.messenger].gifts.map(g=>g.id))&&typeof room.skipped==='boolean'&&(room.choice===null||room.options.includes(room.choice)&&state.relics.includes(room.choice)&&!room.skipped&&act<=state.act))))return false;
+  if(state.phase==='nexus'&&(!state.nexus||state.nexus[state.act].choice||state.nexus[state.act].skipped||state.floor!==-1||state.currentNode||state.rewardQueue.length))return false;
   if (!state.nextNodes.every(id => state.maps[state.act].nodes.some(n => n.id === id)) || !distinct(state.visited) || !state.visited.every(id => state.maps.some(map => map.nodes.some(n => n.id === id)))) return false;
   if (!['kills', 'breaches', 'pressure', 'breachDamage', 'destroyed', 'elites', 'overloadSeconds', 'completedNodes'].every(k => nonnegative(state.stats[k])) || !idsIn(state.stats.bosses, enemies) || !Array.isArray(state.stats.history) || !Array.isArray(state.stats.pressureLog) || !state.stats.damageByUnit) return false;
   if (state.currentNode && (!state.maps[state.act].nodes.some(n => n.id === state.currentNode.id && n.floor === state.currentNode.floor && n.type === state.currentNode.type) || state.floor !== state.currentNode.floor)) return false;
   if (['prep', 'node', 'reward'].includes(state.phase) && !state.currentNode || state.phase === 'reward' && !state.rewardQueue.length) return false;
   const node = state.currentNode;
   if (node?.type === 'shop' && (!node.stock || !['units', 'relics'].every(kind => Array.isArray(node.stock[kind]) && node.stock[kind].length <= 3 && distinct(node.stock[kind].map(item => item.key)) && node.stock[kind].every(item => (kind === 'units' ? towers[item.id] : relics[item.id]) && typeof item.key === 'string' && typeof item.sold === 'boolean')))) return false;
+  if(node?.stock?.items&&(!Array.isArray(node.stock.items)||node.stock.items.length>3||!distinct(node.stock.items.map(item=>item.key))||!node.stock.items.every(item=>items[item.id]&&typeof item.key==='string'&&typeof item.sold==='boolean'&&nonnegative(item.price))))return false;
+  if(node?.stock?.services&&(!record(node.stock.services)||!['capacity','pouch','heal'].every(key=>typeof node.stock.services[key]==='boolean')))return false;
+  if(node?.stock&&['units','relics'].some(kind=>node.stock[kind].some(item=>item.price!==undefined&&!nonnegative(item.price)||item.tier!==undefined&&![1,2].includes(item.tier)||item.tier===2&&!['A','B'].includes(item.branch))))return false;
   if (node?.type === 'treasure' && !idsIn(node.options, relics)) return false;
   if (node?.type === 'event' && (!events[node.eventData?.id] || !towers[node.eventData.unit] || node.eventData.relic !== null && !relics[node.eventData.relic] || !distinct(node.eventData.targets))) return false;
   for (const reward of state.rewardQueue) {
-    if (!['unit', 'relic', 'talent', 'upgrade'].includes(reward.kind) || !distinct(reward.options) || !reward.options.length || reward.options.length > 3) return false;
-    const validOption = id => reward.kind === 'unit' ? towers[id] : reward.kind === 'relic' ? relics[id] : reward.kind === 'talent' ? talents[id] : typeof id === 'string' && /^[^:]+:[AB]$/.test(id) && uids.has(id.split(':')[0]);
+    if (!['unit', 'relic', 'talent', 'upgrade','item'].includes(reward.kind) || !distinct(reward.options) || !reward.options.length || reward.options.length > 3) return false;
+    const validOption = id => reward.kind === 'item'?items[id]:reward.kind === 'unit' ? towers[id] : reward.kind === 'relic' ? relics[id] : reward.kind === 'talent' ? talents[id] : typeof id === 'string' && /^[^:]+:[AB]$/.test(id) && uids.has(id.split(':')[0]);
     if (!reward.options.every(validOption) || reward.reserves && (!distinct(reward.reserves) || !reward.reserves.every(validOption))) return false;
   }
   return true;
@@ -108,7 +116,7 @@ export function createSaveStore(storage = globalThis.localStorage, prefix = 'min
       if (result.ok) state.runId = runId;
       return result;
     },
-    load() { const result = read('run', validRun); return { ...result, state: result.value }; },
+    load() { const result = read('run', validRun);if(result.value){ensureInventory(result.value);ensureShopStock(result.value);ensureNexus(result.value,{legacy:true});} return { ...result, state: result.value }; },
     has() { return read('run', validRun).ok; },
     migrationNotice() { try { if (storage.getItem(key('migration-notice')) !== 'pending') return null; storage.setItem(key('migration-notice'), 'shown'); return '开发版本结构已更新。旧版存档不兼容，已保留原数据；新版从独立存档开始。'; } catch { return null; } },
     clear() { try { for (const k of [key('run'), backup('run'), pending('run')]) storage.removeItem(k); return { ok: true }; } catch (error) { return { ok: false, reason: error.message }; } },

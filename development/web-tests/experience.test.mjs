@@ -1,7 +1,9 @@
+import {unblessedRun} from './helpers/unblessed-run.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as R from '../../web/core/rules.js';
-import * as Run from '../../web/core/state.js';
+import * as CoreRun from '../../web/core/state.js';
+const Run={...CoreRun,newRun:unblessedRun};
 import * as Saves from '../../web/core/save.js';
 import {towers} from '../../web/core/content.js';
 import {unitEffectText} from '../../web/core/unit-details.js';
