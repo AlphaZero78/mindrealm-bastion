@@ -8,7 +8,7 @@ async page=>{
  const verifyBossMap=async act=>{
   const original=page.viewportSize(),layouts=[];
   for(const size of [{width:1920,height:1080},{width:960,height:540}]){
-   await page.setViewportSize(size);const node=page.locator('.map-node.available').first();await node.hover();
+   await page.setViewportSize(size);await page.waitForFunction(()=>!window.__mindrealm.transitions.active&&!window.__mindrealm.dialogs.active&&window.__mindrealm.dialogs.animations.size===0);await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));await page.mouse.move(5,5);const node=page.locator('.map-node.available').first();await node.hover();await page.waitForFunction(()=>!document.querySelector('#route-tooltip').hidden);
    const layout=await page.evaluate(()=>{const detail=document.querySelector('#route-tooltip'),rect=detail.getBoundingClientRect();return{width:innerWidth,tooltipVisible:!detail.hidden,left:rect.left,right:rect.right,top:rect.top,bottom:rect.bottom};});
    if(!layout.tooltipVisible||layout.left<0||layout.right>size.width+1||layout.top<0||layout.bottom>size.height+1)throw Error(`Map tooltip exceeds viewport: ${JSON.stringify(layout)}`);
    await capture(`full-act-${act+1}-boss-map-${size.width}`);
@@ -40,13 +40,15 @@ async page=>{
   if(pressure)await page.evaluate(pressure=>{window.__mindrealm.getProfile().unlockedPressure=pressure;},pressure);
   await click('new');await page.locator('#seed-input').fill(seed);await page.locator('#pressure-input').selectOption(String(pressure));
   await capture('new-run');await approve();
-  await page.evaluate(pressure=>{const state=window.__mindrealm.getState();if(state.pressureLevel!==pressure||state.difficultyRevision!==2)throw Error('UI did not create the requested new difficulty');window.__fullRunAudit={nodes:[],battles:[],errors:[]};},pressure);
+  await page.evaluate(pressure=>{const state=window.__mindrealm.getState();if(state.pressureLevel!==pressure||state.difficultyRevision!==3)throw Error('UI did not create the requested new difficulty');window.__fullRunAudit={nodes:[],battles:[],errors:[]};},pressure);
  }
  const startedAct=await page.evaluate(()=>window.__mindrealm.getState().act);
  for(let steps=0;steps<140;steps++){
   const status=await page.evaluate(()=>{const s=window.__mindrealm.getState();return{phase:s.phase,act:s.act,floor:s.floor,node:s.currentNode?.type};});
   if(['won','lost'].includes(status.phase)||status.act>startedAct)break;
-  if(status.phase==='map'){
+  if(status.phase==='nexus'){const id=await page.evaluate(async()=>{const H=await import('/development/web-tests/helpers/reference-strategy.mjs');return H.chooseReferenceNexus(window.__mindrealm.getState());});await capture(`act-${status.act+1}-nexus`);await page.locator(`[data-action="nexus-gift"][data-id="${id}"]`).click();await approve();}
+  else if(status.phase==='map'){
+   await page.evaluate(async()=>{const q=window.__mindrealm,I=await import('/web/core/inventory.js'),H=await import('/development/web-tests/helpers/reference-strategy.mjs'),R=await import('/web/core/rules.js'),s=q.getState(),bag=I.inventoryStatus(s);if(bag.overflow)I.discardUnits(s,[...bag.stored].sort((a,b)=>(R.unitStats(s,a).attack+a.tier*20)-(R.unitStats(s,b).attack+b.tier*20)).slice(0,bag.overflow).map(u=>u.uid));H.referenceItems(s);q.render();});
    const id=await page.evaluate(async()=>{const R=await import('/web/core/state.js'),s=window.__mindrealm.getState();const value=n=>({camp:s.spirit<s.maxSpirit*.6?120:75,treasure:100,event:85,unknown:65,shop:s.focus>240?65:15,workshop:15,battle:45,elite:s.act===0?25:40,boss:50}[n.type]||0);return [...R.availableNodes(s)].sort((a,b)=>value(b)-value(a))[0].id;});
    if(await page.evaluate(id=>window.__mindrealm.getState().maps[window.__mindrealm.getState().act].nodes.find(node=>node.id===id)?.type==='boss',id))await verifyBossMap(status.act);
    await page.locator(`[data-action="map-node"][data-id="${id}"]`).click();
@@ -63,28 +65,28 @@ async page=>{
     if(config.query.entityAudit==='full'&&await page.evaluate(()=>window.__mindrealm.getState().phase==='battle')){await page.locator('[data-action="speed"][data-speed="3"]').click();await sampleActualAnimation(`act-${status.act+1}-boss`,1900);}
     if(await page.evaluate(()=>window.__mindrealm.getState().phase==='battle')){await click('pause');await capture(`full-act-${status.act+1}-boss-battle`);}
    }
-   const result=await page.evaluate(()=>{const q=window.__mindrealm;q.advance(360);const s=q.getState();return{phase:s.phase,act:s.act,floor:s.floor,completed:s.stats.completedNodes,spirit:s.spirit,focus:s.focus};});
+   const result=await page.evaluate(async()=>{const q=window.__mindrealm,H=await import('/development/web-tests/helpers/reference-strategy.mjs');for(let i=0;i<720&&q.getState().phase==='battle';i++){H.referenceItems(q.getState());q.advance(.5);}q.render();const s=q.getState();return{phase:s.phase,act:s.act,floor:s.floor,completed:s.stats.completedNodes,spirit:s.spirit,focus:s.focus};});
    if(result.phase==='battle')throw Error(`Battle never ended: ${JSON.stringify(result)}`);
    await page.evaluate(result=>window.__fullRunAudit.battles.push(result),result);
   }else if(status.phase==='reward'){
    const id=await page.evaluate(async()=>{const H=await import('/development/web-tests/helpers/reference-strategy.mjs');return H.chooseReferenceReward(window.__mindrealm.getState());});
-   await page.locator(`[data-action="reward"][data-id="${id}"]`).click();
+   if(id==='skip'){await click('item-skip');await approve();}else await page.locator(`[data-action="reward"][data-id="${id}"]`).click();
   }else if(status.phase==='node'){
    const decision=await page.evaluate(async()=>{
-    const q=window.__mindrealm,s=q.getState(),R=await import('/web/core/rules.js'),Run=await import('/web/core/state.js'),node=s.currentNode;
+    const q=window.__mindrealm,s=q.getState(),R=await import('/web/core/rules.js'),Run=await import('/web/core/state.js'),node=s.currentNode,D=await import('/web/core/difficulty.js');
     const values={pulse_array:100,focus_rail:85,memory_mechanic:62,bandwidth_relay:110,phase_blade:50,frequency_choir:55,drone_loom:75,arc_mortar:70,resistance_beacon:25,anchor_bulwark:40,boundary_riveter:25,resonance_guard:25};
     const grow=u=>(values[u.type]||0)*(R.onField(u)?1.5:1)/(u.tier||1);
-    const branch=u=>['pulse_array','focus_rail','phase_blade','bandwidth_relay','memory_mechanic','frequency_choir','resistance_beacon'].includes(u.type)?'A':'B';
+    const branch=u=>u.branch||(['pulse_array','focus_rail','phase_blade','bandwidth_relay','memory_mechanic','frequency_choir','resistance_beacon'].includes(u.type)?'A':'B');
     if(node.type==='camp'){
      if(s.spirit<s.maxSpirit*.65)return{action:'camp-heal'};
-     const u=s.units.filter(u=>u.tier<3&&u.hp>0).sort((a,b)=>grow(b)-grow(a))[0];
+     const u=s.units.filter(u=>D.upgradeRequirement(s,u).ok&&u.hp>0).sort((a,b)=>grow(b)-grow(a))[0];
      if(u)return{action:'camp-upgrade',uid:u.uid,branch:branch(u)};
      const w=s.units.filter(u=>u.hp<R.unitStats(s,u).hp).sort((a,b)=>R.repairCost(s,b)-R.repairCost(s,a))[0];return w?{action:'camp-repair',uid:w.uid}:{action:'camp-heal'};
     }
     if(node.type==='workshop'){const u=s.units.find(u=>u.everDeployed&&u.hp<R.unitStats(s,u).hp*.65&&s.focus>R.repairCost(s,u)+20);return u?{action:'repair',uid:u.uid}:{action:'node-leave'};}
     if(node.type==='shop'){const u=node.stock.units.find(u=>!u.sold&&u.id==='bandwidth_relay');if(u&&s.units.filter(u=>u.type==='bandwidth_relay').length<3&&s.focus>=Run.servicePrice(s,80))return{action:'buy-unit',id:u.key};const relic=node.stock.relics.find(x=>!x.sold);if(s.focus>220&&relic)return{action:'buy-relic',id:relic.key};return{action:'node-leave'};}
     if(node.type==='treasure')return node.options.length?{action:'treasure',id:node.options[0]}:{action:'empty-treasure'};
-    if(node.type==='event'){const value=p=>!p?.canChoose?-Infinity:(p.effects.focus||0)+(p.effects.spirit||0)*(s.spirit<s.maxSpirit*.7?4:1)+(p.effects.bandwidth||0)*25+(p.effects.relic?80:0)+(p.effects.free_upgrade?80:0)+(p.effects.free_upgrades||0)*80+(p.effects.resistance||0)*5;return{action:'event-choice',index:value(Run.eventPreview(s,1))>value(Run.eventPreview(s,0))?1:0};}
+    if(node.type==='event'){const value=p=>!p?.canChoose?-Infinity:(p.effects.focus||0)+(p.effects.spirit||0)*(s.spirit<s.maxSpirit*.7?4:1)+(p.effects.bandwidth||0)*25+(p.effects.relic?80:0)+(p.effects.free_upgrade?80:0)+(p.effects.free_upgrades||0)*80+(p.effects.resistance||0)*5;const C=await import('/web/core/content.js');const choices=C.events[node.eventData.id].choices.map((_,index)=>({index,value:value(Run.eventPreview(s,index))}));return{action:'event-choice',index:choices.sort((a,b)=>b.value-a.value)[0].index};}
     throw Error(`Unknown service ${node.type}`);
    });
    const attrs=['uid','id','index'].filter(k=>decision[k]!==undefined).map(k=>`[data-${k}="${decision[k]}"]`).join('');

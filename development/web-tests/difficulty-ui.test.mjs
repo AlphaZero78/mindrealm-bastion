@@ -1,6 +1,7 @@
+import {unblessedRun as newRun} from './helpers/unblessed-run.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {newRun,enterNode} from '../../web/core/state.js';
+import {enterNode} from '../../web/core/state.js';
 import {acts,enemies} from '../../web/core/content.js';
 import {difficultyProfile,difficultySummary,enemyStats,enemyAbilityProfile} from '../../web/core/difficulty.js';
 import {pressureOptions,pressurePreviewLevels,difficultyDetails,enemyDetails,bossIntel,nodeScreen,summaryScreen,menu} from '../../web/screens.js';

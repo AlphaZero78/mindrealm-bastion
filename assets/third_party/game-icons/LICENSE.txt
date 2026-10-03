@@ -1,0 +1,30 @@
+Game-icons.net icons by Lorc. Licensed under Creative Commons Attribution 3.0 Unported (CC BY 3.0).
+Author: https://lorcblog.blogspot.com/
+License: https://creativecommons.org/licenses/by/3.0/
+Legal code: https://creativecommons.org/licenses/by/3.0/legalcode
+Icons are unchanged white-on-transparent SVGs. The game applies color with CSS masks.
+
+Sources:
+https://game-icons.net/1x1/lorc/crossed-swords.html
+https://game-icons.net/1x1/lorc/campfire.html
+https://game-icons.net/1x1/lorc/crowned-skull.html
+https://game-icons.net/1x1/lorc/locked-chest.html
+https://game-icons.net/1x1/lorc/anvil.html
+https://game-icons.net/1x1/lorc/cash.html
+https://game-icons.net/1x1/lorc/scroll-unfurled.html
+https://game-icons.net/1x1/lorc/uncertainty.html
+https://game-icons.net/1x1/lorc/skull-crossed-bones.html
+https://game-icons.net/1x1/lorc/potion-ball.html
+
+https://game-icons.net/1x1/lorc/third-eye.html
+https://game-icons.net/1x1/lorc/templar-eye.html
+https://game-icons.net/1x1/lorc/heart-organ.html
+https://game-icons.net/1x1/lorc/brain.html
+https://game-icons.net/1x1/lorc/crystal-eye.html
+https://game-icons.net/1x1/lorc/gaze.html
+https://game-icons.net/1x1/lorc/brain-freeze.html
+https://game-icons.net/1x1/lorc/tentacle-heart.html
+https://game-icons.net/1x1/lorc/star-pupil.html
+https://game-icons.net/1x1/lorc/alien-stare.html
+https://game-icons.net/1x1/lorc/octogonal-eye.html
+https://game-icons.net/1x1/lorc/one-eyed.html

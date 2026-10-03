@@ -1,6 +1,9 @@
 import {nodeAction,eventPreview,servicePrice} from '../../../web/core/state.js';
 import {towers,relics,talents} from '../../../web/core/content.js';
 import {unitStats,unitCenter,onField,placement,deploy,repair,repairCost,upgrade,upgradeCost,bandwidthState,pathToCore,solveAttack,cellAt,coreOf} from '../../../web/core/rules.js';
+import {upgradeRequirement} from '../../../web/core/difficulty.js';
+import {inventoryStatus} from '../../../web/core/inventory.js';
+import {events} from '../../../web/core/content.js';
 import {makeEncounter} from '../../../web/core/battle.js';
 
 // A fixed alternative policy, shared by every seed and difficulty. It trades
@@ -30,7 +33,7 @@ function rewardValue(state,id,kind='unit'){
   return ({melee_hp:125,melee_guard:115,repair_discount:120,post_repair:115,support_efficiency:110,overload_buffer:125,bandwidth:100,level_bandwidth:95,relay_cost:90,melee_post_repair:110,support_rate:100,anti_air_damage:100,highground_damage:80,direct_range:75,high_hp_damage:70,height_bonus:65}[effect]||45);
 }
 export function chooseDefensiveReward(state){
-  const offer=state.rewardQueue[0];if(!offer)return null;
+  const offer=state.rewardQueue[0];if(!offer)return null;if(offer.kind==='item')return inventoryStatus(state).items.length<inventoryStatus(state).itemCapacity?offer.options[0]:'skip';
   if(offer.kind==='upgrade'){const unit=state.units.find(candidate=>candidate.uid===offer.uid);return offer.options.find(id=>id.endsWith(`:${branchFor(unit)}`))||offer.options[0];}
   return [...offer.options].sort((a,b)=>rewardValue(state,b,offer.kind)-rewardValue(state,a,offer.kind))[0];
 }
@@ -51,7 +54,7 @@ export function prepareDefensive(state){
     for(let i=2;i<route.length;i+=3){const point=route[i];samples.push({...point,air:false,h:cellAt(state,point.x,point.z).h,entry:entry.id,weight:entry.count/encounter.total});}
   }
   const desiredMelee=encounter.entries.length>=3?3:2,reserve=encounter.entries.length>=3?3:2;
-  const eligible=state.units.filter(unit=>unit.hp>0&&unit.tier<3&&(onField(unit)||['anchor_bulwark','bandwidth_relay','memory_mechanic'].includes(unit.type))).sort((a,b)=>growthValue(b)-growthValue(a));
+  const eligible=state.units.filter(unit=>unit.hp>0&&upgradeRequirement(state,unit).ok&&(onField(unit)||['anchor_bulwark','bandwidth_relay','memory_mechanic'].includes(unit.type))).sort((a,b)=>growthValue(b)-growthValue(a));
   for(const unit of eligible){if(!onField(unit)&&living(state).filter(other=>other.type===unit.type).length>=supportLimit(unit.type))continue;const cost=upgradeCost(state,unit);if(state.focus>=cost+24)upgrade(state,unit.uid,branchFor(unit));}
   const reposition=(knownEntrances.get(state)||0)<encounter.entries.length;knownEntrances.set(state,encounter.entries.length);
   const available=state.units.filter(unit=>unit.hp>0&&(!onField(unit)||reposition));
@@ -106,7 +109,7 @@ export function defensiveNode(state){
     if(state.spirit<state.maxSpirit*.7)return nodeAction(state,'heal');
     const injured=state.units.filter(unit=>unit.everDeployed&&unit.hp<unitStats(state,unit).maxHp*.85).sort((a,b)=>growthValue(b)-growthValue(a))[0];
     if(injured)return nodeAction(state,'repair',{uid:injured.uid});
-    const target=state.units.filter(unit=>unit.hp>0&&unit.tier<3).sort((a,b)=>growthValue(b)-growthValue(a))[0];
+    const target=state.units.filter(unit=>unit.hp>0&&upgradeRequirement(state,unit).ok).sort((a,b)=>growthValue(b)-growthValue(a))[0];
     return target?nodeAction(state,'upgrade',{uid:target.uid,branch:branchFor(target)}):nodeAction(state,'heal');
   }
   if(node.type==='workshop'){repairDefenses(state,true);return nodeAction(state,'leave');}
@@ -119,7 +122,7 @@ export function defensiveNode(state){
   if(node.type==='treasure'){const id=[...node.options].sort((a,b)=>rewardValue(state,b,'relic')-rewardValue(state,a,'relic'))[0];return nodeAction(state,'treasure',{id});}
   if(node.type==='event'){
     const value=preview=>!preview?.canChoose?-Infinity:(preview.effects.spirit||0)*(state.spirit<state.maxSpirit*.75?5:2)+(preview.effects.focus||0)+(preview.effects.bandwidth||0)*25+(preview.effects.resistance||0)*15+(preview.effects.relic?75:0)+(preview.effects.free_upgrade?65:0)+(preview.effects.free_upgrades||0)*65;
-    const previews=[eventPreview(state,0),eventPreview(state,1)];return nodeAction(state,'event',{index:value(previews[1])>value(previews[0])?1:0});
+    const previews=events[node.eventData.id].choices.map((_,index)=>({index,preview:eventPreview(state,index)}));return nodeAction(state,'event',{index:previews.sort((a,b)=>value(b.preview)-value(a.preview))[0].index});
   }
   throw new Error(`Unhandled defensive service ${node.type}`);
 }

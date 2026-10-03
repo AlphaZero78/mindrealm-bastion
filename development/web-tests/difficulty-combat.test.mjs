@@ -18,11 +18,11 @@ const surgeFixture=(level=8)=>{
 };
 
 test('difficulty normalization uses pressureLevel only and revision selection cannot reinterpret an old save',()=>{
-  assert.equal(CURRENT_DIFFICULTY_REVISION,2);
+  assert.equal(CURRENT_DIFFICULTY_REVISION,3);
   for(const v of [null,undefined,NaN,Infinity,-Infinity,'10',{},[],{pressureLevel:NaN}])assert.equal(normalizeDifficulty(v),0);
   assert.equal(normalizeDifficulty(-1),0);assert.equal(normalizeDifficulty(10.9),10);assert.equal(normalizeDifficulty(4.9),4);
   assert.equal(normalizeDifficulty({pressureLevel:0,difficulty:10}),0);
-  assert.equal(difficultyProfile(10).revision,2);
+  assert.equal(difficultyProfile(10).revision,3);
   for(const revision of [undefined,1])assert.equal(difficultyProfile({pressureLevel:10,difficultyRevision:revision}).revision,1);
   assert.equal(difficultyProfile({pressureLevel:10,difficultyRevision:2}).revision,2);
 });
@@ -32,7 +32,7 @@ test('new profiles strengthen individuals monotonically without economy or popul
   for(let level=0;level<=10;level++){
     const p=difficultyProfile(level);
     for(const key of ['hpMultiplier','attackMultiplier','speedMultiplier','breachMultiplier','pressureMultiplier','armorBonus'])assert.ok(p[key]>=previous[key],`${level} ${key}`);
-    assert.equal(p.serviceMultiplier,1);assert.equal(p.campHeal,.3);assert.equal(p.earlyEnemyAct,0);assert.equal(p.functionalDensity,.25);assert.equal(p.jamBonus,0);
+    assert.equal(p.serviceMultiplier,1);assert.equal(p.campHeal,.3);assert.equal(p.earlyEnemyAct,0);assert.equal(p.functionalDensity,.4);assert.equal(p.jamBonus,0);
     close(p.attackMultiplier,1+.09*level);close(p.speedMultiplier,1+.016*level);close(p.breachMultiplier,1+.065*level);close(p.pressureMultiplier,1+.06*level);
     assert.equal(p.armorBonus,Math.floor(level/3));close(p.abilityIntervalMultiplier,1-.02*level);close(p.controlDurationMultiplier,1-Math.max(0,level-5)*.05);
     assert.equal(p.surge.enabled,level>=8);assert.ok(difficultySummary(level).every(line=>typeof line==='string'&&!/NaN|undefined/.test(line)));

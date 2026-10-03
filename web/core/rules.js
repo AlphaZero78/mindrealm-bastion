@@ -1,5 +1,5 @@
 import { towers, effects } from './content.js';
-import { difficultyProfile } from './difficulty.js';
+import { difficultyProfile, upgradeRequirement } from './difficulty.js';
 
 // This module is the single authority for previews, orders, and combat geometry.
 export const DIRECTIONS = [{x:0,z:-1},{x:1,z:0},{x:0,z:1},{x:-1,z:0}];
@@ -13,7 +13,7 @@ export function endRulesFrame(state){frames.delete(state);}
 export function invalidateRulesFrame(state){const frame=frames.get(state);if(frame){frame.key=null;frame.stats.clear();}}
 export function ruleEffects(state){
   const frame=frames.get(state);if(!frame)return effects(state);
-  const ratio=state.spirit/Math.max(1,state.maxSpirit),key=`${ratio<.35}:${ratio<.25}:${Math.floor((state.battle?.spiritLost||0)/10)}:${state.terrain.revision||0}`;
+  const ratio=state.spirit/Math.max(1,state.maxSpirit),key=`${ratio<.35}:${ratio<.25}:${Math.floor((state.battle?.spiritLost||0)/10)}:${state.terrain.revision||0}:${state.battle?.itemRevision||0}:${(state.battle?.disabled||[]).join(',')}`;
   if(frame.key!==key){frame.key=key;frame.mods=effects(state);frame.stats.clear();}
   return frame.mods;
 }
@@ -48,10 +48,11 @@ export function unitStats(state,unit) {
   const growth=tier===1?1:tier===2?1.5:2.35;
   const result={...base, footprint:unitFootprint(unit), effect:tier>1&&b?b.effect:null};
   const roleBonus=mods[`${base.role}_attack`]||0;
-  result.hp=Math.round(base.hp*growth*(tier>1&&b?b.hp_mult||1:1)*(1+(mods.hp||0)+(mods[`${base.role}_hp`]||0)+(unit.hpBonus||0)));
+  result.hp=Math.round(base.hp*growth*(tier>1&&b?b.hp_mult||1:1)*(1+(mods.hp||0)+(mods[`${base.role}_hp`]||0)+(unit.hpBonus||0)+(tier===1?mods.nexus_t1_hp||0:tier===3?mods.nexus_t3_hp||0:0)));
   result.maxHp=result.hp;
   result.attack=base.attack*growth*(tier>1&&b?b.attack_mult||1:1)*(1+(mods.attack||0)+roleBonus);
   result.attack*=1+(mods.lost_spirit_damage||0)*Math.floor((state.battle?.spiritLost||0)/10);
+  result.attack*=1+(tier===1?mods.nexus_t1_attack||0:mods.nexus_evolved_attack||0)+(tier===3?mods.nexus_t3_attack||0:0);
   if((mods.low_spirit_attack||0)&&state.spirit/state.maxSpirit<0.4) result.attack*=1+mods.low_spirit_attack;
   result.armor=base.armor+(tier-1)*2+(mods.armor||0)+(mods[`${base.role}_armor`]||0);
   if(unit.hp<result.hp*.35)result.armor+=mods.low_hp_armor||0;
@@ -60,6 +61,7 @@ export function unitStats(state,unit) {
   result.range=base.range*(1+(mods.range||0)+(mods[`${base.role}_range`]||0));
   if(base.attack_kind==='direct')result.range*=1+(mods.direct_range||0);
   result.rate=base.rate/Math.max(0.2,1+(mods.haste||0)+(mods[`${base.role}_haste`]||0));
+  if(base.role==='ranged')result.rate*=1+(mods.nexus_ranged_delay||0);
   if(onField(unit)&&(cellAt(state,unit.x,unit.z)?.h||0)>=3)result.rate*=1-(mods.height_rate||0);
   result.support_value=(base.support_value||0)*(1+(tier-1)*0.3)*(1+(mods.support_power||0));
   result.bandwidth=Math.max(1,base.bandwidth-(tier===1?mods.t1_bandwidth||0:0)-(base.ability==='bandwidth_plus'?mods.relay_cost||0:0));
@@ -74,9 +76,7 @@ export function bandwidthState(state) {
   const sources=[];
   if(mods.bandwidth) sources.push(`构筑 +${mods.bandwidth}`);
   const disabled=[], active=[...live].sort((a,b)=>(a.order||0)-(b.order||0));
-  const capFor=units=>baseFor(units)+units.reduce((sum,u)=>{
-    const s=unitStats(state,u); return sum+(s.ability==='bandwidth_plus'?Math.round(s.support_value):0);
-  },0);
+  const capFor=units=>baseFor(units)+relaySupply(state,units).reduce((sum,source)=>sum+source.amount,0);
   const allUsed=active.reduce((s,u)=>s+unitStats(state,u).bandwidth,0);
   let used=allUsed,cap=capFor(active);
   const startingCap=cap;
@@ -87,6 +87,11 @@ export function bandwidthState(state) {
   if(jam)sources.push(`敌方干扰 −${jam}`);
   if(cap>base) sources.push(`中继 +${cap-base}`);
   return {used:allUsed,activeUsed:used,cap,disabled,shortfall:Math.max(0,allUsed-startingCap),sources};
+}
+export function relaySupply(state,units=state.units.filter(u=>onField(u)&&u.hp>0)){
+  const sources=units.filter(u=>unitStats(state,u).ability==='bandwidth_plus').map(u=>({uid:u.uid,rated:Math.round(unitStats(state,u).support_value),order:u.order||0}));
+  if(difficultyProfile(state).revision>=3)sources.sort((a,b)=>b.rated-a.rated||a.order-b.order);
+  return sources.map((source,index)=>({...source,amount:difficultyProfile(state).revision>=3?Math.floor(source.rated*([1,.6,.4][index]||0)):source.rated}));
 }
 export function supportInRange(state,source,target) {
   const a=unitCenter(source),b=unitCenter(target);
@@ -112,7 +117,7 @@ export function repairCost(state,uid) {
   return Math.max(0,Math.ceil((1-clamp(u.hp/s.hp,0,1))*s.upkeep*(1-clamp(effects(state).repair_discount||0,-1,1))*difficultyProfile(state).serviceMultiplier));
 }
 export function upgradeCost(state,uid) {
-  const u=getUnit(state,uid); return u?Math.ceil((u.tier===1?42:80)*(unitStats(state,u).upkeep/45)*(1-clamp(effects(state).upgrade_discount||0,0,0.9))*difficultyProfile(state).serviceMultiplier):0;
+  const u=getUnit(state,uid),modern=difficultyProfile(state).revision>=3; return u?Math.ceil((u.tier===1?(modern?65:42):(modern?140:80))*(unitStats(state,u).upkeep/45)*(1-clamp(effects(state).upgrade_discount||0,0,0.9))*(1+(effects(state).nexus_upgrade_tax||0))*difficultyProfile(state).serviceMultiplier):0;
 }
 export function placement(state,unit,x,z) {
   const cells=footprint(state,unit,x,z), bw=bandwidthState(state);
@@ -161,6 +166,7 @@ export function upgrade(state,uid,branch,{free=false}={}) {
   const u=getUnit(state,uid); if(!u)return failure('未找到构造');
   if(!canManage(state)&&!(free&&state.phase==='reward'&&state.rewardQueue?.[0]?.kind==='upgrade'))return failure('当前阶段不能升级');
   if(u.tier>=3)return failure('已达到 T3');
+  const requirement=upgradeRequirement(state,u);if(!requirement.ok)return failure(requirement.reason);
   if(u.tier===1&&!['A','B'].includes(branch))return failure('请选择 A 或 B 分支');
   if(u.tier===2&&branch&&branch!==u.branch)return failure('T3 必须沿原分支成长');
   const cost=free?0:upgradeCost(state,u); if(state.focus<cost)return failure(`需要 ${cost} 专注`);
@@ -172,6 +178,7 @@ export function fuse(state,uid,branch) {
   const u=getUnit(state,uid); if(!u)return failure('未找到核心构造');
   if(!canManage(state))return failure('战斗中不能融合');
   if(u.tier>=3)return failure('T3 不能继续融合');
+  const requirement=upgradeRequirement(state,u);if(!requirement.ok)return failure(requirement.reason);
   if(u.tier===1&&!['A','B'].includes(branch))return failure('请选择融合分支');
   if(u.tier===2&&branch&&branch!==u.branch)return failure('T2 材料必须同分支');
   const material=state.units.filter(t=>t.uid!==u.uid&&t.type===u.type&&t.tier===u.tier&&(u.tier===1||t.branch===u.branch)).slice(0,2);
@@ -300,6 +307,9 @@ export function solveAttack(state,unit,target) {
   if(s.role==='ranged'&&originH>=2)damage*=1+(mods.highground_damage||0);
   if(s.role==='ranged'&&unit.priority==='hp')damage*=1+(mods.high_hp_damage||0);
   if(target.air)damage*=1+(mods.anti_air_damage||0);
+  if(target.kind==='boss')damage*=1+(mods.nexus_boss_damage||0);
+  if(target.kind==='elite')damage*=1+(mods.nexus_elite_damage||0);
+  damage*=1+(s.attack_kind==='direct'?mods.nexus_direct||0:['indirect','drone'].includes(s.attack_kind)?mods.nexus_indirect||0:0);
   if(target.air&&s.effect==='anti_air')damage*=1.8;
   if(s.effect==='execute'&&target.hp/target.maxHp<0.3)damage*=1.65;
   const penetration=(s.effect==='pierce'?0.6:0)+(mods.armor_pierce||0);

@@ -1,4 +1,4 @@
-export const CURRENT_DIFFICULTY_REVISION=2;
+export const CURRENT_DIFFICULTY_REVISION=3;
 const healthCurve=[1,1.10,1.22,1.36,1.53,1.73,1.96,2.22,2.51,2.84,3.2];
 const bound=(value,min,max)=>Math.max(min,Math.min(max,value));
 
@@ -9,9 +9,9 @@ export function normalizeDifficulty(value) {
   return Number.isFinite(level)?bound(Math.floor(level),0,10):0;
 }
 export function difficultyProfile(value=0) {
-  const level=normalizeDifficulty(value),legacy=typeof value==='object'&&value!==null&&value.difficultyRevision!==CURRENT_DIFFICULTY_REVISION;
+  const level=normalizeDifficulty(value),revision=typeof value==='object'&&value!==null?(value.difficultyRevision||1):CURRENT_DIFFICULTY_REVISION,legacy=revision===1;
   return {
-    revision:legacy?1:CURRENT_DIFFICULTY_REVISION,level,legacy,
+    revision,level,legacy,
     hpMultiplier:legacy?(level>=1?1.1:1)*(level>=10?1.1:1):healthCurve[level],
     attackMultiplier:legacy?(level>=2?1.1:1)*(level>=10?1.1:1):1+.09*level,
     speedMultiplier:legacy?1:1+.016*level,
@@ -23,7 +23,7 @@ export function difficultyProfile(value=0) {
     controlDurationMultiplier:legacy?1:1-Math.max(0,level-5)*.05,
     jamBonus:legacy&&level>=8?2:0,
     earlyEnemyAct:legacy&&level>=3?1:0,
-    functionalDensity:legacy&&level>=4?.5:.25,
+    functionalDensity:revision>=3?.4:legacy&&level>=4?.5:.25,
     serviceMultiplier:legacy&&level>=7?1.15:1,
     campHeal:legacy&&level>=5?.2:.3,
     surge:{enabled:!legacy&&level>=8,interval:12,warning:1.5,range:8,maxTargets:2,attackFraction:.55}
@@ -31,16 +31,24 @@ export function difficultyProfile(value=0) {
 }
 
 export function enemyStats(state,spec) {
-  const p=difficultyProfile(state),scale=1+(state.act||0)*.08+(state.floor||0)*.015;
+  const p=difficultyProfile(state),modern=p.revision>=3,scale=modern?1.35*(1+(state.act||0)*.35+Math.max(0,state.floor||0)*.025):1+(state.act||0)*.08+(state.floor||0)*.015;
   const baseHp=spec.hp*scale,maxHp=baseHp*p.hpMultiplier;
   return {...spec,baseHp,maxHp,hp:maxHp,
     supportHp:spec.kind==='boss'&&!p.legacy?baseHp*Math.sqrt(p.hpMultiplier):maxHp,
-    attack:spec.attack*p.attackMultiplier,
+    attack:spec.attack*p.attackMultiplier*(modern?1.12+(state.act||0)*.06:1),
     pressure:spec.pressure*p.pressureMultiplier*(1+(state.modifiers?.pressure_mult||0)),
-    speed:spec.speed*1.5*p.speedMultiplier,
+    speed:spec.speed*1.5*p.speedMultiplier*(modern?1.04:1),
     armor:spec.armor+p.armorBonus,
     core_damage:spec.core_damage*p.breachMultiplier
   };
+}
+
+export const xpRequirement=state=>difficultyProfile(state).revision>=3?state.depth*400:200+(state.depth-1)*125;
+export const killRewardScale=state=>difficultyProfile(state).revision>=3?{xp:.65,focus:.65}:{xp:1,focus:1};
+export function upgradeRequirement(state,unit){
+  if(!unit||unit.tier>=3)return {ok:false,reason:'已达到 T3'};
+  const depth=difficultyProfile(state).revision>=3?(unit.tier===1?2:5):1;
+  return state.depth>=depth?{ok:true,depth}:{ok:false,depth,reason:`T${unit.tier+1} 在精神深度 ${depth} 开放（当前 ${state.depth}）`};
 }
 
 // Used for every source of boss healing/shielding, including ordinary support
@@ -86,5 +94,6 @@ export function difficultySummary(value=0) {
   if(p.controlDurationMultiplier<1)lines.push(`敌人承受的减速与定身时间缩短 ${Math.round((1-p.controlDurationMultiplier)*100)}%；高地保护保持有效。`);
   lines.push(`首领受到的治疗与护盾${p.level===0?'保持基础数值':`提高 ${percent(Math.sqrt(p.hpMultiplier))}`}；带宽征用后至少留下 1.1 秒恢复窗口。`);
   if(p.surge.enabled)lines.push('首领每 12 秒准备频震：预警 1.5 秒后，对 8 格内最多 2 座构造造成 55% 攻击力伤害；嘲讽优先，护甲与高地保护生效。');
+  if(p.revision>=3)lines.push('本版标准强度随幕与层数成长；功能敌人约占 40%。升阶在深度 2 / 5 开放，经验需求从 400 起、每级增加 400。');
   return lines;
 }

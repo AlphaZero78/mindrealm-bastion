@@ -1,6 +1,8 @@
 # 控制压力 0–10：规则与平衡记录
 
-本说明对应 2026-09-05 的新局难度规则 `difficultyRevision: 2`。当前难度的唯一来源是 [difficulty.js](../web/core/difficulty.js)：`difficultyProfile` 提供累计参数，`enemyStats` 计算本场敌人属性，`enemyAbilityProfile` 与 `enemyRecoveryBase` 计算能力、治疗和护盾，`difficultySummary` 生成玩家可见说明。界面与实战应共同读取这些函数。
+本文保留规则修订 2 的参数与历史验收记录。当前新局采用修订 3，标准敌人成长、经验、升阶、中继和道具规则见[平衡与背包更新](BALANCE_INVENTORY_UPDATE.md)。下文表格中的压力级别倍率继续适用；历史胜率仅对应当时的实现。
+
+难度的唯一来源是 [difficulty.js](../web/core/difficulty.js)：`difficultyProfile` 提供累计参数，`enemyStats` 计算本场敌人属性，`enemyAbilityProfile` 与 `enemyRecoveryBase` 计算能力、治疗和护盾，`difficultySummary` 生成玩家可见说明。界面与实战应共同读取这些函数。
 
 ## 选择与解锁
 

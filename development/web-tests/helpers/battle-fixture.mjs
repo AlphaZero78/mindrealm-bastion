@@ -1,10 +1,11 @@
-import {newRun,addUnit,enterNode,availableNodes} from '../../../web/core/state.js';
+import {unblessedRun as newRun} from './unblessed-run.mjs';
+import {addUnit,enterNode,availableNodes} from '../../../web/core/state.js';
 import {startBattle,stepBattle} from '../../../web/core/battle.js';
 import {unitStats,footprint} from '../../../web/core/rules.js';
 
 // Test-only in-memory fixtures. No browser storage or player profile is accessed.
-export function fixture(seed='rules-fixture',{flat=true}={}) {
-  const state=newRun(seed);enterNode(state,availableNodes(state)[0].id);state.units=[];
+export function fixture(seed='rules-fixture',{flat=true,revision=2}={}) {
+  const state=newRun(seed);state.difficultyRevision=revision;enterNode(state,availableNodes(state)[0].id);state.units=[];
   if(flat)for(const cell of state.terrain.cells){cell.h=0;cell.ramp=-1;}state.terrain.revision++;
   return state;
 }

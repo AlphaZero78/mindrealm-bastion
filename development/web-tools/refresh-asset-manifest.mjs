@@ -2,7 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
 import { dirname, extname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { towers, enemies } from '../../web/core/content.js';
+import { towers, enemies, messengers } from '../../web/core/content.js';
 import { AUDIO_FILES } from '../../web/view/audio.js';
 import { ENTITY_ART } from '../../web/view/entity-art.js';
 
@@ -10,6 +10,7 @@ const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const manifestPath = 'assets/third_party/ASSET_MANIFEST.sha256';
 const modelRoot = 'development/assets/model_sources';
 const licensePaths = [
+  'assets/third_party/game-icons/LICENSE.txt',
   'assets/third_party/fusion-pixel-font/OFL.txt',
   'assets/third_party/kenney/sci-fi-sounds/License.txt',
   'assets/third_party/opengameart/singularity/LICENSE.txt',
@@ -52,6 +53,7 @@ export async function runtimeAssetPaths(root = projectRoot) {
     ...Object.values(ENTITY_ART).map(art => art.animationPath.slice(1)),
     ...Object.values(AUDIO_FILES).map(path => path.replace(/^\//, '')),
     ...cssAssets,
+    ...Object.values(messengers).map(m=>`assets/third_party/game-icons/${m.art}.svg`),
   ])].sort(order);
 }
 

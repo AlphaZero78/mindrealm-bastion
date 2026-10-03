@@ -43,7 +43,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\development\web-tests\
 
 默认输出在仓库同级的 `game_build_release` 目录，文件名为 `心域防线-Windows.zip`，旁边是 ZIP 的 SHA-256 文件。ZIP 内保留一个游戏文件夹。文件夹顶层放 `启动游戏.exe`、备用 CMD、`README.txt` 和 `MANIFEST.sha256`；`game/` 集中存放 `web/`、`assets/`、`launcher/`、`runtime/`、`licenses/` 与 `version.json`。
 
-`build-launcher.ps1 -OutputExe <绝对路径>` 可单独编译启动器，输出必须位于源码目录外。`package-windows.ps1` 支持 `-ReleaseDirectory` 和 `-OutputZip`。版本化发布可以使用独立目录，例如 `v0.1.1/Mindrealm-Bastion`，并输出 `Mindrealm-Bastion-v0.1.1-windows-x64.zip`。打包前逐项校验文件清单，打包后再次核对所有 ZIP 条目的哈希。
+`build-launcher.ps1 -OutputExe <绝对路径>` 可单独编译启动器，输出必须位于源码目录外。`package-windows.ps1` 支持 `-ReleaseDirectory` 和 `-OutputZip`。版本化发布可以使用独立目录，例如 `v0.1.2/Mindrealm-Bastion`，并输出 `Mindrealm-Bastion-v0.1.2-windows-x64.zip`。打包前逐项校验文件清单，打包后再次核对所有 ZIP 条目的哈希。
 
 `portable-zip.test.ps1` 将 ZIP 解压到临时中文与空格路径，从其他工作目录启动，并从子进程 PATH 中排除全局 Node.js。测试使用隔离端口与内存存档，结束后关闭自己启动的服务。实际浏览器验收同样使用 `MINDREALM_QA=1` 与独立端口。
 
@@ -52,10 +52,14 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\development\web-tests\
 | 位置 | 职责 |
 | --- | --- |
 | `web/core/content.js` | 稳定内容 ID、内容目录、种子随机与效果描述 |
-| `web/core/difficulty.js` | 0–10 累计难度、修订 1/2 兼容、实际敌人属性、能力/恢复参数与玩家说明的唯一来源 |
+| `web/core/difficulty.js` | 0–10 累计难度、修订 1/2/3 兼容、实际敌人属性、能力/恢复参数与玩家说明的唯一来源 |
 | `web/core/state.js` | 种子地形、三幕路线、节点服务、成长、奖励队列与结算 |
 | `web/core/rules.js` | 部署、完整占地、地形事务、通路、射程、视线、伤害、维修、融合与带宽的唯一判定来源 |
 | `web/core/battle.js` | 遭遇编队、20 Hz 固定步长模拟、敌我行为与事件 |
+| `web/core/inventory.js`、`item-content.js` | 背包、道具目录、增减与容量判定；使用效果由 `battle.js` 结算 |
+| `web/core/nexus-content.js`、`web/nexus-view.js` | 三幕的 12 位精神使者、36 件专属赠礼与枢纽房间视图 |
+| `web/core/extra-events.js` | 三选事件数据，与旧目录合并，继续使用同一节点事务 |
+| `web/inventory-view.js` | 背包、道具、事件选材和商店的中文视图 |
 | `web/core/save.js` | 可注入存储、版本与结构检查、战前快照、备份恢复 |
 | `web/app.js` | 状态、界面、输入、保存和画面循环的连接 |
 | `web/screens.js`、`web/ui.js`、`web/style.css` | 中文页面、上下文面板与响应式布局 |
@@ -72,7 +76,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\development\web-tests\
 
 实体模型的配方、动作行合同、Blender 烘焙、逐帧检查和运行内存说明见[模型与动作](ENTITY_MODELS_AND_ANIMATION.md)。修改战斗事件时须保留原有规则结果，演出只能消费实体身份、目标、朝向、技能倒计时和模拟时钟。
 
-难度相关属性由 `difficultyProfile`、`enemyStats`、`enemyAbilityProfile`、`enemyRecoveryBase` 提供，界面用 `difficultySummary` 展示累计规则，不在界面重写阈值。新局规则修订 2 保持同种子同节点的计划编队、出场时间和击杀奖励，取消旧版营地与服务惩罚，改用敌人数值、控制时间和高阶首领频震。各级表、兼容边界与实测结果见[难度与平衡说明](DIFFICULTY_BALANCE.md)。
+难度相关属性由 `difficultyProfile`、`enemyStats`、`enemyAbilityProfile`、`enemyRecoveryBase` 提供，界面用 `difficultySummary` 展示累计规则，不在界面重写阈值。新局规则修订 3 统一敌人成长、经验、升阶门槛和中继叠加；道具及背包通过独立模块管理。各压力级别保持相同种子编队和基础奖励。当前规则、兼容边界与实测结果见[平衡与背包更新](BALANCE_INVENTORY_UPDATE.md)，压力倍率与旧修订记录见[难度说明](DIFFICULTY_BALANCE.md)。
 
 ## 新局地形生成
 
@@ -104,7 +108,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\development\web-tools\
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\development\web-tools\verify-audio.ps1 -SkipSetup
 ```
 
-规则测试包含 1000 个种子地图检查，以及独立的自然地形连通和多格部署回归。完整模拟由 20 个标准难度参考种子和 100 个终局场景构成：前者必须完成 48 个节点、击败三名首领并获胜；后者覆盖控制压力 0–10，以及空防线、仅开局部署和参考策略，必须到达胜负终态。空防线失败是预期的失败流程验证。模拟只使用内存状态，前后核对核心文件哈希，运行期间不要修改核心或参考策略文件。
+规则测试包含 1000 个种子地图检查，以及独立的自然地形连通和多格部署回归。完整模拟由 20 个标准难度参考种子和 100 个终局场景构成：两组都必须到达胜负终态，所有胜局须完成 48 个节点和三名首领；标准参考组须包含完整胜局。后者覆盖控制压力 0–10，以及空防线、仅开局部署和参考策略。正常败局用于检查提高挑战性后的失败流程。空防线失败是预期的失败流程验证。模拟只使用内存状态，前后核对核心文件哈希，运行期间不要修改核心或参考策略文件。
 
 仅当进程退出码为 0，且最终 `WEB_SIMULATIONS` 显示 `ok: true` 时才算通过；中间进度行不能作为终态证据。其他成功标记为 `MINDREALM_ASSETS_OK`、`MINDREALM_CONTENT_OK` 和 `AUDIO_VERIFY_OK`。
 
@@ -126,7 +130,7 @@ node .\development\web-tools\difficulty-sweep.mjs --levels 0,5,10 --seeds $sampl
 
 `--levels` 支持逗号列表和范围，`--seeds` 为逗号分隔的种子，`--workers` 为 1–4。输出文件必须位于仓库外；脚本只用新建的内存单局，哈希守卫覆盖核心、难度模块与两个策略文件。运行中不得修改这些文件。报告记录每战/每幕损失、时长、计划与实际敌数、构筑、带宽和规则修订号，并核对同节点的计划数量、群数、入口分配和增援预算。
 
-成功需退出码 0、最终 `DIFFICULTY_SWEEP.ok: true` 且 `changed`、`failures`、`countMismatches` 为空。脚本允许正常败局，标准难度门槛还须单独核对 20 个参考种子均完成 48 节点、击败三名首领并胜利。胜率仅代表所选脚本策略样本，不是人类胜率；早败缩短了可累计的伤害，应同时查看到达节点、每战损失和构造损毁。
+成功需退出码 0、最终 `DIFFICULTY_SWEEP.ok: true` 且 `changed`、`failures`、`countMismatches` 为空。脚本允许正常败局，每个胜局还须核对 48 个完成节点和三名首领，正常败局保留其到达位置与损失；标准难度应包含完整胜局。胜率仅代表所选脚本策略样本，不是人类胜率；早败缩短了可累计的伤害，应同时查看到达节点、每战损失和构造损毁。
 
 `reference-strategy.mjs` 的 `runReference` 提供可选 `{hooks:{prepare,reward,node}}`；不传钩子时行为保持原样。`defensive-strategy.mjs` 通过公开命令构建 B 中继、多个前排、分区维修和侧翼远程，所有等级使用同一套参数。`opening` 只在第一战进行部署准备，`empty` 不进行战前部署准备；两者仍使用合法路线、奖励与节点循环。
 
@@ -190,7 +194,7 @@ Web 布局明确替代第二份计划的整屏固定 640×360。`renderResolutio
 
 仅保存安全状态与战前快照；退出战斗后回到该场战前，不能恢复半场或借刷新重抽奖励。路线、地形、单位、耐久、资源、商店、奖励与随机顺序一同恢复。旧 Web v1 数据保留并提示不兼容，不自动当作 v2 读取；旧引擎存档不自动转换或删除。新游戏替换现有单局前需要确认。
 
-本次难度更新不改变存档命名空间或结构版本。`newRun` 写入 `difficultyRevision: 2`；缺少该字段和显式修订 1 的旧 Web v2 单局继续调用旧难度分支，不能在读取时补成 2。旧局内容池、随机顺序、货架、奖励、地形、`runId`、结算记录和局外解锁均保留；未知修订号不作为有效单局读取，原始记录不删除。
+本次难度更新不改变存档命名空间或结构版本。`newRun` 写入 `difficultyRevision: 3`；缺少该字段和显式修订 1 的旧 Web v2 单局继续调用旧难度分支，读取时保留原值。旧局内容池、随机顺序、货架、奖励、地形、`runId`、结算记录和局外解锁均保留；未知修订号不作为有效单局读取，原始记录不删除。
 
 ## 发布
 
@@ -206,9 +210,9 @@ npm run build
 
 发布后应从发布目录实际启动，核对首页、战前、战斗、音频与继续游戏，并检查日志及资源加载。只有必要检查均取得终态结果后才交付。
 
-## 当前难度修订的验证
+## 规则修订 2 的历史验证
 
-当前难度修订在全部界面修复后通过 `npm run build`：144/144 项源码测试，73 项必要运行资源、107 项哈希、7 项许可证检查；发布包 90 个文件全部通过清单核对，17 个 Web 源码文件与工作区逐一 SHA-256 一致。0–10 × 10 个共同种子的 110 局矩阵及额外 10 个标准种子已取得终态，合计 120 局、2415 战；20 个标准种子全部通关，100 个其他难度为 90 胜、10 败。
+规则修订 2 在当时界面修复后通过 `npm run build`：144/144 项源码测试，73 项必要运行资源、107 项哈希、7 项许可证检查；发布包 90 个文件全部通过清单核对，17 个 Web 源码文件与工作区逐一 SHA-256 一致。0–10 × 10 个共同种子的 110 局矩阵及额外 10 个标准种子已取得终态，合计 120 局、2415 战；20 个标准种子全部通关，100 个其他难度为 90 胜、10 败。
 
 源码浏览器通过 75 项难度/兼容/首领情报/频震交互检查，并分别以压力 0、10 从真实新游戏菜单完成 48 节点和三名首领胜利。便携版本经正式 CMD 启动后通过 11 项新局、战斗、退出继续和失败复盘检查；最终样式另通过三窗口共 9 项首领路线普通点击与侧栏滚动检查。全部无脚本、资源、渲染或音频错误。完整步骤、数值边界、样本策略限制以及预览/长弹窗/首领进入遮挡修复见[难度与平衡说明](DIFFICULTY_BALANCE.md)。
 
@@ -225,3 +229,25 @@ npm run build
 ## v0.1.1 性能与项目审计
 
 本轮覆盖规则、渲染、存档、本地服务、音频与发布流程。具体修复、测量边界和复验命令见[审计报告](PERFORMANCE_AUDIT_V011.md)。浏览器性能对照需要分别保留优化前、后的独立服务；使用临时目录保存基线与结果。
+
+## 规则修订 3：道具、背包与事件验证
+
+当前验收见[平衡与背包更新](BALANCE_INVENTORY_UPDATE.md)。`inventory-items.test.mjs` 覆盖容量阻断、交易原子性、十类道具、持续效果到期、事件边界、旧存档和战前回滚。地图悬停在自动滚动后保持可见的回归包含在 `browser-full-run.js` 中。
+
+```powershell
+node .\development\web-tools\balance-sweep.mjs --output "$env:TEMP\mindrealm-balance-report.json"
+```
+
+此脚本使用 76 个内存场景，包含 20 对相同种子的旧、新平衡比较、空防线、仅首战部署、高压力和另一种防守策略。比较规则修订时，两组共享新内容池和道具系统。终态报告需 `ok: true`，并且 `changed`、`failures` 为空。
+
+`browser-inventory.js` 在当前独立 QA 页面检查背包、删除确认、满槽替换、商店服务、事件选材、营地高亮与实际战斗道具。先在系统临时目录建立 `mindrealm-v3-ui` 文件夹，再通过 Playwright CLI 的 `run-code --filename` 执行。它拒绝玩家端口 4173。截图等待弹窗与提示动画结束后记录；完整通关使用 `browser-full-run.js`，每幕一次，三次延续同一页面。
+
+`browser-inventory-layout.js` 另检查三窗口与三种界面缩放的组合，验证四道具槽顶部布局和背包长弹窗边界。CSS 的弹窗最大高度需要除以实际界面缩放，避免 125% / 150% 下标题或关闭按钮移出视口。
+
+## v0.1.2 枢纽与整页节点验收
+
+当前结果见 [v0.1.2 更新说明](RELEASE_V012.md)。`nexus.test.mjs` 使用真实新局，检查入口、赠礼、旧存档、屏障、再生和合并信号。既有独立规则测试使用 `unblessed-run.mjs`，显式去除枢纽加成，避免一个随机赠礼污染另一条规则的期望值。完整策略模拟与浏览器通关会正常选择三次赠礼。
+
+`browser-nexus-layout.js` 覆盖开局空槽、赠礼取消与继续游戏，以及枢纽、商店、7/40 座构造工坊、营地、事件、宝库的 63 组窗口与缩放组合。它与其余浏览器脚本一样，在项目外通过 Playwright CLI 执行，使用隔离端口与 `?qa=1`。`browser-nexus-catalog.js` 另外覆盖 12 位使者、24 个大小窗口布局和 36 次赠礼取消。完整流程继续运行 `browser-full-run.js`，在同一页面按幕执行三次。
+
+新增使者图像的路径来自内容目录。`refresh-asset-manifest.mjs` 同时扫描目录声明和 CSS 引用，保证动态蒙版图像进入运行包与哈希清单。
