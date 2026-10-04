@@ -5,12 +5,15 @@ import {fileURLToPath} from 'node:url';
 import {towers,enemies,relics,talents,events} from '../../web/core/content.js';
 import {AUDIO_FILES} from '../../web/view/audio.js';
 import {ENTITY_ART} from '../../web/view/entity-art.js';
+import {runtimeAssetPaths} from './refresh-asset-manifest.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
 const required=['web/index.html','web/app.js','web/screens.js','web/style.css','web/ui.js','web/favicon.svg','web/core/state.js','web/core/content.js','web/core/rules.js','web/core/battle.js','web/core/save.js','web/view/battlefield.js','web/view/audio.js','launcher/server.mjs','launcher/web_game.ps1','launcher/start_web.cmd','assets/third_party/fusion-pixel-font/fusion-pixel-10px-zh_hans.ttf','assets/third_party/fusion-pixel-font/OFL.txt',...Object.keys(towers).map(id=>`assets/game/sprites/towers/${id}.png`),...Object.keys(enemies).map(id=>`assets/game/sprites/enemies/${id}.png`),...Object.values(AUDIO_FILES).map(path=>path.replace(/^\//,''))];
 required.push('web/core/unit-details.js','web/view/display-settings.js','web/view/transitions.js','web/view/dialog-transitions.js','web/core/difficulty.js','web/view/entity-art.js','web/view/entity-motion.js',...Object.values(ENTITY_ART).map(art=>art.animationPath.slice(1)));
 required.push('web/inventory-view.js','web/core/inventory.js','web/core/item-content.js','web/core/extra-events.js','web/core/nexus-content.js','web/nexus-view.js');
+required.push('web/core/event-stories.js','web/event-view.js','web/event-style.css','web/view/entity-renderer.js','web/view/model-portraits.js',...await runtimeAssetPaths(root));
 for(const file of new Set(required)){const path=resolve(root,file);if(!(await stat(path)).isFile()||!(await stat(path)).size)throw Error(`Missing or empty resource: ${file}`);}
 const licenses=['assets/third_party/game-icons/LICENSE.txt','assets/third_party/opengameart/singularity/LICENSE.txt','assets/third_party/opengameart/dark-sci-fi-audio/LICENSE.txt','assets/third_party/kenney/sci-fi-sounds/License.txt','development/assets/model_sources/kenney/space-kit/License.txt','development/assets/model_sources/kenney/modular-space-kit/License.txt','development/assets/model_sources/kenney/tower-defense-kit/License.txt'];
+licenses.push('assets/third_party/three/LICENSE.txt','assets/third_party/polyhaven/LICENSE.txt');
 for(const file of licenses)if((await readFile(resolve(root,file),'utf8')).length<25)throw Error(`License incomplete: ${file}`);
 const manifest=(await readFile(resolve(root,'assets/third_party/ASSET_MANIFEST.sha256'),'utf8')).trim().split(/\r?\n/);let checked=0;
 for(const line of manifest){const match=line.match(/^([0-9a-fA-F]{64})\s+(.+)$/);if(!match)continue;const file=match[2].trim().replace(/^[*]/,'');const actual=createHash('sha256').update(await readFile(resolve(root,file))).digest('hex');if(actual!==match[1].toLowerCase())throw Error(`Asset checksum mismatch: ${file}`);checked++;}

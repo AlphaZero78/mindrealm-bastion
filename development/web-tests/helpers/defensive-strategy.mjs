@@ -53,6 +53,7 @@ export function prepareDefensive(state){
     lanes.push({entry:entry.id,anchor,weight:entry.count/encounter.total});
     for(let i=2;i<route.length;i+=3){const point=route[i];samples.push({...point,air:false,h:cellAt(state,point.x,point.z).h,entry:entry.id,weight:entry.count/encounter.total});}
   }
+  for(const entry of encounter.entries)if(entry.airCount)for(let i=1;i<=10;i++){const t=i/10;samples.push({x:entry.x+(core.x-entry.x)*t,z:entry.z+(core.z-entry.z)*t,air:true,h:0,entry:entry.id,weight:entry.airCount/encounter.total});}
   const desiredMelee=encounter.entries.length>=3?3:2,reserve=encounter.entries.length>=3?3:2;
   const eligible=state.units.filter(unit=>unit.hp>0&&upgradeRequirement(state,unit).ok&&(onField(unit)||['anchor_bulwark','bandwidth_relay','memory_mechanic'].includes(unit.type))).sort((a,b)=>growthValue(b)-growthValue(a));
   for(const unit of eligible){if(!onField(unit)&&living(state).filter(other=>other.type===unit.type).length>=supportLimit(unit.type))continue;const cost=upgradeCost(state,unit);if(state.focus>=cost+24)upgrade(state,unit.uid,branchFor(unit));}
@@ -76,7 +77,7 @@ export function prepareDefensive(state){
       return b.weight/(1+coverage(b)*2)-a.weight/(1+coverage(a)*2);
     })[0];
     let best=null;
-    for(let z=10;z<=34;z++)for(let x=8;x<=32;x++){
+    for(let z=3;z<state.terrain.size-2;z++)for(let x=3;x<state.terrain.size-2;x++){
       if(!placement(state,unit,x,z).ok)continue;
       const probe={...unit,x,z},center=unitCenter(probe),fronts=allies.filter(other=>role(other)==='melee');let score=0;
       if(stats.role==='melee'){
@@ -121,8 +122,9 @@ export function defensiveNode(state){
   }
   if(node.type==='treasure'){const id=[...node.options].sort((a,b)=>rewardValue(state,b,'relic')-rewardValue(state,a,'relic'))[0];return nodeAction(state,'treasure',{id});}
   if(node.type==='event'){
+    if(node.eventData.outcome)return nodeAction(state,'event-continue');
     const value=preview=>!preview?.canChoose?-Infinity:(preview.effects.spirit||0)*(state.spirit<state.maxSpirit*.75?5:2)+(preview.effects.focus||0)+(preview.effects.bandwidth||0)*25+(preview.effects.resistance||0)*15+(preview.effects.relic?75:0)+(preview.effects.free_upgrade?65:0)+(preview.effects.free_upgrades||0)*65;
-    const previews=events[node.eventData.id].choices.map((_,index)=>({index,preview:eventPreview(state,index)}));return nodeAction(state,'event',{index:previews.sort((a,b)=>value(b.preview)-value(a.preview))[0].index});
+    const previews=events[node.eventData.id].choices.map((_,index)=>({index,preview:eventPreview(state,index)})),result=nodeAction(state,'event',{index:previews.sort((a,b)=>value(b.preview)-value(a.preview))[0].index});return result.ok&&state.phase==='node'?nodeAction(state,'event-continue'):result;
   }
   throw new Error(`Unhandled defensive service ${node.type}`);
 }

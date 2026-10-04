@@ -63,7 +63,8 @@ export function unitStats(state,unit) {
   result.rate=base.rate/Math.max(0.2,1+(mods.haste||0)+(mods[`${base.role}_haste`]||0));
   if(base.role==='ranged')result.rate*=1+(mods.nexus_ranged_delay||0);
   if(onField(unit)&&(cellAt(state,unit.x,unit.z)?.h||0)>=3)result.rate*=1-(mods.height_rate||0);
-  result.support_value=(base.support_value||0)*(1+(tier-1)*0.3)*(1+(mods.support_power||0));
+  const supportGrowth=base.ability==='haste_aura'&&difficultyProfile(state).revision>=4?(tier===3?2:1):1+(tier-1)*.3;
+  result.support_value=(base.support_value||0)*supportGrowth*(1+(mods.support_power||0));
   result.bandwidth=Math.max(1,base.bandwidth-(tier===1?mods.t1_bandwidth||0:0)-(base.ability==='bandwidth_plus'?mods.relay_cost||0:0));
   if(result.effect==='bandwidth_plus_more') result.support_value+=tier*2;
   if(result.effect==='resistance_plus_more') result.support_value+=tier;
@@ -96,6 +97,24 @@ export function relaySupply(state,units=state.units.filter(u=>onField(u)&&u.hp>0
 export function supportInRange(state,source,target) {
   const a=unitCenter(source),b=unitCenter(target);
   return Math.hypot(a.x-b.x,a.z-b.z)<=unitStats(state,source).range;
+}
+export function unitAuras(state,unit){
+  const s=unitStats(state,unit),m=ruleEffects(state),auras=[];
+  if(s.ability==='ally_shield'||s.effect==='guard')auras.push({id:'guard',label:'友军减伤',target:'ally',radius:s.effect==='wide_shield'?6:3,reduction:.18});
+  if(['pressure_sink','pressure_filter'].includes(s.effect))auras.push({id:'pressure',label:'死亡压力过滤',target:'enemy',radius:s.range,reduction:.3});
+  if(s.ability==='haste_aura'){const haste=s.support_value+(s.effect==='strong_haste'?.12:0);auras.push({id:'haste',label:'友军攻速 / 攻击',target:'ally',radius:s.range,haste,damage:haste*.5});}
+  if(s.ability==='repair')auras.push({id:'repair',label:'维修覆盖',target:'ally',radius:s.range,amount:s.attack*(1+(m.support_efficiency||0)),interval:s.rate});
+  if(s.effect==='slow_aura')auras.push({id:'slow',label:'敌人减速',target:'enemy',radius:s.range,slow:.4});
+  if(s.role==='support'&&(m.support_armor||m.support_rate))auras.push({id:'network',label:'支援网络',target:'ally',radius:s.range,armor:m.support_armor||0,rate:m.support_rate||0});
+  if(s.ability==='bandwidth_plus')auras.push({id:'bandwidth',label:'全局带宽',target:'global',radius:null,value:Math.round(s.support_value)});
+  if(s.ability==='resistance_plus')auras.push({id:'resistance',label:'全局抗性',target:'global',radius:null,value:s.support_value});
+  return auras;
+}
+export function auraCovers(state,source,target,aura){return source.uid!==target.uid&&onField(source)&&onField(target)&&Math.hypot(unitCenter(source).x-unitCenter(target).x,unitCenter(source).z-unitCenter(target).z)<=aura.radius;}
+export function auraCoverage(state,source,aura,{preview=false}={}){
+  const disabled=bandwidthState(state).disabled,active=source.hp>0&&onField(source)&&(preview||!disabled.includes(source.uid));
+  const targets=active&&aura.target==='ally'?state.units.filter(u=>u.hp>0&&auraCovers(state,source,u,aura)):[];
+  return {active,global:aura.target==='global',range:aura.radius,targets,affected:targets.filter(u=>aura.id==='repair'||!disabled.includes(u.uid))};
 }
 export function supportCoverage(state,source,{preview=false}={}) {
   const stats=unitStats(state,source),disabled=bandwidthState(state).disabled;
@@ -233,15 +252,18 @@ export function distanceToCore(state,target) {
   return routeField(state).dist[z*n+x];
 }
 export function previewTerrain(state,command) {
-  const {x,z,tool,brush='single',direction=0}=command;
-  const result={ok:false,reason:'',cost:0,cells:[],barriers:[],paths:[]};
+  const {x,z,tool,brush='single',direction=0,x2=x,z2=z}=command;
+  const result={ok:false,reason:'',cost:0,cells:[],selectionCells:[],barriers:[],paths:[]};
   const fail=reason=>({...result,reason});
   if(state.phase!=='prep')return fail('只能在战前改造地形');
   if(!['raise','lower','flatten','ramp'].includes(tool))return fail('未知地形工具');
   if(!Number.isInteger(x)||!Number.isInteger(z))return fail('请选择完整地形格');
-  if(!['single','square','line'].includes(brush))return fail('未知地形笔刷');
+  if(!['single','square','line','box'].includes(brush))return fail('未知地形笔刷');
+  if(brush==='box'&&(!Number.isInteger(x2)||!Number.isInteger(z2)))return fail('框选终点必须是完整地形格');
+  if(brush==='box'&&[x,x2,z,z2].some(v=>v<0||v>=state.terrain.size))return fail('框选超出战场');
   if(!Number.isInteger(direction))return fail('斜坡方向无效');
-  const dir=((direction%4)+4)%4,offsets=brush==='square'?[-1,0,1].flatMap(dz=>[-1,0,1].map(dx=>({x:x+dx,z:z+dz}))):brush==='line'?[-2,-1,0,1,2].map(k=>({x:x+DIRECTIONS[dir].x*k,z:z+DIRECTIONS[dir].z*k})):[{x,z}];
+  const dir=((direction%4)+4)%4,offsets=brush==='box'?Array.from({length:Math.abs(z2-z)+1},(_,dz)=>Array.from({length:Math.abs(x2-x)+1},(_,dx)=>({x:Math.min(x,x2)+dx,z:Math.min(z,z2)+dz}))).flat():brush==='square'?[-1,0,1].flatMap(dz=>[-1,0,1].map(dx=>({x:x+dx,z:z+dz}))):brush==='line'?[-2,-1,0,1,2].map(k=>({x:x+DIRECTIONS[dir].x*k,z:z+DIRECTIONS[dir].z*k})):[{x,z}];
+  result.selectionCells=offsets;
   const occupied=new Set(state.units.filter(u=>onField(u)&&u.hp>0).flatMap(u=>footprint(state,u).map(c=>`${c.x},${c.z}`)));
   for(const p of offsets){const cell=cellAt(state,p.x,p.z);if(!cell)return fail('笔刷超出战场');
     if(cell.protected)return fail('笔刷覆盖了火种或入口保护区');if(occupied.has(`${p.x},${p.z}`))return fail('笔刷覆盖了已部署构造');

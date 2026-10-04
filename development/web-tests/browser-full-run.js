@@ -25,7 +25,7 @@ async page=>{
   const sample=await page.evaluate(({label,duration})=>new Promise(resolve=>{
    const q=window.__mindrealm,start=performance.now(),startTime=q.getState().battle?.time,frames=[],actions={},types=new Set();let maxClockError=0;
    const tick=now=>{const state=q.getState(),battle=state.battle;if(state.phase!=='battle'||!battle){resolve({label,scope:'actual RAF after legal battle start; fixed-step shortcut excluded from this sample',ended:state.phase,wall:(now-start)/1000,frames,actions,types:[...types],maxClockError});return;}
-    maxClockError=Math.max(maxClockError,Math.abs(q.field.entityMotion.snapshot().clock-battle.time*1000));
+    maxClockError=Math.max(maxClockError,Math.abs(q.field.entityMotion.snapshot().clock-Math.max(0,battle.time-(1-q.field.interpolation)*.05)*1000));
     for(const frame of q.field.entityFrames){actions[frame.action]=(actions[frame.action]||0)+1;types.add(frame.type);if(frame.variant?.startsWith('phase')||['attack','cast','death'].includes(frame.action)){const value={key:frame.key,type:frame.type,action:frame.action,pose:frame.pose,row:frame.row,variant:frame.variant,clock:frame.clock};if(frames.length<80&&!frames.some(f=>f.key===value.key&&f.action===value.action&&f.pose===value.pose&&f.variant===value.variant))frames.push(value);}}
     if(now-start<duration)requestAnimationFrame(tick);else resolve({label,scope:'actual RAF; fixed-step shortcut excluded from this sample',wall:(now-start)/1000,simulation:battle.time-startTime,frames,actions,types:[...types],maxClockError});
    };requestAnimationFrame(tick);
@@ -40,15 +40,16 @@ async page=>{
   if(pressure)await page.evaluate(pressure=>{window.__mindrealm.getProfile().unlockedPressure=pressure;},pressure);
   await click('new');await page.locator('#seed-input').fill(seed);await page.locator('#pressure-input').selectOption(String(pressure));
   await capture('new-run');await approve();
-  await page.evaluate(pressure=>{const state=window.__mindrealm.getState();if(state.pressureLevel!==pressure||state.difficultyRevision!==3)throw Error('UI did not create the requested new difficulty');window.__fullRunAudit={nodes:[],battles:[],errors:[]};},pressure);
+  await page.evaluate(pressure=>{const state=window.__mindrealm.getState();if(state.pressureLevel!==pressure||state.difficultyRevision!==4)throw Error('UI did not create the requested new difficulty');window.__fullRunAudit={nodes:[],battles:[],errors:[]};},pressure);
  }
  const startedAct=await page.evaluate(()=>window.__mindrealm.getState().act);
  for(let steps=0;steps<140;steps++){
   const status=await page.evaluate(()=>{const s=window.__mindrealm.getState();return{phase:s.phase,act:s.act,floor:s.floor,node:s.currentNode?.type};});
   if(['won','lost'].includes(status.phase)||status.act>startedAct)break;
-  if(status.phase==='nexus'){const id=await page.evaluate(async()=>{const H=await import('/development/web-tests/helpers/reference-strategy.mjs');return H.chooseReferenceNexus(window.__mindrealm.getState());});await capture(`act-${status.act+1}-nexus`);await page.locator(`[data-action="nexus-gift"][data-id="${id}"]`).click();await approve();}
+  if(status.phase==='interlude'){await page.locator('.act-passage-art').evaluate(image=>image.decode());const before=await page.evaluate(()=>window.__mindrealm.getState().act);await page.evaluate(()=>new Promise(resolve=>setTimeout(resolve,2400)));if(await page.evaluate(()=>window.__mindrealm.getState().phase)!=='interlude')throw Error('Chapter advanced without player entry');await capture(`full-act-${status.act+1}-passage`);await click('act-continue');if(await page.evaluate(()=>window.__mindrealm.getState().act)!==before+1)throw Error('Manual chapter entry failed');}
+  else if(status.phase==='nexus'){const id=await page.evaluate(async()=>{const H=await import('/development/web-tests/helpers/reference-strategy.mjs');return H.chooseReferenceNexus(window.__mindrealm.getState());});await capture(`act-${status.act+1}-nexus`);await page.locator(`[data-action="nexus-gift"][data-id="${id}"]`).click();await approve();}
   else if(status.phase==='map'){
-   await page.evaluate(async()=>{const q=window.__mindrealm,I=await import('/web/core/inventory.js'),H=await import('/development/web-tests/helpers/reference-strategy.mjs'),R=await import('/web/core/rules.js'),s=q.getState(),bag=I.inventoryStatus(s);if(bag.overflow)I.discardUnits(s,[...bag.stored].sort((a,b)=>(R.unitStats(s,a).attack+a.tier*20)-(R.unitStats(s,b).attack+b.tier*20)).slice(0,bag.overflow).map(u=>u.uid));H.referenceItems(s);q.render();});
+   await page.evaluate(async()=>{const q=window.__mindrealm,I=await import('/web/core/inventory.js'),H=await import('/development/web-tests/helpers/reference-strategy.mjs'),R=await import('/web/core/rules.js'),s=q.getState(),bag=I.inventoryStatus(s);if(bag.overflow)I.discardUnits(s,[...bag.all].sort((a,b)=>{const values={pulse_array:100,focus_rail:85,memory_mechanic:62,bandwidth_relay:110,phase_blade:50,frequency_choir:55,drone_loom:75,arc_mortar:70,resistance_beacon:25,anchor_bulwark:40,boundary_riveter:25,resonance_guard:25};const keep=u=>(values[u.type]||0)*u.tier**2*(R.onField(u)?1.5:1)*(u.hp>0?1:.6);return keep(a)-keep(b);}).slice(0,bag.overflow).map(u=>u.uid));H.referenceItems(s);q.render();});
    const id=await page.evaluate(async()=>{const R=await import('/web/core/state.js'),s=window.__mindrealm.getState();const value=n=>({camp:s.spirit<s.maxSpirit*.6?120:75,treasure:100,event:85,unknown:65,shop:s.focus>240?65:15,workshop:15,battle:45,elite:s.act===0?25:40,boss:50}[n.type]||0);return [...R.availableNodes(s)].sort((a,b)=>value(b)-value(a))[0].id;});
    if(await page.evaluate(id=>window.__mindrealm.getState().maps[window.__mindrealm.getState().act].nodes.find(node=>node.id===id)?.type==='boss',id))await verifyBossMap(status.act);
    await page.locator(`[data-action="map-node"][data-id="${id}"]`).click();
@@ -86,14 +87,14 @@ async page=>{
     if(node.type==='workshop'){const u=s.units.find(u=>u.everDeployed&&u.hp<R.unitStats(s,u).hp*.65&&s.focus>R.repairCost(s,u)+20);return u?{action:'repair',uid:u.uid}:{action:'node-leave'};}
     if(node.type==='shop'){const u=node.stock.units.find(u=>!u.sold&&u.id==='bandwidth_relay');if(u&&s.units.filter(u=>u.type==='bandwidth_relay').length<3&&s.focus>=Run.servicePrice(s,80))return{action:'buy-unit',id:u.key};const relic=node.stock.relics.find(x=>!x.sold);if(s.focus>220&&relic)return{action:'buy-relic',id:relic.key};return{action:'node-leave'};}
     if(node.type==='treasure')return node.options.length?{action:'treasure',id:node.options[0]}:{action:'empty-treasure'};
-    if(node.type==='event'){const value=p=>!p?.canChoose?-Infinity:(p.effects.focus||0)+(p.effects.spirit||0)*(s.spirit<s.maxSpirit*.7?4:1)+(p.effects.bandwidth||0)*25+(p.effects.relic?80:0)+(p.effects.free_upgrade?80:0)+(p.effects.free_upgrades||0)*80+(p.effects.resistance||0)*5;const C=await import('/web/core/content.js');const choices=C.events[node.eventData.id].choices.map((_,index)=>({index,value:value(Run.eventPreview(s,index))}));return{action:'event-choice',index:choices.sort((a,b)=>b.value-a.value)[0].index};}
+    if(node.type==='event'){if(node.eventData.outcome)return{action:'event-continue'};const value=p=>!p?.canChoose?-Infinity:(p.effects.focus||0)+(p.effects.spirit||0)*(s.spirit<s.maxSpirit*.7?4:1)+(p.effects.bandwidth||0)*25+(p.effects.relic?80:0)+(p.effects.free_upgrade?80:0)+(p.effects.free_upgrades||0)*80+(p.effects.resistance||0)*5;const C=await import('/web/core/content.js');const choices=C.events[node.eventData.id].choices.map((_,index)=>({index,value:value(Run.eventPreview(s,index))}));return{action:'event-choice',index:choices.sort((a,b)=>b.value-a.value)[0].index};}
     throw Error(`Unknown service ${node.type}`);
    });
    const attrs=['uid','id','index'].filter(k=>decision[k]!==undefined).map(k=>`[data-${k}="${decision[k]}"]`).join('');
    await page.locator(`[data-action="${decision.action}"]${['camp-upgrade','camp-repair'].includes(decision.action)?'':attrs}`).first().click();
    if(['camp-upgrade','camp-repair'].includes(decision.action))await page.locator(`[data-camp-uid="${decision.uid}"]`).click();
    if(decision.action==='camp-upgrade')await page.locator(`[data-dialog-upgrade="${decision.branch}"]`).click();
-   else if(!['node-leave','empty-treasure'].includes(decision.action))await approve();
+   else if(!['node-leave','empty-treasure','event-continue'].includes(decision.action))await approve();
   }else throw Error(`Unexpected phase ${status.phase}`);
  }
  await capture(`full-act-${startedAct+1}-end`);

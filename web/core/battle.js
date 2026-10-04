@@ -1,8 +1,9 @@
 import {towers,enemies,acts,seededRandom} from './content.js';
-import {unitStats,unitCenter,onField,cellAt,coreOf,entriesOf,pathToCore,distanceToCore,edgeInfo,bandwidthState,solveAttack,incomingDamage,clamp,ruleEffects as effects,beginRulesFrame,endRulesFrame,invalidateRulesFrame,supportInRange} from './rules.js';
+import {unitStats,unitCenter,onField,cellAt,coreOf,entriesOf,pathToCore,distanceToCore,edgeInfo,bandwidthState,solveAttack,incomingDamage,clamp,ruleEffects as effects,beginRulesFrame,endRulesFrame,invalidateRulesFrame,supportInRange,unitAuras,auraCovers} from './rules.js';
 import {addXP} from './state.js';
-import {difficultyProfile,enemyStats,enemyAbilityProfile,enemyRecoveryBase,killRewardScale} from './difficulty.js';
+import {difficultyProfile,enemyStats,enemyAbilityProfile,enemyRecoveryBase,killRewardScale,bossAdvanceProfile} from './difficulty.js';
 import {items,ensureInventory} from './inventory.js';
+import {actEnemies,frontlineByAct} from './enemy-expansion.js';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const nodeOf=s=>typeof s.currentNode==='object'?s.currentNode:{id:s.currentNode,type:'battle'};
@@ -16,12 +17,13 @@ export function makeEncounter(state,node=nodeOf(state)) {
   const act=state.act||0,floor=state.floor||0,kind=node?.type||'battle',difficulty=difficultyProfile(state);
   const rand=seededRandom(`${state.seed}:encounter:${node?.id||`${act}:${floor}`}`);
   const allEntries=entriesOf(state),entryCount=act>=2?4:act===1?(floor>=4?4:3):floor>=10?3:floor>=4?2:1;
-  const entries=allEntries.slice(0,entryCount).map(x=>({...x,count:0}));
+  const entries=allEntries.slice(0,entryCount).map(x=>({...x,count:0,groundCount:0,airCount:0}));
   const groupCount=kind==='boss'?5:kind==='elite'?4:3;
   const count=16+act*8+Math.floor(floor/(acts[act]?.floors||17)*12)+(kind==='elite'?4:kind==='boss'?6:0);
-  const regular=Object.values(enemies).filter(e=>e.kind==='normal'&&e.act<=act+1+difficulty.earlyEnemyAct);
-  const functional=regular.filter(e=>!['none','sprint'].includes(e.ability));
-  const base=regular.filter(e=>['none','sprint','armored'].includes(e.ability));
+  const modern=difficulty.revision>=4,addedIds=new Set(actEnemies.map(e=>e.id));
+  const regular=Object.values(enemies).filter(e=>e.kind==='normal'&&(modern?e.act===act+1:!addedIds.has(e.id)&&e.act<=act+1+difficulty.earlyEnemyAct));
+  const base=regular.filter(e=>modern?frontlineByAct[act].includes(e.id):['none','sprint','armored'].includes(e.ability));
+  const functional=regular.filter(e=>modern?!frontlineByAct[act].includes(e.id):!['none','sprint'].includes(e.ability));
   const groups=Array.from({length:groupCount},(_,i)=>({index:i,at:0,count:0,entries:[],types:[],label:`敌群 ${i+1}`}));
   const queue=[];let clock=2,normalIndex=0;
   for(let g=0;g<groupCount;g++){
@@ -36,20 +38,21 @@ export function makeEncounter(state,node=nodeOf(state)) {
       clock+=.75+rand()*.35;
     }
     if(kind==='elite'&&g===groupCount-2||kind==='boss'&&g===3){
-      const options=Object.values(enemies).filter(e=>e.kind===(kind==='elite'?'elite':'boss')&&e.act<=act+1);
+      const options=Object.values(enemies).filter(e=>e.kind===(kind==='elite'?'elite':'boss')&&(modern?e.act===act+1:!addedIds.has(e.id)&&e.act<=act+1));
       const boss=typeof state.bosses?.[act]==='string'?state.bosses[act]:state.bosses?.[act]?.id;
       const type=kind==='boss'?(node.boss||boss||acts[act]?.bosses?.[Math.floor(rand()*2)]||options.at(-1).id):options[Math.floor(rand()*options.length)].id;
       const entry=entries[g%entries.length];queue.push({type,entry:entry.id,at:clock,group:g});clock+=1;entry.count++;group.count++;group.types.push(type);
     }
     clock+=4+rand()*2;
   }
+  for(const q of queue){const entry=entries.find(e=>e.id===q.entry);entry[enemies[q.type].air?'airCount':'groundCount']++;}
   return {queue,groups,entries,total:queue.length,kind,reinforcementBudget:Math.floor(queue.length*.1),duration:clock};
 }
 export function startBattle(state) {
   if(state.phase!=='prep')return {ok:false,reason:'请先进入战前阶段'};
   const encounter=makeEncounter(state),snapshot={...state};delete snapshot.battle;delete snapshot.preBattle;
   state.preBattle=JSON.parse(JSON.stringify(snapshot));state.terrainUndo=[];
-  state.phase='battle';state.battle={...encounter,enemies:[],time:0,spawned:0,nextId:1,reinforcements:0,initialDepth:state.depth,initialSpirit:state.spirit,spiritLost:0,
+  state.phase='battle';state.battle={...encounter,enemies:[],drones:[],nextDroneId:1,time:0,spawned:0,nextId:1,reinforcements:0,initialDepth:state.depth,initialSpirit:state.spirit,spiritLost:0,
     groupIndex:0,nextGroupIn:2,danger:0,jam:0,corrosion:0,resistanceStacks:0,pressureAbsorbAt:0,deathGuardUsed:false,terrainDamage:{},disabled:[],result:null,events:[],eventSequence:0,bossKilled:false,maxActive:0};
   for(const u of state.units){u.cooldown=.1;u.temporaryArmor=0;u.armorBuffUntil=0;u.hitsTaken=0;u.lastHitAt=-100;u.guardUsed=false;u.reactivate=false;u.destroyedThisBattle=false;resetAction(u);}
   state.stats ||= {};for(const key of ['kills','breaches','pressure','breachDamage','destroyed','elites','overloadSeconds'])state.stats[key]??=0;
@@ -99,7 +102,7 @@ function spawn(state,type,entryId,group=0,parent=null) {
     surgeClock:12,surgeWarningUntil:0,surgeTargets:[],surgeOrigin:null,
     armorBreak:0,marked:0,dead:false,breached:false,phase:0,reinforcement:!!parent,pathRevision:-1,path:[],pathIndex:0,
     facing:0,actionTargetId:null,actionTargetKind:null,actionKind:null,lastActionAt:null,lastHitAt:null,castUntil:0,motion:{dx:0,dz:0,distance:0,time:b.time,dt:0}};
-  e.h=cellAt(state,e.x,e.z)?.h||0;if(e.ability==='armored')e.pierce=.35;if(e.kind==='boss')e.pierce=.25;
+  e.h=cellAt(state,e.x,e.z)?.h||0;if(e.ability==='armored')e.pierce=spec.pierce??.35;if(e.kind==='boss')e.pierce=spec.pierce??.25;
   if(effects(state).pressure_mark&&e.pressure>=12)e.pressureMarked=true;
   if(effects(state).nexus_spawn_slow)e.slow=effects(state).nexus_spawn_slow*difficultyProfile(state).controlDurationMultiplier;
   b.enemies.push(e);b.maxActive=Math.max(b.maxActive,b.enemies.filter(t=>!t.dead).length);
@@ -139,7 +142,10 @@ function killEnemy(state,e,active,hit={}) {
   const rewardScale=killRewardScale(state);addXP(state,Math.round((e.xp||0)*rewardScale.xp));state.focus+=Math.round((e.focus||0)*rewardScale.focus)*rewardMultiplier;
   if(e.kind==='elite'){state.stats.elites++;state.spirit=Math.min(state.maxSpirit,state.spirit+(m.elite_spirit||0));}
   if(e.kind==='boss'){
-    b.bossKilled=true;emit(state,{type:'boss',action:'death',x:e.x,z:e.z,enemy:e.id,label:'控制信号已切断'});
+    b.bossKilled=true;if(!(state.stats.bosses||=[]).includes(e.type))state.stats.bosses.push(e.type);
+    if(state.discoveries?.archives&&!state.discoveries.archives.includes(e.type))state.discoveries.archives.push(e.type);
+    state.stats.history.push({act:state.act,floor:state.floor,time:b.time,text:`击败${e.name}${b.spawned<b.queue.length||b.enemies.some(other=>!other.dead)?'，继续清理残余敌群':''}`});
+    emit(state,{type:'boss',action:'death',x:e.x,z:e.z,enemy:e.id,label:'控制信号已切断'});
     // Boss death cuts the signal; it does not produce a post-victory lethal shock.
     return;
   }
@@ -152,7 +158,7 @@ function killEnemy(state,e,active,hit={}) {
   if(hit.area)raw*=1-(m.aoe_pressure||0);
   raw*=1-clamp(Math.floor(dist/10)*(m.distance_pressure||0),0,.8);
   raw*=1-clamp(m.pressure_reduction||0,0,.8);
-  for(const u of active){if(u.hp<=0)continue;const s=unitStats(state,u);if(distance(e,unitCenter(u))<=s.range&&['pressure_sink','pressure_filter'].includes(s.effect))raw*=.7;}
+  for(const u of active){if(u.hp<=0)continue;const aura=unitAuras(state,u).find(a=>a.id==='pressure');if(aura&&distance(e,unitCenter(u))<=aura.radius)raw*=1-aura.reduction;}
   const arrival=raw/(1+(dist/6)**2),resistance=currentResistance(state,active);
   let amount=Math.max(0,arrival-resistance),absorbed=0;
   if(m.pressure_absorb&&amount<=m.pressure_absorb&&b.time>=b.pressureAbsorbAt){absorbed=amount;amount=0;b.pressureAbsorbAt=b.time+10;}
@@ -165,7 +171,7 @@ function killEnemy(state,e,active,hit={}) {
   if(e.ability==='explode')for(const u of aliveUnits(state))if(distance(e,unitCenter(u))<=3.5)hitUnit(state,e,u,e.attack*1.6,active,{actionKind:'explosion',secondary:true});
 }
 function hitEnemy(state,e,amount,unit,active,{area=false}={}) {
-  if(e.dead||e.hp<=0||state.battle.result==='lost'||state.battle.bossKilled)return;
+  if(e.dead||e.hp<=0||state.battle.result==='lost')return;
   let actual=amount*(e.marked>0?1.15:1);const shield=Math.min(e.shield,actual);e.shield-=shield;actual-=shield;
   const before=e.hp;e.hp-=actual;
   if(actual>0||shield>0)e.lastHitAt=state.battle.time;
@@ -174,11 +180,11 @@ function hitEnemy(state,e,amount,unit,active,{area=false}={}) {
   return {damage:Math.min(before,actual),shieldDamage:shield};
 }
 function hitUnit(state,enemy,unit,amount,active,detail={}) {
-  if(unit.hp<=0||state.battle.bossKilled||state.battle.result==='lost')return;
+  if(unit.hp<=0||state.battle.result==='lost'||enemy.dead&&detail.actionKind!=='explosion')return;
   const b=state.battle,m=effects(state),s=unitStats(state,unit);let damage=incomingDamage(state,unit,enemy,amount);
   if(s.ability==='siege_resist'&&enemy.ability==='siege')damage*=.55;
-  const guards=active.filter(u=>u.hp>0&&!b.disabled.includes(u.uid)&&u.uid!==unit.uid&&['ally_shield','taunt'].includes(unitStats(state,u).ability)&&distance(unitCenter(u),unitCenter(unit))<= (unitStats(state,u).effect==='wide_shield'?6:3));
-  if(guards.some(u=>unitStats(state,u).ability==='ally_shield'||unitStats(state,u).effect==='guard'))damage*=.82;
+  const guards=active.flatMap(u=>u.hp>0&&!b.disabled.includes(u.uid)?unitAuras(state,u).filter(a=>a.id==='guard'&&auraCovers(state,u,unit,a)):[]);
+  if(guards.length)damage*=1-Math.max(...guards.map(a=>a.reduction));
   if(unit.hp-damage<=0&&s.role==='melee'&&m.melee_guard&&!unit.guardUsed&&enemy.kind==='normal'){damage=Math.max(0,unit.hp-1);unit.guardUsed=true;}
   if(unit.hp-damage<=0&&m.nexus_rebirth&&!b.nexusRebirthUsed&&!b.disabled.includes(unit.uid)){b.nexusRebirthUsed=true;unit.hp=s.maxHp*.5;damage=0;emit(state,{type:'heal',...unitCenter(unit),unit:unit.uid,label:'余烬再生 · 恢复半数耐久'});}
   unit.hp=Math.max(0,unit.hp-damage);unit.lastHitAt=b.time;unit.hitsTaken++;
@@ -203,7 +209,7 @@ function ability(state,e,active) {
   switch(e.ability){
     case 'heal':for(const t of near){const amount=enemyRecoveryBase(state,t)*info.healFraction,before=t.hp;t.hp=Math.min(t.maxHp,t.hp+amount);event.impacts.push({targetId:t.id,targetKind:'enemy',to:position(state,t,'enemy'),kind:'heal',amount:t.hp-before});}emit(state,{...event,type:'heal',radius:6,label:boss?`重铸脉冲 · 自身恢复 ${Math.round(info.healAmount)}`:'重铸脉冲'});break;
     case 'group_shield':for(const t of near){const before=t.shield;t.shield=Math.max(t.shield,enemyRecoveryBase(state,t)*info.shieldFraction);event.impacts.push({targetId:t.id,targetKind:'enemy',to:position(state,t,'enemy'),kind:'shield',amount:t.shield-before});}emit(state,{...event,radius:6,label:'护盾链已连接'});break;
-    case 'summon':{const added=reinforce(state,e,'static_drifter',boss?2:1);emit(state,{...event,spawnedIds:added?b.enemies.slice(-added).map(t=>t.id):[],label:'召集信号'});break;}
+    case 'summon':{const type=difficultyProfile(state).revision>=4?['static_drifter','memory_runner','ordered_sentinel'][state.act]:'static_drifter',added=reinforce(state,e,type,boss?2:1);emit(state,{...event,spawnedIds:added?b.enemies.slice(-added).map(t=>t.id):[],label:'召集信号'});break;}
     case 'copy':{
       const candidates=near.filter(t=>t.id!==e.id&&t.kind==='normal'&&!t.reinforcement),t=candidates[(b.nextId+e.group)%Math.max(1,candidates.length)];
       const added=reinforce(state,e,t?.type||'shield_echo',boss?2:1);emit(state,{...event,spawnedIds:added?b.enemies.slice(-added).map(t=>t.id):[],copiedId:t?.id??null,label:'镜像复制'});break;}
@@ -235,7 +241,7 @@ function updateAbilities(state,e,dt,active) {
 }
 function updateSurge(state,e,dt,active) {
   const surge=difficultyProfile(state).surge,b=state.battle;
-  if(e.kind!=='boss'||!surge.enabled||e.dead||b.bossKilled||b.result==='lost')return;
+  if(e.kind!=='boss'||!surge.enabled||e.dead||b.result==='lost')return;
   e.surgeClock-=dt;
   if(!e.surgeWarningUntil&&e.surgeClock<=surge.warning){
     const targets=aliveUnits(state).filter(u=>distance(unitCenter(u),e)<=surge.range);
@@ -255,29 +261,38 @@ function updateSurge(state,e,dt,active) {
 }
 function moveEnemy(state,e,dt,active) {
   const b=state.battle,core=coreOf(state),r=core.size/2;
-  if(e.dead||b.bossKilled||b.result==='lost')return;
+  if(e.dead||b.result==='lost')return;
   // The marked frequency shock keeps a fixed, readable origin during its windup.
   if(e.surgeWarningUntil>b.time)return;
+  const advance=e.kind==='boss'&&!e.air?bossAdvanceProfile(state):null;
+  if(advance?.enabled&&e.pushWarningUntil){
+    if(e.pushWarningUntil>b.time)return;
+    e.pushWarningUntil=0;e.pushUntil=b.time+advance.duration;e.blockedAttacks=0;
+    emit(state,{type:'warning',action:'advance',actionKind:'push-release',stage:'release',enemy:e.id,x:e.x,z:e.z,until:e.pushUntil,label:'破阵推进 · 越过阻挡'});
+  }
+  const pushing=advance?.enabled&&e.pushUntil>b.time;
   if(Math.abs(e.x-core.x)<=r&&Math.abs(e.z-core.z)<=r){
     aim(e,core,'core','core');
     if(!e.breached){state.stats.breaches++;e.breached=true;state.stats.history.push({type:'breach',enemy:e.name,time:b.time});}
     if(e.cooldown<=0){const amount=spiritHit(state,e.core_damage,'breach');e.cooldown=e.kind==='normal'?1:2.7;emit(state,{type:'hit',action:'breach',actionKind:'breach',stage:'release',targetId:'core',targetKind:'core',despawn:e.kind==='normal',x:e.x,z:e.z,tx:core.x,tz:core.z,enemy:e.id,amount,label:'火种受击'});e.lastActionAt=b.time;e.actionKind='breach';if(e.kind==='normal')e.dead=true;}
     return;
   }
-  const hunter=e.ability==='tower_hunter'||e.ability==='siege',attackRange=hunter?(e.ability==='tower_hunter'?6:3.6):2.15;
+  const hunter=e.ability==='tower_hunter'||e.ability==='siege',attackRange=e.attackRange??(hunter?(e.ability==='tower_hunter'?6:3.6):2.15);
   const advancing=hunter&&e.advanceUntil>b.time;
-  const victims=aliveUnits(state).filter(u=>(hunter||!e.air&&unitStats(state,u).role==='melee')&&distance(e,unitCenter(u))<=attackRange&&(!advancing||unitStats(state,u).role==='melee'&&distance(e,unitCenter(u))<=1.5));
+  const victims=pushing?[]:aliveUnits(state).filter(u=>(hunter||!e.air&&unitStats(state,u).role==='melee')&&distance(e,unitCenter(u))<=attackRange&&(!advancing||unitStats(state,u).role==='melee'&&distance(e,unitCenter(u))<=1.5));
   victims.sort((a,c)=>{
     const ta=!b.disabled.includes(a.uid)&&unitStats(state,a).ability==='taunt'?1:0,tc=!b.disabled.includes(c.uid)&&unitStats(state,c).ability==='taunt'?1:0;
     return tc-ta||distance(e,unitCenter(a))-distance(e,unitCenter(c));
   });
   if(victims.length){aim(e,unitCenter(victims[0]),victims[0].uid,'unit');if(e.cooldown<=0){
     hitUnit(state,e,victims[0],e.attack,active);e.cooldown=e.kind==='boss'?1.4:1.15;
+    if(e.dead||state.spirit<=0)return;
+    if(advance?.enabled){e.blockedAttacks=(e.blockedAttacks||0)+1;if(e.blockedAttacks>=advance.attacks){e.pushWarningUntil=b.time+advance.warning;emit(state,{type:'warning',stage:'windup',actionKind:'push-windup',ability:'push',enemy:e.id,x:e.x,z:e.z,duration:advance.warning,endsAt:e.pushWarningUntil,label:`破阵蓄力 · ${advance.warning}秒后推进`});}}
     // Ranged hunters and siege units fire finite volleys, then advance into the
     // defense. A repair loop outside both sides' attack ranges cannot stall a run.
     if(hunter&&!advancing){e.volleyShots=(e.volleyShots||0)+1;if(e.volleyShots>=3){e.volleyShots=0;e.advanceUntil=b.time+2.5;emit(state,{type:'warning',action:'advance',until:e.advanceUntil,x:e.x,z:e.z,enemy:e.id,label:'齐射结束 · 向火种推进'});}}
   }return;}
-  if(e.root>0)return;
+  if(e.root>0&&!pushing)return;
   let target=core;
   if(!e.air){
     if(e.pathRevision!==(state.terrain.revision||0)||e.pathIndex>=e.path.length){e.path=pathToCore(state,e.x,e.z);e.pathIndex=1;e.pathRevision=state.terrain.revision||0;}
@@ -297,6 +312,7 @@ function moveEnemy(state,e,dt,active) {
     }
   }
   let speed=e.speed*(e.slow>0?.6:1)*(e.sprintUntil>b.time?1.65:1);
+  if(pushing)speed*=advance.speedMultiplier;
   if(b.enemies.some(other=>!other.dead&&other.hasteUntil>b.time&&distance(e,other)<6))speed*=1.2;
   const dist=distance(e,target),travel=speed*dt,oldX=e.x,oldZ=e.z;
   if(dist<=travel){e.x=target.x;e.z=target.z;if(!e.air)e.pathIndex++;}
@@ -305,22 +321,44 @@ function moveEnemy(state,e,dt,active) {
   const dx=e.x-oldX,dz=e.z-oldZ;e.motion={dx,dz,distance:(e.motion?.distance||0)+Math.hypot(dx,dz),time:b.time,dt};
   if(Math.abs(dx)+Math.abs(dz)>1e-9)e.facing=Math.atan2(dx,dz);
 }
+function launchDrone(state,unit,target,amount,{secondary=false,effect=null,multiplier=1}={}){
+  const b=state.battle; b.drones||=[];if(b.drones.length>=96)return false;
+  const origin=unitCenter(unit),h=(cellAt(state,unit.x,unit.z)?.h||0)+1.35;
+  const id=`d${b.nextDroneId++}`,drone={id,unit:unit.uid,target:target.id,x:origin.x,z:origin.z,h,from:{...origin,h},facing:Math.atan2(target.x-origin.x,target.z-origin.z),amount,effect,multiplier,secondary,expires:b.time+4,motion:{dx:0,dz:0,dh:0}};
+  b.drones.push(drone);
+  emit(state,{type:'shot',stage:'launch',actionKind:'drone',ability:'drone',effect,secondary,...origin,tx:target.x,tz:target.z,unit:unit.uid,enemy:target.id,drone:id,amount:0,kind:'drone'});
+  return true;
+}
+function advanceDrones(state,active,dt){
+  const b=state.battle;
+  for(const drone of b.drones||[]){
+    const source=state.units.find(u=>u.uid===drone.unit);if(!source||source.hp<=0||!onField(source)||b.disabled.includes(source.uid)||drone.expires<b.time){drone.done=true;continue;}
+    let target=b.enemies.find(e=>e.id===drone.target&&!e.dead);
+    if(!target){target=b.enemies.filter(e=>!e.dead&&solveAttack(state,source,e).ok).sort((a,c)=>distance(drone,a)-distance(drone,c))[0];if(!target){drone.done=true;continue;}drone.target=target.id;drone.amount=solveAttack(state,source,{...target,armor:Math.max(0,target.armor-target.armorBreak)}).damage*drone.multiplier;}
+    const dx=target.x-drone.x,dz=target.z-drone.z,dist=Math.hypot(dx,dz),travel=11*dt,old={x:drone.x,z:drone.z,h:drone.h},targetH=(target.h||0)+(target.air?1.3:0)+.7;
+    drone.facing=Math.atan2(dx,dz);const fraction=dist>0?Math.min(1,travel/dist):1;drone.x+=dx*fraction;drone.z+=dz*fraction;drone.h+=(targetH-drone.h)*Math.min(1,dt*5);
+    drone.motion={dx:drone.x-old.x,dz:drone.z-old.z,dh:drone.h-old.h};
+    if(dist<=travel+.3){const impact=hitEnemy(state,target,drone.amount,source,active);if(drone.effect==='mark'&&!target.dead)target.marked=4;emit(state,{type:'shot',stage:'impact',actionKind:'drone-impact',ability:'drone',effect:drone.effect,secondary:true,from:{x:drone.x,z:drone.z,h:drone.h},unit:source.uid,enemy:target.id,amount:drone.amount,drone:drone.id,...impact});drone.done=true;}
+    if(state.spirit<=0)break;
+  }
+  b.drones=(b.drones||[]).filter(d=>!d.done);
+}
 function towerActions(state,active,dt) {
   const b=state.battle,m=effects(state),supports=active.filter(u=>unitStats(state,u).role==='support');
   const controlDuration=difficultyProfile(state).controlDurationMultiplier;
   for(const u of [...active]){
-    if(state.spirit<=0||b.bossKilled)break;
+    if(state.spirit<=0)break;
     if(u.hp<=0||b.disabled.includes(u.uid))continue;
     const s=unitStats(state,u),origin=unitCenter(u),cover=supports.filter(t=>t.hp>0&&!b.disabled.includes(t.uid)&&t.uid!==u.uid&&supportInRange(state,t,u));
     const overlap=cover.length>=2?1+(m.support_overlap||0):1;
     u.temporaryArmor=(cover.length?(m.support_armor||0)*overlap:0)+(u.armorBuffUntil>b.time?3:0);
-    const choirs=cover.filter(t=>unitStats(state,t).ability==='haste_aura'),haste=choirs.reduce((sum,t)=>sum+unitStats(state,t).support_value+(unitStats(state,t).effect==='strong_haste'?.12:0),0)*overlap;
+    const choirs=cover.filter(t=>unitStats(state,t).ability==='haste_aura'),haste=choirs.reduce((sum,t)=>sum+(unitAuras(state,t).find(a=>a.id==='haste')?.haste||0),0)*overlap;
     u.cooldown-=dt*(1+haste);if(s.effect==='self_repair'&&b.time-u.lastHitAt>4)u.hp=Math.min(s.hp,u.hp+dt*s.hp*.025);
     if(s.effect==='slow_aura')for(const e of b.enemies)if(!e.dead&&distance(origin,e)<=s.range)e.slow=Math.max(e.slow,.3*controlDuration);
     if(u.cooldown>0)continue;
     if(s.attack_kind==='support'){
       if(s.ability==='repair'){
-        const targets=aliveUnits(state).filter(t=>t.hp<unitStats(state,t).hp&&supportInRange(state,u,t));
+        const targets=aliveUnits(state).filter(t=>t.uid!==u.uid&&t.hp<unitStats(state,t).hp&&supportInRange(state,u,t));
         targets.sort((a,c)=>{
           const threat=t=>m.triage&&b.enemies.some(e=>!e.dead&&distance(e,unitCenter(t))<4)?40:0;
           return (unitStats(state,c).hp-c.hp+threat(c))-(unitStats(state,a).hp-a.hp+threat(a));
@@ -349,6 +387,11 @@ function towerActions(state,active,dt) {
     if(!target)continue;
     const multiplier=(1+haste*.5)*(u.reactivate?1+(m.reactivate_damage||0):1);
     let amount=solution.damage*multiplier;u.reactivate=false;
+    if(s.ability==='drone'&&difficultyProfile(state).revision>=4){
+      const launched=launchDrone(state,u,target,amount,{effect:s.effect,multiplier});
+      if(launched&&s.effect==='extra_drone'){const second=candidates.find(e=>e.id!==target.id&&!e.dead&&solveAttack(state,u,e).ok);if(second)launchDrone(state,u,second,solveAttack(state,u,{...second,armor:Math.max(0,second.armor-second.armorBreak)}).damage*multiplier*.6,{secondary:true,effect:s.effect,multiplier:multiplier*.6});}
+      u.cooldown=launched?s.rate*(cover.length?1-(m.support_rate||0):1):.1;continue;
+    }
     const impact=hitEnemy(state,target,amount,u,active,{area:s.ability==='splash'});
     emit(state,{type:'shot',stage:'release',actionKind:s.role==='melee'?'melee':s.ability==='drone'?'drone':s.attack_kind,ability:s.ability,effect:s.effect,...origin,tx:target.x,tz:target.z,unit:u.uid,enemy:target.id,amount,kind:s.attack_kind,...impact});
     if(u.hp>0&&(s.ability==='lifesteal'||s.effect==='lifesteal_plus'))u.hp=Math.min(s.hp,u.hp+amount*(s.effect==='lifesteal_plus'?.22:.1));
@@ -392,16 +435,17 @@ export function stepBattle(state,dt=.05) {
   const active=aliveUnits(state).filter(u=>!disabled.includes(u.uid));
   towerActions(state,active,dt);
   for(const e of [...b.enemies]){
-    if(state.spirit<=0||b.bossKilled)break;
+    if(state.spirit<=0)break;
     if(e.dead)continue;e.motion={dx:0,dz:0,distance:e.motion?.distance||0,time:b.time,dt};e.actionTargetId=null;e.actionTargetKind=null;e.cooldown-=dt;e.slow=Math.max(0,e.slow-dt);e.root=Math.max(0,e.root-dt);e.marked=Math.max(0,e.marked-dt);
     updateAbilities(state,e,dt,active);updateSurge(state,e,dt,active);moveEnemy(state,e,dt,active);
     if(state.spirit<=0)break;
   }
+  if(state.spirit>0)advanceDrones(state,active,dt);
   b.enemies=b.enemies.filter(e=>!e.dead);
   const nearby=b.enemies.filter(e=>distance(e,coreOf(state))<10).length;
   const wanted=clamp(nearby*.07+b.enemies.length*.008+(1-state.spirit/state.maxSpirit)*.45+(disabled.length?.15:0)+(b.enemies.some(e=>e.kind==='boss')?.16:0),0,1);
   b.danger+=(wanted-b.danger)*(1-Math.exp(-dt/(wanted>b.danger?1.5:4)));
-  if(state.spirit<=0)b.result='lost';else if(b.bossKilled||b.spawned>=b.queue.length&&b.enemies.length===0)b.result='won';
+  if(state.spirit<=0)b.result='lost';else if(b.spawned>=b.queue.length&&b.enemies.length===0)b.result='won';
   return {events:b.events,finished:b.result};
   } finally {endRulesFrame(state);}
 }

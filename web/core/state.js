@@ -1,7 +1,9 @@
 import { acts, towers, enemies, relics, talents, events, effects, contentPool, seededRandom, shuffle, messengers } from './content.js';
 import * as Rules from './rules.js';
-import { CURRENT_DIFFICULTY_REVISION, normalizeDifficulty, difficultyProfile, xpRequirement, upgradeRequirement } from './difficulty.js';
+import { CURRENT_DIFFICULTY_REVISION, normalizeDifficulty, difficultyProfile, xpRequirement, upgradeRequirement, levelBandwidth } from './difficulty.js';
 import {items,ensureInventory,inventoryStatus,addItem,discardUnits,MAX_CAPACITY,MAX_ITEM_CAPACITY} from './inventory.js';
+import {generateTerrain} from './world.js';
+import {eventChoice} from './event-balance.js';
 
 export const cloneState = state => JSON.parse(JSON.stringify(state));
 const ok = extra => ({ ok: true, ...extra });
@@ -10,87 +12,7 @@ const pick = (items, random) => items[Math.floor(random() * items.length)];
 const heal = (state, amount) => { state.spirit = Math.min(state.maxSpirit, state.spirit + amount); };
 const record = (state, text) => state.stats.history.push({ act: state.act, floor: state.floor, text });
 
-export function generateTerrain(seed) {
-  const random = seededRandom(`${seed}:terrain`), size = 41;
-  const core = { x: 20, z: 24, size: 5 };
-  const entries = [{ id: 'north', name: '北入口', x: 20, z: 0 }, { id: 'west', name: '西入口', x: 0, z: 24 }, { id: 'east', name: '东入口', x: 40, z: 24 }, { id: 'south', name: '南入口', x: 20, z: 40 }];
-  const smooth = t => t * t * (3 - 2 * t);
-  // Low-frequency, interpolated fields bend the hill contours without turning
-  // the shelves into isolated one-cell noise. Each field owns only this stream.
-  const noise = scale => {
-    const width = Math.ceil(size / scale) + 2;
-    const values = Array.from({ length: width * width }, () => random() * 2 - 1);
-    return (x, z) => {
-      const fx = Math.max(0, Math.min(width - 1.001, x / scale));
-      const fz = Math.max(0, Math.min(width - 1.001, z / scale));
-      const ix = Math.floor(fx), iz = Math.floor(fz), tx = smooth(fx - ix), tz = smooth(fz - iz);
-      const a = values[iz * width + ix] * (1 - tx) + values[iz * width + ix + 1] * tx;
-      const b = values[(iz + 1) * width + ix] * (1 - tx) + values[(iz + 1) * width + ix + 1] * tx;
-      return a * (1 - tz) + b * tz;
-    };
-  };
-  const warpX = noise(11), warpZ = noise(11), detail = noise(7);
-  const hills = [];
-  // Overlapping, rotated ovals form ridges and basins instead of four square
-  // islands. The inner ring gives every approach usable terraces near the fire.
-  const rotation = random() * Math.PI * 2;
-  for (let i = 0; i < 9; i++) {
-    const angle = rotation + i * Math.PI * 2 / 5 + (random() - .5) * .45;
-    const radius = i < 5 ? 8 + random() * 4 : 13 + random() * 8;
-    hills.push({ x: Math.max(3, Math.min(37, core.x + Math.cos(angle) * radius)),
-      z: Math.max(3, Math.min(37, core.z + Math.sin(angle) * radius)),
-      rx: 7 + random() * 5, rz: 6 + random() * 5,
-      angle: random() * Math.PI, height: 3.6 + random() * 1.6 });
-  }
-  const cells = Array.from({ length: size * size }, (_, i) => {
-    const x = i % size, z = Math.floor(i / size);
-    const protectedCell = Math.abs(x - core.x) <= 2 && Math.abs(z - core.z) <= 2 || entries.some(e => Math.abs(x - e.x) <= 1 && Math.abs(z - e.z) <= 1);
-    const wx = x + warpX(x, z) * 2.7, wz = z + warpZ(x, z) * 2.7;
-    let height = 0;
-    for (const hill of hills) {
-      const dx = wx - hill.x, dz = wz - hill.z, c = Math.cos(hill.angle), s = Math.sin(hill.angle);
-      const distance = Math.hypot((dx * c - dz * s) / hill.rx, (dx * s + dz * c) / hill.rz);
-      height = Math.max(height, hill.height - distance * 3.2);
-    }
-    return { h: protectedCell ? 0 : Math.max(0, Math.min(4, Math.floor(height + detail(x, z) * .5))), ramp: -1, protected: protectedCell };
-  });
-  // Carve continuous, seed-dependent lowland approaches. Interpolate every
-  // cardinal step and widen it, so bends cannot leave diagonal-only gaps.
-  const carve = (x, z, width) => {
-    for (let dz = -width; dz <= width; dz++) for (let dx = -width; dx <= width; dx++) {
-      if (dx * dx + dz * dz > width * width + 1) continue;
-      const nx = x + dx, nz = z + dz;
-      if (nx >= 0 && nz >= 0 && nx < size && nz < size) cells[nz * size + nx].h = 0;
-    }
-  };
-  for (const entry of entries) {
-    const vertical = entry.x === core.x, length = vertical ? Math.abs(core.z - entry.z) : Math.abs(core.x - entry.x);
-    const amplitude = 3 + random() * 4, phase = random() * Math.PI * 2, widthPhase = random() * Math.PI * 2;
-    let previous = { x: entry.x, z: entry.z };
-    for (let step = 0; step <= length; step++) {
-      const t = step / length, bend = Math.round(Math.sin(Math.PI * t) * amplitude * Math.sin(Math.PI * 2 * t + phase));
-      const point = vertical ? { x: core.x + bend, z: entry.z + Math.sign(core.z - entry.z) * step }
-        : { x: entry.x + Math.sign(core.x - entry.x) * step, z: core.z + bend };
-      const width = Math.sin(t * Math.PI * 3 + widthPhase) > .35 ? 2 : 1;
-      while (previous.x !== point.x) { previous.x += Math.sign(point.x - previous.x); carve(previous.x, previous.z, width); }
-      while (previous.z !== point.z) { previous.z += Math.sign(point.z - previous.z); carve(previous.x, previous.z, width); }
-      carve(point.x, point.z, width);
-    }
-  }
-  // Erode sharp cuts into one-level terraces. This never raises a carved road
-  // or protected cell. Ramps remain player-built, following the existing rules.
-  const queue = Array.from({ length: cells.length }, (_, i) => i);
-  for (let read = 0; read < queue.length; read++) {
-    const i = queue[read], x = i % size, z = Math.floor(i / size);
-    for (const [dx, dz] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
-      const nx = x + dx, nz = z + dz;
-      if (nx < 0 || nz < 0 || nx >= size || nz >= size) continue;
-      const next = nz * size + nx;
-      if (cells[next].h > cells[i].h + 1) { cells[next].h = cells[i].h + 1; queue.push(next); }
-    }
-  }
-  return { size, core, entries, cells, revision: 0 };
-}
+export {generateTerrain} from './world.js';
 
 const nodeInfo = {
   battle: ['战斗', '连续三群敌人', '单位三选一、专注与精神恢复'], elite: ['精英', '连续四群敌人，包含精英', '更多专注、单位与必得收藏品'],
@@ -159,7 +81,7 @@ export function newRun(seed, pressure = 0, profile = {}) {
 
 export function ensureNexus(state,{legacy=false}={}) {
   if(state.nexus)return state.nexus;
-  state.nexus=acts.map((_,act)=>{const m=pick(Object.values(messengers).filter(m=>m.act===act),seededRandom(`${state.seed}:nexus:${act}`));return {act,messenger:m.id,options:m.gifts.map(g=>g.id),choice:null,skipped:legacy&&act<=state.act};});
+  state.nexus=acts.map((_,act)=>{const rng=seededRandom(`${state.seed}:nexus:${act}`),m=pick(Object.values(messengers).filter(m=>m.act===act),rng);return {act,messenger:m.id,options:shuffle(m.gifts.map(g=>g.id),rng).slice(0,3),choice:null,skipped:legacy&&act<=state.act};});
   return state.nexus;
 }
 export function chooseNexus(state,id) {
@@ -169,6 +91,7 @@ export function chooseNexus(state,id) {
   state.relics.push(id);discover(state,'relics',id);
   if(grant.maxSpirit){state.maxSpirit=Math.max(20,state.maxSpirit+grant.maxSpirit);state.spirit=Math.min(state.maxSpirit,state.spirit+Math.max(0,grant.maxSpirit));}
   state.focus+=grant.focus||0;heal(state,grant.heal||0);
+  if(grant.capacity){const bag=ensureInventory(state);bag.capacity=Math.min(MAX_CAPACITY,bag.capacity+grant.capacity);}
   if(grant.spiritCost)state.spirit=Math.max(1,state.spirit-grant.spiritCost);
   for(const [u,maxHp] of before)u.hp=Math.min(Rules.unitStats(state,u).maxHp,Rules.unitStats(state,u).maxHp*u.hp/maxHp);
   room.choice=id;state.phase='map';record(state,`心神枢纽 · ${messengers[room.messenger].name}：选择${gift.name}`);
@@ -208,7 +131,7 @@ function queueGrowth(state) {
 export function enterNode(state, id) {
   const node = availableNodes(state).find(n => n.id === id);
   if (!node) return fail('只能选择当前高亮连接的下一节点。');
-  const bag=inventoryStatus(state);if(bag.overflow)return fail(`背包 ${bag.used}/${bag.capacity}，请先删除至少 ${bag.overflow} 个库存构造。`);
+  const bag=inventoryStatus(state);if(bag.overflow)return fail(`背包 ${bag.used}/${bag.capacity}，请先移除至少 ${bag.overflow} 个构造。`);
   state.currentNode = node; state.floor = node.floor; state.bossReveal = Math.max(state.bossReveal, node.floor >= state.maps[state.act].floors - 2 ? 3 : node.floor >= Math.floor(state.maps[state.act].floors / 2) ? 2 : 1);
   if (node.type === 'unknown') { node.originalType = 'unknown'; node.type = node.revealType; node.map_icon_id = 'unknown'; [node.name, node.risk, node.reward] = nodeInfo[node.type]; record(state, `未知信号揭示为${node.type==='event'?'事件':node.name}`); }
   const rng = seededRandom(`${state.seed}:service:${node.id}`);
@@ -228,7 +151,7 @@ function completeNode(state) {
   if (node && !node.completed) { node.completed = true; const canonical = state.maps[state.act].nodes.find(n => n.id === node.id); if (canonical) Object.assign(canonical, node); state.visited.push(node.id); state.stats.completedNodes++; record(state, `完成${node.name || node.type}`); }
   state.nextNodes = node ? [...node.next] : state.nextNodes;
   state.phase = state.rewardQueue.length ? 'reward' : 'map';
-  if (!state.rewardQueue.length && state.nextAct !== undefined) enterNextAct(state);
+  if (!state.rewardQueue.length && state.nextAct !== undefined) state.phase='interlude';
 }
 function enterNextAct(state) {
   state.act = state.nextAct; delete state.nextAct; state.floor = -1; state.currentNode = null; state.bossReveal = 1; state.nextNodes = state.maps[state.act].nodes.filter(n => n.floor === 0).map(n => n.id); state.phase = 'map';
@@ -236,11 +159,17 @@ function enterNextAct(state) {
   const room=ensureNexus(state)[state.act];if(!room.choice&&!room.skipped)state.phase='nexus';
 }
 
+export function continueAct(state){
+  if(state.phase!=='interlude'||!Number.isInteger(state.nextAct)||state.nextAct!==state.act+1||state.nextAct>2||state.rewardQueue.length)return fail('请先完成本幕战斗与奖励。');
+  const bag=inventoryStatus(state);if(bag.overflow)return fail(`背包已超出 ${bag.overflow} 格，请先整理构造。`);
+  enterNextAct(state);state.battle=null;state.preBattle=null;return ok({reason:`已进入${acts[state.act].name}`});
+}
+
 export function addXP(state, amount) {
   if (!Number.isFinite(amount) || amount < 0) return 0;
   state.xp += amount; let levels = 0;
   while (state.depth < 12 && state.xp >= xpRequirement(state)) {
-    state.xp -= xpRequirement(state); state.depth++; levels++; state.maxSpirit += 5; heal(state, difficultyProfile(state).revision>=3?6:10); state.bandwidth += 1 + effects(state).level_bandwidth; state.resistance++;
+    state.xp -= xpRequirement(state); state.depth++; levels++; state.maxSpirit += 5; heal(state, difficultyProfile(state).revision>=3?6:10); state.bandwidth += levelBandwidth(state) + effects(state).level_bandwidth; state.resistance++;
     state.pendingUnitRewards++; if (state.depth % 2 === 0) state.pendingTalents++;
     record(state, `精神深度达到${state.depth}`);
   }
@@ -250,6 +179,7 @@ export function addXP(state, amount) {
 export function finishBattle(state, result = {}) {
   if (!['battle', 'prep'].includes(state.phase)) return fail('当前没有待结算的战斗。');
   const lost = result.won === false || result.victory === false || state.spirit <= 0;
+  if(!lost&&state.phase==='battle'&&(state.battle?.result!=='won'||state.battle.spawned<state.battle.queue.length||state.battle.enemies.some(e=>!e.dead)))return fail('请先清理全部计划敌人与增援。');
   if (lost) { state.spirit = Math.max(0, state.spirit); state.phase = 'lost'; state.preBattle = null; record(state, '醒觉火种熄灭'); state.summary = getSummary(state); return ok({ terminal: true }); }
   addXP(state, result.xp || 0);
   const type = state.currentNode.type, modifier = effects(state);
@@ -289,7 +219,7 @@ export function chooseReward(state, id, payload={}) {
   // whenever the pool has enough. No interface action advances a random stream.
   for (const offer of state.rewardQueue) if (offer.kind === 'talent' || offer.kind === 'relic') offer.options = (offer.reserves || offer.options).filter(choice => !(offer.kind === 'talent' ? state.talents : state.relics).includes(choice)).slice(0, 3);
   state.rewardQueue = state.rewardQueue.filter(offer => offer.options.length);
-  if (!state.rewardQueue.length) { state.phase = 'map'; if (state.nextAct !== undefined) enterNextAct(state); }
+  if (!state.rewardQueue.length) state.phase=state.nextAct!==undefined?'interlude':'map';
   return ok();
 }
 
@@ -307,7 +237,7 @@ export function ensureShopStock(state){
 }
 export function shopPrice(state,kind,offer){return servicePrice(state,offer.price??(kind==='units'?80:kind==='items'?items[offer.id].price:120));}
 export function eventPreview(state, index, payload={}) {
-  const node = state.currentNode, event = events[node?.eventData?.id], choice = event?.choices[index];
+  const node = state.currentNode, event = events[node?.eventData?.id], choice = eventChoice(state,event,index);
   if (!choice) return null;
   const details = [], fx = choice.effects, data = node.eventData;
   const bag=inventoryStatus(state),recycled=fx.recycle?(payload.uid?bag.stored.find(u=>u.uid===payload.uid):bag.stored.find(u=>data.targets.includes(u.uid))):null;
@@ -318,7 +248,8 @@ export function eventPreview(state, index, payload={}) {
   if(fx.capacity)details.push(`背包容量 ${bag.capacity} → ${Math.min(MAX_CAPACITY,bag.capacity+fx.capacity)}`);
   if(fx.item_capacity)details.push(`道具槽 ${bag.itemCapacity} → ${Math.min(MAX_ITEM_CAPACITY,bag.itemCapacity+fx.item_capacity)}`);
   if(fx.max_spirit)details.push(`最大精神 +${fx.max_spirit}，当前精神恢复 ${fx.max_spirit}`);
-  if (fx.spirit) { const amount = fx.spirit > 0 ? Math.min(state.maxSpirit - state.spirit, fx.spirit) : -Math.min(state.spirit, -fx.spirit); details.push(`精神 ${amount >= 0 ? '+' : ''}${amount}${state.spirit + fx.spirit <= 0 ? '（将导致本局失败）' : ''}`); }
+  const spiritAfterGrowth=Math.min(state.maxSpirit+(fx.max_spirit||0),state.spirit+Math.max(0,fx.max_spirit||0));
+  if (fx.spirit) details.push(`精神 ${fx.spirit>0?'+':''}${Math.round(fx.spirit)}${spiritAfterGrowth+fx.spirit<=0?'（将导致本局失败）':''}`);
   for (const [key, name] of [['focus', '专注'], ['bandwidth', '永久带宽'], ['resistance', '永久抗性'], ['xp', '经验']]) if (fx[key]) details.push(`${name} ${fx[key] > 0 ? '+' : ''}${fx[key]}`);
   if (fx.unit || fx.unit_t2) details.push(`获得${towers[data.unit].name}${fx.unit_t2 ? (upgradeRequirement(state,{tier:1}).ok?' T2（随后选择分支）':' T1；升阶将在深度2开放，本次升阶折算40专注') : ' T1'}`);
   if (fx.relic) details.push(data.relic ? `获得${relics[data.relic].name}` : '收藏品已集齐：获得120专注');
@@ -335,7 +266,7 @@ export function eventPreview(state, index, payload={}) {
   if (fx.tower_damage_bonus) details.push(`全部单位永久攻击 +${fx.tower_damage_bonus * 100}%`);
   if (fx.pressure_mult) details.push(`敌人死亡压力永久 +${fx.pressure_mult * 100}%`);
   if (fx.boss_reveal) details.push(`公开本幕首领：${enemies[state.maps[state.act].boss].name}`);
-  return { ...choice, details, recycleUid:recycled?.uid,itemUid:consumed?.uid,canChoose: (fx.focus || 0) + state.focus >= 0 && (fx.bandwidth || 0) + state.bandwidth >= 1&&(!fx.recycle||!!recycled)&&(!fx.consume_item||!!consumed)&&(!fx.capacity||bag.capacity<MAX_CAPACITY)&&(!fx.item_capacity||bag.itemCapacity<MAX_ITEM_CAPACITY) };
+  return { ...choice, details, recycleUid:recycled?.uid,itemUid:consumed?.uid,canChoose: !data.outcome && (fx.focus || 0) + state.focus >= 0 && (fx.bandwidth || 0) + state.bandwidth >= 1&&(!fx.recycle||!!recycled)&&(!fx.consume_item||!!consumed)&&(!fx.capacity||bag.capacity<MAX_CAPACITY)&&(!fx.item_capacity||bag.itemCapacity<MAX_ITEM_CAPACITY) };
 }
 
 function queueFreeUpgrades(state, count, ids) {
@@ -396,6 +327,8 @@ export function nodeAction(state, action, payload = {}) {
     state.relics.push(payload.id); discover(state, 'relics', payload.id); record(state, `宝库选择${relics[payload.id].name}`); completeNode(state); return ok();
   }
   if (node.type === 'event' && action === 'event') {
+    if (!Number.isInteger(payload.index)) return fail('请选择有效的事件行动。');
+    if (node.eventData.outcome) return fail('这次事件已经作出选择，请阅读后续并继续。');
     const preview = eventPreview(state, payload.index,payload);
     if (!preview || !preview.canChoose) return fail('不能支付这项选择的费用。');
     const fx = preview.effects, data = node.eventData;
@@ -421,9 +354,18 @@ export function nodeAction(state, action, payload = {}) {
     if (fx.free_repairs) { const targets = [...state.units].sort((a, b) => (Rules.unitStats(state, b).maxHp - b.hp) - (Rules.unitStats(state, a).maxHp - a.hp)).slice(0, fx.free_repairs); for (const u of targets) if (u.hp < Rules.unitStats(state, u).maxHp) Rules.repair(state, u.uid, {free:true}); }
     if (fx.free_upgrade || fx.free_upgrades) queueFreeUpgrades(state, fx.free_upgrades || 1, data.targets);
     if (fx.boss_reveal) state.bossReveal = 3;
-    record(state, `${events[data.id].title}：${preview.label}`); queueGrowth(state); completeNode(state);
-    if (state.spirit <= 0) { state.phase = 'lost'; state.summary = getSummary(state); }
+    data.outcome = {index:payload.index,label:preview.label,details:[...preview.details]};
+    // JSON snapshots duplicate currentNode; keep the map's copy authoritative too.
+    const mapNode=state.maps[state.act].nodes.find(entry=>entry.id===node.id);if(mapNode)mapNode.eventData=data;
+    record(state, `${events[data.id].title}：${preview.label}`); queueGrowth(state);
+    // Keep the applied result on this node until the player reads the outcome.
+    // Saving this phase prevents both rerolls and double collection on reload.
+    if (state.spirit <= 0) { completeNode(state); state.phase = 'lost'; state.summary = getSummary(state); }
     return ok();
+  }
+  if (node.type === 'event' && action === 'event-continue') {
+    if (!node.eventData.outcome) return fail('请先作出事件选择。');
+    completeNode(state); return ok();
   }
   return fail('当前节点不提供这项操作。');
 }

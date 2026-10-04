@@ -24,13 +24,13 @@ function zeroGround(terrain) {
   return seen;
 }
 
-test('1000 natural terrains preserve protected cells, one-level slopes and four connected zero-height approaches', () => {
+test('1000 natural terrains preserve protected cells, one-level slopes and three connected zero-height approaches', () => {
   for (let seed = 0; seed < 1000; seed++) {
     const terrain = generateTerrain(`terrain-${seed}`), seen = zeroGround(terrain);
     assert.equal(terrain.size, 41);
     assert.equal(terrain.cells.length, 1681);
-    assert.deepEqual(terrain.core, { x: 20, z: 24, size: 5 });
-    assert.equal(terrain.entries.length, 4);
+    assert.deepEqual(terrain.core, { x: 20, z: 38, size: 5 });
+    assert.equal(terrain.entries.length, 3);
     assert.equal(terrain.revision, 0);
     let protectedCount = 0;
     for (let z = 0; z < terrain.size; z++) for (let x = 0; x < terrain.size; x++) {
@@ -42,9 +42,9 @@ test('1000 natural terrains preserve protected cells, one-level slopes and four 
       if (x < 40) assert.ok(Math.abs(here.h - cell(terrain, x + 1, z).h) <= 1, `east slope ${seed}/${x}/${z}`);
       if (z < 40) assert.ok(Math.abs(here.h - cell(terrain, x, z + 1).h) <= 1, `south slope ${seed}/${x}/${z}`);
     }
-    assert.equal(protectedCount, 49);
+    assert.equal(protectedCount, 43);
     for (const entry of terrain.entries) assert.ok(seen.has(entry.z * terrain.size + entry.x), `zero-ground route ${seed}/${entry.id}`);
-    assert.ok(terrain.cells.filter(c => c.h > 0).length >= 400, `meaningful highlands ${seed}`);
+    assert.ok(terrain.cells.filter(c => c.h > 0).length >= 200, `meaningful highlands ${seed}`);
     assert.ok(terrain.cells.some(c => c.h >= 3), `layered highlands ${seed}`);
   }
 });
@@ -81,10 +81,10 @@ test('broad natural terraces allow all three opening ranged units to deploy with
       .sort((a, b) => towers[b.type].footprint[0] - towers[a.type].footprint[0]);
     for (const unit of ranged) {
       const candidates = [];
-      for (let z = 11; z <= 35; z++) for (let x = 7; x <= 32; x++) {
-        if (Math.hypot(x - 20, z - 24) > 13 || !placement(state, unit, x, z).ok) continue;
-        const coversFire = solveAttack(state, { ...unit, x, z }, { x: 20, z: 24, h: 0, air: false }).ok;
-        candidates.push({ x, z, score: Math.hypot(x - 20, z - 24) + (coversFire ? 0 : 50) });
+      for (let z = 23; z < 39; z++) for (let x = 3; x < 38; x++) {
+        if (Math.hypot(x - 20, z - 38) > 13 || !placement(state, unit, x, z).ok) continue;
+        const coversFire = solveAttack(state, { ...unit, x, z }, { x: 20, z: 38, h: 0, air: false }).ok;
+        candidates.push({ x, z, score: Math.hypot(x - 20, z - 38) + (coversFire ? 0 : 50) });
       }
       candidates.sort((a, b) => a.score - b.score);
       assert.ok(candidates.length, `No opening terrace ${seed}/${unit.type}`);

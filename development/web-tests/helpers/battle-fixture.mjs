@@ -6,6 +6,9 @@ import {unitStats,footprint} from '../../../web/core/rules.js';
 // Test-only in-memory fixtures. No browser storage or player profile is accessed.
 export function fixture(seed='rules-fixture',{flat=true,revision=2}={}) {
   const state=newRun(seed);state.difficultyRevision=revision;enterNode(state,availableNodes(state)[0].id);state.units=[];
+  // Legacy combat fixtures deliberately keep their historical coordinates.
+  // Revision 4 terrain and route behavior have dedicated generated-world tests.
+  if(revision<4){state.terrain.generation=1;state.terrain.core={x:20,z:24,size:5};state.terrain.entries=[{id:'north',x:20,z:0},{id:'west',x:0,z:24},{id:'east',x:40,z:24},{id:'south',x:20,z:40}];for(let i=0;i<state.terrain.cells.length;i++){const x=i%41,z=Math.floor(i/41);state.terrain.cells[i].protected=Math.abs(x-20)<=2&&Math.abs(z-24)<=2||state.terrain.entries.some(e=>Math.abs(e.x-x)<=1&&Math.abs(e.z-z)<=1);}}
   if(flat)for(const cell of state.terrain.cells){cell.h=0;cell.ramp=-1;}state.terrain.revision++;
   return state;
 }

@@ -1,6 +1,6 @@
-import {newRun,chooseNexus,availableNodes,enterNode,finishBattle,chooseReward,nodeAction,eventPreview} from '../../../web/core/state.js';
+import {newRun,chooseNexus,continueAct,availableNodes,enterNode,finishBattle,chooseReward,nodeAction,eventPreview} from '../../../web/core/state.js';
 import {towers,relics,talents} from '../../../web/core/content.js';
-import {unitStats,unitCenter,onField,placement,deploy,withdraw,repair,repairCost,upgrade,upgradeCost,bandwidthState,pathToCore,entriesOf,solveAttack,cellAt} from '../../../web/core/rules.js';
+import {unitStats,unitCenter,onField,placement,deploy,withdraw,repair,repairCost,upgrade,upgradeCost,bandwidthState,pathToCore,entriesOf,coreOf,solveAttack,cellAt} from '../../../web/core/rules.js';
 import {makeEncounter,startBattle,stepBattle,useItem,itemPreview} from '../../../web/core/battle.js';
 import {inventoryStatus,discardUnits} from '../../../web/core/inventory.js';
 import {upgradeRequirement} from '../../../web/core/difficulty.js';
@@ -9,6 +9,7 @@ import {events} from '../../../web/core/content.js';
 const branchFor=u=>u.branch||(['pulse_array','focus_rail','phase_blade','bandwidth_relay','memory_mechanic','frequency_choir','resistance_beacon'].includes(u.type)?'A':'B');
 const roleValue={pulse_array:100,focus_rail:85,memory_mechanic:62,bandwidth_relay:110,phase_blade:50,frequency_choir:55,drone_loom:75,arc_mortar:70,resistance_beacon:25,anchor_bulwark:40,boundary_riveter:25,resonance_guard:25};
 const growValue=u=>(roleValue[u.type]||0)*(onField(u)?1.5:1)/(u.tier||1);
+const retainValue=u=>(roleValue[u.type]||0)*(u.tier||1)**2*(onField(u)?1.5:1)*(u.hp>0?1:.6);
 const knownEntrances=new WeakMap();
 
 export function chooseReferenceReward(state) {
@@ -36,8 +37,9 @@ export function prepareReference(state) {
   }
   const eligible=state.units.filter(u=>u.hp>0&&u.tier<3&&(onField(u)||['pulse_array','bandwidth_relay'].includes(u.type))).sort((a,b)=>growValue(b)-growValue(a));
   for(const u of eligible){const cost=upgradeCost(state,u);if(state.focus>=cost+16)upgrade(state,u.uid,branchFor(u));}
-  const encounter=makeEncounter(state),samples=[];
+  const encounter=makeEncounter(state),samples=[],core=coreOf(state);
   for(const entry of encounter.entries){const path=pathToCore(state,entry.x,entry.z);for(let i=2;i<path.length;i+=2)samples.push({...path[i],air:false,h:cellAt(state,path[i].x,path[i].z).h,weight:entry.count/encounter.total*(.8+i/path.length)});}
+  for(const entry of encounter.entries)if(entry.airCount)for(let i=1;i<=10;i++){const t=i/10;samples.push({x:entry.x+(core.x-entry.x)*t,z:entry.z+(core.z-entry.z)*t,air:true,h:0,weight:entry.airCount/encounter.total*(.6+t)});}
   const reposition=(knownEntrances.get(state)||0)<encounter.entries.length;knownEntrances.set(state,encounter.entries.length);
   const order=state.units.filter(u=>u.hp>0&&(!onField(u)||reposition&&towers[u.type].role==='ranged')).sort((a,b)=>(roleValue[b.type]||0)*(b.tier*.55+.45)-(roleValue[a.type]||0)*(a.tier*.55+.45));
   for(const u of order){
@@ -47,21 +49,21 @@ export function prepareReference(state) {
     if(u.type==='memory_mechanic'&&live.filter(t=>t.type===u.type).length>=2)continue;
     if(u.type==='frequency_choir'&&live.some(t=>t.type===u.type))continue;
     let best=null;
-    for(let z=12;z<=32;z++)for(let x=10;x<=30;x++){
+    for(let z=3;z<state.terrain.size-2;z++)for(let x=3;x<state.terrain.size-2;x++){
       const p=placement(state,u,x,z);if(!p.ok)continue;
       const probe={...u,x,z},center=unitCenter(probe);let score=0;
       if(stats.role==='ranged'){
         for(const target of samples){const shot=solveAttack(state,probe,target);if(shot.ok)score+=target.weight*(stats.attack/stats.rate)*(.6+shot.damage/Math.max(1,stats.attack));}
         // Cover the fire itself so a boss cannot force relocation mid-battle.
-        if(solveAttack(state,probe,{x:20,z:24,h:0,air:true}).ok)score+=70;else score*=.4;
-        score-=Math.hypot(center.x-20,center.z-24)*.12;
+        if(solveAttack(state,probe,{...core,h:0,air:true}).ok)score+=70;else score*=.4;
+        score-=Math.hypot(center.x-core.x,center.z-core.z)*.12;
       }else if(stats.role==='support'){
         for(const ally of live){const d=Math.hypot(center.x-unitCenter(ally).x,center.z-unitCenter(ally).z);if(d<=stats.range)score+=(towers[ally.type].role==='ranged'?15:10)*(1-d/stats.range*.3);}
-        score-=Math.hypot(center.x-20,center.z-24)*.5;
+        score-=Math.hypot(center.x-core.x,center.z-core.z)*.5;
         if(u.type==='bandwidth_relay')score-=samples.reduce((s,p)=>s+(Math.hypot(center.x-p.x,center.z-p.z)<3?3:0),0);
       }else{
         for(const target of samples)if(Math.hypot(center.x-target.x,center.z-target.z)<stats.range)score+=target.weight*20;
-        score-=Math.abs(center.z-19)*.8+Math.abs(center.x-20)*.2;
+        score-=Math.abs(center.z-(core.z-6))*.8+Math.abs(center.x-core.x)*.2;
       }
       if(!best||score>best.score)best={x,z,score};
     }
@@ -88,8 +90,9 @@ function referenceNode(state) {
   }
   if(node.type==='treasure')return nodeAction(state,'treasure',{id:node.options[0]});
   if(node.type==='event'){
+    if(node.eventData.outcome)return nodeAction(state,'event-continue');
     const value=p=>!p?.canChoose?-Infinity:(p.effects.focus||0)+(p.effects.spirit||0)*(state.spirit<state.maxSpirit*.7?4:1)+(p.effects.bandwidth||0)*25+(p.effects.relic?80:0)+(p.effects.free_upgrade?80:0)+(p.effects.free_upgrades||0)*80+(p.effects.resistance||0)*5;
-    const choices=events[node.eventData.id].choices.map((_,index)=>({index,preview:eventPreview(state,index)}));return nodeAction(state,'event',{index:choices.sort((a,b)=>value(b.preview)-value(a.preview))[0].index});
+    const choices=events[node.eventData.id].choices.map((_,index)=>({index,preview:eventPreview(state,index)})),result=nodeAction(state,'event',{index:choices.sort((a,b)=>value(b.preview)-value(a.preview))[0].index});return result.ok&&state.phase==='node'?nodeAction(state,'event-continue'):result;
   }
   throw new Error(`Unhandled service ${node.type}`);
 }
@@ -101,7 +104,7 @@ export function referenceItems(state){
     if(entry.type==='focus_cell')ready=state.phase!=='battle';
     if(entry.type==='repair_foam'){target=state.units.filter(u=>u.hp>0&&u.hp<unitStats(state,u).maxHp*.55&&(state.phase!=='battle'||onField(u))).sort((a,b)=>growValue(b)-growValue(a))[0]?.uid;ready=!!target;}
     if(state.phase==='battle'){
-      const live=state.battle.enemies.filter(e=>!e.dead),boss=live.some(e=>e.kind==='boss'),crowd=live.filter(e=>Math.hypot(e.x-20,e.z-24)<14).length;
+      const live=state.battle.enemies.filter(e=>!e.dead),boss=live.some(e=>e.kind==='boss'),crowd=live.filter(e=>Math.hypot(e.x-coreOf(state).x,e.z-coreOf(state).z)<14).length;
       if(['stasis','pulse_bomb','overclock','fortify'].includes(entry.type))ready=boss||crowd>=6;
       if(['barrier','insulator'].includes(entry.type))ready=boss||state.spirit<state.maxSpirit*.6&&crowd>=3;
       if(entry.type==='cleanser')ready=state.battle.jam>0||state.battle.corrosion>0;
@@ -112,9 +115,10 @@ export function referenceItems(state){
 export function runReference(seed,{pressure=0,revision,maxBattleSeconds=360,dt=.05,strategy='reference',onNode=()=>{},hooks={},consumables=true}={}) {
   const state=newRun(String(seed),pressure),battles=[];let steps=0;if(revision)state.difficultyRevision=revision;
   while(!['won','lost'].includes(state.phase)&&steps++<300){
-    if(state.phase==='nexus'){const result=chooseNexus(state,chooseReferenceNexus(state));if(!result.ok)throw new Error(result.reason);}
+    if(state.phase==='interlude'){const bag=inventoryStatus(state);if(bag.overflow)discardUnits(state,[...bag.all].sort((a,b)=>retainValue(a)-retainValue(b)).slice(0,bag.overflow).map(u=>u.uid));const result=continueAct(state);if(!result.ok)throw new Error(result.reason);}
+    else if(state.phase==='nexus'){const result=chooseNexus(state,chooseReferenceNexus(state));if(!result.ok)throw new Error(result.reason);}
     else if(state.phase==='map'){
-      const bag=inventoryStatus(state);if(bag.overflow)discardUnits(state,[...bag.stored].sort((a,b)=>growValue(a)-growValue(b)).slice(0,bag.overflow).map(u=>u.uid));
+      const bag=inventoryStatus(state);if(bag.overflow)discardUnits(state,[...bag.all].sort((a,b)=>retainValue(a)-retainValue(b)).slice(0,bag.overflow).map(u=>u.uid));
       if(consumables)referenceItems(state);
       const value=n=>({camp:state.spirit<state.maxSpirit*.6?120:75,treasure:100,event:85,unknown:65,shop:state.focus>240?65:15,workshop:15,battle:45,elite:state.act===0?25:40,boss:50}[n.type]||0);
       const next=[...availableNodes(state)].sort((a,b)=>value(b)-value(a))[0];if(!next)throw new Error(`No reachable node in ${state.phase}`);const result=enterNode(state,next.id);if(!result.ok)throw new Error(result.reason);

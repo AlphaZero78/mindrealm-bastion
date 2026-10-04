@@ -1,0 +1,29 @@
+/* Current tactical HUD and information hierarchy. */
+.resource.depth{display:flex}
+.depth-caption{display:flex;justify-content:space-between;gap:7px;align-items:center;white-space:nowrap}
+.depth-caption small{font:9px ui-monospace,monospace;color:#c5b9ee}
+.xp-meter{appearance:none;display:block;width:112px;height:3px;margin-top:5px;border:0;border-radius:0;overflow:hidden;background:#343046}
+.xp-meter::-webkit-progress-bar{background:#343046}.xp-meter::-webkit-progress-value{background:#c2a4ee;transition:width .18s}.xp-meter::-moz-progress-bar{background:#c2a4ee}
+.bag-unit.is-deployed{border-color:#719fbe;background:#173944}.bag-location{color:#a8d9e5!important}
+.unit-effect-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}.unit-effect-list li{line-height:1.7}
+.unit-effect-list .effect-changed{color:#ffe092;font-weight:700;border-left:3px solid #dfbf75;padding-left:8px;background:#b8983020}
+.unit-effect-list .effect-changed:before{content:'变化 · ';font-size:10px;font-weight:600;color:#dfbf75}
+.enemy-behavior{margin:16px 0;padding-top:12px;border-top:1px solid #38554f}.enemy-behavior h4{color:#d8e8df;margin-bottom:7px}.enemy-behavior p+p{margin-top:10px}
+.unit-effect-list .effect-removed{color:#e5a594;font-weight:600}
+.act-passage{background:#091820;pointer-events:auto}.act-passage-stage{position:relative;flex:1;min-height:0;overflow:hidden;isolation:isolate;display:flex;align-items:center;justify-content:center}
+.act-passage-art{position:absolute;inset:0;z-index:-3;width:100%;height:100%;object-fit:cover;animation:act-distance 2.2s ease-out both}
+.act-passage-shade{position:absolute;inset:0;z-index:-2;background:#061520bd;animation:act-reveal 1.5s ease-out both}
+.act-passage-content{text-align:center;width:min(850px,90%);padding:30px 20px;animation:act-arrival 1.4s ease-out both}
+.act-passage-emblem>.icon{width:60px;height:60px;color:#b5dbc7;margin:20px 0;filter:drop-shadow(0 0 16px #93dcba77)}
+.act-passage-from{color:#aebeb9;font-size:13px;margin-bottom:12px}.act-passage-content h2{font:600 clamp(28px,4vw,66px)/1.3 'Noto Serif SC',SimSun,serif;letter-spacing:5px;color:#e6e6ca;margin:0 0 18px}
+.act-passage-content>p{color:#b9ced0;font-size:14px}.act-passage-route{display:flex;gap:35px;justify-content:center;padding:28px 0;margin:16px 0;list-style:none}.act-passage-route li{display:flex;align-items:center;gap:9px;color:#7e959b;font-size:12px}.act-passage-route b{display:grid;place-items:center;width:34px;height:34px;border:1px solid #607f7b;border-radius:50%;font:17px ui-monospace,monospace}.act-passage-route .complete{color:#92c2ad}.act-passage-route .next{color:#ffe29f}.act-passage-route .next b{border-color:#ebcd82;box-shadow:0 0 24px #ecd38530}
+.act-passage-actions{display:flex;justify-content:center;gap:14px;margin:12px 0 16px}.act-passage-actions .btn{min-width:175px}.act-passage-content>small{font-size:11px}
+@keyframes act-distance{from{transform:scale(1.12);filter:brightness(.55)}to{transform:scale(1);filter:brightness(1)}}
+@keyframes act-reveal{from{background:#061520f7}to{background:#061520bd}}
+@keyframes act-arrival{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:none}}
+.act-passage[data-reduced-motion=true] .act-passage-art,.act-passage[data-reduced-motion=true] .act-passage-shade,.act-passage[data-reduced-motion=true] .act-passage-content{animation:none}
+@container(max-width:1150px){.topbar .brand>div{display:none}.resource.depth{display:flex}.resources{gap:18px}.depth-caption small{font-size:9px}.xp-meter{width:108px}}
+@container(max-width:850px){.resources{gap:10px}.resource{gap:6px}.resource.depth{display:flex}.topbar{gap:10px;padding:0 12px}.xp-meter{width:98px}.depth-caption{gap:4px}.depth-caption small{font-size:8px}}
+@container(max-width:690px){.run-hud .topbar{height:auto;min-height:92px;display:flex;flex-wrap:wrap;padding:9px 12px;gap:8px}.topbar .brand{display:none}.topbar .resources{width:100%;justify-content:space-between}.topbar .top-actions{margin-left:auto}.resource .value{font-size:16px}}
+@media(max-height:650px){.act-passage-content{padding:15px}.act-passage-emblem>.icon{width:32px;height:32px;margin:10px 0}.act-passage-route{padding:10px 0;margin:9px 0}.act-passage-content h2{font-size:30px;margin-bottom:10px}.act-passage-actions{margin-top:4px}}
+@media(prefers-reduced-motion:reduce){.act-passage-art,.act-passage-shade,.act-passage-content{animation:none}.xp-meter::-webkit-progress-value{transition:none}}

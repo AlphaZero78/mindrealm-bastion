@@ -17,7 +17,7 @@ test('encounters use 3/4/5 distinct groups, deterministic sequence, entry unlock
     const s=newRun(`encounters-${act}-${floor}`);s.act=act;s.floor=floor;s.currentNode={id:`test-${act}-${floor}`,type,boss:s.maps[act].boss};
     const encounter=makeEncounter(s);assert.deepEqual(encounter,makeEncounter(cloneState(s)));assert.equal(encounter.groups.length,groups);assert.equal(encounter.total,encounter.queue.length);assert.equal(encounter.reinforcementBudget,Math.floor(encounter.total*.1));
     const ordinary=encounter.queue.filter(q=>enemies[q.type].kind==='normal');assert.ok(ordinary.filter(q=>!['none','sprint'].includes(enemies[q.type].ability)).length>=Math.floor(ordinary.length/4));
-    assert.equal(encounter.entries.length,act===2?4:act===1?(floor>=4?4:3):floor>=10?3:floor>=4?2:1);
+    assert.equal(encounter.entries.length,act>=1?3:floor>=10?3:floor>=4?2:1);
     for(let i=1;i<groups;i++){const last=encounter.queue.filter(q=>q.group===i-1).at(-1);assert.ok(encounter.groups[i].at-last.at>=4);}
     const strong=encounter.queue.filter(q=>enemies[q.type].kind!=='normal');assert.equal(strong.length,type==='battle'?0:1);if(strong.length)assert.equal(strong[0].group,type==='elite'?2:3);
   }

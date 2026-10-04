@@ -10,6 +10,9 @@ const definitions={
   arc_mortar:['towers','ranged','anchored'],drone_loom:['towers','ranged','anchored'],
   bandwidth_relay:['towers','support','anchored'],memory_mechanic:['towers','support','anchored'],
   frequency_choir:['towers','support','anchored'],resistance_beacon:['towers','support','anchored'],
+  scrap_bulwark:['enemies','normal','crawler'],echo_glider:['enemies','normal','hover'],noise_bell:['enemies','elite','crawler'],
+  memory_runner:['enemies','normal','runner'],repair_skiff:['enemies','normal','hover'],archive_warden:['enemies','elite','crawler'],
+  ordered_sentinel:['enemies','normal','walker'],null_wing:['enemies','normal','hover'],entropy_engine:['enemies','elite','crawler'],
   static_drifter:['enemies','normal','walker'],spike_runner:['enemies','normal','runner'],
   shield_echo:['enemies','normal','walker'],tempo_amplifier:['enemies','normal','crawler'],
   fracture_seed:['enemies','normal','crawler'],floating_noise:['enemies','normal','hover'],
@@ -207,6 +210,21 @@ const ART_BOUNDS={
     },
     "minVisibleSpan": 34
   },
+  "archive_warden": {
+    "bounds": {
+      "x": 14,
+      "y": 16,
+      "width": 52,
+      "height": 60
+    },
+    "iconBounds": {
+      "x": 18,
+      "y": 27,
+      "width": 44,
+      "height": 43
+    },
+    "minVisibleSpan": 40
+  },
   "armored_worm": {
     "bounds": {
       "x": 15,
@@ -281,6 +299,36 @@ const ART_BOUNDS={
       "height": 34
     },
     "minVisibleSpan": 34
+  },
+  "echo_glider": {
+    "bounds": {
+      "x": 8,
+      "y": 20,
+      "width": 64,
+      "height": 54
+    },
+    "iconBounds": {
+      "x": 7,
+      "y": 27,
+      "width": 67,
+      "height": 41
+    },
+    "minVisibleSpan": 50
+  },
+  "entropy_engine": {
+    "bounds": {
+      "x": 13,
+      "y": 24,
+      "width": 54,
+      "height": 52
+    },
+    "iconBounds": {
+      "x": 19,
+      "y": 31,
+      "width": 42,
+      "height": 46
+    },
+    "minVisibleSpan": 38
   },
   "floating_noise": {
     "bounds": {
@@ -357,6 +405,21 @@ const ART_BOUNDS={
     },
     "minVisibleSpan": 38
   },
+  "memory_runner": {
+    "bounds": {
+      "x": 11,
+      "y": 17,
+      "width": 58,
+      "height": 52
+    },
+    "iconBounds": {
+      "x": 21,
+      "y": 18,
+      "width": 39,
+      "height": 46
+    },
+    "minVisibleSpan": 36
+  },
   "mirror_censor": {
     "bounds": {
       "x": 5,
@@ -372,6 +435,21 @@ const ART_BOUNDS={
     },
     "minVisibleSpan": 45
   },
+  "noise_bell": {
+    "bounds": {
+      "x": 18,
+      "y": 23,
+      "width": 44,
+      "height": 53
+    },
+    "iconBounds": {
+      "x": 19,
+      "y": 28,
+      "width": 42,
+      "height": 42
+    },
+    "minVisibleSpan": 38
+  },
   "noise_hive": {
     "bounds": {
       "x": 12,
@@ -386,6 +464,36 @@ const ART_BOUNDS={
       "height": 41
     },
     "minVisibleSpan": 36
+  },
+  "null_wing": {
+    "bounds": {
+      "x": 9,
+      "y": 18,
+      "width": 62,
+      "height": 55
+    },
+    "iconBounds": {
+      "x": 12,
+      "y": 24,
+      "width": 56,
+      "height": 40
+    },
+    "minVisibleSpan": 51
+  },
+  "ordered_sentinel": {
+    "bounds": {
+      "x": 3,
+      "y": 11,
+      "width": 74,
+      "height": 64
+    },
+    "iconBounds": {
+      "x": 17,
+      "y": 20,
+      "width": 46,
+      "height": 51
+    },
+    "minVisibleSpan": 42
   },
   "phase_teleporter": {
     "bounds": {
@@ -447,6 +555,21 @@ const ART_BOUNDS={
     },
     "minVisibleSpan": 35
   },
+  "repair_skiff": {
+    "bounds": {
+      "x": 12,
+      "y": 22,
+      "width": 56,
+      "height": 54
+    },
+    "iconBounds": {
+      "x": 19,
+      "y": 32,
+      "width": 42,
+      "height": 36
+    },
+    "minVisibleSpan": 38
+  },
   "replication_node": {
     "bounds": {
       "x": 18,
@@ -476,6 +599,21 @@ const ART_BOUNDS={
       "height": 32
     },
     "minVisibleSpan": 42
+  },
+  "scrap_bulwark": {
+    "bounds": {
+      "x": 13,
+      "y": 24,
+      "width": 54,
+      "height": 52
+    },
+    "iconBounds": {
+      "x": 19,
+      "y": 42,
+      "width": 42,
+      "height": 29
+    },
+    "minVisibleSpan": 34
   },
   "shield_conductor": {
     "bounds": {

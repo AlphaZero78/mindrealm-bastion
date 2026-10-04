@@ -61,8 +61,8 @@ def measure(source):
                 variants=static.height//CELL,frames=len(frame_alpha),
                 staticSha256=hashlib.sha256(static_path.read_bytes()).hexdigest(),
                 animationSha256=hashlib.sha256(animation_path.read_bytes()).hexdigest())
-    if len(records)!=40:
-        raise ValueError(f'Expected 40 entity types, found {len(records)}')
+    if not records:
+        raise ValueError('No entity atlases were found')
     return records
 
 

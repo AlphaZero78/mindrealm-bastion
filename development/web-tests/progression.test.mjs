@@ -1,7 +1,7 @@
 import {unblessedRun as newRun} from './helpers/unblessed-run.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {  generateMap, generateTerrain, availableNodes, enterNode, nodeAction, finishBattle, chooseReward, addXP, cloneState, eventPreview, getSummary, servicePrice } from '../../web/core/state.js';
+import {  generateMap, generateTerrain, availableNodes, enterNode, nodeAction, finishBattle, chooseReward, addXP, cloneState, eventPreview, getSummary, servicePrice, continueAct } from '../../web/core/state.js';
 import { towers, enemies, relics, talents, events, effects, contentUnlocks, contentPool, hashSeed, pressureLevels } from '../../web/core/content.js';
 import { unitStats, repairCost, upgradeCost } from '../../web/core/rules.js';
 import { createSaveStore, settleProfile, unlockArchive, unlockContent } from '../../web/core/save.js';
@@ -23,8 +23,8 @@ const service = (type, seed = 'service', act = 0) => { const s = newRun(seed); s
 const drain = s => { let count = 0; while (s.phase === 'reward') { assert.ok(count++ < 60, '奖励队列必须有限'); assert.equal(chooseReward(s, s.rewardQueue[0].kind==='item'&&inventoryStatus(s).items.length>=inventoryStatus(s).itemCapacity?'skip':s.rewardQueue[0].options[0]).ok, true); } };
 
 test('complete catalog has stable IDs and finite effect values', () => {
-  assert.deepEqual([Object.keys(towers).length, Object.keys(enemies).length, Object.keys(relics).length, Object.keys(talents).length, Object.keys(events).length], [12, 28, 66, 24, 36]);
-  for (const t of Object.values(towers)) { assert.ok(t.footprint[0] >= 2 && t.footprint[1] >= 2); assert.deepEqual(Object.keys(t.branches), ['A', 'B']); assert.ok(t.range > 0); assert.equal(t.sprite_id, t.id); assert.ok(t.description.length > 20); for (const b of Object.values(t.branches)) assert.ok(b.description.length>8); }
+  assert.deepEqual([Object.keys(towers).length, Object.keys(enemies).length, Object.keys(relics).length, Object.keys(talents).length, Object.keys(events).length], [12, 37, 102, 24, 36]);
+  for (const t of Object.values(towers)) { assert.ok(t.footprint[0] >= 2 && t.footprint[1] >= 2); assert.deepEqual(Object.keys(t.branches), ['A', 'B']); assert.ok(t.range > 0); assert.equal(t.sprite_id, t.id); assert.ok(t.description.length > 5); for (const b of Object.values(t.branches)) assert.ok(b.description.length>8); }
   for (const enemy of Object.values(enemies)) { assert.ok(enemy.description.length > 20); if (enemy.kind === 'boss') { assert.ok(enemy.archive.length > 50); assert.match(enemy.mechanics, /70%\/35%/); } }
   const s = newRun('effects'); s.relics = Object.keys(relics); s.talents = Object.keys(talents); assert.ok(Object.values(effects(s)).every(Number.isFinite));
   for (const e of Object.values(events)) assert.ok([2,3].includes(e.choices.length));
@@ -108,7 +108,7 @@ test('all 36 events and every choice produce their advertised effects and determ
     const twin = cloneState(s); assert.equal(nodeAction(s, 'event', { index }).ok, true); assert.equal(nodeAction(twin, 'event', { index }).ok, true); assert.deepEqual(s, twin);
     assert.equal(s.focus, before.focus + (preview.effects.focus || 0));
     if (preview.effects.tower_hp) assert.ok(s.units.some((u, i) => unitStats(s, u).maxHp > unitStats(before, before.units[i]).maxHp));
-    drain(s); assert.ok(['map', 'lost'].includes(s.phase));
+    assert.equal(s.phase,'node');assert.equal(nodeAction(s,'event-continue').ok,true);drain(s); assert.ok(['map', 'lost'].includes(s.phase));
   }
 });
 
@@ -121,7 +121,7 @@ test('depth milestones, ordered rewards, safe resume and all three act bosses', 
   const s = service('elite'); s.xp = 200 + 325; finishBattle(s, { won: true }); assert.equal(s.depth, 3); assert.equal(s.maxSpirit, 110); assert.equal(s.bandwidth, 22); assert.equal(s.resistance, 2);
   assert.deepEqual(s.rewardQueue.filter(r=>r.kind!=='item').map(r => r.kind), ['unit', 'unit', 'unit', 'relic', 'talent']);
   const storage = createSaveStore(new MemoryStorage()); storage.save(s); const copy = storage.load().state; assert.deepEqual(copy.rewardQueue, s.rewardQueue); assert.equal(chooseReward(copy, 'wrong').ok, false); drain(s); drain(copy); assert.deepEqual(s.talents, copy.talents);
-  for (let act = 0; act < 3; act++) { const b = service('boss', `boss${act}`, act); b.spirit = 10; finishBattle(b, { won: true }); assert.equal(b.spirit, act === 2 ? 45 : 30); if (act === 2) { assert.equal(b.phase, 'won'); assert.equal(b.rewardQueue.length, 0); } else { assert.equal(b.phase, 'reward'); drain(b); assert.equal(b.act, act + 1); assert.equal(b.phase, 'map'); assert.equal(availableNodes(b).length, 4); } }
+  for (let act = 0; act < 3; act++) { const b = service('boss', `boss${act}`, act); b.spirit = 10; finishBattle(b, { won: true }); assert.equal(b.spirit, act === 2 ? 45 : 30); if (act === 2) { assert.equal(b.phase, 'won'); assert.equal(b.rewardQueue.length, 0); } else { assert.equal(b.phase, 'reward'); drain(b); assert.equal(b.phase,'interlude'); assert.equal(continueAct(b).ok,true); assert.equal(b.act, act + 1); assert.equal(b.phase, 'map'); assert.equal(availableNodes(b).length, 4); } }
   const lost = service('battle'); lost.spirit = 0; finishBattle(lost, { won: false }); assert.equal(lost.phase, 'lost'); assert.equal(getSummary(lost).won, false);
 });
 
@@ -199,7 +199,7 @@ test('event affordability, lethal cost, no upgrade target and repair routing mat
   assert.equal(lethal.summary.eventDamage, 1); assert.equal(lethal.summary.reasons[0], '事件交换耗尽精神稳定');
   const maxed = make('last_workshop'); for (const unit of maxed.units) { unit.tier = 3; unit.branch = 'A'; unit.hp = unitStats(maxed, unit).maxHp; }
   const beforeFocus = maxed.focus; assert.ok(eventPreview(maxed, 1).details.some(t => t.includes('兑换80专注')));
-  nodeAction(maxed, 'event', { index:1 }); assert.equal(maxed.focus, beforeFocus + 80); assert.equal(maxed.phase, 'map');
+  nodeAction(maxed, 'event', { index:1 }); assert.equal(maxed.focus, beforeFocus + 80); assert.equal(maxed.phase, 'node');assert.equal(nodeAction(maxed,'event-continue').ok,true);assert.equal(maxed.phase,'map');
   const repair = make('resonance_storm'); repair.units[0].x = 20; repair.units[0].z = 8; repair.units[0].hp = 0;
   nodeAction(repair, 'event', { index:0 }); assert.equal(repair.units[0].x, null); assert.equal(repair.units[0].hp, unitStats(repair, repair.units[0]).maxHp);
 });
@@ -275,8 +275,8 @@ test('unknown future difficulty revisions are rejected without overwriting runs 
   const memory=new MemoryStorage(),store=createSaveStore(memory,'difficulty-future'),s=newRun('future',10),profile=store.loadProfile();
   profile.unlockedPressure=10;profile.fragments=123;profile.settledRuns=['already-paid'];assert.equal(store.saveProfile(profile).ok,true);assert.equal(store.save(s).ok,true);
   const raw=memory.getItem('difficulty-future.run');
-  for(const revision of [null,0,4,'2',-1]){assert.equal(store.save({...s,difficultyRevision:revision}).ok,false);assert.equal(memory.getItem('difficulty-future.run'),raw);}
-  const future=JSON.parse(raw),payload=JSON.parse(future.payload);payload.difficultyRevision=4;future.payload=JSON.stringify(payload);future.checksum=hashSeed(future.payload).toString(16);
+  for(const revision of [null,0,5,'2',-1]){assert.equal(store.save({...s,difficultyRevision:revision}).ok,false);assert.equal(memory.getItem('difficulty-future.run'),raw);}
+  const future=JSON.parse(raw),payload=JSON.parse(future.payload);payload.difficultyRevision=5;future.payload=JSON.stringify(payload);future.checksum=hashSeed(future.payload).toString(16);
   const futureRaw=JSON.stringify(future);memory.setItem('difficulty-future.run',futureRaw);assert.equal(store.load().ok,false);assert.equal(store.has(),false);
   assert.equal(memory.getItem('difficulty-future.run'),futureRaw);assert.deepEqual(store.loadProfile(),profile);
   memory.setItem('difficulty-future.run.backup',raw);assert.equal(store.load().recovered,true);assert.equal(store.load().state.difficultyRevision,CURRENT_DIFFICULTY_REVISION);

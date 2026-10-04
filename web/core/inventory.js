@@ -10,16 +10,17 @@ export function ensureInventory(state) {
 }
 export function inventoryStatus(state) {
   const bag=state.inventory||{capacity:DEFAULT_CAPACITY,itemCapacity:DEFAULT_ITEM_CAPACITY,items:[]};
-  const stored=state.units.filter(u=>!Number.isFinite(u.x));
-  return {...bag,stored,used:stored.length,overflow:Math.max(0,stored.length-bag.capacity)};
+  const stored=state.units.filter(u=>!Number.isFinite(u.x)),deployed=state.units.filter(u=>Number.isFinite(u.x));
+  return {...bag,stored,deployed,all:[...deployed,...stored],used:state.units.length,overflow:Math.max(0,state.units.length-bag.capacity)};
 }
 export function discardUnits(state,uids) {
-  if(!['map','node','prep','nexus'].includes(state.phase))return fail('请在路线、节点或战前整理构造。');
+  if(!['map','node','prep','nexus','interlude'].includes(state.phase))return fail('请在路线、节点或战前整理构造。');
+  if(!Array.isArray(uids)||uids.some(id=>typeof id!=='string'))return fail('请选择有效的构造列表。');
   const unique=[...new Set(uids||[])],units=unique.map(id=>state.units.find(u=>u.uid===id));
-  if(!unique.length||units.some(u=>!u||Number.isFinite(u.x)))return fail('只能删除背包中的构造，请先选择。');
+  if(!unique.length||units.some(u=>!u))return fail('请选择本局仍拥有的构造。');
   state.units=state.units.filter(u=>!unique.includes(u.uid));
   state.stats.history.push({act:state.act,floor:state.floor,text:`整理背包：删除 ${units.map(u=>`${towers[u.type].name} T${u.tier}`).join('、')}`});
-  return {ok:true,reason:`已删除 ${unique.length} 个仓库构造`};
+  return {ok:true,reason:`已移除 ${unique.length} 个构造，释放相同数量背包格`};
 }
 export function addItem(state,type,replaceUid=null) {
   if(!items[type])return fail('未知道具。');

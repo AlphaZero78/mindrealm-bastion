@@ -17,12 +17,12 @@ const equip=(s,type)=>{s.inventory.items=[];return addItem(s,type).item.uid;};
 const combat=()=>{const s=fixture('items',{revision:3}),u=place(s,'pulse_array',10,10,{h:1}),[e]=battle(s);Object.assign(e,{x:1,z:1,speed:0,cooldown:1e6,abilityClock:1e6,hp:1e6,maxHp:1e6});return {s,u,e};};
 const inert=(s,fn)=>{const before=clone(s);assert.equal(fn().ok,false);assert.deepEqual(s,before);};
 
-test('inventory capacity counts stored units, blocks the next node, and only confirmed valid sets are discarded',()=>{
+test('inventory capacity counts deployed and stored units; all confirmed sets are removed atomically',()=>{
  const s=Run.newRun('overflow'),first=s.nextNodes[0];for(let i=0;i<7;i++)Run.addUnit(s,'pulse_array');
  assert.equal(inventoryStatus(s).used,14);assert.equal(inventoryStatus(s).overflow,2);
  inert(s,()=>Run.enterNode(s,first));inert(s,()=>discardUnits(s,['missing']));inert(s,()=>discardUnits(s,[]));
  assert.equal(discardUnits(s,s.units.slice(-2).map(u=>u.uid)).ok,true);assert.equal(inventoryStatus(s).used,12);assert.equal(Run.enterNode(s,first).ok,true);
- const unit=s.units[0];unit.x=5;unit.z=5;assert.equal(inventoryStatus(s).used,11);inert(s,()=>discardUnits(s,[unit.uid]));
+ const unit=s.units[0];unit.x=5;unit.z=5;assert.equal(inventoryStatus(s).used,12);assert.equal(inventoryStatus(s).deployed.length,1);assert.equal(discardUnits(s,[unit.uid]).ok,true);assert.equal(inventoryStatus(s).used,11);
  startBattle(s);inert(s,()=>discardUnits(s,[s.units[1].uid]));
 });
 test('full item slots require an explicit replacement; malformed and stale replacements are inert',()=>{

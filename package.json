@@ -1,6 +1,6 @@
 {
   "name": "mindrealm-bastion",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "type": "module",
   "description": "心域防线 · 离线浏览器肉鸽塔防",
