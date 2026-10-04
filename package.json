@@ -9,6 +9,8 @@
     "start": "node launcher/server.mjs",
     "test": "node --test development/web-tests/*.test.mjs",
     "verify": "node development/web-tools/verify.mjs",
+    "build:pages": "node development/web-tools/build-pages.mjs",
+    "preview:pages": "node development/web-tools/serve-pages.mjs",
     "build": "node development/web-tools/build.mjs",
     "package": "npm run build && powershell.exe -NoProfile -ExecutionPolicy Bypass -File development/web-tools/package-windows.ps1"
   }

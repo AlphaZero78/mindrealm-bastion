@@ -10,6 +10,12 @@ v0.1.3 包含 36 幅写实科幻事件 CG、84 条选择后的故事发展，以
 
 ## 启动
 
+### 在线游玩
+
+浏览器打开 [心域防线在线版](https://alphazero78.github.io/mindrealm-bastion/)，即可游玩当前 `master` 分支通过验证的版本。首次加载需要下载模型、音乐和插画。
+
+在线版进度保存在当前浏览器中。在线网址与本地便携版使用各自的浏览器存储，继续游戏时请使用相同网址和浏览器。部署流程与本地预览见 [GitHub Pages 说明](docs/GITHUB_PAGES.md)。
+
 ### 下载 Windows 版
 
 打开 [v0.1.3 发布页](https://github.com/AlphaZero78/mindrealm-bastion/releases/tag/v0.1.3)，下载 `Mindrealm-Bastion-v0.1.3-windows-x64.zip`。右键选择“全部解压”，打开解压后的文件夹，再双击 **`启动游戏.exe`**。游戏会自动在默认浏览器打开。
