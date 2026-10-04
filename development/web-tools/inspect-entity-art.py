@@ -19,9 +19,13 @@ def digest(im):
     return hashlib.sha256(im.tobytes()).hexdigest()
 
 
+def pixels(image):
+    return image.get_flattened_data() if hasattr(image, 'get_flattened_data') else image.getdata()
+
+
 def changed_pixels(a,b):
     difference=ImageChops.difference(a,b)
-    return sum(max(p)>=24 and max(x[3],y[3])>=80 for p,x,y in zip(difference.get_flattened_data(),a.get_flattened_data(),b.get_flattened_data()))
+    return sum(max(p)>=24 and max(x[3],y[3])>=80 for p,x,y in zip(pixels(difference),pixels(a),pixels(b)))
 
 
 def main():

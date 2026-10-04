@@ -2,6 +2,8 @@
 import { difficultySummary } from './difficulty.js';
 import { extraEvents } from './extra-events.js';
 import { nexusRelics } from './nexus-content.js';
+import {towerText} from './tower-text.js';
+import {actEnemies} from './enemy-expansion.js';
 export { messengers, nexusRelics } from './nexus-content.js';
 const data = {
   "acts": [
@@ -1879,7 +1881,7 @@ const data = {
   ]
 };
 export const acts=data.acts;
-export const towers=Object.fromEntries(data.towers.map(x=>[x.id,x]));
+export const towers=Object.fromEntries(data.towers.map(x=>[x.id,{...x,description:towerText[x.id][0],branches:{A:{...x.branches.A,description:towerText[x.id][1]},B:{...x.branches.B,description:towerText[x.id][2]}}}]));
 const enemyDescriptions = {
  static_drifter:'沿地面通路接近火种，攻击拦路的近战构造。没有特殊能力，适合用来判断防线基础火力。',
  spike_runner:'预警后获得65%额外移动速度，持续2.5秒。生命较低，减速和提前部署的交叉火力能阻止它穿过空隙。',
@@ -1926,7 +1928,7 @@ const bossMechanics = {
  chorus_overseer:'每次能力为6格内敌人补充至18%最大生命护盾。第二阶段开始额外征用6带宽，持续2秒。此首领始终飞行。',
  zero_frequency_mind:'第一/二/三阶段，冲击半径10/11/12格，最多击中3/4/5座构造，造成65%/75%/85%攻击力伤害；拆障伤害为3/4/5倍攻击力。'
 };
-export const enemies=Object.fromEntries(data.enemies.map(x=>[x.id,{...x,description:enemyDescriptions[x.id]+(['tower_hunter','siege'].includes(x.ability)?' 连续射击三次后显示提示并向火种推进2.5秒；贴身近战仍可阻挡。':''),archive:bossArchives[x.id]||null,mechanics:bossMechanics[x.id] ? `${bossMechanics[x.id]} 生命低于70%/35%时进入第二/三阶段，能力间隔为6.5/5.7/4.9秒；每次能力先预警1.1秒。` : null}]));
+export const enemies=Object.fromEntries([...data.enemies,...actEnemies].map(x=>[x.id,{...x,description:x.description||(enemyDescriptions[x.id]+(['tower_hunter','siege'].includes(x.ability)?' 连续射击三次后显示提示并向火种推进2.5秒；贴身近战仍可阻挡。':'')),archive:bossArchives[x.id]||null,mechanics:bossMechanics[x.id] ? `${bossMechanics[x.id]} 生命低于70%/35%时进入第二/三阶段，能力间隔为6.5/5.7/4.9秒；每次能力先预警1.1秒。` : null}]));
 export const relics={...Object.fromEntries(data.relics.map(x=>[x.id,x])),...nexusRelics};
 export const talents=Object.fromEntries(data.talents.map(x=>[x.id,x]));
 export const events=Object.fromEntries([...data.events,...extraEvents].map(x=>[x.id,x]));

@@ -18,15 +18,17 @@ const record = value => !!value && typeof value === 'object' && !Array.isArray(v
 const validCell = c => record(c) && Number.isInteger(c.h) && c.h >= 0 && c.h <= 4 && Number.isInteger(c.ramp) && c.ramp >= -1 && c.ramp <= 3 && typeof c.protected === 'boolean';
 const validDiscoveries = d => d && idsIn(d.towers, towers) && idsIn(d.enemies, enemies) && idsIn(d.relics, relics) && idsIn(d.talents, talents) && idsIn(d.archives, Object.fromEntries(Object.values(enemies).filter(e => e.kind === 'boss').map(e => [e.id, e])));
 function validRun(state) {
-  if (!state || state.version !== 2 || !numericTree(state) || typeof state.seed !== 'string' || !['map', 'prep', 'reward', 'node', 'nexus', 'won', 'lost'].includes(state.phase)) return false;
+  if (!state || state.version !== 2 || !numericTree(state) || typeof state.seed !== 'string' || !['map', 'prep', 'reward', 'node', 'nexus', 'interlude', 'won', 'lost'].includes(state.phase)) return false;
   // Earlier v2 runs have no revision: keep their original balance and payload.
   // Unknown revisions cannot be interpreted safely by this build.
-  if (state.difficultyRevision !== undefined && ![1, 2, CURRENT_DIFFICULTY_REVISION].includes(state.difficultyRevision)) return false;
+  if (state.difficultyRevision !== undefined && (!Number.isInteger(state.difficultyRevision)||state.difficultyRevision<1||state.difficultyRevision>CURRENT_DIFFICULTY_REVISION)) return false;
   if(state.inventory){const bag=state.inventory;if(!Number.isInteger(bag.capacity)||bag.capacity<12||bag.capacity>MAX_CAPACITY||!Number.isInteger(bag.itemCapacity)||bag.itemCapacity<3||bag.itemCapacity>MAX_ITEM_CAPACITY||!Number.isInteger(bag.nextId)||bag.nextId<0||!Number.isInteger(bag.pity)||bag.pity<0||!Array.isArray(bag.items)||bag.items.length>bag.itemCapacity||!distinct(bag.items.map(item=>item.uid))||!bag.items.every(item=>items[item.type]&&/^p[1-9]\d*$/.test(item.uid)&&Number(item.uid.slice(1))<=bag.nextId))return false;}
   if (!Number.isInteger(state.act) || state.act < 0 || state.act > 2 || !Array.isArray(state.maps) || state.maps.length !== 3 || !Array.isArray(state.units)) return false;
   if (!state.terrain || state.terrain.size !== 41 || state.terrain.cells?.length !== 1681 || !Number.isInteger(state.terrain.revision) || state.terrain.revision < 0) return false;
-  if (!state.terrain.core || state.terrain.core.x !== 20 || state.terrain.core.z !== 24 || state.terrain.core.size !== 5 || state.terrain.entries?.length !== 4) return false;
-  if (!['north', 'west', 'east', 'south'].every(id => state.terrain.entries.some(e => e.id === id && Number.isInteger(e.x) && Number.isInteger(e.z) && e.x >= 0 && e.z >= 0 && e.x < 41 && e.z < 41))) return false;
+  const southern=state.terrain.generation===2,entryIds=southern?['north','west','east']:['north','west','east','south'];
+  if(state.terrain.generation!==undefined&&![1,2].includes(state.terrain.generation))return false;
+  if (!state.terrain.core || state.terrain.core.x !== 20 || state.terrain.core.z !== (southern?38:24) || state.terrain.core.size !== 5 || state.terrain.entries?.length !== entryIds.length) return false;
+  if (!entryIds.every(id => state.terrain.entries.some(e => e.id === id && Number.isInteger(e.x) && Number.isInteger(e.z) && e.x >= 0 && e.z >= 0 && e.x < 41 && e.z < 41))) return false;
   if (!state.terrain.cells.every(validCell)) return false;
   if (state.modifiers != null && (!record(state.modifiers) || !Object.values(state.modifiers).every(finite))) return false;
   if (state.terrainUndo !== undefined && (!Array.isArray(state.terrainUndo) || !state.terrainUndo.every(item => record(item) && nonnegative(item.cost) && (item.editsBefore === undefined || Number.isSafeInteger(item.editsBefore) && item.editsBefore >= 0) && Array.isArray(item.cells) && item.cells.length > 0 && item.cells.every(c => record(c) && Number.isInteger(c.x) && Number.isInteger(c.z) && c.x >= 0 && c.z >= 0 && c.x < 41 && c.z < 41 && validCell(c.before) && validCell(c.after))))) return false;
@@ -46,8 +48,10 @@ function validRun(state) {
     if (ids.size !== map.nodes.length || !map.nodes.every(n => typeof n.id === 'string' && Number.isInteger(n.floor) && n.floor >= 0 && n.floor < [17, 16, 15][i] && Number.isInteger(n.lane) && n.lane >= 0 && n.lane <= 4 && ['battle', 'elite', 'camp', 'workshop', 'shop', 'treasure', 'event', 'unknown', 'boss'].includes(n.type) && distinct(n.next) && n.next.every(id => ids.has(id) && map.nodes.find(next => next.id === id).floor === n.floor + 1))) return false;
   }
   if (!idsIn(state.relics, relics) || !idsIn(state.talents, talents) || !state.stats || !Array.isArray(state.rewardQueue) || !distinct(state.nextNodes)) return false;
-  if(state.nexus!==undefined&&(!Array.isArray(state.nexus)||state.nexus.length!==3||!state.nexus.every((room,act)=>record(room)&&room.act===act&&messengers[room.messenger]?.act===act&&JSON.stringify(room.options)===JSON.stringify(messengers[room.messenger].gifts.map(g=>g.id))&&typeof room.skipped==='boolean'&&(room.choice===null||room.options.includes(room.choice)&&state.relics.includes(room.choice)&&!room.skipped&&act<=state.act))))return false;
+  if(state.nexus!==undefined&&(!Array.isArray(state.nexus)||state.nexus.length!==3||!state.nexus.every((room,act)=>record(room)&&room.act===act&&messengers[room.messenger]?.act===act&&distinct(room.options)&&room.options.length===3&&room.options.every(id=>messengers[room.messenger].gifts.some(g=>g.id===id))&&typeof room.skipped==='boolean'&&(room.choice===null||room.options.includes(room.choice)&&state.relics.includes(room.choice)&&!room.skipped&&act<=state.act))))return false;
   if(state.phase==='nexus'&&(!state.nexus||state.nexus[state.act].choice||state.nexus[state.act].skipped||state.floor!==-1||state.currentNode||state.rewardQueue.length))return false;
+  if(state.nextAct!==undefined&&(!Number.isInteger(state.nextAct)||state.nextAct!==state.act+1||state.nextAct>2))return false;
+  if(state.phase==='interlude'&&(state.nextAct===undefined||state.currentNode?.type!=='boss'||!state.currentNode.completed||state.rewardQueue.length||state.nextNodes.length))return false;
   if (!state.nextNodes.every(id => state.maps[state.act].nodes.some(n => n.id === id)) || !distinct(state.visited) || !state.visited.every(id => state.maps.some(map => map.nodes.some(n => n.id === id)))) return false;
   if (!['kills', 'breaches', 'pressure', 'breachDamage', 'destroyed', 'elites', 'overloadSeconds', 'completedNodes'].every(k => nonnegative(state.stats[k])) || !idsIn(state.stats.bosses, enemies) || !Array.isArray(state.stats.history) || !Array.isArray(state.stats.pressureLog) || !state.stats.damageByUnit) return false;
   if (state.currentNode && (!state.maps[state.act].nodes.some(n => n.id === state.currentNode.id && n.floor === state.currentNode.floor && n.type === state.currentNode.type) || state.floor !== state.currentNode.floor)) return false;
@@ -59,6 +63,10 @@ function validRun(state) {
   if(node?.stock&&['units','relics'].some(kind=>node.stock[kind].some(item=>item.price!==undefined&&!nonnegative(item.price)||item.tier!==undefined&&![1,2].includes(item.tier)||item.tier===2&&!['A','B'].includes(item.branch))))return false;
   if (node?.type === 'treasure' && !idsIn(node.options, relics)) return false;
   if (node?.type === 'event' && (!events[node.eventData?.id] || !towers[node.eventData.unit] || node.eventData.relic !== null && !relics[node.eventData.relic] || !distinct(node.eventData.targets))) return false;
+  if (node?.type === 'event' && node.eventData.outcome !== undefined) {
+    const outcome=node.eventData.outcome;
+    if(!record(outcome)||!Number.isInteger(outcome.index)||!events[node.eventData.id].choices[outcome.index]||typeof outcome.label!=='string'||outcome.label.length>240||!Array.isArray(outcome.details)||outcome.details.length>30||!outcome.details.every(text=>typeof text==='string'&&text.length<800))return false;
+  }
   for (const reward of state.rewardQueue) {
     if (!['unit', 'relic', 'talent', 'upgrade','item'].includes(reward.kind) || !distinct(reward.options) || !reward.options.length || reward.options.length > 3) return false;
     const validOption = id => reward.kind === 'item'?items[id]:reward.kind === 'unit' ? towers[id] : reward.kind === 'relic' ? relics[id] : reward.kind === 'talent' ? talents[id] : typeof id === 'string' && /^[^:]+:[AB]$/.test(id) && uids.has(id.split(':')[0]);

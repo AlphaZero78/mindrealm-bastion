@@ -27,7 +27,7 @@ function envelope(param,now,duration,profile){
 }
 const musicGain=name=>10**((-18-(MUSIC_LUFS[name]??-18))/20);
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,Number.isFinite(v)?v:a));
-const SCENES={nexus:'node',prep:'prepare',prebattle:'prepare',preparation:'prepare',deployment:'prepare',map:'route',reward:'node',rewards:'node',camp:'node',workshop:'node',shop:'node',treasure:'node',event:'node',loss:'defeat',lost:'defeat',win:'victory',won:'victory',credits:'menu',settings:'menu',codex:'menu'};
+const SCENES={nexus:'node',interlude:'route',prep:'prepare',prebattle:'prepare',preparation:'prepare',deployment:'prepare',map:'route',reward:'node',rewards:'node',camp:'node',workshop:'node',shop:'node',treasure:'node',event:'node',loss:'defeat',lost:'defeat',win:'victory',won:'victory',credits:'menu',settings:'menu',codex:'menu'};
 export function normalizeScene(scene){return SCENES[scene]||(['prepare','battle','boss','route','node','victory','defeat'].includes(scene)?scene:'menu');}
 export function adaptiveMix(danger,boss=false,paused=false){const d=Math.max(clamp(danger),boss?.5:0),duck=paused?.28:1;return {calm:Math.cos(d*Math.PI/2)*duck,action:Math.sin(d*Math.PI/2)*duck};}
 export function approachDanger(current,target,dt){const c=clamp(current),t=clamp(target),duration=t>c?1.5:4;return c+Math.sign(t-c)*Math.min(Math.abs(t-c),Math.max(0,dt)/duration);}

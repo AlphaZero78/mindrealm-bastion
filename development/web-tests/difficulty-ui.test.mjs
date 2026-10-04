@@ -22,7 +22,7 @@ test('difficulty summaries use the selected revision and distinguish locked-leve
   const current=newRun('difficulty-ui',10),legacy={...current};delete legacy.difficultyRevision;
   for(const state of [current,legacy]){const html=difficultyDetails(state);for(const line of difficultySummary(state))assert.ok(html.includes(escapeHTML(line)));assert.equal(html.includes('沿用旧规则'),difficultyProfile(state).legacy);}
   assert.match(difficultyDetails(10,true),/效果预览/);assert.doesNotMatch(difficultyDetails(10,true),/本次累计生效/);
-  assert.match(difficultyDetails(10),/本次累计生效/);
+  assert.match(difficultyDetails(10),/进阶效果/);assert.equal(difficultyDetails(0),'');
 });
 
 test('camp and shop UI follow current and legacy service rules at pressure ten',()=>{
@@ -45,7 +45,7 @@ test('encounter details display actual floor, pressure and all boss phase values
       for(const key of ['healAmount','shieldAmount','jamDuration'])if(phases.some(p=>p[key]))assert.ok(html.includes(phases.map(p=>n(p[key])).join(' / ')));
       assert.equal(html.includes('额外频震：'),difficultyProfile(state).surge.enabled);
     }
-    const catalog=enemyDetails(null,spec);assert.match(catalog,/图鉴基础数值 · 未计入幕、层与控制压力/);assert.ok(catalog.includes(`基础生命 ${n(spec.hp)}`));assert.doesNotMatch(catalog,/本场实际数值/);
+    const catalog=enemyDetails(null,spec);assert.match(catalog,/图鉴基础数值/);assert.ok(catalog.includes(`基础生命 ${n(spec.hp)}`));assert.doesNotMatch(catalog,/本场实际数值/);
   }
 });
 

@@ -63,7 +63,7 @@ test('workshop lists deployed units first and current/next effects have no unrel
  const html=nodeScreen(s);assert.ok(html.indexOf(`data-unit="${deployed.uid}"`)<html.indexOf(`data-unit="${stored.uid}"`));assert.match(html,/is-deployed/);
  for(const type of Object.keys(towers))for(const branch of ['A','B'])for(const tier of [1,2]){
   const u={type,tier,branch:tier===1?null:branch,hp:1,x:null,z:null};const text=unitEffectText(s,u),comparison=upgradeComparison(s,u,branch);
-  assert.ok(text.length>15);assert.doesNotMatch(text,/T2.*T3|倍率/);assert.match(comparison,/当前/);assert.match(comparison,/下一级/);assert.match(comparison,/<table>/);
+  assert.ok(text.length>=6);assert.doesNotMatch(text,/额外提高|T1为/);assert.doesNotMatch(text,/T2.*T3|倍率/);assert.match(comparison,/当前/);assert.match(comparison,/下一级/);assert.match(comparison,/<table>/);
  }
  const map=mapScreen(Run.newRun('route-ui'));assert.doesNotMatch(map,/id="node-detail"/);assert.match(map,/role="tooltip"/);assert.match(map,/aria-describedby="route-tooltip"/);
 });

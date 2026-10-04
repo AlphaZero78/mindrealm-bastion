@@ -9,10 +9,11 @@ const actionOf=kind=>['melee','direct','indirect','drone','chain','ranged','sieg
 export class EntityMotion {
  constructor(){this.reset();}
  reset(){this.clock=0;this.state=null;this.battle=null;this.tracks=new Map();this.deaths=[];this.serial=0;}
- update(state,events=[],wallTime=0){
-  const battle=state?.battle||null,nextClock=battle?Math.max(0,battle.time||0)*1000:wallTime;
+ update(state,events=[],wallTime=0,interpolation=1){
+  const battle=state?.battle||null,nextClock=battle?Math.max(0,(battle.time||0)-(1-interpolation)*.05)*1000:wallTime;
   if(this.state!==state||this.battle!==battle||nextClock<this.clock){this.reset();this.state=state;this.battle=battle;}
   this.clock=nextClock;
+  this.interpolation=interpolation;
   const present=new Set();
   for(const [kind,list] of [['unit',state?.units||[]],['enemy',battle?.enemies||[]]])for(const entity of list){
    if(kind==='unit'&&(entity.x==null||entity.z==null))continue;
@@ -30,7 +31,7 @@ export class EntityMotion {
     const facing=Number.isFinite(event.facing)?event.facing:angleTo(event.from,event.to);if(Number.isFinite(facing))track.facing=facing;
    }
    const target=this.tracks.get(`${event.targetKind}:${event.targetId}`);
-   if(target&&['shot','hit'].includes(event.type))target.hitAt=at;
+   if(target&&['shot','hit'].includes(event.type)&&event.stage!=='launch')target.hitAt=at;
    if(event.action==='spawn'&&track)track.spawnAt=at;
    if(event.action==='death'&&event.entity&&event.sourceKind==='enemy')this.addDeath(event.entity,at);
   }
@@ -39,7 +40,7 @@ export class EntityMotion {
    // event is the authority; disappearing on a view switch is not a death.
    this.tracks.delete(key);
   }
-  this.deaths=this.deaths.filter(death=>this.clock-death.at<650&&this.clock>=death.at);
+  this.deaths=this.deaths.filter(death=>this.clock-death.at<650);
  }
  addDeath(entity,at){
   const existing=this.deaths.find(death=>death.entity.id===entity.id);if(existing){existing.entity={...existing.entity,...entity};existing.at=Math.min(existing.at,at);return;}
@@ -58,7 +59,7 @@ export class EntityMotion {
   const stateAt=Number.isFinite(entity.lastActionAt)?entity.lastActionAt*1000:-Infinity;
   const lastAt=Math.max(track?.actionAt??-Infinity,stateAt),age=(this.clock-lastAt)/1000;
   const lastKind=actionOf(stateAt>=(track?.actionAt??-Infinity)?(entity.actionKind||entity.lastActionKind||'idle'):(track?.action||'idle'));
-  const castUntil=Math.max(entity.surgeWarningUntil||0,Number.isFinite(entity.castUntil)?entity.castUntil:entity.warningUntil||0);
+  const castUntil=Math.max(entity.pushWarningUntil||0,entity.surgeWarningUntil||0,Number.isFinite(entity.castUntil)?entity.castUntil:entity.warningUntil||0);
   const windup=kind==='enemy'&&castUntil>clock;
   if(!inactive){
    if(windup){action='cast';progress=clamp(1-(castUntil-clock)/1.5,0,1);pose=8;}
@@ -66,7 +67,7 @@ export class EntityMotion {
     action=['buff','heal','phase','cast'].includes(lastKind)?'cast':'attack';progress=age/.42;
     pose=action==='cast'?9:age<.07?5:age<.18?6:7;
    }else if(kind==='enemy'&&entity.motion&&Math.hypot(entity.motion.dx||0,entity.motion.dz||0)>.00001){
-    action='move';progress=fraction((entity.motion.distance||0)/1.5);pose=1+Math.floor(progress*4);
+    action='move';progress=fraction(((entity.motion.distance||0)-Math.hypot(entity.motion.dx||0,entity.motion.dz||0)*(1-this.interpolation))/1.5);pose=1+Math.floor(progress*4);
    }else if(kind==='enemy'&&entity.air){action='hover';progress=fraction(clock*.8+(Number(String(entity.id).replace(/\D/g,''))||0)*.17);pose=1+Math.floor(progress*4);}
   }
   if(reducedMotion){if(action==='move'||action==='hover'){pose=0;progress=0;}else if(action==='attack'){pose=6;progress=0;}else if(action==='cast'){progress=0;}}

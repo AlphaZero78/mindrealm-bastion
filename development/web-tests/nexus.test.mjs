@@ -16,7 +16,7 @@ const frozen=(state,fn)=>{const old=Run.cloneState(state);assert.equal(fn().ok,f
 const enterGift=(state,id)=>{
  const m=messengers[nexusRelics[id].messenger];state.act=m.act;state.floor=-1;state.currentNode=null;state.phase='nexus';
  state.nextNodes=state.maps[m.act].nodes.filter(n=>n.floor===0).map(n=>n.id);
- state.nexus[m.act]={act:m.act,messenger:m.id,options:m.gifts.map(g=>g.id),choice:null,skipped:false};
+ state.nexus[m.act]={act:m.act,messenger:m.id,options:[id,...m.gifts.filter(g=>g.id!==id).slice(0,2).map(g=>g.id)],choice:null,skipped:false};
  return Run.chooseNexus(state,id);
 };
 
@@ -28,11 +28,11 @@ test('new run begins with three empty item slots and a seed-fixed act-specific m
   frozen(s,()=>Run.enterNode(s,s.nextNodes[0]));frozen(s,()=>Run.chooseNexus(s,'nexus-invalid'));
   for(const room of s.nexus){seen[room.act].add(room.messenger);assert.equal(messengers[room.messenger].act,room.act);assert.equal(new Set(room.options).size,3);}
  }
- assert.deepEqual(seen.map(x=>x.size),[4,4,4]);assert.equal(Object.keys(nexusRelics).length,36);
+ assert.deepEqual(seen.map(x=>x.size),[4,4,4]);assert.equal(Object.keys(nexusRelics).length,72);
  assert.equal(normalizeScene('nexus'),'node');
 });
 
-test('all 36 gifts are exclusive, apply immediately, preserve durability ratio and survive reload without reroll',()=>{
+test('all 72 gifts are exclusive, apply immediately, preserve durability ratio and survive reload without reroll',()=>{
  const ordinary=contentPool({unlockedContent:['overlook_archive','anchor_archive','network_archive','pressure_archive','redline_archive','channel_archive']}).relics;
  for(const gift of Object.values(nexusRelics)){
   assert.ok(!ordinary.includes(gift.id));const s=Run.newRun('all-gifts');s.units[0].hp*=.4;
@@ -60,7 +60,7 @@ test('three act entrances interrupt progression exactly once; boss rewards finis
   assert.equal(s.phase,'nexus');assert.equal(s.act,act);assert.equal(Run.chooseNexus(s,s.nexus[act].options[0]).ok,true);
   const boss=s.maps[act].nodes.find(n=>n.type==='boss');s.nextNodes=[boss.id];assert.equal(Run.enterNode(s,boss.id).ok,true);
   assert.equal(Run.finishBattle(s,{won:true}).ok,true);
-  if(act<2){assert.equal(s.phase,'reward');while(s.phase==='reward')assert.equal(Run.chooseReward(s,s.rewardQueue[0].kind==='item'?'skip':s.rewardQueue[0].options[0]).ok,true);assert.equal(s.floor,-1);assert.equal(s.currentNode,null);}
+  if(act<2){assert.equal(s.phase,'reward');while(s.phase==='reward')assert.equal(Run.chooseReward(s,s.rewardQueue[0].kind==='item'?'skip':s.rewardQueue[0].options[0]).ok,true);assert.equal(s.phase,'interlude');assert.equal(s.act,act);assert.equal(Run.continueAct(s).ok,true);assert.equal(s.floor,-1);assert.equal(s.currentNode,null);}
  }
  assert.equal(s.phase,'won');assert.equal(s.stats.bosses.length,3);assert.equal(s.nexus.filter(r=>r.choice).length,3);
  assert.equal(s.stats.completedNodes,3,'entrance rooms do not inflate the 48 route-node counter');

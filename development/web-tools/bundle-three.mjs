@@ -1,0 +1,14 @@
+import {createRequire} from 'node:module';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
+import {resolve,dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..'),deps=process.argv[2];
+if(!deps)throw Error('Pass an external directory containing three 0.186.1 and esbuild.');
+const require=createRequire(resolve(deps,'package.json')),esbuild=require('esbuild');
+const pkg=JSON.parse(await readFile(resolve(deps,'node_modules/three/package.json'),'utf8'));
+if(pkg.version!=='0.186.1')throw Error(`Expected reviewed three 0.186.1, found ${pkg.version}`);
+const folder=resolve(root,'assets/third_party/three');await mkdir(folder,{recursive:true});
+const exports=['WebGLRenderer','Scene','OrthographicCamera','DirectionalLight','HemisphereLight','AmbientLight','MeshStandardMaterial','MeshBasicMaterial','BufferGeometry','Float32BufferAttribute','InstancedMesh','Mesh','Matrix4','Quaternion','Euler','Vector3','Vector2','Color','Box3','PMREMGenerator','EquirectangularReflectionMapping','SRGBColorSpace','ACESFilmicToneMapping','DoubleSide','DynamicDrawUsage','DataTexture','CubeUVReflectionMapping','HalfFloatType','RGBAFormat','LinearSRGBColorSpace','LinearFilter','PCFShadowMap','TextureLoader','RepeatWrapping','REVISION'];
+await esbuild.build({stdin:{contents:`export {${exports.join(',')}} from 'three';export {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';export {HDRLoader} from 'three/addons/loaders/HDRLoader.js';`,resolveDir:resolve(deps)},bundle:true,format:'esm',minify:true,target:'es2022',legalComments:'eof',outfile:resolve(folder,'three.bundle.js')});
+await writeFile(resolve(folder,'LICENSE.txt'),await readFile(resolve(deps,'node_modules/three/LICENSE')));
+console.log('THREE_BUNDLE_OK '+pkg.version);

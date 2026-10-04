@@ -18,11 +18,11 @@ const surgeFixture=(level=8)=>{
 };
 
 test('difficulty normalization uses pressureLevel only and revision selection cannot reinterpret an old save',()=>{
-  assert.equal(CURRENT_DIFFICULTY_REVISION,3);
+  assert.equal(CURRENT_DIFFICULTY_REVISION,4);
   for(const v of [null,undefined,NaN,Infinity,-Infinity,'10',{},[],{pressureLevel:NaN}])assert.equal(normalizeDifficulty(v),0);
   assert.equal(normalizeDifficulty(-1),0);assert.equal(normalizeDifficulty(10.9),10);assert.equal(normalizeDifficulty(4.9),4);
   assert.equal(normalizeDifficulty({pressureLevel:0,difficulty:10}),0);
-  assert.equal(difficultyProfile(10).revision,3);
+  assert.equal(difficultyProfile(10).revision,4);
   for(const revision of [undefined,1])assert.equal(difficultyProfile({pressureLevel:10,difficultyRevision:revision}).revision,1);
   assert.equal(difficultyProfile({pressureLevel:10,difficultyRevision:2}).revision,2);
 });

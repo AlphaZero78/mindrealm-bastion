@@ -1,0 +1,14 @@
+Studio Small 09 HDRI
+Author: Sergej Majboroda / Poly Haven
+Source: https://polyhaven.com/a/studio_small_09
+Downloaded asset: studio_small_09_1k.hdr (original 1K HDR)
+License: Creative Commons CC0 1.0 Universal
+License statement: https://polyhaven.com/license
+License text: https://creativecommons.org/publicdomain/zero/1.0/legalcode
+Use in this game: shared image-based lighting for metallic realtime models.
+
+Blue Metal Plate (diffuse, OpenGL normal and roughness maps, original 1K files)
+Author: Rob Tuytel / Poly Haven
+Source: https://polyhaven.com/a/blue_metal_plate
+License: Creative Commons CC0 1.0 Universal (same legalcode above)
+Use in this game: subtle surface wear and varying metal roughness, shared by models.

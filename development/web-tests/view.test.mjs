@@ -53,11 +53,11 @@ test('live state contract renders airborne string IDs and six bosses, caches pat
     field.rotate(.1);field.render(116);assert.equal(field.paths,paths,'camera rotation must not recalculate navigation');
     state.terrain.cells[10*41+10].h=0;state.terrain.revision++;field.render(132);assert.notEqual(field.paths,paths);assert.equal(field.tiles.find(t=>t.x===10&&t.z===10).h,0);
     state.phase='battle';state.battle={time:1,entries:Rules.entriesOf(state),enemies:Object.values(enemies).filter(e=>e.air||e.kind==='boss').map((e,i)=>({...e,id:`e${i+1}`,type:e.id,x:8+i,z:18,maxHp:e.hp,warningUntil:2,pressureMarked:true}))};field.hover={x:8,z:18};field.render(148);
-    assert.equal(Rules.entriesOf(state).filter(e=>field.entryStatus(e).active).length,4);const draws=canvas.ctx.calls.filter(c=>c.method==='drawImage');assert.ok(draws.length>6,'actual sprite atlas frames were drawn');assert.ok([...canvas.ctx.calls,...(field.entityLayer?.ctx.calls||[])].some(c=>c.method==='fillText'&&String(c.args[0]).includes('能力蓄力')));
+    assert.equal(Rules.entriesOf(state).filter(e=>field.entryStatus(e).active).length,3);const draws=canvas.ctx.calls.filter(c=>c.method==='drawImage');assert.ok(draws.length>6,'actual sprite atlas frames were drawn');assert.ok([...canvas.ctx.calls,...(field.entityLayer?.ctx.calls||[])].some(c=>c.method==='fillText'&&String(c.args[0]).includes('能力蓄力')));
     assert.ok([...canvas.ctx.calls,...(field.entityLayer?.ctx.calls||[])].some(c=>c.method==='fillText'&&String(c.args[0]).includes('高压力目标')));field.setInteractive(true);field.keys.add('e');field.render(180);assert.equal(field.fastTerrain,true);field.keys.clear();field.render(212);assert.equal(field.fastTerrain,false,'decorative grid must return after camera movement stops');
   }finally{field.destroy();dom.restore();}
 });
-test('all 40 entities have transparent eight-direction models and complete authored pose and variant sheets',async()=>{
+test('all 49 entities have transparent eight-direction models and complete authored pose and variant sheets',async()=>{
   for(const [folder,catalog]of [['towers',towers],['enemies',enemies]])for(const id of Object.keys(catalog)){
     const art=ENTITY_ART[id];assert.ok(art,id);assert.equal(art.directions,8);assert.equal(art.cell,80);assert.equal(art.poseRows,10);
     for(const [path,rows]of [[art.staticPath,art.iconRows],[art.animationPath,art.rows]]){const data=await readFile(new URL(`../..${path}`,import.meta.url));assert.equal(data.toString('ascii',1,4),'PNG');assert.equal(data.readUInt32BE(16),art.cell*art.directions,id);assert.equal(data.readUInt32BE(20),art.cell*rows,id);assert.equal(data[25],6,`${id} must preserve RGBA transparency`);}

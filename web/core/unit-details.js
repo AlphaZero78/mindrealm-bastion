@@ -1,16 +1,29 @@
-import {towers} from './content.js';
-import {unitStats} from './rules.js';
-import {difficultyProfile} from './difficulty.js';
+import {unitStats,unitAuras,ruleEffects} from './rules.js';
+import {difficultyProfile,CURRENT_DIFFICULTY_REVISION} from './difficulty.js';
 
-// Descriptions explain the current stage; numeric growth is a before/after table.
-export function unitEffectText(state,unit){
-  const base=towers[unit.type],s=unitStats(state,unit),parts=[base.description];
-  if(unit.tier>1&&unit.branch)parts.push(base.branches[unit.branch].description);
-  const fmt=value=>Number(value.toFixed(2));
-  if(s.effect==='guard')parts.push(`当前分支额外护甲 +${5*unit.tier}。`);
-  if(s.ability==='bandwidth_plus')parts.push(difficultyProfile(state).revision>=3?`额定带宽 +${Math.round(s.support_value)}。启用中继按额定供给排序，前三座分别提供 100% / 60% / 40%（向下取整），其余作为备份；失效后自动递补。`:`当前全局带宽 +${Math.round(s.support_value)}。`);
-  if(s.ability==='resistance_plus')parts.push(`当前全局抗性 +${fmt(s.support_value)}。`);
-  if(s.ability==='repair')parts.push(`每 ${fmt(s.rate)} 秒维修 ${fmt(s.attack)} 耐久；作用半径 ${fmt(s.range)} 格。`);
-  if(s.ability==='haste_aura'){const haste=s.support_value+(s.effect==='strong_haste'?.12:0);parts.push(`范围内友军攻击频率 +${fmt(haste*100)}%，伤害 +${fmt(haste*50)}%。`);}
-  return parts.join(' ');
+const number=value=>Number(value.toFixed(2));
+const neutralState={difficultyRevision:CURRENT_DIFFICULTY_REVISION,spirit:100,maxSpirit:100,units:[],relics:[],talents:[],modifiers:{},terrain:{size:41,cells:[]}};
+export function unitEffectLines(state,unit){
+ state||=neutralState;const s=unitStats(state,unit),m=ruleEffects(state),auras=unitAuras(state,unit),parts=[];
+ const add=(id,text)=>parts.push({id,text});
+ if(s.attack_kind!=='support')add('target',s.ability==='drone'?'追踪无人机 · 对地 / 对空 · 越过地形':s.attack_kind==='indirect'?'间接攻击 · 对地 · 越过地形':s.role==='melee'?'近战 · 对地':`直接射击 · ${s.targets==='all'?'对地 / 对空':'对地'}`);
+ if(s.ability==='taunt')add('taunt','嘲讽攻击范围内的敌人');
+ if(s.ability==='lifesteal')add('lifesteal',`吸血 ${s.effect==='lifesteal_plus'?22:10}%`);
+ if(s.ability==='siege_resist')add('siege','受到的攻城伤害 −45%');
+ if(s.ability==='high_hp_priority')add('priority','默认优先最高生命目标');
+ if(s.ability==='splash')add('splash',`爆炸半径 ${number((s.effect==='large_splash'?3.4:2.3)*(1+(m.indirect_radius||0)))} 格；溅射伤害 65%；${s.effect==='large_splash'?`主目标减速 ${number(2.5*difficultyProfile(state).controlDurationMultiplier)} 秒，` : ''}溅射减速 ${number(1.2*difficultyProfile(state).controlDurationMultiplier)} 秒`);
+ for(const a of auras){
+  if(a.id==='guard')add('guard',`${a.radius} 格内其他友军减伤 ${number(a.reduction*100)}%，同类不叠加`);
+  if(a.id==='pressure')add('pressure',`${number(a.radius)} 格内敌人死亡压力 −${number(a.reduction*100)}%`);
+  if(a.id==='haste')add('haste',`范围内友军攻速 +${number(a.haste*100)}%，攻击力 +${number(a.damage*100)}%`);
+  if(a.id==='repair')add('repair',`每 ${number(a.interval)} 秒维修 ${number(a.amount)} 耐久，优先缺损最多的存活友军`);
+  if(a.id==='slow')add('slow',`范围内敌人移速 −${number(a.slow*100)}%`);
+  if(a.id==='bandwidth')add('bandwidth',`额定全局带宽 +${a.value}${difficultyProfile(state).revision>=3?'；前三座按 100% / 60% / 40% 供给':''}`);
+  if(a.id==='resistance')add('resistance',`全局抗性 +${number(a.value)}`);
+  if(a.id==='network')add('network',`支援覆盖内友军${a.armor?`护甲 +${number(a.armor)}`:''}${a.armor&&a.rate?'，':''}${a.rate?`攻击间隔 −${number(a.rate*100)}%`:''}`);
+ }
+ const extra={counter:'受击反击：攻击力 ×65%，无视护甲',guard:`分支护甲 +${5*(unit.tier||1)}`,armor_break:'命中削减 2 护甲，最低 0',self_repair:'4 秒未受击后，每秒修复 2.5% 最大耐久',root:`命中定身 ${number(.65*difficultyProfile(state).controlDurationMultiplier)} 秒`,chain:'连锁 3.5 格内另一目标，伤害 60%',anti_air:'对空伤害 +80%',pierce:'忽略 60% 护甲；贯穿目标承受 65% 伤害',execute:'目标生命低于 30% 时，伤害 +65%',corrosion:'爆炸命中削减 2 护甲，最低 0',extra_drone:'每轮追加一架无人机攻击另一目标，伤害 60%',mark:'标记 4 秒：目标后续承伤 +15%',jam_resist:'抵消 3 点带宽干扰，同类不叠加',critical_repair:'目标耐久低于 35% 时，维修量 +60%',armor_repair:'维修后护甲 +3，持续 3 秒'}[s.effect];
+ if(extra)add(s.effect,extra);
+ return parts;
 }
+export function unitEffectText(state,unit){return unitEffectLines(state,unit).map(p=>p.text).join('；')+'。';}

@@ -143,6 +143,18 @@ enemy('terrain_dismantler',[sp('craft_miner',(1.72,1.63,.70),(0,0,.25),'body'),*
 enemy('proliferation_protocol',[rover((1.62,1.58,.56)),sp('hangar_roundA',(1.23,1.1,.72),(0,.0,.52),'body'),*pair('machine_barrel',(.46,.47,.93),.79,.17,.48,'pod'),sp('gate_simple',(.91,.38,1.11),(0,.16,.91),'gate')],elite=True)
 enemy('spirit_taxer',[td('enemy-ufo-d',(1.72,1.56,.53),(0,0,.75),'body'),*pair('rocket_fuelB',(.42,.45,1.07),.71,.0,.28,'pod',finish='gold'),sp('satelliteDish_large',(.81,.60,.72),(0,-.18,1.19),'speaker'),*pair('rocket_finsA',(.23,.78,.47),.96,.07,.74,'fin')],'hover',elite=True)
 
+# Revision 4 formations: a wide shield, wing escorts, factory transports and
+# articulated heavy siege chassis use distinct assemblies of licensed parts.
+enemy('scrap_bulwark',[rover((1.4,1.2,.5)),sp('corridor_wallCorner',(1.65,.40,1.04),(0,-.45,.43),'shield',finish='armor'),sp('weapon_gun',(.43,1.25,.36),(0,-.68,.88),'barrel'),eye(1.32)])
+enemy('echo_glider',[sp('craft_speederA',(1.06,1.68,.43),(0,0,.62),'body'),*pair('rocket_finsB',(.70,.90,.30),.88,.17,.70,'fin',(0,20,0),'blade'),sp('satelliteDish',(.64,.37,.58),(0,.15,1.03),'speaker'),*pair('rocket_fuelA',(.27,.69,.3),.40,.45,.43,'engine',finish='glow')],'hover')
+enemy('noise_bell',[rover((1.55,1.32,.54)),sp('gate_simple',(1.24,.48,1.56),(0,.18,.63),'gate',finish='metal'),sp('satelliteDish_large',(1.37,.83,.84),(0,-.05,1.64),'speaker'),sp('machine_generator',(.72,.75,.81),(0,0,.63),'core',finish='gold')],elite=True)
+enemy('memory_runner',[sp('alien',(.82,.81,1.47),(0,0,.34),'body'),*legs(),*pair('weapon_gun',(.27,1.01,.32),.53,-.22,.99,'arm'),sp('machine_barrel',(.62,.67,.80),(0,.53,.82),'reservoir',finish='ivory'),*pair('rocket_finsB',(.25,.57,.9),.58,.19,.53,'fin',finish='metal')],'runner')
+enemy('repair_skiff',[sp('craft_cargoB',(1.48,1.62,.58),(0,0,.64),'body'),*pair('machine_barrel',(.52,.55,.77),.66,-.04,.82,'reservoir',finish='ivory'),*pair('weapon_gun',(.22,.93,.22),.86,-.38,.54,'tool',finish='gold'),sp('rocket_fuelA',(.74,.66,.35),(0,.30,.32),'engine',finish='glow')],'hover')
+enemy('archive_warden',[rover((1.85,1.65,.64)),*pair('corridor_wallCorner',(.45,1.02,1.42),.86,0,.56,'shield',finish='armor'),sp('gate_complex',(1.15,.59,1.18),(0,.16,.75),'gate'),sp('machine_generator',(.68,.62,.90),(0,-.33,.72),'core',finish='gold')],elite=True)
+enemy('ordered_sentinel',[sp('alien',(1.02,.99,1.70),(0,0,.33),'body'),*legs(),*pair('corridor_wallCorner',(.41,.75,1.13),.67,.04,.78,'shield',finish='armor'),*pair('weapon_rifle',(.31,1.50,.32),.65,-.53,.94,'barrel'),sp('rocket_topA',(.57,.57,.56),(0,.05,1.84),'head',finish='gold')],'walker')
+enemy('null_wing',[td('enemy-ufo-b',(1.71,1.56,.53),(0,0,.67),'body'),*pair('rocket_finsA',(.40,1.37,.52),.88,.14,.64,'fin',finish='blade'),*pair('satelliteDish',(.63,.39,.69),.66,.22,1.03,'sensor'),sp('machine_wireless',(.48,.47,.73),(0,-.27,.97),'core',finish='gold')],'hover')
+enemy('entropy_engine',[sp('craft_miner',(2.1,2.12,.82),(0,0,.29),'body'),*pair('turret_double',(.68,1.58,.51),.76,-.65,.79,'barrel'),sp('rocket_baseB',(1.44,.91,.77),(0,-1.12,.30),'hammer',finish='metal'),sp('machine_generatorLarge',(1.03,1.04,1.12),(0,.31,1.02),'core',finish='gold'),*pair('rocket_fuelB',(.48,.74,1.14),1.03,.35,.59,'reservoir')],elite=True)
+
 enemy('noise_hive',[sp('hangar_roundB',(1.81,1.47,.93),(0,.20,.35),'body'),sp('gate_complex',(1.11,.65,1.12),(0,-.48,.41),'gate'),
     *pair('craft_cargoB',(.50,1.26,.62),1.0,.12,.26,'segment'),sp('machine_generatorLarge',(.72,.70,.69),(0,.34,1.25),'core'),
     *pair('machine_barrel',(.38,.45,.67),.72,-.07,1.18,'pod')],boss=True,

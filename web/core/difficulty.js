@@ -1,4 +1,4 @@
-export const CURRENT_DIFFICULTY_REVISION=3;
+export const CURRENT_DIFFICULTY_REVISION=4;
 const healthCurve=[1,1.10,1.22,1.36,1.53,1.73,1.96,2.22,2.51,2.84,3.2];
 const bound=(value,min,max)=>Math.max(min,Math.min(max,value));
 
@@ -32,10 +32,10 @@ export function difficultyProfile(value=0) {
 
 export function enemyStats(state,spec) {
   const p=difficultyProfile(state),modern=p.revision>=3,scale=modern?1.35*(1+(state.act||0)*.35+Math.max(0,state.floor||0)*.025):1+(state.act||0)*.08+(state.floor||0)*.015;
-  const baseHp=spec.hp*scale,maxHp=baseHp*p.hpMultiplier;
+  const actPower=p.revision>=4?1+(state.act||0)*.12:1,baseHp=spec.hp*scale*actPower,maxHp=baseHp*p.hpMultiplier;
   return {...spec,baseHp,maxHp,hp:maxHp,
     supportHp:spec.kind==='boss'&&!p.legacy?baseHp*Math.sqrt(p.hpMultiplier):maxHp,
-    attack:spec.attack*p.attackMultiplier*(modern?1.12+(state.act||0)*.06:1),
+    attack:spec.attack*p.attackMultiplier*(modern?1.12+(state.act||0)*.06:1)*actPower,
     pressure:spec.pressure*p.pressureMultiplier*(1+(state.modifiers?.pressure_mult||0)),
     speed:spec.speed*1.5*p.speedMultiplier*(modern?1.04:1),
     armor:spec.armor+p.armorBonus,
@@ -45,6 +45,8 @@ export function enemyStats(state,spec) {
 
 export const xpRequirement=state=>difficultyProfile(state).revision>=3?state.depth*400:200+(state.depth-1)*125;
 export const killRewardScale=state=>difficultyProfile(state).revision>=3?{xp:.65,focus:.65}:{xp:1,focus:1};
+export const levelBandwidth=state=>difficultyProfile(state).revision>=4?3:1;
+export const bossAdvanceProfile=state=>({enabled:difficultyProfile(state).revision>=4,attacks:6,warning:1.1,duration:2.5,speedMultiplier:1.2});
 export function upgradeRequirement(state,unit){
   if(!unit||unit.tier>=3)return {ok:false,reason:'已达到 T3'};
   const depth=difficultyProfile(state).revision>=3?(unit.tier===1?2:5):1;
@@ -60,22 +62,23 @@ export function enemyRecoveryBase(state,enemy) {
 export function enemyAbilityProfile(state,spec,phase=spec.phase||0) {
   const p=difficultyProfile(state),boss=spec.kind==='boss',stage=bound(Math.floor(phase)||0,0,2);
   const cycle=(boss?6.5-stage*.8:7.5)*(boss?p.bossIntervalMultiplier:p.abilityIntervalMultiplier);
-  const healFraction=spec.ability==='heal'?(boss?.07+stage*.015:.09):0;
-  const shieldFraction=spec.ability==='group_shield'?(boss?.18:.12):spec.ability==='shield'?.15:boss&&spec.type==='mirror_censor'&&stage>=1?.025:boss&&spec.id==='mirror_censor'&&stage>=1?.025:0;
+  const healFraction=spec.ability==='heal'?(spec.healFraction??(boss?.07+stage*.015:.09)):0;
+  const shieldFraction=spec.ability==='group_shield'?(spec.shieldFraction??(boss?.18:.12)):spec.ability==='shield'?.15:boss&&spec.type==='mirror_censor'&&stage>=1?.025:boss&&spec.id==='mirror_censor'&&stage>=1?.025:0;
   const recoveryBase=enemyRecoveryBase(state,spec);
-  const rawJamDuration=spec.ability==='jam'?(boss?5:3):boss&&['chorus_overseer'].includes(spec.type||spec.id)&&stage>=1?2:0;
+  const rawJamDuration=spec.ability==='jam'?(spec.jamDuration??(boss?5:3)):boss&&['chorus_overseer'].includes(spec.type||spec.id)&&stage>=1?2:0;
   return {cycle,warning:1.1,healFraction,healAmount:recoveryBase*healFraction,
     shieldFraction,shieldAmount:recoveryBase*shieldFraction,
     jamDuration:p.legacy?rawJamDuration:Math.min(rawJamDuration,Math.max(0,cycle-1.1)),
-    jamStrength:rawJamDuration?(spec.ability==='jam'&&boss?6+stage*2:boss?6:2):0,
+    jamStrength:rawJamDuration?(spec.jamBaseStrength??(spec.ability==='jam'&&boss?6+stage*2:boss?6:2)):0,
     surge:{...p.surge,enabled:boss&&p.surge.enabled}
   };
 }
 
 export function difficultySummary(value=0) {
-  const p=difficultyProfile(value),percent=n=>`${Math.round((n-1)*100)}%`;
+  const p=difficultyProfile(value),percent=n=>`${Number(((n-1)*100).toFixed(1))}%`;
+  if(p.level===0)return [];
   if(p.legacy){
-    const lines=['旧版控制压力规则：本局按原难度继续。'];
+    const lines=[];
     if(p.level>=1)lines.push(`敌人生命提高 ${percent(p.hpMultiplier)}。`);
     if(p.level>=2)lines.push(`敌人攻击提高 ${percent(p.attackMultiplier)}。`);
     if(p.level>=3)lines.push('后续幕敌人提前出现。');
@@ -85,15 +88,14 @@ export function difficultySummary(value=0) {
     if(p.level>=7)lines.push('商店、维修和升级费用提高 15%。');
     if(p.level>=8)lines.push('存在带宽干扰时，额外降低 2 带宽。');
     if(p.level>=9)lines.push('首领能力间隔缩短 20%。');
-    if(p.level===0)lines.push('标准敌人强度。');
     return lines;
   }
-  const lines=[p.level===0?'标准：基础敌人强度。':`敌人生命提高 ${percent(p.hpMultiplier)}，攻击提高 ${percent(p.attackMultiplier)}，速度提高 ${percent(p.speedMultiplier)}。`,
-    '相同种子的敌人编队、数量、出场间隔和击杀奖励保持一致；营地恢复 30%，服务价格不增加。'];
-  if(p.level>0)lines.push(`突破伤害提高 ${percent(p.breachMultiplier)}，死亡压力提高 ${percent(p.pressureMultiplier)}；护甲增加 ${p.armorBonus}，普通与精英能力间隔缩短 ${Math.round((1-p.abilityIntervalMultiplier)*100)}%。`);
-  if(p.controlDurationMultiplier<1)lines.push(`敌人承受的减速与定身时间缩短 ${Math.round((1-p.controlDurationMultiplier)*100)}%；高地保护保持有效。`);
-  lines.push(`首领受到的治疗与护盾${p.level===0?'保持基础数值':`提高 ${percent(Math.sqrt(p.hpMultiplier))}`}；带宽征用后至少留下 1.1 秒恢复窗口。`);
+  const lines=[`敌人生命 +${percent(p.hpMultiplier)}，攻击 +${percent(p.attackMultiplier)}，移速 +${percent(p.speedMultiplier)}。`,
+    `突破伤害 +${percent(p.breachMultiplier)}，死亡压力 +${percent(p.pressureMultiplier)}。`,
+    `普通与精英能力间隔 −${Math.round((1-p.abilityIntervalMultiplier)*100)}%。`];
+  if(p.armorBonus)lines.push(`敌人护甲 +${p.armorBonus}。`);
+  if(p.controlDurationMultiplier<1)lines.push(`敌人受到的减速与定身时长 −${Math.round((1-p.controlDurationMultiplier)*100)}%。`);
+  lines.push(`首领治疗与护盾 +${percent(Math.sqrt(p.hpMultiplier))}。`);
   if(p.surge.enabled)lines.push('首领每 12 秒准备频震：预警 1.5 秒后，对 8 格内最多 2 座构造造成 55% 攻击力伤害；嘲讽优先，护甲与高地保护生效。');
-  if(p.revision>=3)lines.push('本版标准强度随幕与层数成长；功能敌人约占 40%。升阶在深度 2 / 5 开放，经验需求从 400 起、每级增加 400。');
   return lines;
 }

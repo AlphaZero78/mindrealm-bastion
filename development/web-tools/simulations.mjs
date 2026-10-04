@@ -13,7 +13,7 @@ if(!isMainThread){
 }else{
   const quick=process.argv.includes('--quick'),refs=quick?2:20,scenarios=quick?5:100;
   const hash=async path=>createHash('sha256').update(await readFile(new URL(path,import.meta.url))).digest('hex');
-  const files=['../../web/core/content.js','../../web/core/state.js','../../web/core/rules.js','../../web/core/battle.js','../../web/core/difficulty.js','../../web/core/extra-events.js','../../web/core/inventory.js','../../web/core/item-content.js','../../web/core/nexus-content.js','../web-tests/helpers/reference-strategy.mjs'];
+  const files=['../../web/core/content.js','../../web/core/state.js','../../web/core/rules.js','../../web/core/battle.js','../../web/core/difficulty.js','../../web/core/extra-events.js','../../web/core/inventory.js','../../web/core/item-content.js','../../web/core/nexus-content.js','../../web/core/world.js','../../web/core/event-balance.js','../../web/core/event-stories.js','../../web/core/enemy-expansion.js','../../web/core/tower-text.js','../../web/core/unit-details.js','../web-tests/helpers/reference-strategy.mjs'];
   const hashes=Object.fromEntries(await Promise.all(files.map(async p=>[p,await hash(p)])));
   const jobs=[...Array.from({length:refs},(_,i)=>({seed:`reference-${i}`,kind:'reference',options:{}})),...Array.from({length:scenarios},(_,i)=>({seed:`terminal-${i}`,kind:'terminal',options:{pressure:i%11,strategy:i%5===0?'empty':i%5===1?'opening':'reference'}}))];
   const started=performance.now(),results=[];let cursor=0;
