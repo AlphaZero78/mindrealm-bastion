@@ -5,14 +5,14 @@ import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {runReference} from '../web-tests/helpers/reference-strategy.mjs';
 import {defensiveHooks} from '../web-tests/helpers/defensive-strategy.mjs';
-import {newRun} from '../../web/core/state.js';
-import {makeEncounter} from '../../web/core/battle.js';
-import {onField,bandwidthState} from '../../web/core/rules.js';
-import {towers} from '../../web/core/content.js';
+import {newRun} from '../../game/web/core/state.js';
+import {makeEncounter} from '../../game/web/core/battle.js';
+import {onField,bandwidthState} from '../../game/web/core/rules.js';
+import {towers} from '../../game/web/core/content.js';
 
 // Fresh newRun instances only. Never import save.js or access player storage.
 const ROOT=fileURLToPath(new URL('../../',import.meta.url));
-const SOURCE_FILES=['web/core/content.js','web/core/state.js','web/core/rules.js','web/core/battle.js','web/core/difficulty.js','development/web-tests/helpers/reference-strategy.mjs','development/web-tests/helpers/defensive-strategy.mjs'];
+const SOURCE_FILES=['game/web/core/content.js','game/web/core/state.js','game/web/core/rules.js','game/web/core/battle.js','game/web/core/difficulty.js','development/web-tests/helpers/reference-strategy.mjs','development/web-tests/helpers/defensive-strategy.mjs'];
 const round=value=>Math.round((Number(value)||0)*100)/100;
 const sum=(items,key)=>items.reduce((total,item)=>total+(Number(item[key])||0),0);
 const count=items=>Object.fromEntries([...new Set(items)].sort().map(item=>[item,items.filter(value=>value===item).length]));
@@ -68,7 +68,7 @@ async function outputPath(value){
   let existing=target;while(true){try{const resolved=await realpath(existing);if(inside(root,resolved))throw Error('Report path resolves inside the repository');break;}catch(error){if(error.code!=='ENOENT')throw error;const parent=path.dirname(existing);if(parent===existing)throw error;existing=parent;}}
   await mkdir(path.dirname(target),{recursive:true});return target;
 }
-async function sourceHashes(){return Object.fromEntries(await Promise.all(SOURCE_FILES.map(async file=>{try{return [file,createHash('sha256').update(await readFile(path.join(ROOT,file))).digest('hex')];}catch(error){if(file==='web/core/difficulty.js'&&error.code==='ENOENT')return [file,null];throw error;}})));}
+async function sourceHashes(){return Object.fromEntries(await Promise.all(SOURCE_FILES.map(async file=>{try{return [file,createHash('sha256').update(await readFile(path.join(ROOT,file))).digest('hex')];}catch(error){if(file==='game/web/core/difficulty.js'&&error.code==='ENOENT')return [file,null];throw error;}})));}
 
 async function main(){
   const options=parseArguments(process.argv.slice(2));if(options.help){console.log('node development/web-tools/difficulty-sweep.mjs --levels 0,5,10 --seeds reference-0,reference-1,reference-2 --strategy reference --workers 2 --output <file outside repository>\nDefaults: levels 0-10; three reference seeds; strategy reference. Strategies: reference, defensive, opening, empty. All runs are fresh in-memory states. Difficulty may change route decisions and actual reinforcements; count invariants compare the same planned node.');return;}

@@ -1,2 +1,0 @@
-# Source GLB files are retained only for the offline pixel-sprite baker.
-# Runtime Godot imports and Windows exports use the generated PNG atlases.

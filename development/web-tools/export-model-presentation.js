@@ -8,7 +8,7 @@ async page=>{
    const r=window.__mindrealm.field.realtime;let blob,name,info;
    if(kind==='environment'){
     // PMREM is an authoring operation. Players load the baked CubeUV texture.
-    const T=await import('/assets/third_party/three/three.bundle.js'),hdr=await new T.HDRLoader().loadAsync('/assets/third_party/polyhaven/studio_small_09_1k.hdr'),pmrem=new T.PMREMGenerator(r.renderer),target=pmrem.fromEquirectangular(hdr),bytes=new Uint16Array(target.width*target.height*4);r.renderer.readRenderTargetPixels(target,0,0,target.width,target.height,bytes);
+    const T=await import('/assets/third_party/three/three.bundle.js'),hdr=await new T.HDRLoader().loadAsync('/development/assets/lighting/studio_small_09_1k.hdr'),pmrem=new T.PMREMGenerator(r.renderer),target=pmrem.fromEquirectangular(hdr),bytes=new Uint16Array(target.width*target.height*4);r.renderer.readRenderTargetPixels(target,0,0,target.width,target.height,bytes);
     if(new Set(bytes).size<100)throw Error('Environment export is empty');
     blob=new Blob([bytes],{type:'application/octet-stream'});name='studio_small_09_pmrem.bin';info={width:target.width,height:target.height,format:'RGBA16F',bytes:bytes.byteLength};target.dispose();hdr.dispose();pmrem.dispose();
    }else{

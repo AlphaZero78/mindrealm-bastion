@@ -3,7 +3,7 @@ import {createHash} from 'node:crypto';
 import {dirname, extname, isAbsolute, join, relative, resolve, sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parseArgs} from 'node:util';
-import {inventoryAssets} from './refresh-asset-manifest.mjs';
+import {runtimeFiles} from './runtime-layout.mjs';
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const marker = 'mindrealm-github-pages';
@@ -65,30 +65,22 @@ async function prepareOutput(output) {
 export async function buildPages({outputDir = join(projectRoot, 'out/github-pages'), basePath = '/mindrealm-bastion/'} = {}) {
   const base = normalizeBasePath(basePath), output = resolve(outputDir);
   const metadata = JSON.parse(await readFile(join(projectRoot, 'package.json'), 'utf8'));
-  const inventory = await inventoryAssets(projectRoot);
-  const assets = inventory.retained.filter(file => file.startsWith('assets/') &&
-    (inventory.runtime.includes(file) || /\/(?:LICENSE|License|OFL)\.txt$/.test(file)));
-  const webFiles = await filesBelow(join(projectRoot, 'web'));
+  const sourceRoot=join(projectRoot,'game');
+  const publishFiles=(await runtimeFiles(projectRoot)).filter(file=>!file.startsWith('launcher/'));
   await prepareOutput(output);
-  for (const name of [...webFiles.map(file => 'web/' + file), ...assets]) {
+  for (const name of publishFiles) {
     const target = join(output, name);
     await mkdir(dirname(target), {recursive: true});
     const textResource = (name.startsWith('web/') && ['.js', '.css', '.html', '.json'].includes(extname(name))) ||
       name === 'assets/game/models/models.json';
     if (textResource) {
-      await writeFile(target, rewriteHostedPaths(await readFile(join(projectRoot, name), 'utf8'), base));
+      await writeFile(target, rewriteHostedPaths(await readFile(join(sourceRoot, name), 'utf8'), base));
     } else {
-      await cp(join(projectRoot, name), target);
+      await cp(join(sourceRoot, name), target);
     }
   }
   await cp(join(output, 'web/index.html'), join(output, 'index.html'));
   await writeFile(join(output, '.nojekyll'), '');
-  await mkdir(join(output, 'licenses'), {recursive: true});
-  for (const kit of ['space-kit', 'modular-space-kit', 'tower-defense-kit']) {
-    await cp(join(projectRoot, 'development/assets/model_sources/kenney', kit, 'License.txt'),
-      join(output, 'licenses', `kenney-${kit}.txt`));
-  }
-  await cp(join(projectRoot, 'docs/THIRD_PARTY_ASSETS.md'), join(output, 'licenses/THIRD_PARTY_ASSETS.md'));
   const files = [], paths = await filesBelow(output);
   for (const path of paths) {
     const bytes = await readFile(join(output, path));

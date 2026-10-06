@@ -1,4 +1,4 @@
-import {newRun} from '../../../web/core/state.js';
+import {newRun} from '../../../game/web/core/state.js';
 
 // Rule-isolation fixture: no messenger gift modifies the mechanic under test.
 // Real opening, all three rooms and gift effects are covered in nexus.test.mjs.

@@ -1,14 +1,14 @@
 import {unblessedRun as newRun} from './helpers/unblessed-run.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {  generateMap, generateTerrain, availableNodes, enterNode, nodeAction, finishBattle, chooseReward, addXP, cloneState, eventPreview, getSummary, servicePrice, continueAct } from '../../web/core/state.js';
-import { towers, enemies, relics, talents, events, effects, contentUnlocks, contentPool, hashSeed, pressureLevels } from '../../web/core/content.js';
-import { unitStats, repairCost, upgradeCost } from '../../web/core/rules.js';
-import { createSaveStore, settleProfile, unlockArchive, unlockContent } from '../../web/core/save.js';
-import { CURRENT_DIFFICULTY_REVISION, difficultyProfile } from '../../web/core/difficulty.js';
-import {ensureShopStock} from '../../web/core/state.js';
-import {inventoryStatus,addItem} from '../../web/core/inventory.js';
-import { makeEncounter, startBattle } from '../../web/core/battle.js';
+import {  generateMap, generateTerrain, availableNodes, enterNode, nodeAction, finishBattle, chooseReward, addXP, cloneState, eventPreview, getSummary, servicePrice, continueAct } from '../../game/web/core/state.js';
+import { towers, enemies, relics, talents, legacyEvents as events, effects, contentUnlocks, contentPool, hashSeed, pressureLevels } from '../../game/web/core/content.js';
+import { unitStats, repairCost, upgradeCost } from '../../game/web/core/rules.js';
+import { createSaveStore, settleProfile, unlockArchive, unlockContent } from '../../game/web/core/save.js';
+import { CURRENT_DIFFICULTY_REVISION, difficultyProfile } from '../../game/web/core/difficulty.js';
+import {ensureShopStock} from '../../game/web/core/state.js';
+import {inventoryStatus,addItem} from '../../game/web/core/inventory.js';
+import { makeEncounter, startBattle } from '../../game/web/core/battle.js';
 
 class MemoryStorage { data = new Map(); getItem(k) { return this.data.get(k) ?? null; } setItem(k, v) { this.data.set(k, String(v)); } removeItem(k) { this.data.delete(k); } }
 
@@ -100,7 +100,7 @@ test('shops have fixed three plus three shelves and permit multiple purchases wi
 
 test('all 36 events and every choice produce their advertised effects and deterministic targets', () => {
   for (const event of Object.values(events)) for (let index = 0; index < event.choices.length; index++) {
-    const s = newRun(`event-${event.id}`); s.depth=5; s.act = event.act - 1;
+    const s = newRun(`event-${event.id}`); s.difficultyRevision=4; s.depth=5; s.act = event.act - 1;
     const n = s.maps[s.act].nodes.find(n => n.floor === 1); n.type = 'event'; n.event = event.id; s.nextNodes = [n.id]; enterNode(s, n.id);
     addItem(s,'clarity');s.focus = 500; s.spirit = 80; for (const u of s.units) u.hp *= .5;
     const before = cloneState(s), preview = eventPreview(s, index); assert.equal(preview.canChoose, true); assert.ok(preview.details.length);
@@ -198,7 +198,7 @@ test('event affordability, lethal cost, no upgrade target and repair routing mat
   assert.ok(eventPreview(lethal, lethalChoice).details.some(t => t.includes('将导致本局失败'))); nodeAction(lethal, 'event', { index:lethalChoice }); assert.equal(lethal.phase, 'lost'); assert.equal(lethal.spirit, 0);
   assert.equal(lethal.summary.eventDamage, 1); assert.equal(lethal.summary.reasons[0], '事件交换耗尽精神稳定');
   const maxed = make('last_workshop'); for (const unit of maxed.units) { unit.tier = 3; unit.branch = 'A'; unit.hp = unitStats(maxed, unit).maxHp; }
-  const beforeFocus = maxed.focus; assert.ok(eventPreview(maxed, 1).details.some(t => t.includes('兑换80专注')));
+  const beforeFocus = maxed.focus; assert.ok(eventPreview(maxed, 1).details.some(t => t.includes('折算 80 专注')));
   nodeAction(maxed, 'event', { index:1 }); assert.equal(maxed.focus, beforeFocus + 80); assert.equal(maxed.phase, 'node');assert.equal(nodeAction(maxed,'event-continue').ok,true);assert.equal(maxed.phase,'map');
   const repair = make('resonance_storm'); repair.units[0].x = 20; repair.units[0].z = 8; repair.units[0].hp = 0;
   nodeAction(repair, 'event', { index:0 }); assert.equal(repair.units[0].x, null); assert.equal(repair.units[0].hp, unitStats(repair, repair.units[0]).maxHp);
@@ -275,8 +275,8 @@ test('unknown future difficulty revisions are rejected without overwriting runs 
   const memory=new MemoryStorage(),store=createSaveStore(memory,'difficulty-future'),s=newRun('future',10),profile=store.loadProfile();
   profile.unlockedPressure=10;profile.fragments=123;profile.settledRuns=['already-paid'];assert.equal(store.saveProfile(profile).ok,true);assert.equal(store.save(s).ok,true);
   const raw=memory.getItem('difficulty-future.run');
-  for(const revision of [null,0,5,'2',-1]){assert.equal(store.save({...s,difficultyRevision:revision}).ok,false);assert.equal(memory.getItem('difficulty-future.run'),raw);}
-  const future=JSON.parse(raw),payload=JSON.parse(future.payload);payload.difficultyRevision=5;future.payload=JSON.stringify(payload);future.checksum=hashSeed(future.payload).toString(16);
+  for(const revision of [null,0,CURRENT_DIFFICULTY_REVISION+1,'2',-1]){assert.equal(store.save({...s,difficultyRevision:revision}).ok,false);assert.equal(memory.getItem('difficulty-future.run'),raw);}
+  const future=JSON.parse(raw),payload=JSON.parse(future.payload);payload.difficultyRevision=CURRENT_DIFFICULTY_REVISION+1;future.payload=JSON.stringify(payload);future.checksum=hashSeed(future.payload).toString(16);
   const futureRaw=JSON.stringify(future);memory.setItem('difficulty-future.run',futureRaw);assert.equal(store.load().ok,false);assert.equal(store.has(),false);
   assert.equal(memory.getItem('difficulty-future.run'),futureRaw);assert.deepEqual(store.loadProfile(),profile);
   memory.setItem('difficulty-future.run.backup',raw);assert.equal(store.load().recovered,true);assert.equal(store.load().state.difficultyRevision,CURRENT_DIFFICULTY_REVISION);

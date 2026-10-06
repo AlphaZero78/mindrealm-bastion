@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {EntityMotion} from '../../web/view/entity-motion.js';
+import {EntityMotion} from '../../game/web/view/entity-motion.js';
 const variants=['T1','T2A','T2B','T3A','T3B'];
 const fixture=()=>({phase:'battle',units:[{uid:'u1',type:'pulse_array',x:2,z:2,hp:100,tier:1,facing:0}],battle:{time:10,enemies:[{id:'e1',type:'static_drifter',x:5,z:5,hp:100,motion:{distance:.8,dx:.05,dz:0}}]}});
 

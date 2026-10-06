@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {startBattle,stepBattle} from '../../web/core/battle.js';
-import {unitCenter,unitStats,coreOf,cellAt} from '../../web/core/rules.js';
-import {cloneState} from '../../web/core/state.js';
+import {startBattle,stepBattle} from '../../game/web/core/battle.js';
+import {unitCenter,unitStats,coreOf,cellAt} from '../../game/web/core/rules.js';
+import {cloneState} from '../../game/web/core/state.js';
 import {fixture,place,battle} from './helpers/battle-fixture.mjs';
 
 const close=(a,b)=>assert.ok(Math.abs(a-b)<1e-8,`${a} != ${b}`);

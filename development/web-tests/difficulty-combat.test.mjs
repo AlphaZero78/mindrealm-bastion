@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {CURRENT_DIFFICULTY_REVISION,normalizeDifficulty,difficultyProfile,difficultySummary,enemyStats,enemyAbilityProfile} from '../../web/core/difficulty.js';
-import {makeEncounter,stepBattle} from '../../web/core/battle.js';
-import {newRun,cloneState} from '../../web/core/state.js';
-import {enemies} from '../../web/core/content.js';
-import {unitStats,incomingDamage} from '../../web/core/rules.js';
+import {CURRENT_DIFFICULTY_REVISION,normalizeDifficulty,difficultyProfile,difficultySummary,enemyStats,enemyAbilityProfile} from '../../game/web/core/difficulty.js';
+import {makeEncounter,stepBattle} from '../../game/web/core/battle.js';
+import {newRun,cloneState} from '../../game/web/core/state.js';
+import {enemies} from '../../game/web/core/content.js';
+import {unitStats,incomingDamage} from '../../game/web/core/rules.js';
 import {fixture,place,battle,tick} from './helpers/battle-fixture.mjs';
 
 const close=(actual,expected,message='')=>assert.ok(Math.abs(actual-expected)<1e-7,`${message}: ${actual} != ${expected}`);
@@ -18,11 +18,11 @@ const surgeFixture=(level=8)=>{
 };
 
 test('difficulty normalization uses pressureLevel only and revision selection cannot reinterpret an old save',()=>{
-  assert.equal(CURRENT_DIFFICULTY_REVISION,4);
+  assert.equal(CURRENT_DIFFICULTY_REVISION,5);
   for(const v of [null,undefined,NaN,Infinity,-Infinity,'10',{},[],{pressureLevel:NaN}])assert.equal(normalizeDifficulty(v),0);
   assert.equal(normalizeDifficulty(-1),0);assert.equal(normalizeDifficulty(10.9),10);assert.equal(normalizeDifficulty(4.9),4);
   assert.equal(normalizeDifficulty({pressureLevel:0,difficulty:10}),0);
-  assert.equal(difficultyProfile(10).revision,4);
+  assert.equal(difficultyProfile(10).revision,CURRENT_DIFFICULTY_REVISION);
   for(const revision of [undefined,1])assert.equal(difficultyProfile({pressureLevel:10,difficultyRevision:revision}).revision,1);
   assert.equal(difficultyProfile({pressureLevel:10,difficultyRevision:2}).revision,2);
 });

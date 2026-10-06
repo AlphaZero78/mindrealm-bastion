@@ -1,13 +1,13 @@
 import {unblessedRun} from './helpers/unblessed-run.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import * as R from '../../web/core/rules.js';
-import * as CoreRun from '../../web/core/state.js';
+import * as R from '../../game/web/core/rules.js';
+import * as CoreRun from '../../game/web/core/state.js';
 const Run={...CoreRun,newRun:unblessedRun};
-import * as Saves from '../../web/core/save.js';
-import {towers} from '../../web/core/content.js';
-import {unitEffectText} from '../../web/core/unit-details.js';
-import {mapScreen,nodeScreen,upgradeComparison} from '../../web/screens.js';
+import * as Saves from '../../game/web/core/save.js';
+import {towers} from '../../game/web/core/content.js';
+import {unitEffectText} from '../../game/web/core/unit-details.js';
+import {mapScreen,nodeScreen,upgradeComparison} from '../../game/web/screens.js';
 import {fixture,place,battle,tick} from './helpers/battle-fixture.mjs';
 
 test('rotated multi-cell placement is atomic, tests every cell, center, cost and cancel',()=>{

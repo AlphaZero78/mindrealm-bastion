@@ -28,9 +28,8 @@ function Run-Entry([string]$File, [string]$Arguments) {
     $info.CreateNoWindow = $true
     $info.RedirectStandardOutput = $true
     $info.RedirectStandardError = $true
-    # Deliberately omit global Node.js and use memory-only browser saves.
+    # Deliberately omit global Node.js ; this check never opens a browser.
     $info.EnvironmentVariables['PATH'] = "$env:SystemRoot\System32;$env:SystemRoot\System32\WindowsPowerShell\v1.0"
-    $info.EnvironmentVariables['MINDREALM_QA'] = '1'
     $process = [Diagnostics.Process]::Start($info)
     try {
         $stdout = $process.StandardOutput.ReadToEndAsync()
@@ -64,21 +63,21 @@ try {
         $verified++
         # Compare shipped code and assets directly with the current source.
         if ($relative -match '^game/(web|assets|launcher)/') {
-            $sourceFile = Join-Path $sourceRoot $relative.Substring(5)
+            $sourceFile = Join-Path $sourceRoot $relative
             Assert-Check ((Get-FileHash -LiteralPath $sourceFile -Algorithm SHA256).Hash.ToLowerInvariant() -eq $expectedHash) ('matches source: ' + $relative)
         }
     }
     $entry = Join-Path $packageRoot '启动游戏.exe'
     $serverFile = Join-Path $packageRoot 'game\launcher\server.mjs'
     $first = Run-Entry $entry "--port $Port --no-browser"
-    Assert-Check ($first.Contains("http://127.0.0.1:$Port/?qa=1")) 'EXE starts after unzip without global Node.js'
+    Assert-Check ($first.Contains("http://127.0.0.1:$Port/")) 'EXE starts after unzip without global Node.js'
     $listener = Get-NetTCPConnection -LocalAddress 127.0.0.1 -LocalPort $Port -State Listen
     $serverPid = $listener.OwningProcess
     $identity = Get-CimInstance Win32_Process -Filter "ProcessId=$serverPid"
     Assert-Check ($identity.ExecutablePath -eq (Join-Path $packageRoot 'game\runtime\node.exe') -and $identity.CommandLine.Contains($serverFile)) 'server uses extracted bundled runtime and payload'
     $health = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/health"
     Assert-Check ($health.app -eq 'mindrealm-bastion') 'extracted server health passes'
-    $page = Invoke-WebRequest -Uri "http://127.0.0.1:$Port/?qa=1" -UseBasicParsing
+    $page = Invoke-WebRequest -Uri "http://127.0.0.1:$Port/" -UseBasicParsing
     Assert-Check ($page.StatusCode -eq 200 -and $page.Content.Contains('/web/app.js')) 'game page loads from extracted ZIP'
     foreach ($path in @('/web/core/battle.js','/web/view/entity-art.js','/assets/third_party/opengameart/singularity/singularity_calm.mp3')) {
         $response = Invoke-WebRequest -Uri ("http://127.0.0.1:$Port" + $path) -Method Head -UseBasicParsing

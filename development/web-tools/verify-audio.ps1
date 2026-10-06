@@ -46,7 +46,7 @@ if ($null -eq $ffmpeg -or $null -eq $ffprobe) {
     throw 'FFmpeg is unavailable. Run this script without -SkipSetup to install it in the user tool directory.'
 }
 
-$audioRoot = Join-Path $projectRoot 'assets\third_party\opengameart\singularity'
+$audioRoot = Join-Path $projectRoot 'game\assets\third_party\opengameart\singularity'
 $durations = @()
 foreach ($name in @('singularity_calm.mp3', 'singularity_action.mp3')) {
     $path = Join-Path $audioRoot $name

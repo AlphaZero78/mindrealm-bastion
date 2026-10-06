@@ -21,10 +21,7 @@ jobs:
         with:
           node-version: '24.12.0'
           package-manager-cache: false
-      - name: Test game rules, resources and hosted paths
-        run: npm test
-      - name: Verify assets and licenses
-        run: npm run verify
+      # Release validation runs once before publishing; this job only packages and deploys.
       - name: Build static game
         run: npm run build:pages -- --base-path /mindrealm-bastion/ --output out/github-pages
       - uses: actions/upload-pages-artifact@v5

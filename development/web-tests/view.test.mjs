@@ -1,13 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,access} from 'node:fs/promises';
-import {Battlefield,worldToScreen,screenToGround,panScreen,cameraStep,wrapAngle,directionFrame} from '../../web/view/battlefield.js';
-import {AudioDirector,AUDIO_FILES,adaptiveMix,approachDanger,normalizeScene} from '../../web/view/audio.js';
-import {newRun} from '../../web/core/state.js';
-import {makeEncounter} from '../../web/core/battle.js';
-import * as Rules from '../../web/core/rules.js';
-import {towers,enemies} from '../../web/core/content.js';
-import {ENTITY_ART} from '../../web/view/entity-art.js';
+import {Battlefield,worldToScreen,screenToGround,panScreen,cameraStep,wrapAngle,directionFrame} from '../../game/web/view/battlefield.js';
+import {AudioDirector,AUDIO_FILES,adaptiveMix,approachDanger,normalizeScene} from '../../game/web/view/audio.js';
+import {newRun} from '../../game/web/core/state.js';
+import {makeEncounter} from '../../game/web/core/battle.js';
+import * as Rules from '../../game/web/core/rules.js';
+import {towers,enemies} from '../../game/web/core/content.js';
+import {ENTITY_ART} from '../../game/web/view/entity-art.js';
 const near=(actual,expected,epsilon=1e-8)=>assert.ok(Math.abs(actual-expected)<epsilon,`${actual} != ${expected}`);
 
 test('orthographic picking and screen-relative WASD agree at all planned camera angles',()=>{
@@ -36,6 +36,16 @@ class Surface{
 function makeContext(){const calls=[];return new Proxy({calls,measureText:text=>({width:String(text).length*6})},{get(target,key){if(key in target)return target[key];return (...args)=>{for(const arg of args)if(typeof arg==='number')assert.ok(Number.isFinite(arg),`Nonfinite ${String(key)} canvas coordinate`);calls.push({method:key,args});};},set(target,key,value){target[key]=value;return true;}});}
 function mockDOM(){const old={document:globalThis.document,window:globalThis.window,Image:globalThis.Image,ResizeObserver:globalThis.ResizeObserver};const window=new Surface();globalThis.window=window;globalThis.document={createElement:()=>new Surface()};globalThis.Image=class{constructor(){this.complete=true;this.naturalWidth=384;this.naturalHeight=48;}};globalThis.ResizeObserver=class{observe(){}disconnect(){}};return {window,restore:()=>Object.assign(globalThis,old)};}
 
+test('right drag pans during terrain selection, left drag selects, right tap cancels once and blur clears capture',()=>{
+ const dom=mockDOM(),canvas=new Surface(),areas=[];let cancels=0,clicks=0;const field=new Battlefield(canvas,{onArea:a=>areas.push(a),onCancel:()=>cancels++,onCell:()=>clicks++});
+ try{const s=newRun('right-drag');s.phase='prep';s.terrain.cells.forEach(c=>{c.h=0;c.ramp=-1;});s.terrain.revision++;field.setState(s);field.setInteractive(true);field.setSelection({terrainTool:'raise',brush:'box'});field.render(100);
+  const rect=canvas.getBoundingClientRect(),point=field.project(20,24),p={clientX:point.x+rect.left,clientY:point.y+rect.top,pointerId:1,button:2},initial={...field.camera};
+  canvas.fire('pointerdown',p);canvas.fire('contextmenu');canvas.fire('pointermove',{...p,clientX:p.clientX+35});canvas.fire('pointerup',{...p,clientX:p.clientX+35});canvas.fire('contextmenu');assert.notEqual(field.camera.x,initial.x);assert.equal(cancels,0);assert.equal(areas.length,0);assert.equal(clicks,0);
+  const after={...field.camera};canvas.fire('pointerdown',{...p,button:0});canvas.fire('pointermove',{...p,button:0,clientX:p.clientX+35});canvas.fire('pointerup',{...p,button:0,clientX:p.clientX+35});assert.deepEqual(field.camera,after);assert.equal(areas.length,1);assert.equal(clicks,0);
+  canvas.fire('pointerdown',p);canvas.fire('pointerup',p);canvas.fire('contextmenu');assert.equal(cancels,1);canvas.fire('pointerdown',p);dom.window.fire('blur');assert.equal(field.drag,null);assert.equal(canvas.hasPointerCapture(1),false);
+ }finally{field.destroy();dom.restore();}
+});
+
 test('hidden views and modals release camera/canvas input; buttons retain rotate/zoom/focus interfaces',()=>{
   const dom=mockDOM(),canvas=new Surface();let clicks=0,cancels=0;const field=new Battlefield(canvas,{onCell:()=>clicks++,onCancel:()=>cancels++});try{
     const state=newRun('view-input');state.phase='prep';field.setState(state);field.setEncounter(makeEncounter(state));field.setInteractive(true);field.focus();
@@ -60,10 +70,10 @@ test('live state contract renders airborne string IDs and six bosses, caches pat
 test('all 49 entities have transparent eight-direction models and complete authored pose and variant sheets',async()=>{
   for(const [folder,catalog]of [['towers',towers],['enemies',enemies]])for(const id of Object.keys(catalog)){
     const art=ENTITY_ART[id];assert.ok(art,id);assert.equal(art.directions,8);assert.equal(art.cell,80);assert.equal(art.poseRows,10);
-    for(const [path,rows]of [[art.staticPath,art.iconRows],[art.animationPath,art.rows]]){const data=await readFile(new URL(`../..${path}`,import.meta.url));assert.equal(data.toString('ascii',1,4),'PNG');assert.equal(data.readUInt32BE(16),art.cell*art.directions,id);assert.equal(data.readUInt32BE(20),art.cell*rows,id);assert.equal(data[25],6,`${id} must preserve RGBA transparency`);}
+    for(const [path,rows]of [[art.staticPath,art.iconRows],[art.animationPath,art.rows]]){const data=await readFile(new URL(`../../game${path}`,import.meta.url));assert.equal(data.toString('ascii',1,4),'PNG');assert.equal(data.readUInt32BE(16),art.cell*art.directions,id);assert.equal(data.readUInt32BE(20),art.cell*rows,id);assert.equal(data[25],6,`${id} must preserve RGBA transparency`);}
     assert.equal(art.variants.length,folder==='towers'?5:catalog[id].kind==='boss'?3:1);
   }
-  for(const path of Object.values(AUDIO_FILES))await access(new URL(`../..${path}`,import.meta.url));assert.notEqual(AUDIO_FILES.node,AUDIO_FILES.hover);
+  for(const path of Object.values(AUDIO_FILES))await access(new URL(`../../game${path}`,import.meta.url));assert.notEqual(AUDIO_FILES.node,AUDIO_FILES.hover);
 });
 test('placement range and terrain-edit range match the combat solver, including live low-spirit growth',()=>{
   const dom=mockDOM(),field=new Battlefield(new Surface());try{

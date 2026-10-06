@@ -1,15 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import * as Run from '../../web/core/state.js';
-import {events} from '../../web/core/content.js';
-import {eventStories} from '../../web/core/event-stories.js';
-import {addItem} from '../../web/core/inventory.js';
-import {createSaveStore} from '../../web/core/save.js';
-import {header,nodeScreen,rewardScreen,summaryScreen} from '../../web/screens.js';
+import * as Run from '../../game/web/core/state.js';
+import {legacyEvents as events} from '../../game/web/core/content.js';
+import {legacyEventStories as eventStories} from '../../game/web/core/event-stories.js';
+import {addItem} from '../../game/web/core/inventory.js';
+import {createSaveStore} from '../../game/web/core/save.js';
+import {header,nodeScreen,rewardScreen,summaryScreen} from '../../game/web/screens.js';
 
 class MemoryStorage{data=new Map();getItem(k){return this.data.get(k)??null;}setItem(k,v){this.data.set(k,String(v));}removeItem(k){this.data.delete(k);}}
 function encounter(id){
- const state=Run.newRun(`story:${id}`);Run.chooseNexus(state,state.nexus[0].options[0]);state.act=events[id].act-1;
+ const state=Run.newRun(`story:${id}`);state.difficultyRevision=4;Run.chooseNexus(state,state.nexus[0].options[0]);state.act=events[id].act-1;
  const node=state.maps[state.act].nodes.find(n=>n.floor===1);node.type='event';node.event=id;state.nextNodes=[node.id];Run.enterNode(state,node.id);
  state.depth=5;state.focus=500;state.spirit=80;for(const u of state.units)u.hp*=.6;addItem(state,'clarity');return state;
 }
@@ -38,7 +38,7 @@ test('all 84 branches persist applied outcomes and block rerolls, premature rewa
 });
 test('invalid event outcome data is rejected while older unresolved event saves remain readable',()=>{
  const state=encounter('quiet_room'),store=createSaveStore(new MemoryStorage(),'story.compat');assert.equal(store.save(state).ok,true);assert.equal(store.load().state.currentNode.eventData.outcome,undefined);
- Run.nodeAction(state,'event',{index:0});for(const change of [o=>o.index=-1,o=>o.index=2,o=>o.details=[{}],o=>o.label=null]){const invalid=Run.cloneState(state);change(invalid.currentNode.eventData.outcome);assert.equal(store.save(invalid).ok,false);}
+ Run.nodeAction(state,'event',{index:0});for(const change of [o=>o.index=-1,o=>o.index=99,o=>o.details=[{}],o=>o.label=null]){const invalid=Run.cloneState(state);change(invalid.currentNode.eventData.outcome);assert.equal(store.save(invalid).ok,false);}
  assert.equal(store.save(state).ok,true);assert.equal(store.load().state.phase,'node');
 });
 test('scene markup uses the real illustration and outcome while XP remains visible at depth cap',()=>{

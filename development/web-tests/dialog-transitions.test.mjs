@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {DialogTransitions} from '../../web/view/dialog-transitions.js';
+import {DialogTransitions} from '../../game/web/view/dialog-transitions.js';
 
 class Events {
   constructor() { this.listeners = new Map(); }

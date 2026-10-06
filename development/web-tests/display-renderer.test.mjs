@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Battlefield,screenToGround} from '../../web/view/battlefield.js';
-import {RESOLUTION_PRESETS,resolveRenderResolution} from '../../web/view/display-settings.js';
-import {newRun} from '../../web/core/state.js';
-import * as Rules from '../../web/core/rules.js';
+import {Battlefield,screenToGround} from '../../game/web/view/battlefield.js';
+import {RESOLUTION_PRESETS,resolveRenderResolution} from '../../game/web/view/display-settings.js';
+import {newRun} from '../../game/web/core/state.js';
+import * as Rules from '../../game/web/core/rules.js';
 
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-7,`${a} != ${b}`);
 function context(){return new Proxy({calls:[],measureText:text=>({width:String(text).length*12})},{get(target,key){if(key in target)return target[key];return (...args)=>{for(const value of args)if(typeof value==='number')assert.ok(Number.isFinite(value),`${String(key)} received a non-finite coordinate`);target.calls.push({method:key,args});};}});}

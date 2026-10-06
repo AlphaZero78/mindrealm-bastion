@@ -8,9 +8,11 @@ async page=>{
   const ready=()=>page.evaluate(async()=>{await document.querySelector('.event-cg').decode();await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});
   await ready();
   const geometry=await page.evaluate(()=>{const i=document.querySelector('.event-cg'),s=document.querySelector('.event-stage');return{image:i.getBoundingClientRect().toJSON(),stage:s.getBoundingClientRect().toJSON(),natural:[i.naturalWidth,i.naturalHeight],height:getComputedStyle(i).height};});
-  if(Math.abs(geometry.image.height-geometry.stage.height)>1)throw Error('CG does not cover scene '+JSON.stringify(geometry));
+  if(Math.abs(geometry.image.width/geometry.stage.width-.8)>.003||Math.abs(geometry.image.height/geometry.stage.height-.8)>.003||Math.abs(geometry.image.x+geometry.image.width/2-geometry.stage.x-geometry.stage.width/2)>1||Math.abs(geometry.image.y+geometry.image.height/2-geometry.stage.y-geometry.stage.height/2)>1)throw Error('CG must remain at 80% and centered '+JSON.stringify(geometry));
   await page.screenshot({path:`mindrealm-realtime-art/event-choice-${size.width}.png`});
-  await page.locator('[data-action="event-choice"][data-index="0"]').click();await page.locator('.modal-footer .primary').click();await ready();
+  await page.locator('[data-action="event-choice"][data-index="0"]').click();await ready();
+  await page.screenshot({path:`mindrealm-realtime-art/event-confirmation-${size.width}.png`});
+  await page.locator('[data-action="event-choice"][data-index="0"]').click();await ready();
   await page.screenshot({path:`mindrealm-realtime-art/event-outcome-${size.width}.png`});records.push({size,...geometry});
   if(size.width===2548){await page.setViewportSize({width:2551,height:1458});await ready();await page.screenshot({path:'mindrealm-realtime-art/event-outcome-reference.png'});}
  }

@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import {resolve,join,sep} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {writeFile} from 'node:fs/promises';
-import * as Rules from '../../web/core/rules.js';
-import * as Content from '../../web/core/content.js';
+import * as Rules from '../../game/web/core/rules.js';
+import * as Content from '../../game/web/core/content.js';
 import {runReference} from '../web-tests/helpers/reference-strategy.mjs';
 
 const argument=name=>process.argv[process.argv.indexOf(name)+1];

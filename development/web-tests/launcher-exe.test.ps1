@@ -98,7 +98,7 @@ try {
     $result = Run-Launcher "--port $BasePort --no-browser"
     Assert-Check ($result.code -eq 3 -and $result.stderr.Contains('server.mjs')) 'missing server fails without dialog'
     [void][IO.Directory]::CreateDirectory((Join-Path $payloadRoot 'launcher'))
-    Copy-Item -LiteralPath (Join-Path $sourceRoot 'launcher\server.mjs') -Destination (Join-Path $payloadRoot 'launcher\server.mjs')
+    Copy-Item -LiteralPath (Join-Path $sourceRoot 'game\launcher\server.mjs') -Destination (Join-Path $payloadRoot 'launcher\server.mjs')
     $result = Run-Launcher "--port $BasePort --no-browser"
     Assert-Check ($result.code -eq 3 -and $result.stderr.Contains('index.html')) 'missing game page fails without dialog'
     [void][IO.Directory]::CreateDirectory((Join-Path $payloadRoot 'web'))
@@ -121,14 +121,16 @@ try {
         [IO.File]::WriteAllText($serverFile, 'process.exit(23);')
         $result = Run-Launcher "--port $($BasePort + 4) --no-browser"
         Assert-Check ($result.code -eq 5 -and $result.stderr.Contains('23') -and (Listener ($BasePort + 4)).Count -eq 0) 'server startup failure has nonzero code and no stale listener'
-    } finally { Copy-Item -LiteralPath (Join-Path $sourceRoot 'launcher\server.mjs') -Destination $serverFile -Force }
+    } finally { Copy-Item -LiteralPath (Join-Path $sourceRoot 'game\launcher\server.mjs') -Destination $serverFile -Force }
 
     $first = Run-Launcher "--port $BasePort --no-browser"
     $gamePid = Wait-Listener $BasePort
     $identity = Get-CimInstance Win32_Process -Filter "ProcessId=$gamePid"
-    Assert-Check ($first.code -eq 0 -and $first.stdout.Contains("http://127.0.0.1:$BasePort/?qa=1") -and $identity.ExecutablePath -eq (Join-Path $payloadRoot 'runtime\node.exe') -and $identity.CommandLine.Contains($serverFile)) 'Chinese spaced path starts bundled Node from game/ and absolute server path'
+    Assert-Check ($first.code -eq 0 -and $first.stdout.Contains("http://127.0.0.1:$BasePort/") -and $identity.ExecutablePath -eq (Join-Path $payloadRoot 'runtime\node.exe') -and $identity.CommandLine.Contains($serverFile)) 'Chinese spaced path starts bundled Node from game/ and absolute server path'
     Assert-Check ((Invoke-WebRequest -UseBasicParsing -Uri "http://127.0.0.1:$BasePort/").Content.Contains('OWN_PACKAGE_ROOT')) 'server serves package root despite unrelated working directory'
-    Assert-Check ((Invoke-WebRequest -UseBasicParsing -Uri "http://127.0.0.1:$BasePort/development/web-tests/helpers/qa.txt").Content -eq 'QA_INHERITED') 'QA environment reaches child and QA URL is reported'
+    $denied = $false
+    try { Invoke-WebRequest -UseBasicParsing -Uri "http://127.0.0.1:$BasePort/development/web-tests/helpers/qa.txt" | Out-Null } catch { $denied = [int]$_.Exception.Response.StatusCode -eq 404 }
+    Assert-Check ($denied -and -not $first.stdout.Contains('?qa')) 'legacy QA environment cannot expose developer files or change launch URL'
     $again = Run-Launcher "--port $BasePort --no-browser"
     Assert-Check ($again.code -eq 0 -and (Listener $BasePort)[0].OwningProcess -eq $gamePid) 'existing game service reused with identical PID'
     Start-Sleep -Milliseconds 400

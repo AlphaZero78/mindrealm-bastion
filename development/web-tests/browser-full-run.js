@@ -40,7 +40,7 @@ async page=>{
   if(pressure)await page.evaluate(pressure=>{window.__mindrealm.getProfile().unlockedPressure=pressure;},pressure);
   await click('new');await page.locator('#seed-input').fill(seed);await page.locator('#pressure-input').selectOption(String(pressure));
   await capture('new-run');await approve();
-  await page.evaluate(pressure=>{const state=window.__mindrealm.getState();if(state.pressureLevel!==pressure||state.difficultyRevision!==4)throw Error('UI did not create the requested new difficulty');window.__fullRunAudit={nodes:[],battles:[],errors:[]};},pressure);
+  await page.evaluate(pressure=>{const state=window.__mindrealm.getState();if(state.pressureLevel!==pressure||state.difficultyRevision!==5)throw Error('UI did not create the requested new difficulty');window.__fullRunAudit={nodes:[],battles:[],errors:[]};},pressure);
  }
  const startedAct=await page.evaluate(()=>window.__mindrealm.getState().act);
  for(let steps=0;steps<140;steps++){
@@ -85,7 +85,7 @@ async page=>{
      const w=s.units.filter(u=>u.hp<R.unitStats(s,u).hp).sort((a,b)=>R.repairCost(s,b)-R.repairCost(s,a))[0];return w?{action:'camp-repair',uid:w.uid}:{action:'camp-heal'};
     }
     if(node.type==='workshop'){const u=s.units.find(u=>u.everDeployed&&u.hp<R.unitStats(s,u).hp*.65&&s.focus>R.repairCost(s,u)+20);return u?{action:'repair',uid:u.uid}:{action:'node-leave'};}
-    if(node.type==='shop'){const u=node.stock.units.find(u=>!u.sold&&u.id==='bandwidth_relay');if(u&&s.units.filter(u=>u.type==='bandwidth_relay').length<3&&s.focus>=Run.servicePrice(s,80))return{action:'buy-unit',id:u.key};const relic=node.stock.relics.find(x=>!x.sold);if(s.focus>220&&relic)return{action:'buy-relic',id:relic.key};return{action:'node-leave'};}
+    if(node.type==='shop'){const u=node.stock.units.find(u=>!u.sold&&u.id==='bandwidth_relay');if(u&&s.units.filter(u=>u.type==='bandwidth_relay').length<1&&s.focus>=Run.servicePrice(s,80))return{action:'buy-unit',id:u.key};const relic=node.stock.relics.find(x=>!x.sold);if(s.focus>220&&relic)return{action:'buy-relic',id:relic.key};return{action:'node-leave'};}
     if(node.type==='treasure')return node.options.length?{action:'treasure',id:node.options[0]}:{action:'empty-treasure'};
     if(node.type==='event'){if(node.eventData.outcome)return{action:'event-continue'};const value=p=>!p?.canChoose?-Infinity:(p.effects.focus||0)+(p.effects.spirit||0)*(s.spirit<s.maxSpirit*.7?4:1)+(p.effects.bandwidth||0)*25+(p.effects.relic?80:0)+(p.effects.free_upgrade?80:0)+(p.effects.free_upgrades||0)*80+(p.effects.resistance||0)*5;const C=await import('/web/core/content.js');const choices=C.events[node.eventData.id].choices.map((_,index)=>({index,value:value(Run.eventPreview(s,index))}));return{action:'event-choice',index:choices.sort((a,b)=>b.value-a.value)[0].index};}
     throw Error(`Unknown service ${node.type}`);
@@ -94,6 +94,7 @@ async page=>{
    await page.locator(`[data-action="${decision.action}"]${['camp-upgrade','camp-repair'].includes(decision.action)?'':attrs}`).first().click();
    if(['camp-upgrade','camp-repair'].includes(decision.action))await page.locator(`[data-camp-uid="${decision.uid}"]`).click();
    if(decision.action==='camp-upgrade')await page.locator(`[data-dialog-upgrade="${decision.branch}"]`).click();
+   else if(decision.action==='event-choice')await page.locator(`[data-action="event-choice"]${attrs}`).click();
    else if(!['node-leave','empty-treasure','event-continue'].includes(decision.action))await approve();
   }else throw Error(`Unexpected phase ${status.phase}`);
  }

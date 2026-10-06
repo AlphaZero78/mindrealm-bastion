@@ -149,7 +149,7 @@ def main():
     for source in sources:
         models[source] = export_source(source, output)
         print('REALTIME_PART ' + source + ' ' + str(models[source]['triangles']), flush=True)
-    metadata = dict(format=1, source='Kenney CC0; see development/assets/model_sources', blender=bpy.app.version_string,
+    metadata = dict(format=1, source='Kenney CC0 model parts; license notices are included in licenses/',
                     sources=models, entities=entities)
     (output/'models.json').write_text(json.dumps(metadata, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     print('REALTIME_EXPORT_OK ' + json.dumps(dict(entities=len(entities), sources=len(models), bytes=sum(m['bytes'] for m in models.values()))), flush=True)

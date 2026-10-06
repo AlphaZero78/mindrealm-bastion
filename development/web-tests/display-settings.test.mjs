@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { RESOLUTION_PRESETS, normalizeResolution, resolveRenderResolution } from '../../web/view/display-settings.js';
-import { createSaveStore } from '../../web/core/save.js';
-import { hashSeed } from '../../web/core/content.js';
+import { RESOLUTION_PRESETS, normalizeResolution, resolveRenderResolution } from '../../game/web/view/display-settings.js';
+import { createSaveStore } from '../../game/web/core/save.js';
+import { hashSeed } from '../../game/web/core/content.js';
 
 class MemoryStorage {
   data = new Map(); calls = 0; failAt = Infinity;
