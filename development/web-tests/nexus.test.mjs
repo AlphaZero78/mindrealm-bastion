@@ -1,14 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import * as Run from '../../web/core/state.js';
-import * as Rules from '../../web/core/rules.js';
-import {messengers,nexusRelics,relics,towers,contentPool,effects} from '../../web/core/content.js';
-import {startBattle,stepBattle,useItem} from '../../web/core/battle.js';
-import {addItem} from '../../web/core/inventory.js';
-import {createSaveStore} from '../../web/core/save.js';
+import * as Run from '../../game/web/core/state.js';
+import * as Rules from '../../game/web/core/rules.js';
+import {messengers,nexusRelics,relics,towers,contentPool,effects} from '../../game/web/core/content.js';
+import {startBattle,stepBattle,useItem} from '../../game/web/core/battle.js';
+import {addItem} from '../../game/web/core/inventory.js';
+import {createSaveStore} from '../../game/web/core/save.js';
 import {fixture,place,battle} from './helpers/battle-fixture.mjs';
-import {mapScreen,nexusScreen} from '../../web/screens.js';
-import {normalizeScene} from '../../web/view/audio.js';
+import {mapScreen,nexusScreen} from '../../game/web/screens.js';
+import {normalizeScene} from '../../game/web/view/audio.js';
 
 const store=()=>{const data=new Map();return createSaveStore({getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)},'nexus.isolated');};
 const same=(a,b)=>assert.ok(Math.abs(a-b)<1e-7,`${a} != ${b}`);

@@ -12,7 +12,7 @@ if(!isMainThread){
  }catch(error){parentPort.postMessage({...workerData,error:error.stack});}
 }else{
  const count=process.argv.includes('--quick')?4:20;
- const files=['content.js','difficulty.js','rules.js','state.js','battle.js','inventory.js','item-content.js','extra-events.js'].map(f=>new URL(`../../web/core/${f}`,import.meta.url));
+ const files=['content.js','difficulty.js','rules.js','state.js','battle.js','inventory.js','item-content.js','extra-events.js'].map(f=>new URL(`../../game/web/core/${f}`,import.meta.url));
  files.push(new URL('../web-tests/helpers/reference-strategy.mjs',import.meta.url),new URL('../web-tests/helpers/defensive-strategy.mjs',import.meta.url));
  const hash=async file=>createHash('sha256').update(await readFile(file)).digest('hex');const hashes=await Promise.all(files.map(hash));
  const jobs=[];for(let i=0;i<count;i++)for(const revision of [2,3])jobs.push({seed:`balance-${i}`,group:revision===2?'previous':'current',options:{revision}});

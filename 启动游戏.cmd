@@ -1,3 +1,3 @@
 @echo off
-call "%~dp0launcher\start_web.cmd" %*
+call "%~dp0game\launcher\start_web.cmd" %*
 exit /b %ERRORLEVEL%

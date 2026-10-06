@@ -37,13 +37,13 @@ test('Pages refuses to replace source directories or unrelated files', async t =
   const file = join(root, 'keep.txt'); await writeFile(file, 'keep me');
   await assert.rejects(buildPages({outputDir: root}), /unrecognized/);
   assert.equal(await readFile(file, 'utf8'), 'keep me');
-  await assert.rejects(buildPages({outputDir: new URL('../../web/', import.meta.url).pathname.replace(/^\/(?=[A-Za-z]:)/, '')}), /Output/);
+  await assert.rejects(buildPages({outputDir: new URL('../../game/web/', import.meta.url).pathname.replace(/^\/(?=[A-Za-z]:)/, '')}), /Output/);
 });
 
 test('complete static export works under a repository subpath, including model and license assets', async t => {
   const root = await mkdtemp(join(tmpdir(), 'mindrealm-pages-export-')), output = join(root, 'site');
   t.after(() => rm(root, {recursive:true, force:true}));
-  const sourceIndex = await readFile(new URL('../../web/index.html', import.meta.url), 'utf8');
+  const sourceIndex = await readFile(new URL('../../game/web/index.html', import.meta.url), 'utf8');
   const result = await buildPages({outputDir: output});
   const server = createPagesPreview({directory: output, basePath: result.basePath});
   server.listen(0, '127.0.0.1'); await once(server, 'listening');
@@ -67,7 +67,7 @@ test('complete static export works under a repository subpath, including model a
     assert.equal(createHash('sha256').update(await readFile(join(output, file.path))).digest('hex'), file.sha256);
     assert.ok(!/^(launcher|development|runtime|\.git)\//.test(file.path));
   }
-  assert.equal(await readFile(new URL('../../web/index.html', import.meta.url), 'utf8'), sourceIndex);
+  assert.equal(await readFile(new URL('../../game/web/index.html', import.meta.url), 'utf8'), sourceIndex);
   const rebuilt = await buildPages({outputDir: output});
   assert.deepEqual(rebuilt.files, result.files);
 });

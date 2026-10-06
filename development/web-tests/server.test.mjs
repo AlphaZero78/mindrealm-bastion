@@ -5,7 +5,7 @@ import {mkdtemp,mkdir,writeFile,utimes,symlink,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {resolve,join,sep} from 'node:path';
 import {once} from 'node:events';
-import {createGameServer} from '../../launcher/server.mjs';
+import {createGameServer} from '../../game/launcher/server.mjs';
 
 async function fixture(t,qa=false){
  const root=await mkdtemp(join(tmpdir(),'mindrealm-server-audit-'));
@@ -33,7 +33,7 @@ test('HEAD avoids a payload and ETag revalidates unchanged and modified local re
  const changed=await request('/web/app.js',{headers:{'If-None-Match':first.headers.etag}});assert.equal(changed.status,200);assert.equal(changed.body,'new js');assert.notEqual(changed.headers.etag,first.headers.etag);
  assert.deepEqual(JSON.parse((await request('/health')).body),{app:'mindrealm-bastion',version:1});assert.equal((await request('/health',{method:'HEAD'})).body,'');
 });
-test('QA helper access is explicit and cannot escape its own directory',async t=>{
- const {request}=await fixture(t,true);assert.equal((await request('/development/web-tests/helpers/fixture.mjs')).body,'qa helper');
+test('production ignores legacy QA options and never serves developer files',async t=>{
+ const {request}=await fixture(t,true);assert.equal((await request('/development/web-tests/helpers/fixture.mjs')).status,404);
  assert.equal((await request('/development/web-tests/helpers/..%2f..%2f..%2fprivate.txt')).status,404);
 });

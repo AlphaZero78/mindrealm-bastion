@@ -1,0 +1,41 @@
+/* Service pages share card typography; only their composition adapts here. */
+.service-screen .node-fit{padding:24px clamp(40px,7vw,140px) 28px;overflow:clip}
+.service-screen .node-sheet{height:100%;max-width:none;display:flex;flex-direction:column;min-width:0;min-height:0}
+.service-screen .content-heading{flex:none;margin-bottom:16px}
+.service-screen .node-content{flex:1;min-height:0;gap:18px;overflow:clip}
+.service-screen .node-footer{flex:none;min-height:36px;padding-top:8px}
+.service-screen .shop-catalog{display:flex;flex:1;min-height:0;flex-direction:column;justify-content:space-between;gap:18px;overflow:auto;scrollbar-gutter:stable both-edges}
+.service-screen .shop-column{flex:none;min-width:0}
+.service-screen .shop-category{margin-bottom:12px;justify-content:flex-start;gap:12px}
+.service-screen .shop-products{display:grid;grid-template-columns:repeat(3,minmax(0,300px));align-items:start;justify-content:space-between;gap:18px 28px}
+.service-screen .shop-units .shop-products{grid-template-columns:repeat(6,minmax(0,180px));gap:18px 14px}
+.service-screen .shop-product{min-width:0;align-self:start}
+.service-screen .shop-product-heading{align-items:center;min-height:40px}
+.service-screen .shop-product-heading>div{min-width:0}
+.service-screen .shop-product p{margin-top:8px}
+.shop-purchase{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}
+.shop-purchase>small{max-width:100%}
+.shop-purchase>.btn{margin-left:auto}
+.service-screen .shop-services{flex:none;gap:28px;align-items:start}
+.workshop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,220px));grid-auto-rows:max-content;align-content:space-between;justify-content:space-between;gap:28px;flex:1;min-height:0;overflow:auto;scrollbar-gutter:stable;padding:4px 4px 10px 0}
+.workshop-grid .service-unit{align-self:start;min-width:0}
+.workshop-grid .service-unit>.row:last-child{gap:8px;margin-top:10px}
+.workshop-grid .service-unit small{display:block}
+.service-screen.node-camp .node-story{display:flex;flex:1;min-height:0;flex-direction:column;justify-content:space-between;gap:36px}
+.service-screen.node-camp .node-story>div:first-child{display:flex;align-items:center;gap:32px}
+.service-screen.node-camp .node-illustration{height:112px;width:140px;flex:none}
+.service-screen.node-camp .node-choices{display:grid;grid-template-columns:repeat(3,minmax(0,290px));gap:30px;justify-content:space-between;margin-block:auto}
+.service-screen.node-camp .option-button{height:auto;align-items:flex-start;min-width:0}
+.service-screen.node-camp .node-content,.service-screen.node-treasure .node-content{overflow:auto;scrollbar-gutter:stable both-edges}
+.service-screen.node-camp .node-story{flex-shrink:0;min-height:min-content}
+.service-screen.node-treasure .choice-grid{flex:1;grid-template-columns:repeat(3,minmax(0,300px));align-items:center;justify-content:space-between;gap:32px}
+.service-screen.node-treasure .choice-card{align-self:center}
+.service-screen.node-treasure .choice-grid{flex-shrink:0;min-height:min-content}
+.map-side.left{padding-inline:12px;scrollbar-gutter:stable both-edges;min-width:0}
+.map-side.left .act-list,.map-side.left .intel{width:100%;margin-inline:auto;min-width:0}
+.map-side.left .act-step{width:100%;box-sizing:border-box}
+.bag-clues{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.bag-clues article{padding:12px 14px;border:1px solid #586a56;border-radius:8px;background:#263b34}
+.bag-clues strong{color:var(--gold);font-size:13px}.bag-clues p{font-size:11px;line-height:1.7;margin-top:5px}
+@container(max-width:1340px){.service-screen .shop-units .shop-products{grid-template-columns:repeat(3,minmax(0,210px));gap:18px 28px}.service-screen .node-fit{padding-inline:6cqw}.service-screen .shop-catalog{gap:24px}.workshop-grid{grid-template-columns:repeat(auto-fit,minmax(180px,205px));gap:24px}}
+@container(max-width:900px){.service-screen .node-fit{padding:16px 5cqw 18px}.service-screen .content-heading{margin-bottom:16px}.service-screen .node-content{gap:16px}.service-screen .shop-products{gap:16px}.service-screen .shop-services{gap:16px}.service-screen.node-camp .node-choices{gap:18px}.bag-clues{grid-template-columns:1fr}}

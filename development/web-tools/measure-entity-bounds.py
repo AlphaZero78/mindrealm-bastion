@@ -67,7 +67,7 @@ def measure(source):
 
 
 def refresh_metadata(records):
-    path=ROOT/'web/view/entity-art.js'
+    path=ROOT/'game/web/view/entity-art.js'
     text=path.read_text(encoding='utf-8')
     bounds={id:dict(bounds=r['bounds'],iconBounds=r['iconBounds'],minVisibleSpan=r['minVisibleSpan']) for id,r in records.items()}
     block=START+'\nconst ART_BOUNDS='+json.dumps(bounds,ensure_ascii=False,indent=2)+';\n'+END
@@ -90,7 +90,7 @@ def refresh_metadata(records):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--source',default=str(ROOT/'assets/game/sprites'))
+    parser.add_argument('--source',default=str(ROOT/'game/assets/game/sprites'))
     parser.add_argument('--output',required=True)
     parser.add_argument('--write-metadata',action='store_true')
     args=parser.parse_args()

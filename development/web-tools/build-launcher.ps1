@@ -24,7 +24,7 @@ while ($ancestor) {
 }
 $compiler = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 if (-not (Test-Path -LiteralPath $compiler -PathType Leaf)) { throw 'Windows .NET Framework 4 C# compiler is missing.' }
-$source = Join-Path $sourceRoot 'launcher\GameLauncher.cs'
+$source = Join-Path $sourceRoot 'development\launcher\GameLauncher.cs'
 $buildDirectory = Join-Path ([IO.Path]::GetTempPath()) ('mindrealm-launcher-build-' + [Guid]::NewGuid().ToString('N'))
 [void][IO.Directory]::CreateDirectory($buildDirectory)
 $temporaryExe = Join-Path $buildDirectory 'GameLauncher.exe'

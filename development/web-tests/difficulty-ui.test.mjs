@@ -1,11 +1,11 @@
 import {unblessedRun as newRun} from './helpers/unblessed-run.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {enterNode} from '../../web/core/state.js';
-import {acts,enemies} from '../../web/core/content.js';
-import {difficultyProfile,difficultySummary,enemyStats,enemyAbilityProfile} from '../../web/core/difficulty.js';
-import {pressureOptions,pressurePreviewLevels,difficultyDetails,enemyDetails,bossIntel,nodeScreen,summaryScreen,menu} from '../../web/screens.js';
-import {n,escapeHTML} from '../../web/ui.js';
+import {enterNode} from '../../game/web/core/state.js';
+import {acts,enemies} from '../../game/web/core/content.js';
+import {difficultyProfile,difficultySummary,enemyStats,enemyAbilityProfile} from '../../game/web/core/difficulty.js';
+import {pressureOptions,pressurePreviewLevels,difficultyDetails,enemyDetails,bossIntel,nodeScreen,summaryScreen,menu} from '../../game/web/screens.js';
+import {n,escapeHTML} from '../../game/web/ui.js';
 
 test('all eleven pressures stay visible and locked levels remain previewable without being selectable',()=>{
   for(const unlocked of [0,4,10]){

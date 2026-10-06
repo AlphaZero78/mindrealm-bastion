@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { generateTerrain, generateMap, newRun } from '../../web/core/state.js';
-import { towers } from '../../web/core/content.js';
-import { DIRECTIONS, placement, deploy, pathToCore, solveAttack } from '../../web/core/rules.js';
-import { createSaveStore } from '../../web/core/save.js';
+import { generateTerrain, generateMap, newRun } from '../../game/web/core/state.js';
+import { towers } from '../../game/web/core/content.js';
+import { DIRECTIONS, placement, deploy, pathToCore, solveAttack } from '../../game/web/core/rules.js';
+import { createSaveStore } from '../../game/web/core/save.js';
 
 const cell = (terrain, x, z) => terrain.cells[z * terrain.size + x];
 const protectedAt = (terrain, x, z) => Math.abs(x - terrain.core.x) <= 2 && Math.abs(z - terrain.core.z) <= 2 ||

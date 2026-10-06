@@ -1,10 +1,10 @@
-import {newRun,chooseNexus,continueAct,availableNodes,enterNode,finishBattle,chooseReward,nodeAction,eventPreview} from '../../../web/core/state.js';
-import {towers,relics,talents} from '../../../web/core/content.js';
-import {unitStats,unitCenter,onField,placement,deploy,withdraw,repair,repairCost,upgrade,upgradeCost,bandwidthState,pathToCore,entriesOf,coreOf,solveAttack,cellAt} from '../../../web/core/rules.js';
-import {makeEncounter,startBattle,stepBattle,useItem,itemPreview} from '../../../web/core/battle.js';
-import {inventoryStatus,discardUnits} from '../../../web/core/inventory.js';
-import {upgradeRequirement} from '../../../web/core/difficulty.js';
-import {events} from '../../../web/core/content.js';
+import {newRun,chooseNexus,continueAct,availableNodes,enterNode,finishBattle,chooseReward,nodeAction,eventPreview} from '../../../game/web/core/state.js';
+import {towers,relics,talents} from '../../../game/web/core/content.js';
+import {unitStats,unitCenter,onField,placement,deploy,withdraw,repair,repairCost,upgrade,upgradeCost,bandwidthState,pathToCore,entriesOf,coreOf,solveAttack,cellAt} from '../../../game/web/core/rules.js';
+import {makeEncounter,startBattle,stepBattle,useItem,itemPreview} from '../../../game/web/core/battle.js';
+import {inventoryStatus,discardUnits} from '../../../game/web/core/inventory.js';
+import {upgradeRequirement} from '../../../game/web/core/difficulty.js';
+import {events} from '../../../game/web/core/content.js';
 
 const branchFor=u=>u.branch||(['pulse_array','focus_rail','phase_blade','bandwidth_relay','memory_mechanic','frequency_choir','resistance_beacon'].includes(u.type)?'A':'B');
 const roleValue={pulse_array:100,focus_rail:85,memory_mechanic:62,bandwidth_relay:110,phase_blade:50,frequency_choir:55,drone_loom:75,arc_mortar:70,resistance_beacon:25,anchor_bulwark:40,boundary_riveter:25,resonance_guard:25};
@@ -19,7 +19,7 @@ export function chooseReferenceReward(state) {
   const value=id=>{
     if(offer.kind==='unit'){
       const count=state.units.filter(u=>u.type===id).length;
-      if(id==='bandwidth_relay')return count<3?180-count*20:50;
+      if(id==='bandwidth_relay')return count<(state.difficultyRevision>=5?1:3)?180-count*20:10;
       if(id==='memory_mechanic')return count<2?130-count*25:20;
       if(id==='frequency_choir')return count<1?90:20;
       return (roleValue[id]||0)-count*(id==='pulse_array'?5:20);
@@ -32,6 +32,9 @@ export function chooseReferenceReward(state) {
 export function prepareReference(state) {
   // Every decision below uses the same public commands exposed to the player.
   // Resources, terrain, rolls, health and queues are never granted or overwritten.
+  for(const uid of bandwidthState(state).disabled){
+    const result=withdraw(state,uid);if(!result.ok)throw new Error(`Cannot release event-constrained bandwidth: ${result.reason}`);
+  }
   for(const u of state.units.filter(u=>u.everDeployed&&u.hp<unitStats(state,u).hp*.65).sort((a,b)=>growValue(b)-growValue(a))){
     if(state.focus>=repairCost(state,u)+12)repair(state,u.uid);
   }
@@ -47,7 +50,7 @@ export function prepareReference(state) {
     const bandwidth=bandwidthState(state);if(!onField(u)&&stats.ability!=='bandwidth_plus'&&bandwidth.cap-bandwidth.used<stats.bandwidth)continue;
     if(stats.role==='melee'&&live.filter(t=>towers[t.type].role==='melee').length>=1)continue;
     if(u.type==='memory_mechanic'&&live.filter(t=>t.type===u.type).length>=2)continue;
-    if(u.type==='frequency_choir'&&live.some(t=>t.type===u.type))continue;
+    if((u.type==='frequency_choir'||state.difficultyRevision>=5&&u.type==='bandwidth_relay')&&live.some(t=>t.type===u.type&&t.uid!==u.uid))continue;
     let best=null;
     for(let z=3;z<state.terrain.size-2;z++)for(let x=3;x<state.terrain.size-2;x++){
       const p=placement(state,u,x,z);if(!p.ok)continue;
@@ -85,7 +88,7 @@ function referenceNode(state) {
     return nodeAction(state,'leave');
   }
   if(node.type==='shop'){
-    const relay=node.stock.units.find(u=>!u.sold&&u.id==='bandwidth_relay');if(relay&&state.units.filter(u=>u.type==='bandwidth_relay').length<3)nodeAction(state,'buy-unit',{id:relay.key});
+    const relay=node.stock.units.find(u=>!u.sold&&u.id==='bandwidth_relay');if(relay&&state.units.filter(u=>u.type==='bandwidth_relay').length<(state.difficultyRevision>=5?1:3))nodeAction(state,'buy-unit',{id:relay.key});
     if(state.focus>220){const item=node.stock.relics.find(x=>!x.sold);if(item)nodeAction(state,'buy-relic',{id:item.key});}return nodeAction(state,'leave');
   }
   if(node.type==='treasure')return nodeAction(state,'treasure',{id:node.options[0]});

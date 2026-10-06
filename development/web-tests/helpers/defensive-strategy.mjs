@@ -1,10 +1,10 @@
-import {nodeAction,eventPreview,servicePrice} from '../../../web/core/state.js';
-import {towers,relics,talents} from '../../../web/core/content.js';
-import {unitStats,unitCenter,onField,placement,deploy,repair,repairCost,upgrade,upgradeCost,bandwidthState,pathToCore,solveAttack,cellAt,coreOf} from '../../../web/core/rules.js';
-import {upgradeRequirement} from '../../../web/core/difficulty.js';
-import {inventoryStatus} from '../../../web/core/inventory.js';
-import {events} from '../../../web/core/content.js';
-import {makeEncounter} from '../../../web/core/battle.js';
+import {nodeAction,eventPreview,servicePrice} from '../../../game/web/core/state.js';
+import {towers,relics,talents} from '../../../game/web/core/content.js';
+import {unitStats,unitCenter,onField,placement,deploy,repair,repairCost,upgrade,upgradeCost,bandwidthState,pathToCore,solveAttack,cellAt,coreOf} from '../../../game/web/core/rules.js';
+import {upgradeRequirement} from '../../../game/web/core/difficulty.js';
+import {inventoryStatus} from '../../../game/web/core/inventory.js';
+import {events} from '../../../game/web/core/content.js';
+import {makeEncounter} from '../../../game/web/core/battle.js';
 
 // A fixed alternative policy, shared by every seed and difficulty. It trades
 // relay-A expansion and concentrated fire for fronts, maintenance and jam slack.

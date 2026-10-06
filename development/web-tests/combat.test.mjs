@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {performance} from 'node:perf_hooks';
-import {makeEncounter,startBattle,stepBattle} from '../../web/core/battle.js';
-import {unitStats,unitCenter,cellAt,solveAttack,bandwidthState,pathToCore,repairCost,moveCost,incomingDamage} from '../../web/core/rules.js';
-import {addUnit,newRun,enterNode,availableNodes,finishBattle,cloneState} from '../../web/core/state.js';
-import {enemies,towers} from '../../web/core/content.js';
+import {makeEncounter,startBattle,stepBattle} from '../../game/web/core/battle.js';
+import {unitStats,unitCenter,cellAt,solveAttack,bandwidthState,pathToCore,repairCost,moveCost,incomingDamage} from '../../game/web/core/rules.js';
+import {addUnit,newRun,enterNode,availableNodes,finishBattle,cloneState} from '../../game/web/core/state.js';
+import {enemies,towers} from '../../game/web/core/content.js';
 import {fixture,place,battle,tick} from './helpers/battle-fixture.mjs';
 
 const pin=(enemy,x,z,{hp=10000,...rest}={})=>Object.assign(enemy,{x,z,h:0,speed:0,hp,maxHp:hp,attack:0,cooldown:10000,abilityClock:10000,...rest});

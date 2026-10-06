@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {AudioDirector,UI_CUES} from '../../web/view/audio.js';
+import {AudioDirector,UI_CUES} from '../../game/web/view/audio.js';
 
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-8,`${a} != ${b}`);
 class Param{

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {ScreenTransitions} from '../../web/view/transitions.js';
+import {ScreenTransitions} from '../../game/web/view/transitions.js';
 
 const css=name=>name.replace(/[A-Z]/g,char=>`-${char.toLowerCase()}`);
 class Style{

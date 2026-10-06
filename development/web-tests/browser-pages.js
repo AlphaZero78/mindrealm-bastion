@@ -1,75 +1,36 @@
-async page => {
-  const url = new URL(page.url());
-  if (url.searchParams.get('qa') !== '1' ||
-      !['127.0.0.1', 'localhost', 'alphazero78.github.io'].includes(url.hostname) || url.port === '4173') {
-    throw Error('Use an isolated ?qa=1 Pages preview or the published game.');
-  }
-  const base = url.pathname.endsWith('/') ? url.pathname : url.pathname + '/';
-  const errors = [], requests = [], checks = [];
-  const recordError = error => errors.push(error.message);
-  const recordConsole = message => {if (['error', 'warning'].includes(message.type())) errors.push(message.text());};
-  const recordResponse = response => {if (response.status() >= 400) requests.push(`${response.status()} ${response.url()}`);};
-  page.on('pageerror', recordError); page.on('console', recordConsole); page.on('response', recordResponse);
-  const check = (condition, label) => {if (!condition) throw Error(label); checks.push(label);};
-  const idle = () => page.waitForFunction(() => window.__mindrealm && !window.__mindrealm.transitions.active &&
-    !window.__mindrealm.dialogs.active && !window.__mindrealm.dialogs.animations.size);
-  const click = async action => {await page.locator(`[data-action="${action}"]`).first().click(); await idle();};
-  try {
-    await page.setViewportSize({width:1440,height:900});
-    await page.reload(); await idle();
-    await page.waitForFunction(() => window.__mindrealm.field.realtime?.ready, undefined, {timeout:60000});
-    const manifest = await page.evaluate(async base => (await fetch(base + 'site-manifest.json')).json(), base);
-    check(manifest.kind === 'mindrealm-github-pages' && manifest.basePath === base, 'published manifest and repository subpath agree');
-    await page.screenshot({path:'pages-menu.png'});
-    await click('new'); await page.locator('#seed-input').fill('pages-v0.1.3');
-    await page.locator('.modal-footer .primary').click(); await idle();
-    check(await page.evaluate(() => window.__mindrealm.getState().phase) === 'nexus', 'new run reaches spirit nexus');
-    await click('nexus-gift'); await page.locator('.modal-footer .primary').click(); await idle();
-    await page.locator('.map-node.available').first().click(); await idle();
-    check(await page.evaluate(() => window.__mindrealm.getState().phase) === 'prep', 'route enters preparation');
-    const placement = await page.evaluate(async base => {
-      const q = window.__mindrealm, state = q.getState(), R = await import(base + 'web/core/rules.js');
-      const unit = state.units.find(u => u.type === 'pulse_array'), core = R.coreOf(state), choices = [];
-      for (let z = 0; z < state.terrain.size; z++) for (let x = 0; x < state.terrain.size; x++) {
-        if (R.placement(state, unit, x, z).ok) choices.push({x,z,distance:Math.hypot(x-core.x,z-core.z)});
-      }
-      return {uid:unit.uid, ...choices.sort((a,b) => a.distance-b.distance)[0]};
-    }, base);
-    await page.locator(`[data-action="select-unit"][data-uid="${placement.uid}"]`).click();
-    const point = await page.evaluate(cell => {
-      const q=window.__mindrealm, state=q.getState(), rect=document.querySelector('#battlefield').getBoundingClientRect();
-      const p=q.field.project(cell.x+.5,cell.z+.5,state.terrain.cells[cell.z*state.terrain.size+cell.x].h);
-      return {x:rect.x+p.x,y:rect.y+p.y};
-    }, placement);
-    await page.mouse.click(point.x, point.y); await idle();
-    check(await page.evaluate(uid => window.__mindrealm.getState().units.find(u => u.uid===uid).x!==null, placement.uid), 'model deploys by an actual battlefield click');
-    await page.screenshot({path:'pages-preparation.png'});
-    await click('menu'); await click('continue');
-    check(await page.evaluate(uid => window.__mindrealm.getState().units.find(u => u.uid===uid).x!==null, placement.uid), 'continue restores the deployment in isolated storage');
-    await click('start'); await page.locator('.modal-footer .primary').click(); await idle();
-    await page.waitForFunction(() => window.__mindrealm.getState().battle?.time > 2);
-    await click('pause');
-    await page.screenshot({path:'pages-battle.png'});
-    const details = await page.evaluate(() => {
-      const q=window.__mindrealm;
-      return {phase:q.getState().phase, elapsed:q.getState().battle.time, models:q.field.realtime.sources.size,
-        graphics:q.field.errors, audio:q.audio.errors};
-    });
-    check(details.phase==='battle' && details.elapsed>2 && details.models>0, 'hosted game simulates and renders a battle');
-    check(details.graphics.length===0 && details.audio.length===0, 'graphics and audio report no loading failures');
-    // Read and decode every dynamic event illustration from its deployed URL.
-    const illustrations = await page.evaluate(async base => {
-      const {events}=await import(base+'web/core/content.js'), ids=Object.keys(events);
-      await Promise.all(ids.map(id => new Promise((resolve,reject) => {
-        const image=new Image();image.onload=()=>resolve();image.onerror=()=>reject(Error('Event art: '+id));
-        image.src=base+'assets/game/events/'+id+'.png';
-      })));
-      return ids.length;
-    }, base);
-    check(illustrations===36, 'all 36 event illustrations decode under the hosted prefix');
-    check(errors.length===0 && requests.length===0, `no browser or HTTP errors: ${JSON.stringify({errors,requests})}`);
-    return {status:'PAGES_BROWSER_OK', version:manifest.version, commit:manifest.commit, checks, details, illustrations, errors, requests};
-  } finally {
-    page.off('pageerror',recordError);page.off('console',recordConsole);page.off('response',recordResponse);
-  }
+async sourcePage => {
+ const destination=new URL(sourcePage.url());
+ if(!['127.0.0.1','localhost','alphazero78.github.io'].includes(destination.hostname)||destination.port==='4173')throw Error('Use an isolated preview or the published site');
+ // A fresh context has no player cookies, settings or saves, even on the live domain.
+ const context=await sourcePage.context().browser().newContext({viewport:{width:1440,height:900}}),page=await context.newPage();
+ const errors=[],requests=[],checks=[];
+ page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(['error','warning'].includes(m.type()))errors.push(m.text());});
+ page.on('response',r=>{if(r.status()>=400)requests.push(`${r.status()} ${r.url()}`);});
+ const check=(ok,label)=>{if(!ok)throw Error(label);checks.push(label);};
+ const idle=()=>page.waitForFunction(()=>document.querySelector('#app')&&!document.querySelector('#app').inert&&!document.querySelector('#modal-root').inert&&!document.getAnimations().some(a=>a.playState==='running'&&a.effect?.getTiming().iterations!==Infinity));
+ const click=async name=>{await page.locator(`[data-action="${name}"]`).first().click();await idle();};
+ const state=()=>page.evaluate(async base=>(await import(base+'web/core/save.js')).createSaveStore(localStorage).load().value,destination.pathname);
+ try{
+  await page.goto(destination.href);await page.locator('[data-action="new"]').waitFor();await idle();
+  check(await page.evaluate(()=>window.__mindrealm===undefined),'production exposes no QA interface');
+  const base=destination.pathname.endsWith('/')?destination.pathname:destination.pathname+'/';destination.pathname=base;
+  const manifest=base==='/'?null:await page.evaluate(async base=>(await fetch(base+'site-manifest.json')).json(),base);
+  if(manifest)check(manifest.version==='0.1.4'&&manifest.basePath===base,'published version and subpath agree');
+  await page.screenshot({path:'v014-production-menu.png'});
+  await click('new');const seed1=await page.locator('#seed-input').inputValue();await page.locator('[data-random-seed]').click();const seed2=await page.locator('#seed-input').inputValue();
+  check([seed1,seed2].every(x=>/^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{16}$/.test(x))&&seed1!==seed2,'mixed random seeds differ');
+  await page.keyboard.press('Escape');await idle();check((await state())===null,'new-run cancellation leaves no run');
+  await click('new');await page.locator('#seed-input').fill('release-v014');await page.locator('.modal-footer .primary').click();await idle();
+  check((await state()).phase==='nexus','new game enters nexus');await page.screenshot({path:'v014-production-nexus.png'});
+  await click('nexus-gift');await page.keyboard.press('Escape');await idle();check((await state()).phase==='nexus','gift cancellation preserves nexus');
+  await click('nexus-gift');await page.locator('.modal-footer .primary').click();await idle();await page.locator('.map-node.available').first().click();await idle();
+  check((await state()).phase==='prep','route enters preparation');await page.screenshot({path:'v014-production-prep.png'});
+  await click('menu');await click('continue');check((await state()).seed==='release-v014','continue restores the isolated safe save');
+  await click('start');await page.locator('.modal-footer .primary').click();await idle();await page.locator('[data-action="pause"]').waitFor();
+  await page.waitForFunction(()=>[...document.querySelectorAll('canvas')].some(c=>c.width>0&&c.height>0));await click('pause');await page.screenshot({path:'v014-production-battle.png'});
+  await click('menu');await page.locator('.modal-footer .primary').click();await idle();await click('continue');check((await state()).phase==='prep','battle exit restores preparation');
+  const illustrations=await page.evaluate(async base=>{const {events}=await import(base+'web/core/content.js'),{NEXUS_ART}=await import(base+'web/view/nexus-art.js');const paths=[...Object.keys(events).map(id=>base+'assets/game/events/'+id+'.png'),...Object.values(NEXUS_ART).map(a=>a.path)];for(let i=0;i<paths.length;i+=4)await Promise.all(paths.slice(i,i+4).map(path=>new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>img.naturalWidth>=1600?resolve():reject(Error(path));img.onerror=()=>reject(Error(path));img.src=path;})));return paths.length;},base);
+  check(illustrations===48,'48 narrative illustrations decode');check(errors.length===0&&requests.length===0,JSON.stringify({errors,requests}));
+  return {status:'PRODUCTION_BROWSER_OK',version:manifest?.version||'0.1.4',commit:manifest?.commit,checks,errors,requests};
+ }finally{await context.close();}
 }

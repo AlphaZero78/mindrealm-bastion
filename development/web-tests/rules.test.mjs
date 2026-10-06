@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {newRun,addUnit,cloneState} from '../../web/core/state.js';
-import * as R from '../../web/core/rules.js';
-import {towers} from '../../web/core/content.js';
+import {newRun,addUnit,cloneState} from '../../game/web/core/state.js';
+import * as R from '../../game/web/core/rules.js';
+import {towers} from '../../game/web/core/content.js';
 import {fixture,place,battle} from './helpers/battle-fixture.mjs';
 
 test('deployment checks full footprint, height, protection, overlap, ramps and bandwidth atomically',()=>{

@@ -1,14 +1,14 @@
 import {unblessedRun} from './helpers/unblessed-run.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import * as CoreRun from '../../web/core/state.js';
+import * as CoreRun from '../../game/web/core/state.js';
 const Run={...CoreRun,newRun:unblessedRun};
-import * as Rules from '../../web/core/rules.js';
-import {items,addItem,discardItem,discardUnits,inventoryStatus} from '../../web/core/inventory.js';
-import {itemPreview,useItem,makeEncounter,startBattle,stepBattle} from '../../web/core/battle.js';
-import {xpRequirement,upgradeRequirement,enemyStats,killRewardScale} from '../../web/core/difficulty.js';
-import {events,enemies} from '../../web/core/content.js';
-import {createSaveStore} from '../../web/core/save.js';
+import * as Rules from '../../game/web/core/rules.js';
+import {items,addItem,discardItem,discardUnits,inventoryStatus} from '../../game/web/core/inventory.js';
+import {itemPreview,useItem,makeEncounter,startBattle,stepBattle} from '../../game/web/core/battle.js';
+import {xpRequirement,upgradeRequirement,enemyStats,killRewardScale} from '../../game/web/core/difficulty.js';
+import {events,enemies} from '../../game/web/core/content.js';
+import {createSaveStore} from '../../game/web/core/save.js';
 import {fixture,place,battle} from './helpers/battle-fixture.mjs';
 const clone=Run.cloneState;
 const store=()=>{const data=new Map();return createSaveStore({getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)},'items.isolated');};
@@ -79,7 +79,7 @@ test('battle item drops and replacements resume exactly; full slots can always s
 });
 test('shops persist discounted stock, tiered offers, item replacement, limited services and resale',()=>{
  const s=service('shop');addItem(s,'clarity');addItem(s,'stasis');s.focus=1000;s.spirit=50;const node=s.currentNode;
- assert.deepEqual([node.stock.units.length,node.stock.relics.length,node.stock.items.length],[3,3,3]);assert.equal(Run.shopPrice(s,'units',node.stock.units[0]),60);
+ assert.deepEqual([node.stock.units.length,node.stock.relics.length,node.stock.items.length],[6,3,3]);assert.equal(Run.shopPrice(s,'units',node.stock.units[0]),60);
  const offer=node.stock.items[0],before=s.focus;assert.equal(Run.nodeAction(s,'buy-item',{id:offer.key}).ok,true);assert.equal(s.focus,before-offer.price);inert(s,()=>Run.nodeAction(s,'buy-item',{id:offer.key}));
  const next=node.stock.items[1];inert(s,()=>Run.nodeAction(s,'buy-item',{id:next.key}));assert.equal(Run.nodeAction(s,'buy-item',{id:next.key,replaceUid:s.inventory.items[0].uid}).ok,true);
  assert.equal(Run.nodeAction(s,'shop-service',{id:'capacity'}).ok,true);assert.equal(s.inventory.capacity,14);inert(s,()=>Run.nodeAction(s,'shop-service',{id:'capacity'}));
@@ -112,7 +112,7 @@ test('every event keeps a survivable exit when storage is empty, expansions are 
  }
 });
 test('event tier-two previews match the actual depth-gated compensation',()=>{
- const s=service('event');s.currentNode.eventData.id='identity_checkpoint';s.depth=1;const p=Run.eventPreview(s,1),focus=s.focus;
+ const s=service('event');s.difficultyRevision=4;s.currentNode.eventData.id='identity_checkpoint';s.depth=1;const p=Run.eventPreview(s,1),focus=s.focus;
  assert.match(p.details.join(' '),/T1.*40/);assert.equal(Run.nodeAction(s,'event',{index:1}).ok,true);assert.equal(s.units.at(-1).tier,1);assert.equal(s.focus,focus+40);
 });
 test('new standard enemies grow across acts without adding population; current economy and XP previews agree',()=>{

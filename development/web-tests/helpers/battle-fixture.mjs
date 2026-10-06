@@ -1,7 +1,7 @@
 import {unblessedRun as newRun} from './unblessed-run.mjs';
-import {addUnit,enterNode,availableNodes} from '../../../web/core/state.js';
-import {startBattle,stepBattle} from '../../../web/core/battle.js';
-import {unitStats,footprint} from '../../../web/core/rules.js';
+import {addUnit,enterNode,availableNodes} from '../../../game/web/core/state.js';
+import {startBattle,stepBattle} from '../../../game/web/core/battle.js';
+import {unitStats,footprint} from '../../../game/web/core/rules.js';
 
 // Test-only in-memory fixtures. No browser storage or player profile is accessed.
 export function fixture(seed='rules-fixture',{flat=true,revision=2}={}) {

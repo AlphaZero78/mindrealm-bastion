@@ -2,23 +2,24 @@ import { createHash, randomUUID } from 'node:crypto';
 import { readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
 import { dirname, extname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { towers, enemies, messengers, events } from '../../web/core/content.js';
-import { AUDIO_FILES } from '../../web/view/audio.js';
-import { ENTITY_ART } from '../../web/view/entity-art.js';
-import { MODEL_PORTRAITS } from '../../web/view/model-portraits.js';
+import { towers, enemies, messengers, events } from '../../game/web/core/content.js';
+import { AUDIO_FILES } from '../../game/web/view/audio.js';
+import { ENTITY_ART } from '../../game/web/view/entity-art.js';
+import { MODEL_PORTRAITS } from '../../game/web/view/model-portraits.js';
+import { NEXUS_ART } from '../../game/web/view/nexus-art.js';
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const manifestPath = 'assets/third_party/ASSET_MANIFEST.sha256';
+const manifestPath = 'development/assets/ASSET_MANIFEST.sha256';
 const modelRoot = 'development/assets/model_sources';
 const licensePaths = [
-  'assets/third_party/game-icons/LICENSE.txt',
-  'assets/third_party/fusion-pixel-font/OFL.txt',
-  'assets/third_party/kenney/sci-fi-sounds/License.txt',
-  'assets/third_party/opengameart/singularity/LICENSE.txt',
-  'assets/third_party/opengameart/dark-sci-fi-audio/LICENSE.txt',
-  'assets/third_party/node/LICENSE.txt',
-  'assets/third_party/three/LICENSE.txt',
-  'assets/third_party/polyhaven/LICENSE.txt',
+  'game/assets/third_party/game-icons/LICENSE.txt',
+  'game/assets/third_party/fusion-pixel-font/OFL.txt',
+  'game/assets/third_party/kenney/sci-fi-sounds/License.txt',
+  'game/assets/third_party/opengameart/singularity/LICENSE.txt',
+  'game/assets/third_party/opengameart/dark-sci-fi-audio/LICENSE.txt',
+  'game/assets/third_party/node/LICENSE.txt',
+  'game/assets/third_party/three/LICENSE.txt',
+  'game/assets/third_party/polyhaven/LICENSE.txt',
   ...['space-kit', 'modular-space-kit', 'tower-defense-kit'].map(
     kit => `${modelRoot}/kenney/${kit}/License.txt`),
 ];
@@ -47,8 +48,8 @@ async function walk(root, folder) {
 
 /** Actual browser loads: catalog-backed sprites, the audio registry and CSS URLs. */
 export async function runtimeAssetPaths(root = projectRoot) {
-  const css = await readFile(inside(root, 'web/style.css'), 'utf8');
-  const models=JSON.parse(await readFile(inside(root,'assets/game/models/models.json'),'utf8'));
+  const css = await readFile(inside(root, 'game/web/style.css'), 'utf8');
+  const models=JSON.parse(await readFile(inside(root,'game/assets/game/models/models.json'),'utf8'));
   const cssAssets = [...css.matchAll(/url\(\s*['"]?(\/assets\/[^)'"\s]+)['"]?\s*\)/g)]
     .map(match => match[1].slice(1));
   return [...new Set([
@@ -59,28 +60,29 @@ export async function runtimeAssetPaths(root = projectRoot) {
     ...cssAssets,
     ...Object.values(messengers).map(m=>`assets/third_party/game-icons/${m.art}.svg`),
     ...Object.keys(events).map(id=>`assets/game/events/${id}.png`),
+    ...Object.values(NEXUS_ART).map(art=>art.path.slice(1)),
     ...Object.values(MODEL_PORTRAITS).map(art=>art.path.slice(1)),
     ...Object.values(models.sources).map(model=>model.path.slice(1)),
     'assets/game/models/models.json','assets/game/lighting/studio_small_09_pmrem.bin',
     'assets/third_party/three/three.bundle.js',
     ...['nor_gl.png','rough.jpg','diff.jpg'].map(name=>`assets/third_party/polyhaven/blue_metal_plate_${name}`),
-  ])].sort(order);
+  ])].map(file=>'game/'+file).sort(order);
 }
 
 /** Read-only inventory. Importing this module never writes a manifest. */
 export async function inventoryAssets(root = projectRoot) {
-  const [assets, models, runtime] = await Promise.all([
-    walk(root, 'assets'), walk(root, modelRoot), runtimeAssetPaths(root),
+  const [assets, models, notices, runtime] = await Promise.all([
+    walk(root, 'game/assets'), walk(root, modelRoot), walk(root, 'game/licenses'), runtimeAssetPaths(root),
   ]);
-  const present = new Set([...assets, ...models]);
+  const present = new Set([...assets, ...models, ...notices]);
   for (const path of [...runtime, ...licensePaths]) {
     inside(root, path);
     if (!present.has(path)) throw Error(`Required runtime asset or license is missing: ${path}`);
   }
   const sources = models.filter(path => !sidecar(path) &&
     (modelExtensions.has(extname(path).toLowerCase()) || isLicense(path)));
-  const authoringAssets=['assets/third_party/polyhaven/studio_small_09_1k.hdr'];
-  const retained = [...new Set([...runtime, ...licensePaths, ...sources, ...authoringAssets])].sort(order);
+  const authoringAssets=['development/assets/lighting/studio_small_09_1k.hdr'];
+  const retained = [...new Set([...runtime, ...licensePaths, ...notices, ...sources, ...authoringAssets])].sort(order);
   const retainedSet = new Set(retained);
   const unusedAssets = assets.filter(path => path !== manifestPath && !sidecar(path) && !retainedSet.has(path));
   const assetDirectories = [...new Set(assets.map(path => path.slice(0, path.lastIndexOf('/'))))];

@@ -1,6 +1,10 @@
 # Third-party files are verified byte-for-byte against ASSET_MANIFEST.sha256.
 # Prevent Windows checkout from rewriting license/source line endings.
-assets/third_party/** -text
+game/assets/third_party/** -text
 development/assets/model_sources/** -text
 # Preserve upstream formatting inside the vendored GLSL shader strings.
-assets/third_party/three/three.bundle.js -whitespace
+game/assets/third_party/three/three.bundle.js -whitespace
+
+game/licenses/kenney-*.txt -text -whitespace
+game/assets/game/models/models.json -text whitespace=cr-at-eol
+game/licenses/** -text
