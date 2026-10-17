@@ -5,6 +5,24 @@ import * as R from '../../game/web/core/rules.js';
 import {towers} from '../../game/web/core/content.js';
 import {fixture,place,battle} from './helpers/battle-fixture.mjs';
 
+test('frame-cached stats follow spirit thresholds in both directions, including maximum-spirit changes',()=>{
+  const s=fixture(),u=place(s,'pulse_array',8,8,{h:1});
+  s.modifiers.low_spirit_attack=.5;s.relics=['volatile_clarity'];
+  R.beginRulesFrame(s);
+  try {
+    for(const spirit of [41,40,39,35,34,25,24,26,36,39,40,41]){
+      s.spirit=spirit;
+      const uncached=cloneState(s);
+      assert.deepEqual(R.unitStats(s,u),R.unitStats(uncached,uncached.units[0]),`spirit ${spirit}`);
+    }
+    for(const maxSpirit of [110,100,120,100]){
+      s.maxSpirit=maxSpirit;
+      const uncached=cloneState(s);
+      assert.deepEqual(R.unitStats(s,u),R.unitStats(uncached,uncached.units[0]),`maximum spirit ${maxSpirit}`);
+    }
+  } finally { R.endRulesFrame(s); }
+});
+
 test('deployment checks full footprint, height, protection, overlap, ramps and bandwidth atomically',()=>{
   const s=fixture(),u=addUnit(s,'focus_rail');
   const unchanged=(x,z,reason)=>{const before=cloneState(s);const p=R.placement(s,u,x,z);assert.equal(p.ok,false);assert.match(p.reason,reason);assert.equal(R.deploy(s,u.uid,x,z).ok,false);assert.deepEqual(s,before);};
