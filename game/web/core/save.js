@@ -43,19 +43,29 @@ function validRun(state) {
   if (state.units.some(u => !record(u) || u.hpBonus !== undefined && !finite(u.hpBonus) || u.order !== undefined && (!Number.isSafeInteger(u.order) || u.order < 0) || u.everDeployed !== undefined && typeof u.everDeployed !== 'boolean')) return false;
   if(state.terrainEdits!==undefined&&(!Number.isSafeInteger(state.terrainEdits)||state.terrainEdits<0))return false;
   for (const u of state.units) { if (!towers[u.type] || typeof u.uid !== 'string' || !/^u[1-9]\d*$/.test(u.uid) || +u.uid.slice(1) > state.unitCounter || uids.has(u.uid) || !finite(u.hp) || u.hp < 0 || ![1, 2, 3].includes(u.tier) || !(u.tier === 1 ? u.branch === null : ['A', 'B'].includes(u.branch)) || !['near', 'far', 'hp'].includes(u.priority)) return false; uids.add(u.uid); if (![u.x, u.z].every(v => v === null || Number.isInteger(v) && v >= 0 && v < 41)) return false; if ((u.x === null) !== (u.z === null)) return false; if(u.rotation!==undefined&&(!Number.isInteger(u.rotation)||u.rotation<0||u.rotation>3))return false; if (u.x !== null && (u.x + unitFootprint(u)[0] > 41 || u.z + unitFootprint(u)[1] > 41)) return false; }
+  const mapNodes = [];
   for (let i = 0; i < 3; i++) {
     const map = state.maps[i]; if (!Array.isArray(map.nodes) || !acts[i].bosses.includes(map.boss) || map.floors !== acts[i].floors) return false;
-    const ids = new Set(map.nodes.map(n => n.id));
-    if (ids.size !== map.nodes.length || !map.nodes.every(n => typeof n.id === 'string' && Number.isInteger(n.floor) && n.floor >= 0 && n.floor < [17, 16, 15][i] && Number.isInteger(n.lane) && n.lane >= 0 && n.lane <= 4 && ['battle', 'elite', 'camp', 'workshop', 'shop', 'treasure', 'event', 'unknown', 'boss'].includes(n.type) && distinct(n.next) && n.next.every(id => ids.has(id) && map.nodes.find(next => next.id === id).floor === n.floor + 1))) return false;
+    const nodes = new Map(map.nodes.map(n => [n.id, n]));
+    mapNodes.push(nodes);
+    if (nodes.size !== map.nodes.length) return false;
+    for (const node of map.nodes) {
+      if (typeof node.id !== 'string' || !Number.isInteger(node.floor) || node.floor < 0 || node.floor >= acts[i].floors) return false;
+      if (!Number.isInteger(node.lane) || node.lane < 0 || node.lane > 4 || !['battle', 'elite', 'camp', 'workshop', 'shop', 'treasure', 'event', 'unknown', 'boss'].includes(node.type)) return false;
+      if (!distinct(node.next) || !node.next.every(id => nodes.get(id)?.floor === node.floor + 1)) return false;
+    }
   }
   if (!idsIn(state.relics, relics) || !idsIn(state.talents, talents) || !state.stats || !Array.isArray(state.rewardQueue) || !distinct(state.nextNodes)) return false;
   if(state.nexus!==undefined&&(!Array.isArray(state.nexus)||state.nexus.length!==3||!state.nexus.every((room,act)=>record(room)&&room.act===act&&messengers[room.messenger]?.act===act&&distinct(room.options)&&room.options.length===3&&room.options.every(id=>messengers[room.messenger].gifts.some(g=>g.id===id))&&typeof room.skipped==='boolean'&&(room.choice===null||room.options.includes(room.choice)&&state.relics.includes(room.choice)&&!room.skipped&&act<=state.act))))return false;
   if(state.phase==='nexus'&&(!state.nexus||state.nexus[state.act].choice||state.nexus[state.act].skipped||state.floor!==-1||state.currentNode||state.rewardQueue.length))return false;
   if(state.nextAct!==undefined&&(!Number.isInteger(state.nextAct)||state.nextAct!==state.act+1||state.nextAct>2))return false;
   if(state.phase==='interlude'&&(state.nextAct===undefined||state.currentNode?.type!=='boss'||!state.currentNode.completed||state.rewardQueue.length||state.nextNodes.length))return false;
-  if (!state.nextNodes.every(id => state.maps[state.act].nodes.some(n => n.id === id)) || !distinct(state.visited) || !state.visited.every(id => state.maps.some(map => map.nodes.some(n => n.id === id)))) return false;
+  if (!state.nextNodes.every(id => mapNodes[state.act].has(id)) || !distinct(state.visited) || !state.visited.every(id => mapNodes.some(nodes => nodes.has(id)))) return false;
   if (!['kills', 'breaches', 'pressure', 'breachDamage', 'destroyed', 'elites', 'overloadSeconds', 'completedNodes'].every(k => nonnegative(state.stats[k])) || !idsIn(state.stats.bosses, enemies) || !Array.isArray(state.stats.history) || !Array.isArray(state.stats.pressureLog) || !state.stats.damageByUnit) return false;
-  if (state.currentNode && (!state.maps[state.act].nodes.some(n => n.id === state.currentNode.id && n.floor === state.currentNode.floor && n.type === state.currentNode.type) || state.floor !== state.currentNode.floor)) return false;
+  if (state.currentNode) {
+    const current = mapNodes[state.act].get(state.currentNode.id);
+    if (!current || current.floor !== state.currentNode.floor || current.type !== state.currentNode.type || state.floor !== state.currentNode.floor) return false;
+  }
   if (['prep', 'node', 'reward'].includes(state.phase) && !state.currentNode || state.phase === 'reward' && !state.rewardQueue.length) return false;
   const node = state.currentNode;
   if (node?.type === 'shop' && (!node.stock || !['units', 'relics'].every(kind => Array.isArray(node.stock[kind]) && node.stock[kind].length <= (kind==='units'&&(state.difficultyRevision||1)>=5?6:3) && distinct(node.stock[kind].map(item => item.key)) && node.stock[kind].every(item => (kind === 'units' ? towers[item.id] : relics[item.id]) && typeof item.key === 'string' && typeof item.sold === 'boolean')))) return false;
