@@ -286,13 +286,22 @@ function moveEnemy(state,e,dt,active) {
   }
   const hunter=e.ability==='tower_hunter'||e.ability==='siege',attackRange=e.attackRange??(hunter?(e.ability==='tower_hunter'?6:3.6):2.15);
   const advancing=hunter&&e.advanceUntil>b.time;
-  const victims=pushing?[]:aliveUnits(state).filter(u=>(hunter||!e.air&&unitStats(state,u).role==='melee')&&distance(e,unitCenter(u))<=attackRange&&(!advancing||unitStats(state,u).role==='melee'&&distance(e,unitCenter(u))<=1.5));
-  victims.sort((a,c)=>{
-    const ta=!b.disabled.includes(a.uid)&&unitStats(state,a).ability==='taunt'?1:0,tc=!b.disabled.includes(c.uid)&&unitStats(state,c).ability==='taunt'?1:0;
-    return tc-ta||distance(e,unitCenter(a))-distance(e,unitCenter(c));
-  });
-  if(victims.length){aim(e,unitCenter(victims[0]),victims[0].uid,'unit');if(e.cooldown<=0){
-    hitUnit(state,e,victims[0],e.attack,active);e.cooldown=e.kind==='boss'?1.4:1.15;
+  // Only the best victim is used. A strict improvement preserves the original
+  // stable ordering when two units have the same taunt status and distance.
+  let victim=null,victimTaunt=-1,victimDistance=Infinity;
+  if(!pushing&&(hunter||!e.air))for(const unit of state.units){
+    if(!onField(unit)||unit.hp<=0)continue;
+    const separation=distance(e,unitCenter(unit));
+    if(!(separation<=attackRange)||advancing&&separation>1.5)continue;
+    const stats=unitStats(state,unit);
+    if((!hunter||advancing)&&stats.role!=='melee')continue;
+    const taunt=!b.disabled.includes(unit.uid)&&stats.ability==='taunt'?1:0;
+    if(!victim||taunt>victimTaunt||taunt===victimTaunt&&separation<victimDistance){
+      victim=unit;victimTaunt=taunt;victimDistance=separation;
+    }
+  }
+  if(victim){aim(e,unitCenter(victim),victim.uid,'unit');if(e.cooldown<=0){
+    hitUnit(state,e,victim,e.attack,active);e.cooldown=e.kind==='boss'?1.4:1.15;
     if(e.dead||state.spirit<=0)return;
     if(advance?.enabled){e.blockedAttacks=(e.blockedAttacks||0)+1;if(e.blockedAttacks>=advance.attacks){e.pushWarningUntil=b.time+advance.warning;emit(state,{type:'warning',stage:'windup',actionKind:'push-windup',ability:'push',enemy:e.id,x:e.x,z:e.z,duration:advance.warning,endsAt:e.pushWarningUntil,label:`破阵蓄力 · ${advance.warning}秒后推进`});}}
     // Ranged hunters and siege units fire finite volleys, then advance into the
