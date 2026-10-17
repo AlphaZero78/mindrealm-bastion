@@ -9,12 +9,13 @@ export const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
 // Standalone previews and commands remain uncached,
 // so a UI mutation can never leave behind stale placement or damage results.
 const frames=new WeakMap();
+const lowSpiritAttackActive=state=>state.spirit/state.maxSpirit<.4;
 export function beginRulesFrame(state){frames.set(state,{key:null,mods:null,stats:new Map()});}
 export function endRulesFrame(state){frames.delete(state);}
 export function invalidateRulesFrame(state){const frame=frames.get(state);if(frame){frame.key=null;frame.stats.clear();}}
 export function ruleEffects(state){
   const frame=frames.get(state);if(!frame)return effects(state);
-  const ratio=state.spirit/Math.max(1,state.maxSpirit),key=`${ratio<.35}:${ratio<.25}:${Math.floor((state.battle?.spiritLost||0)/10)}:${state.terrain.revision||0}:${state.battle?.itemRevision||0}:${(state.battle?.disabled||[]).join(',')}`;
+  const ratio=state.spirit/Math.max(1,state.maxSpirit),key=`${ratio<.35}:${ratio<.25}:${lowSpiritAttackActive(state)}:${Math.floor((state.battle?.spiritLost||0)/10)}:${state.terrain.revision||0}:${state.battle?.itemRevision||0}:${(state.battle?.disabled||[]).join(',')}`;
   if(frame.key!==key){frame.key=key;frame.mods=effects(state);frame.stats.clear();}
   return frame.mods;
 }
@@ -56,7 +57,7 @@ export function unitStats(state,unit) {
   result.attack=base.attack*growth*(tier>1&&b?b.attack_mult||1:1)*(1+(mods.attack||0)+roleBonus);
   result.attack*=1+(mods.lost_spirit_damage||0)*Math.floor((state.battle?.spiritLost||0)/10);
   result.attack*=1+(tier===1?mods.nexus_t1_attack||0:mods.nexus_evolved_attack||0)+(tier===3?mods.nexus_t3_attack||0:0);
-  if((mods.low_spirit_attack||0)&&state.spirit/state.maxSpirit<0.4) result.attack*=1+mods.low_spirit_attack;
+  if((mods.low_spirit_attack||0)&&lowSpiritAttackActive(state)) result.attack*=1+mods.low_spirit_attack;
   result.armor=base.armor+(tier-1)*2+(mods.armor||0)+(mods[`${base.role}_armor`]||0);
   if(unit.hp<result.hp*.35)result.armor+=mods.low_hp_armor||0;
   if(mods.priority_armor&&onField(unit)&&state.units.filter(u=>onField(u)&&u.hp>0).sort((a,b)=>(a.order||0)-(b.order||0)).slice(0,3).some(u=>u.uid===unit.uid))result.armor+=mods.priority_armor;
