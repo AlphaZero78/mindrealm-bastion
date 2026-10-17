@@ -353,6 +353,13 @@ test('checksums and nested schemas reject corrupt routes, units, rewards, profil
   const memory = new MemoryStorage(), store = createSaveStore(memory, 'schema'), original = service('elite', 'schema'); finishBattle(original, { won:true }); assert.equal(store.save(original).ok, true);
   const mutations = [
     s => { s.maps[0].nodes[0].next = [s.maps[0].nodes[0].id]; },
+    s => { s.maps[0].nodes[1].id = s.maps[0].nodes[0].id; },
+    s => { s.maps[0].nodes[0].next = ['missing-route-node']; },
+    s => { s.maps[0].nodes[0].next.push(s.maps[0].nodes[0].next[0]); },
+    s => { s.maps[0].nodes[0].floor = 17; },
+    s => { s.visited.push('missing-visited-node'); },
+    s => { s.currentNode.type = 'camp'; },
+    s => { s.currentNode.floor++; },
     s => { s.units[0].x = 40; s.units[0].z = 40; },
     s => { s.units[0].uid = s.units[1].uid; },
     s => { s.units[0].tier = 2; s.units[0].branch = 'C'; },
