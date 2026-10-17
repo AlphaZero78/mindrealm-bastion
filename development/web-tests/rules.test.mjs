@@ -23,6 +23,28 @@ test('frame-cached stats follow spirit thresholds in both directions, including 
   } finally { R.endRulesFrame(s); }
 });
 
+test('frame cache follows damage, terrain, item and in-place disabled-unit revisions',()=>{
+  const s=fixture(),u=place(s,'pulse_array',8,8,{h:1});
+  place(s,'phase_blade',12,8);const support=place(s,'frequency_choir',16,8);
+  Object.assign(s.modifiers,{lost_spirit_damage:.1,height_rate:.2,nexus_trinity:.25});
+  s.phase='battle';s.battle={spiritLost:0,time:0,itemRevision:0,itemBuffs:[],disabled:[]};
+  const check=()=>{
+    const uncached=cloneState(s);
+    assert.deepEqual(R.ruleEffects(s),R.ruleEffects(uncached));
+    assert.deepEqual(R.unitStats(s,u),R.unitStats(uncached,uncached.units[0]));
+  };
+  R.beginRulesFrame(s);
+  try {
+    check();s.battle.spiritLost=10;check();
+    R.cellAt(s,u.x,u.z).h=3;s.terrain.revision++;check();
+    s.battle.itemBuffs.push({effect:'attack',value:.3,until:10});s.battle.itemRevision++;check();
+    s.battle.disabled.push(support.uid);check();
+    s.battle.disabled.pop();check();
+    s.modifiers.attack=.4;R.invalidateRulesFrame(s);check();
+  } finally { R.endRulesFrame(s); }
+  s.modifiers.attack=.6;check();
+});
+
 test('deployment checks full footprint, height, protection, overlap, ramps and bandwidth atomically',()=>{
   const s=fixture(),u=addUnit(s,'focus_rail');
   const unchanged=(x,z,reason)=>{const before=cloneState(s);const p=R.placement(s,u,x,z);assert.equal(p.ok,false);assert.match(p.reason,reason);assert.equal(R.deploy(s,u.uid,x,z).ok,false);assert.deepEqual(s,before);};
