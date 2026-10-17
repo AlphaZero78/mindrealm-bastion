@@ -50,6 +50,42 @@ test('malformed nested save structures return failure without throwing or touchi
   assert.equal(store.save(valid).ok,true,'Valid writes still work after rejected inputs');
 });
 
+test('saved catalog references reject inherited properties and non-string IDs',()=>{
+  const states={run:newRun('catalog-save'),shop:service('shop','catalog-shop'),event:service('event','catalog-event'),reward:service('elite','catalog-reward')};
+  addItem(states.run,'clarity');finishBattle(states.reward,{won:true});
+  ensureShopStock(states.shop);
+  states.event.currentNode.eventData.relic=Object.keys(relics)[0];
+  states.event.currentNode.eventData.unitsByRole={melee:'phase_blade',ranged:'pulse_array',support:'memory_mechanic'};
+  for(const [kind,id]of [['item','clarity'],['relic',Object.keys(relics)[0]],['talent',Object.keys(talents)[0]]]){
+    states[kind]=cloneState(states.reward);states[kind].rewardQueue=[{kind,options:[id],reserves:[id]}];
+  }
+  const cases=[
+    ['run',s=>s.units[0],'type'],
+    ['run',s=>s.inventory.items[0],'type'],
+    ['shop',s=>s.currentNode.stock.units[0],'id'],
+    ['shop',s=>s.currentNode.stock.relics[0],'id'],
+    ['shop',s=>s.currentNode.stock.items[0],'id'],
+    ['event',s=>s.currentNode.eventData,'id'],
+    ['event',s=>s.currentNode.eventData,'unit'],
+    ['event',s=>s.currentNode.eventData,'relic'],
+    ['event',s=>s.currentNode.eventData.unitsByRole,'melee'],
+    ['run',s=>s.nexus[0],'messenger'],
+    ['reward',s=>s.rewardQueue[0].options,0],
+    ...['item','relic','talent'].flatMap(kind=>[[kind,s=>s.rewardQueue[0].options,0],[kind,s=>s.rewardQueue[0].reserves,0]])
+  ];
+  for(const [kind,entry,key]of cases){
+    const storage=new MemoryStorage(),store=createSaveStore(storage,'catalog-audit'),valid=cloneState(states[kind]);
+    assert.equal(store.save(valid).ok,true,`${kind}: valid fixture`);
+    const original=[...storage.data],realId=entry(valid)[key];
+    for(const invalidId of ['toString','constructor','__proto__',[realId]]){
+      const invalid=cloneState(valid);entry(invalid)[key]=invalidId;
+      assert.equal(store.save(invalid).ok,false,`${kind}.${key}: ${JSON.stringify(invalidId)}`);
+      assert.deepEqual([...storage.data],original);
+      assert.equal(store.load().ok,true);
+    }
+  }
+});
+
 test('complete catalog has stable IDs and finite effect values', () => {
   assert.deepEqual([Object.keys(towers).length, Object.keys(enemies).length, Object.keys(relics).length, Object.keys(talents).length, Object.keys(events).length], [12, 37, 102, 24, 36]);
   for (const t of Object.values(towers)) { assert.ok(t.footprint[0] >= 2 && t.footprint[1] >= 2); assert.deepEqual(Object.keys(t.branches), ['A', 'B']); assert.ok(t.range > 0); assert.equal(t.sprite_id, t.id); assert.ok(t.description.length > 5); for (const b of Object.values(t.branches)) assert.ok(b.description.length>8); }
