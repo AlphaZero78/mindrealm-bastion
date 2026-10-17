@@ -22,6 +22,34 @@ test('malformed stat modifiers, unit metadata and terrain refunds cannot overwri
 const service = (type, seed = 'service', act = 0) => { const s = newRun(seed); s.difficultyRevision=2; s.act = act; const node = s.maps[act].nodes.find(n => n.type === type) || s.maps[act].nodes.find(n => n.floor === 1); node.type = type; s.nextNodes = [node.id]; assert.equal(enterNode(s, node.id).ok, true); return s; };
 const drain = s => { let count = 0; while (s.phase === 'reward') { assert.ok(count++ < 60, '奖励队列必须有限'); assert.equal(chooseReward(s, s.rewardQueue[0].kind==='item'&&inventoryStatus(s).items.length>=inventoryStatus(s).itemCapacity?'skip':s.rewardQueue[0].options[0]).ok, true); } };
 
+test('malformed nested save structures return failure without throwing or touching storage',()=>{
+  const storage=new MemoryStorage(),store=createSaveStore(storage,'nested-save-audit');
+  const valid=newRun('nested-save-audit');assert.equal(store.save(valid).ok,true);
+  const original=[...storage.data];
+  const corruptions=[
+    s=>{s.maps[0]=null;},
+    s=>{s.maps[0].nodes[0]=null;},
+    s=>{s.inventory.items=[null];},
+    s=>{s.terrain.entries[0]=null;},
+    s=>{s.rewardQueue=[null];},
+    s=>{s.stats.history.push(s);}
+  ];
+  for(const corrupt of corruptions){
+    const invalid=cloneState(valid);corrupt(invalid);
+    assert.equal(store.save(invalid).ok,false);
+    assert.deepEqual([...storage.data],original,'No primary, backup or pending write');
+    assert.equal(store.load().ok,true);
+  }
+  const interrupted=cloneState(valid);interrupted.phase='battle';
+  interrupted.preBattle=cloneState(valid);interrupted.preBattle.maps[0]=null;
+  assert.equal(store.save(interrupted).ok,false);
+  assert.deepEqual([...storage.data],original);
+  const profile=store.loadProfile();profile.cycle=profile;
+  assert.equal(store.saveProfile(profile).ok,false);
+  assert.deepEqual([...storage.data],original);
+  assert.equal(store.save(valid).ok,true,'Valid writes still work after rejected inputs');
+});
+
 test('complete catalog has stable IDs and finite effect values', () => {
   assert.deepEqual([Object.keys(towers).length, Object.keys(enemies).length, Object.keys(relics).length, Object.keys(talents).length, Object.keys(events).length], [12, 37, 102, 24, 36]);
   for (const t of Object.values(towers)) { assert.ok(t.footprint[0] >= 2 && t.footprint[1] >= 2); assert.deepEqual(Object.keys(t.branches), ['A', 'B']); assert.ok(t.range > 0); assert.equal(t.sprite_id, t.id); assert.ok(t.description.length > 5); for (const b of Object.values(t.branches)) assert.ok(b.description.length>8); }

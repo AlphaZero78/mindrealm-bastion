@@ -91,6 +91,12 @@ function validSettings(s) { return !!s && ['master', 'music', 'effects', 'ui'].e
 // repaired independently, so it cannot discard valid volume or UI preferences.
 function validStoredSettings(s) { return !!s && typeof s === 'object' && !Array.isArray(s) && validSettings(completeSettings(s)); }
 
+// Public save operations report malformed data as a failed validation, just as
+// loading does. Nested nulls or cycles must not escape before the write guard.
+function passesValidation(value, validator) {
+  try { return validator(value); } catch { return false; }
+}
+
 /** All I/O is confined to the injected storage and a new Web-only namespace. */
 export function createSaveStore(storage = globalThis.localStorage, prefix = 'mindrealm.web.v2') {
   if (!storage || !['getItem', 'setItem', 'removeItem'].every(k => typeof storage[k] === 'function')) throw new Error('需要可用的浏览器本地存储。');
@@ -108,7 +114,7 @@ export function createSaveStore(storage = globalThis.localStorage, prefix = 'min
     catch (error) { return { ok: false, value: null, reason: `无法读取本地存档：${error.message}` }; }
   }
   function write(kind, value, validator) {
-    if (!validator(value)) return { ok: false, reason: '数据结构无效，未覆盖现有存档。' };
+    if (!passesValidation(value, validator)) return { ok: false, reason: '数据结构无效，未覆盖现有存档。' };
     try {
       const raw = envelope(kind, value), previous = storage.getItem(key(kind));
       storage.setItem(pending(kind), raw);
@@ -121,7 +127,7 @@ export function createSaveStore(storage = globalThis.localStorage, prefix = 'min
       if (!state || typeof state !== 'object') return { ok: false, reason: '没有可保存的单局。' };
       if (state.phase === 'battle' && !state.preBattle) return { ok: false, reason: '缺少战前快照，拒绝保存半场战斗。' };
       const source = state.phase === 'battle' ? state.preBattle : state;
-      if (!validRun(source)) return { ok: false, reason: '数据结构无效，未覆盖现有存档。' };
+      if (!passesValidation(source, validRun)) return { ok: false, reason: '数据结构无效，未覆盖现有存档。' };
       const safe = clone(source), runId = state.runId || `${state.seed}:${Date.now().toString(36)}:${Math.random().toString(36).slice(2, 8)}`;
       safe.runId = runId; safe.battle = null; safe.preBattle = null;
       if (state.phase === 'battle') safe.phase = 'prep';
@@ -137,7 +143,7 @@ export function createSaveStore(storage = globalThis.localStorage, prefix = 'min
     saveProfile(profile) { return write('profile', profile, validProfile); },
     loadSettings() { return completeSettings(read('settings', validStoredSettings).value); },
     saveSettings(settings) {
-      if (!validStoredSettings(settings)) return { ok: false, reason: '设置数据结构无效，未覆盖现有设置。' };
+      if (!passesValidation(settings, validStoredSettings)) return { ok: false, reason: '设置数据结构无效，未覆盖现有设置。' };
       const previous = read('settings', validStoredSettings).value;
       return write('settings', completeSettings({ ...previous, ...settings }), validStoredSettings);
     }
