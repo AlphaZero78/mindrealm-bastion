@@ -11,6 +11,8 @@ node development/web-tools/simulations.mjs
 
 性能重构前，在项目外保留基线检出，然后运行 `node development/web-tools/compare-core.mjs --baseline <基线目录>`。基线应采用当前的 `game/web/core/` 布局，并包含 `package.json` 和 `development/web-tests/helpers/`。该工具逐字段比较攻击判定、构筑效果及两个种子在压力 0、5、10 下的完整远征结果；可用 `--output <项目外路径>` 保存结果。
 
+战斗性能对照使用 `node development/web-tools/compare-combat.mjs --baseline <基线目录>`（同样支持外置 `--output`）。工具对 100 敌人、35 构造的近目标、远目标及最高生命优先级逐步比较完整状态和事件，再交替测量七轮。耗时仅作当前机器的参考，不设易受机器负载影响的相对性能断言。
+
 | 验证层 | 覆盖内容 |
 | --- | --- |
 | `rules.test.mjs` | 完整占地、所有部署失败原因、成本与取消、T1–T3 双分支和融合耐久、地形事务与撤销、斜坡与破障、所有高度组合、带宽、战中锁定 |

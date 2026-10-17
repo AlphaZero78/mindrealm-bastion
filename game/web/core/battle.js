@@ -358,6 +358,22 @@ function advanceDrones(state,active,dt){
 }
 function towerActions(state,active,dt) {
   const b=state.battle,m=effects(state),supports=active.filter(u=>unitStats(state,u).role==='support');
+  // Positions and terrain stay fixed until tower actions finish. Reuse stable
+  // distance orderings, but rebuild when a kill appends split reinforcements.
+  // Health ordering and live eligibility must reflect every preceding attack.
+  const distanceOrders=new Map();let orderedEnemyCount=-1;
+  const attackCandidates=priority=>{
+    const alive=e=>!e.dead&&e.hp>0;
+    if(priority==='hp')return b.enemies.filter(alive).sort((a,c)=>c.hp-a.hp);
+    if(orderedEnemyCount!==b.enemies.length){distanceOrders.clear();orderedEnemyCount=b.enemies.length;}
+    const direction=priority==='far'?-1:1;
+    if(!distanceOrders.has(direction)){
+      const ranked=b.enemies.filter(alive).map(enemy=>({enemy,distance:distanceToCore(state,enemy)}));
+      ranked.sort((a,c)=>direction*(a.distance-c.distance));
+      distanceOrders.set(direction,ranked.map(({enemy})=>enemy));
+    }
+    return distanceOrders.get(direction).filter(alive);
+  };
   const current=difficultyProfile(state).revision>=5,controlDuration=difficultyProfile(state).controlDurationMultiplier;
   const passive=active.flatMap(source=>unitAuras(state,source).filter(a=>['regeneration','armor'].includes(a.id)).map(aura=>({source,aura})));
   // Stopped units leave aura coverage immediately; timed repair armor still
@@ -400,8 +416,7 @@ function towerActions(state,active,dt) {
     }
     // solveAttack is the authority for the full modified range; a separate
     // broad-phase multiplier can silently reject legal high-ground targets.
-    const candidates=b.enemies.filter(e=>!e.dead&&e.hp>0);
-    candidates.sort((a,c)=>u.priority==='hp'?c.hp-a.hp:u.priority==='far'?distanceToCore(state,c)-distanceToCore(state,a):distanceToCore(state,a)-distanceToCore(state,c));
+    const candidates=attackCandidates(u.priority);
     let target=null,solution=null;
     for(const e of candidates){const check=solveAttack(state,u,{...e,armor:Math.max(0,e.armor-e.armorBreak)});if(check.ok){target=e;solution=check;break;}}
     if(!target)continue;
