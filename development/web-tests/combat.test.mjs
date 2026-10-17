@@ -39,6 +39,38 @@ test('basic shots, all elevation pairs and modified maximum range use the same s
   pin(e,28,10.5);const expected=solveAttack(s,u,e);assert.equal(expected.ok,true);stepBattle(s,.05);assert.ok(e.hp<e.maxHp,'far but preview-valid shot must fire');
 });
 
+test('target priorities preserve ties, live health and distance changes between steps',()=>{
+  for(const priority of ['near','far','hp']){
+    const s=fixture(),first=place(s,'pulse_array',10,10,{h:1}),second=place(s,'pulse_array',10,14,{h:1});
+    first.priority=second.priority=priority;
+    const [a,b]=battle(s,['static_drifter','static_drifter']);
+    pin(a,14,12);pin(b,14,12);first.cooldown=second.cooldown=0;
+    const shots=()=>s.battle.events.filter(e=>e.type==='shot'&&e.stage==='release');
+    stepBattle(s,.05);
+    assert.deepEqual(shots().map(e=>e.enemy),[a.id,priority==='hp'?b.id:a.id],`${priority}: stable ties and updated health`);
+    second.cooldown=1000;
+    for(const swapped of [false,true]){
+      pin(a,14,swapped?14:10,{hp:swapped?2000:1000});
+      pin(b,14,swapped?10:14,{hp:swapped?1000:2000});
+      first.cooldown=0;stepBattle(s,.05);
+      const near=swapped?a:b,far=swapped?b:a;
+      assert.equal(shots()[0]?.enemy,(priority==='far'?far:near).id,`${priority}: fresh priorities next step`);
+    }
+  }
+});
+
+test('later towers can target reinforcements split during the same action phase',()=>{
+  const s=fixture(),first=place(s,'pulse_array',10,10,{h:1}),second=place(s,'pulse_array',10,14,{h:1});
+  const [parent,other]=battle(s,['static_drifter','static_drifter']);
+  pin(parent,14,12,{hp:1,ability:'split',pressure:0});pin(other,15,9);
+  s.battle.reinforcementBudget=2;first.cooldown=second.cooldown=0;
+  stepBattle(s,.05);
+  const shots=s.battle.events.filter(e=>e.type==='shot'&&e.stage==='release');
+  assert.equal(shots[0].enemy,parent.id);
+  assert.equal(s.battle.reinforcements,2);
+  assert.ok(s.battle.enemies.some(e=>e.reinforcement&&e.id===shots[1]?.enemy));
+});
+
 test('all offensive tower branches apply their distinct combat effect',()=>{
   {
     const {s,u,e}=oneShot('phase_blade',{tier:2,branch:'A'});u.hp*=.3;const hp=u.hp;stepBattle(s,.05);assert.ok(u.hp>hp);
