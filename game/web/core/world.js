@@ -16,11 +16,15 @@ export function generateTerrain(seed){
  // Jittered southern shoulders keep the new edge target defensible. They share
  // the same noisy silhouette and erosion as every other hill.
  for(const side of [0,1])hills.push({x:(side?26:8)+random()*7,z:28+random()*7,rx:6+random()*3,rz:5+random()*4,angle:random()*Math.PI,height:4.5+random()});
+ // Each hill keeps its orientation across all 1,681 cells. Precompute only
+ // these constants, preserving both random draws and floating-point arithmetic.
+ for(const hill of hills){hill.cos=Math.cos(hill.angle);hill.sin=Math.sin(hill.angle);}
+ const rotationCos=Math.cos(rotation),rotationSin=Math.sin(rotation);
  const cells=Array.from({length:size*size},(_,i)=>{
   const x=i%size,z=Math.floor(i/size),wx=x+warpX(x,z)*4,wz=z+warpZ(x,z)*4;
   const protectedCell=Math.abs(x-core.x)<=2&&Math.abs(z-core.z)<=2||entries.some(e=>Math.abs(x-e.x)<=1&&Math.abs(z-e.z)<=1);
-  let peak=0;for(const h of hills){const dx=wx-h.x,dz=wz-h.z,c=Math.cos(h.angle),s=Math.sin(h.angle),d=Math.hypot((dx*c-dz*s)/h.rx,(dx*s+dz*c)/h.rz);peak=Math.max(peak,h.height-d*3.15);}
-  const rotated=(wx-20)*Math.cos(rotation)+(wz-18)*Math.sin(rotation),radial=Math.hypot((wx-20)/1.1,wz-18);
+  let peak=0;for(const h of hills){const dx=wx-h.x,dz=wz-h.z,c=h.cos,s=h.sin,d=Math.hypot((dx*c-dz*s)/h.rx,(dx*s+dz*c)/h.rz);peak=Math.max(peak,h.height-d*3.15);}
+  const rotated=(wx-20)*rotationCos+(wz-18)*rotationSin,radial=Math.hypot((wx-20)/1.1,wz-18);
   const shape=profile===0?peak+.5*Math.sin(rotated*.45):profile===1?peak*.95:profile===2?Math.max(peak*.6,3.8-Math.abs(radial-11)*.6):profile===3?Math.max(peak*.55,4.1-Math.abs(Math.abs(rotated)-8)*.55):2.2+coarse(x,z)*2.2+peak*.35;
   return{h:protectedCell?0:clamp(Math.floor(shape+coarse(x,z)*.7+detail(x,z)*.45),0,4),ramp:-1,protected:protectedCell};
  });
