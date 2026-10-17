@@ -86,6 +86,23 @@ test('all offensive tower branches apply their distinct combat effect',()=>{
   const ex=oneShot('focus_rail',{tier:2,branch:'B'});const normal=solveAttack(ex.s,ex.u,ex.e);ex.e.hp=ex.e.maxHp*.2;assert.ok(solveAttack(ex.s,ex.u,ex.e).damage>normal.damage*1.5);
 });
 
+test('enemy victims keep stable distance ties and only enabled taunts outrank closer defenders',()=>{
+  for(const type of ['static_drifter','remote_hunter']){
+    const s=fixture(),first=place(s,'phase_blade',10,10),second=place(s,'phase_blade',13,10);
+    const [enemy]=battle(s,[type]);pin(enemy,12,10.5,{attack:20,cooldown:0});
+    first.cooldown=second.cooldown=1000;stepBattle(s,.05);
+    assert.equal(s.battle.events.find(e=>e.type==='hit'&&e.enemy===enemy.id)?.unit,first.uid,`${type}: stable distance tie`);
+  }
+  for(const disabled of [false,true]){
+    const s=fixture(),near=place(s,'phase_blade',10,10),taunt=place(s,'anchor_bulwark',14,10);
+    if(disabled)s.bandwidth=unitStats(s,near).bandwidth;
+    const [enemy]=battle(s,['remote_hunter']);pin(enemy,12,10.5,{attack:20,cooldown:0});
+    near.cooldown=taunt.cooldown=1000;stepBattle(s,.05);
+    assert.equal(s.battle.disabled.includes(taunt.uid),disabled);
+    assert.equal(s.battle.events.find(e=>e.type==='hit'&&e.enemy===enemy.id)?.unit,(disabled?near:taunt).uid);
+  }
+});
+
 test('support targets most missing health; both repair branches, haste, slow aura, shield and self repair work',()=>{
   for(const branch of ['A','B']){
     const s=fixture(),repair=place(s,'memory_mechanic',10,10,{tier:2,branch}),a=place(s,'anchor_bulwark',12,10),b=place(s,'phase_blade',14,10);a.hp=100;b.hp=120;
