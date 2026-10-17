@@ -15,8 +15,15 @@ export function endRulesFrame(state){frames.delete(state);}
 export function invalidateRulesFrame(state){const frame=frames.get(state);if(frame){frame.key=null;frame.stats.clear();}}
 export function ruleEffects(state){
   const frame=frames.get(state);if(!frame)return effects(state);
-  const ratio=state.spirit/Math.max(1,state.maxSpirit),key=`${ratio<.35}:${ratio<.25}:${lowSpiritAttackActive(state)}:${Math.floor((state.battle?.spiritLost||0)/10)}:${state.terrain.revision||0}:${state.battle?.itemRevision||0}:${(state.battle?.disabled||[]).join(',')}`;
-  if(frame.key!==key){frame.key=key;frame.mods=effects(state);frame.stats.clear();}
+  const ratio=state.spirit/Math.max(1,state.maxSpirit),lowSpirit=ratio<.35,crisis=ratio<.25,lowAttack=lowSpiritAttackActive(state);
+  const lostSegments=Math.floor((state.battle?.spiritLost||0)/10),terrainRevision=state.terrain.revision||0,itemRevision=state.battle?.itemRevision||0;
+  const disabled=(state.battle?.disabled||[]).join(','),key=frame.key;
+  // Compare primitives on the hot path; allocate a key only when it changes.
+  // Keep a value signature for disabled IDs so in-place changes also invalidate.
+  if(!key||key.lowSpirit!==lowSpirit||key.crisis!==crisis||key.lowAttack!==lowAttack||key.lostSegments!==lostSegments||key.terrainRevision!==terrainRevision||key.itemRevision!==itemRevision||key.disabled!==disabled){
+    frame.key={lowSpirit,crisis,lowAttack,lostSegments,terrainRevision,itemRevision,disabled};
+    frame.mods=effects(state);frame.stats.clear();
+  }
   return frame.mods;
 }
 export const coreOf = state => state.terrain.core || {x:20,z:24,size:5};

@@ -32,4 +32,6 @@ node development/web-tools/simulations.mjs
 
 无界面测试不能证明画面、音频、真实操作和发布入口可用；这些仍需在实际浏览器和发布版本中单独验证。
 
-难度改动使用 `difficulty-sweep.mjs` 记录各幕伤害、突破、损毁、战斗时长和构筑，并逐节点核对跨难度的计划敌人数与增援预算。`--strategy` 可选 `reference`、`defensive`、`opening`、`empty`；后两者用于验证缺少成长或部署时的失败流程。所有结果必须到达终态且源码哈希一致。实际命令、数值表和样本结果见 [难度与平衡说明](../../docs/DIFFICULTY_BALANCE.md)。参考策略的样本胜率不能当作真实玩家胜率。
+难度改动使用 `difficulty-sweep.mjs` 记录各幕伤害、突破、损毁、战斗时长和构筑，并逐节点核对跨难度的计划敌人数与增援预算。`--strategy` 可选 `reference`、`defensive`、`opening`、`empty`；后两者用于验证缺少成长或部署时的失败流程。所有结果必须到达终态且源码哈希一致。实际命令、数值表和样本结果见 [难度与平衡说明](../docs/DIFFICULTY_BALANCE.md)。参考策略的样本胜率不能当作真实玩家胜率。
+
+2026-10-17 的基线、逐轮改动、性能样本与验证范围见[持续代码审计](../docs/PERFORMANCE_AUDIT_20261017.md)。
