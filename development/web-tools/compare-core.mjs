@@ -11,7 +11,7 @@ if(!process.argv.includes('--baseline'))throw Error('Pass an external preserved 
 const baseline=resolve(argument('--baseline')),root=resolve(import.meta.dirname,'../..');
 if(baseline===root||baseline.startsWith(root+sep))throw Error('Baseline must be outside the current checkout');
 const moduleAt=relative=>import(pathToFileURL(join(baseline,relative)));
-const [Old,OldRun,OldContent,OldStrategy]=await Promise.all([moduleAt('web/core/rules.js'),moduleAt('web/core/state.js'),moduleAt('web/core/content.js'),moduleAt('development/web-tests/helpers/reference-strategy.mjs')]);
+const [Old,OldRun,OldContent,OldStrategy]=await Promise.all([moduleAt('game/web/core/rules.js'),moduleAt('game/web/core/state.js'),moduleAt('game/web/core/content.js'),moduleAt('development/web-tests/helpers/reference-strategy.mjs')]);
 const random=Content.seededRandom('optimization-equivalence'),state=OldRun.newRun('optical-differential');let attacks=0,effects=0;
 for(const type of Object.keys(Content.towers))for(const [tier,branch]of [[1,null],[2,'A'],[2,'B'],[3,'A'],[3,'B']])for(let rotation=0;rotation<4;rotation++){
  const unit={uid:'u1',type,tier,branch,rotation,x:5+Math.floor(random()*25),z:5+Math.floor(random()*25),hp:20,priority:'hp'};state.units=[unit];
