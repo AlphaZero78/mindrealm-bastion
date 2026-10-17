@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { generateTerrain, generateMap, newRun } from '../../game/web/core/state.js';
 import { towers } from '../../game/web/core/content.js';
 import { DIRECTIONS, placement, deploy, pathToCore, solveAttack } from '../../game/web/core/rules.js';
@@ -8,6 +9,23 @@ import { createSaveStore } from '../../game/web/core/save.js';
 const cell = (terrain, x, z) => terrain.cells[z * terrain.size + x];
 const protectedAt = (terrain, x, z) => Math.abs(x - terrain.core.x) <= 2 && Math.abs(z - terrain.core.z) <= 2 ||
   terrain.entries.some(entry => Math.abs(x - entry.x) <= 1 && Math.abs(z - entry.z) <= 1);
+
+test('generation 2 preserves pre-optimization terrain bytes across all five landforms', () => {
+  // Captured from release v0.1.4, before hoisting the rotation constants.
+  // Cover the entire terrain payload, including roads, ramps and protection.
+  const baselines = [
+    ['terrain-0', '环形洼地', 'e457c701655f9363adf12e423cdb79fc81474f84a27cf8e2c798bacd0f6212ba'],
+    ['terrain-2', '双脊峡谷', '8954e6d14fb29d76c02a8723fa1fa21274cb4a5a05833a1146ec4cb4cd94e0a0'],
+    ['terrain-3', '离散台群', 'e28429cfa7f1b2e20232c881181bbb7c89359a2b79c9bdde44f177f28117c013'],
+    ['terrain-7', '破碎高原', '8725cd236fed4c0cf6257d5c1d2b8a7e2576f36baf29b5e31c5ca5b715ea7908'],
+    ['terrain-21', '交错山脊', 'ed498169a1042c438379429e1cf58b89f63a6e1ae4947a6307265a647e73dd71']
+  ];
+  for (const [seed, landform, hash] of baselines) {
+    const terrain = generateTerrain(seed);
+    assert.equal(terrain.landform, landform);
+    assert.equal(createHash('sha256').update(JSON.stringify(terrain)).digest('hex'), hash, seed);
+  }
+});
 
 function zeroGround(terrain) {
   const origin = terrain.core.z * terrain.size + terrain.core.x;
