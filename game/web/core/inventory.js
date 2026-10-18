@@ -20,7 +20,7 @@ export function discardUnits(state,uids) {
   if(!unique.length||units.some(u=>!u))return fail('请选择本局仍拥有的构造。');
   state.units=state.units.filter(u=>!unique.includes(u.uid));
   state.stats.history.push({act:state.act,floor:state.floor,text:`整理背包：删除 ${units.map(u=>`${towers[u.type].name} T${u.tier}`).join('、')}`});
-  return {ok:true,reason:`已移除 ${unique.length} 个构造，释放相同数量背包格`};
+  return {ok:true,reason:`已移除 ${unique.length} 座构造，释放相同数量的背包格`};
 }
 export function addItem(state,type,replaceUid=null) {
   if(!items[type])return fail('未知道具。');

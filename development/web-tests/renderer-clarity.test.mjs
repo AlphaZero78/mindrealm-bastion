@@ -49,7 +49,7 @@ test('compact world annotations avoid the unit silhouette and stay inside the vi
 });
 test('boss frequency shock keeps its radius and locked targets readable with reduced motion and clears at release',()=>{
  const qa=setup();try{const {field,state,canvas}=qa;state.pressureLevel=10;state.phase='battle';const target=state.units[0];target.x=18;target.z=19;state.battle={time:10.8,enemies:[{id:'boss-test',kind:'boss',hp:100,surgeWarningUntil:12,surgeOrigin:{x:20,z:17,h:0},surgeTargets:[target.uid]}]};field.setSelection({reducedMotion:true});field.worldLabels=[];field.drawSurgeTelegraphs();
- assert.ok(field.worldLabels.some(label=>label.text==='! 频震 · 1.2秒'));
+ assert.ok(field.worldLabels.some(label=>label.text==='! 频震 · 1.2 秒'));
  assert.ok(field.worldLabels.some(label=>label.text==='! 频震锁定'));
  assert.ok(canvas.ctx.calls.some(call=>call.method==='setLineDash'&&call.args[0].length));
  state.battle.time=12;field.worldLabels=[];const before=canvas.ctx.calls.length;field.drawSurgeTelegraphs();assert.equal(field.worldLabels.length,0);assert.equal(canvas.ctx.calls.length,before);

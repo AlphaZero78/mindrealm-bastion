@@ -26,7 +26,9 @@ export function createDevelopmentServer({workspaceDirectory=workspace}={}){
    if(!['GET','HEAD'].includes(req.method))return serveGame(req,res);
    if(path==='/health'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(req.method==='HEAD'?undefined:JSON.stringify({app:'mindrealm-bastion-development',version:1}));return;}
    let body,contentType='text/javascript; charset=utf-8';
-   if(path==='/web/app.js'){
+   if(path==='/development/enemy-review'){
+    body=await readFile(resolve(root,'development/web-tools/enemy-review.html'));contentType='text/html; charset=utf-8';
+   }else if(path==='/web/app.js'){
     const [source,bridge]=await Promise.all([readFile(resolve(root,'game/web/app.js'),'utf8'),readFile(resolve(root,'development/web-tools/qa-bridge.js'),'utf8')]);body=instrumentApp(source,bridge);
    }else if(path==='/development/assets/lighting/studio_small_09_1k.hdr'){
     body=await readFile(resolve(root,path.slice(1)));contentType='application/octet-stream';

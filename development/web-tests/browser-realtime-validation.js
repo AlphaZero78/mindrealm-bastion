@@ -4,11 +4,11 @@ async page=>{
  const check=(name,ok,detail)=>{checks.push({name,ok:!!ok,detail});if(!ok)throw Error(JSON.stringify(checks.at(-1)));};
  const idle=()=>page.waitForFunction(()=>window.__mindrealm&&!window.__mindrealm.transitions.active&&!window.__mindrealm.dialogs.active&&!window.__mindrealm.dialogs.animations.size);
  const click=async action=>{await page.locator(`[data-action="${action}"]`).first().click();await idle();};
- await page.reload();await page.waitForFunction(()=>window.__mindrealm?.field.realtime?.ready);await page.setViewportSize({width:1440,height:900});
+ await page.bringToFront();await page.reload();await page.waitForFunction(()=>window.__mindrealm?.field.realtime?.ready);await page.setViewportSize({width:1440,height:900});
  const catalog=await page.evaluate(()=>{
   const q=window.__mindrealm,r=q.field.realtime,records=[];q.getSettings().reducedMotion=true;
   const signature=()=>[...r.batches].filter(([,b])=>b.count).map(([key,b])=>[key,...b.mesh.instanceMatrix.array.slice(0,b.count*16)]).flat().join(',');
-  const pose=(id,action,progress,variant,reducedMotion=false,facing=.371)=>{r.begin({x:0,z:0,yaw:.63,width:256,height:256,scale:40,focusY:1},null,256,256);r.iconMode=true;r.add(id,{key:'sample',clock:progress*1000,action,progress,facing,variant},{x:0,z:0,h:0,fp:[2,2]},{reducedMotion,wreck:action==='wreck'});r.flush();return signature();};
+  const pose=(id,action,progress,variant,reducedMotion=false,facing=.371)=>{r.begin({x:0,z:0,yaw:.63,width:256,height:256,scale:40,focusY:1},null,256,256);r.iconMode=true;r.add(id,{key:'sample',clock:progress*1000,action,progress,facing,variant,phase:Math.max(0,Object.keys(r.catalog.entities[id].variants).indexOf(variant)),travel:progress*.72,speed:action==='move'?.1+progress*1.2:1,moving:action==='move',stage:'release'},{x:0,z:0,h:0,fp:[2,2]},{reducedMotion,wreck:action==='wreck'});r.flush();return signature();};
   for(const [id,d]of Object.entries(r.catalog.entities)){
    const variants=Object.keys(d.variants),images=new Set();for(const variant of variants){r.renderIcon(id,variant,256);const c=document.createElement('canvas');c.width=256;c.height=256;const ctx=c.getContext('2d');ctx.drawImage(r.canvas,0,0);const pixels=ctx.getImageData(0,0,256,256).data;let visible=0;for(let i=3;i<pixels.length;i+=4)if(pixels[i])visible++;if(visible<500)throw Error('Empty model '+id+variant);images.add(c.toDataURL());}
    if(images.size!==variants.length)throw Error('Duplicate branch/phase '+id);
@@ -73,7 +73,8 @@ async page=>{
  }
  await page.evaluate(()=>{const q=window.__mindrealm;q.getState().depth=12;q.getState().xp=0;q.render();});check('depth cap keeps full bar and explicit label',await page.locator('#hud-xp-bar').evaluate(e=>e.value===1&&e.max===1)&&await page.locator('#hud-xp-value').textContent()==='已满级');
  await page.evaluate(async()=>{const q=window.__mindrealm,R=await import('/web/core/state.js'),s=R.newRun('fatal-story');R.chooseNexus(s,s.nexus[0].options[0]);const n=s.maps[0].nodes.find(n=>n.floor===1);n.type='event';n.event='noise_market';s.nextNodes=[n.id];R.enterNode(s,n.id);s.spirit=1;q.loadState(s);});await idle();await page.locator('[data-action="event-choice"][data-index="0"]').click();await page.locator('[data-action="event-choice"][data-index="0"]').click();await idle();
- check('lethal exchange records choice, cost and ending in defeat',await page.evaluate(()=>window.__mindrealm.getState().phase==='lost')&&await page.locator('.event-final-record').count()===1&&/交出失眠的片段/.test(await page.locator('.event-final-record').textContent()));
+ const ending=await page.evaluate(()=>{const s=window.__mindrealm.getState();return{phase:s.phase,...s.currentNode.eventData.outcome};}),endingText=await page.locator('.event-final-record').textContent();
+ check('lethal exchange records choice, cost and ending in defeat',ending.phase==='lost'&&await page.locator('.event-final-record').count()===1&&endingText.includes(ending.label)&&ending.details.every(detail=>endingText.includes(detail)));
  const diagnostics=await page.evaluate(()=>({render:window.__mindrealm.field.errors,audio:window.__mindrealm.audio.errors,models:window.__mindrealm.field.realtime.snapshot()}));check('runtime diagnostics remain clear',!issues.length&&!diagnostics.render.length&&!diagnostics.audio.length,diagnostics);
  return {status:'REALTIME_MODELS_XP_UI_OK',checks:checks.length,catalog,samples,xp,hud,diagnostics,issues};
 }

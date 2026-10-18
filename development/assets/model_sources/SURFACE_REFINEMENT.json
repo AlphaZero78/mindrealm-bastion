@@ -1,0 +1,2324 @@
+{
+  "date": "2026-10-15",
+  "blender": "4.5.9",
+  "sources": [
+    {
+      "id": "space-kit/alien",
+      "original": "development/assets/model_sources/kenney/space-kit/alien.glb",
+      "originalSHA256": "c041e8ed0eff82f0b25b944a8107f1268ddbec9c2c93afedc4ee0e8b047d983d",
+      "runtime": "/assets/game/models/space-kit__alien.glb",
+      "runtimeSHA256": "425bdbcd1881b7fe807199554941a0e040a4a6e05e9cd53296f701e62497f505",
+      "triangles": [
+        7778,
+        292
+      ]
+    },
+    {
+      "id": "space-kit/barrel",
+      "original": "development/assets/model_sources/kenney/space-kit/barrel.glb",
+      "originalSHA256": "8a95781be23b35ebb39ad90278affc03140c75d4d055027e98be0313de084451",
+      "runtime": "/assets/game/models/space-kit__barrel.glb",
+      "runtimeSHA256": "ae747f81efb18280959cb7323ae4edaa2c74274dc4155a4e6a038083fb22d2c7",
+      "triangles": [
+        800,
+        56
+      ]
+    },
+    {
+      "id": "space-kit/corridor_wall",
+      "original": "development/assets/model_sources/kenney/space-kit/corridor_wall.glb",
+      "originalSHA256": "de47b981f8b29d3f36cab58fd71dc407f60977cd337f30782f7bf66ea1e338fd",
+      "runtime": "/assets/game/models/space-kit__corridor_wall.glb",
+      "runtimeSHA256": "f658f4c4a42995f1f620e29a572bb6c5d34f1215b0b83fc2a74723d8ccd95053",
+      "triangles": [
+        572,
+        36
+      ]
+    },
+    {
+      "id": "space-kit/corridor_wallCorner",
+      "original": "development/assets/model_sources/kenney/space-kit/corridor_wallCorner.glb",
+      "originalSHA256": "fad3456c3d903cecb200f87ac34fc583b767bb98c6fe90bbccdab1e12ea69e56",
+      "runtime": "/assets/game/models/space-kit__corridor_wallCorner.glb",
+      "runtimeSHA256": "1d00d205edff9c046d70b8e554a5658093933091a0be2ae4faa576cd599a2dff",
+      "triangles": [
+        1232,
+        256
+      ]
+    },
+    {
+      "id": "space-kit/craft_cargoA",
+      "original": "development/assets/model_sources/kenney/space-kit/craft_cargoA.glb",
+      "originalSHA256": "b9676e838c605699e164c4c1779262bf47db1562a1504ceb29764828cbaa80c2",
+      "runtime": "/assets/game/models/space-kit__craft_cargoA.glb",
+      "runtimeSHA256": "8dd65051ad2e5dfe86d5a696cab465f36f9004a9ddef6ec86f750ba524d8107d",
+      "triangles": [
+        6740,
+        264
+      ]
+    },
+    {
+      "id": "space-kit/craft_cargoB",
+      "original": "development/assets/model_sources/kenney/space-kit/craft_cargoB.glb",
+      "originalSHA256": "8da33a720ed3b208938a969864d6b0a64a51b7715f71d102ecad0a5f71412b8c",
+      "runtime": "/assets/game/models/space-kit__craft_cargoB.glb",
+      "runtimeSHA256": "f9cd4f541f76a0131477b99000c62bba2acf22782df5d46d9df69c265a2fb939",
+      "triangles": [
+        10760,
+        380
+      ]
+    },
+    {
+      "id": "space-kit/craft_miner",
+      "original": "development/assets/model_sources/kenney/space-kit/craft_miner.glb",
+      "originalSHA256": "de32320578886d2e73b1cd24b6161c9bd855e3a172bc2abcc8cb7bdd46352348",
+      "runtime": "/assets/game/models/space-kit__craft_miner.glb",
+      "runtimeSHA256": "ed6bc2059a4dde645cc0b4b335c30b75f62c732d3984308e1a04bf53e1be10c7",
+      "triangles": [
+        9860,
+        384
+      ]
+    },
+    {
+      "id": "space-kit/craft_racer",
+      "original": "development/assets/model_sources/kenney/space-kit/craft_racer.glb",
+      "originalSHA256": "bce8cb3d037a67e151ea6b68bba5876f53f4c77dfd43892c1c72892d5ab1c5aa",
+      "runtime": "/assets/game/models/space-kit__craft_racer.glb",
+      "runtimeSHA256": "f88d718cdc8f8250fb8ce54365224079e3a2cbfd1d1aa3077ea3cb63cd10ca8e",
+      "triangles": [
+        7552,
+        280
+      ]
+    },
+    {
+      "id": "space-kit/craft_speederA",
+      "original": "development/assets/model_sources/kenney/space-kit/craft_speederA.glb",
+      "originalSHA256": "dc48652fa5c59088a5e3902abce7598199f32e0dcb8c91bac25e17bb8ce15876",
+      "runtime": "/assets/game/models/space-kit__craft_speederA.glb",
+      "runtimeSHA256": "8445795105de2cac6220fac83e254faa25243d8025ca9cc5b2853e00e3d6ad28",
+      "triangles": [
+        7616,
+        280
+      ]
+    },
+    {
+      "id": "space-kit/craft_speederB",
+      "original": "development/assets/model_sources/kenney/space-kit/craft_speederB.glb",
+      "originalSHA256": "146aa14e340bf3d1884d184fe58dc65d367a8a8974faa8a953b8680abc310314",
+      "runtime": "/assets/game/models/space-kit__craft_speederB.glb",
+      "runtimeSHA256": "33f23c11928bda1121439629657312458ca1e2dc6445976c2246a02f0f3ebba9",
+      "triangles": [
+        7460,
+        270
+      ]
+    },
+    {
+      "id": "space-kit/desk_computerScreen",
+      "original": "development/assets/model_sources/kenney/space-kit/desk_computerScreen.glb",
+      "originalSHA256": "3a7526fff69a29bd1c793cea34c2bf9d6a96dcc7ef0c7b3c1286f691b8835074",
+      "runtime": "/assets/game/models/space-kit__desk_computerScreen.glb",
+      "runtimeSHA256": "bc13cf586b1bd411717634fa6a18e98a62e29ee683342640e6c3d700c66ff6df",
+      "triangles": [
+        2590,
+        108
+      ]
+    },
+    {
+      "id": "space-kit/gate_complex",
+      "original": "development/assets/model_sources/kenney/space-kit/gate_complex.glb",
+      "originalSHA256": "6c0914bd5886928760fab54fc602aafd1441314a7c08c9cd30fad2a3f9191b90",
+      "runtime": "/assets/game/models/space-kit__gate_complex.glb",
+      "runtimeSHA256": "d4f48f1c64096bae8091e136af988b8eb7ea0582e8ad2f850c1ea4cd08debc04",
+      "triangles": [
+        12264,
+        460
+      ]
+    },
+    {
+      "id": "space-kit/gate_simple",
+      "original": "development/assets/model_sources/kenney/space-kit/gate_simple.glb",
+      "originalSHA256": "9ed530a12b9bfc2da091dc1725010c9c54debf99ec261320119e2db2dc8d5cff",
+      "runtime": "/assets/game/models/space-kit__gate_simple.glb",
+      "runtimeSHA256": "63a1c188243168d04e8e3dad88ac2ed32714a05a8b5aa00146a45554c61af530",
+      "triangles": [
+        5904,
+        212
+      ]
+    },
+    {
+      "id": "space-kit/hangar_roundA",
+      "original": "development/assets/model_sources/kenney/space-kit/hangar_roundA.glb",
+      "originalSHA256": "cf64a33cc795f897971990433c46097d43529ae3ef0dce8ba719761c54dd6a3d",
+      "runtime": "/assets/game/models/space-kit__hangar_roundA.glb",
+      "runtimeSHA256": "0848372021120042dd1bdadc1a8db9a60d3448ad51fa5458b00f75044c01f094",
+      "triangles": [
+        5232,
+        372
+      ]
+    },
+    {
+      "id": "space-kit/hangar_roundB",
+      "original": "development/assets/model_sources/kenney/space-kit/hangar_roundB.glb",
+      "originalSHA256": "66dfd1e692f3951a0a4ceaf167f72e9d02e145c285ee53ebddc33fc3dea1c435",
+      "runtime": "/assets/game/models/space-kit__hangar_roundB.glb",
+      "runtimeSHA256": "76accbe44b00726e90b792114fa39e803b288f8f732e5625335c4607173102c6",
+      "triangles": [
+        5024,
+        360
+      ]
+    },
+    {
+      "id": "space-kit/machine_barrel",
+      "original": "development/assets/model_sources/kenney/space-kit/machine_barrel.glb",
+      "originalSHA256": "ecd46823928292bbb01718966bd4602a71e37a09320f3ba232d9044e909ce4ed",
+      "runtime": "/assets/game/models/space-kit__machine_barrel.glb",
+      "runtimeSHA256": "0f4fee13ca3e3057f20f070ef8c8948801fc7e978c6c442afc9245084437d52e",
+      "triangles": [
+        1855,
+        102
+      ]
+    },
+    {
+      "id": "space-kit/machine_barrelLarge",
+      "original": "development/assets/model_sources/kenney/space-kit/machine_barrelLarge.glb",
+      "originalSHA256": "3c156127373395cd45bfb7772936c56b06e4bcf33101da7a5030f17e5d8acae5",
+      "runtime": "/assets/game/models/space-kit__machine_barrelLarge.glb",
+      "runtimeSHA256": "606310c90f6b6669fe01aa9fcb6fe0539805865491b8fa3b7e355e968f42da11",
+      "triangles": [
+        5688,
+        422
+      ]
+    },
+    {
+      "id": "space-kit/machine_generator",
+      "original": "development/assets/model_sources/kenney/space-kit/machine_generator.glb",
+      "originalSHA256": "98e8ac6aceada3b2483ed1eceb59bff7190ee774edac799350ccc11ad140f7f3",
+      "runtime": "/assets/game/models/space-kit__machine_generator.glb",
+      "runtimeSHA256": "3cf415459af9f88972d7e897fdf74e59716a76204400d2a73f87087152ee1967",
+      "triangles": [
+        2542,
+        110
+      ]
+    },
+    {
+      "id": "space-kit/machine_generatorLarge",
+      "original": "development/assets/model_sources/kenney/space-kit/machine_generatorLarge.glb",
+      "originalSHA256": "bbfa33a2e7c7eff7d9ee12f64255249b7e2f5d4b2ada2d681aa35cf38ba599bc",
+      "runtime": "/assets/game/models/space-kit__machine_generatorLarge.glb",
+      "runtimeSHA256": "e3215031ed277950e4abd13d7c76a4803f870dbb10d7b77024c3eb840988d449",
+      "triangles": [
+        3272,
+        126
+      ]
+    },
+    {
+      "id": "space-kit/machine_wireless",
+      "original": "development/assets/model_sources/kenney/space-kit/machine_wireless.glb",
+      "originalSHA256": "9d49e70d51515bc38628fb0d6e43f4eda7f9cd5326882fd02e8815e61f2259d7",
+      "runtime": "/assets/game/models/space-kit__machine_wireless.glb",
+      "runtimeSHA256": "cf01c248334ec356dc82aee17afb54a5d66914af39898e68e8a4e8acf60801f3",
+      "triangles": [
+        4868,
+        174
+      ]
+    },
+    {
+      "id": "space-kit/pipe_ring",
+      "original": "development/assets/model_sources/kenney/space-kit/pipe_ring.glb",
+      "originalSHA256": "5b5700b08e9decc638ec025b3d77cb1923cd7d0255588dde2fb130f9bd5e30f3",
+      "runtime": "/assets/game/models/space-kit__pipe_ring.glb",
+      "runtimeSHA256": "bdb8b380c5ab114bf77ef7644a3e6deef05faae06cdb960158455451f53997cb",
+      "triangles": [
+        2892,
+        144
+      ]
+    },
+    {
+      "id": "space-kit/pipe_ringHigh",
+      "original": "development/assets/model_sources/kenney/space-kit/pipe_ringHigh.glb",
+      "originalSHA256": "9091694f93359e720150b85c6f576485beb888cc43d80b020b391263f5b047f1",
+      "runtime": "/assets/game/models/space-kit__pipe_ringHigh.glb",
+      "runtimeSHA256": "55a37fe13bf1b909afde8fd6f5b89563222faa4347df91cfb37d68b3f1ef2f80",
+      "triangles": [
+        3522,
+        188
+      ]
+    },
+    {
+      "id": "space-kit/rocket_baseA",
+      "original": "development/assets/model_sources/kenney/space-kit/rocket_baseA.glb",
+      "originalSHA256": "cd1e61105d70a6d8ae4d5245b7c8655e6f13c879af9e4db7195191d64f01e2bd",
+      "runtime": "/assets/game/models/space-kit__rocket_baseA.glb",
+      "runtimeSHA256": "eac35dad7f1179d33d293c4771d99ab4017f6c2007ef70519b6f5a94c98918dd",
+      "triangles": [
+        8744,
+        300
+      ]
+    },
+    {
+      "id": "space-kit/rocket_baseB",
+      "original": "development/assets/model_sources/kenney/space-kit/rocket_baseB.glb",
+      "originalSHA256": "a83b3c4db4c9ed5a367032e393433c815062b21faf1fc7b0075f73c3f60c6642",
+      "runtime": "/assets/game/models/space-kit__rocket_baseB.glb",
+      "runtimeSHA256": "e8f2719b0167a08cd64921b612e7f4dcc61577f987da9aca18b6214afae173b4",
+      "triangles": [
+        7568,
+        284
+      ]
+    },
+    {
+      "id": "space-kit/rocket_finsA",
+      "original": "development/assets/model_sources/kenney/space-kit/rocket_finsA.glb",
+      "originalSHA256": "656c530940f3a50a1ea9107a67452252ea6b00a8a3d24bbe84faed1f9f086e01",
+      "runtime": "/assets/game/models/space-kit__rocket_finsA.glb",
+      "runtimeSHA256": "0b25ae739cfd72dff14f5fac61984d2a1d73b65fa1b824542bb7693417e1ad18",
+      "triangles": [
+        4268,
+        188
+      ]
+    },
+    {
+      "id": "space-kit/rocket_finsB",
+      "original": "development/assets/model_sources/kenney/space-kit/rocket_finsB.glb",
+      "originalSHA256": "61d9a66dc0665a91d3f12922566894b91a325a7642f9f31105ec825eeb2b4952",
+      "runtime": "/assets/game/models/space-kit__rocket_finsB.glb",
+      "runtimeSHA256": "80f9a03e7c7da00d1c0b650c11d14263eec250566e89f82cc09bb34b7c9b6913",
+      "triangles": [
+        5136,
+        244
+      ]
+    },
+    {
+      "id": "space-kit/rocket_fuelA",
+      "original": "development/assets/model_sources/kenney/space-kit/rocket_fuelA.glb",
+      "originalSHA256": "093c94f292a974d4765224d7704c948d4b33d8e7e891489d4c66eb4b0b263868",
+      "runtime": "/assets/game/models/space-kit__rocket_fuelA.glb",
+      "runtimeSHA256": "bb8ebde4e9fe436cc3cfed136b90de942087f276241895ed5b82ff8745e590f5",
+      "triangles": [
+        2262,
+        236
+      ]
+    },
+    {
+      "id": "space-kit/rocket_fuelB",
+      "original": "development/assets/model_sources/kenney/space-kit/rocket_fuelB.glb",
+      "originalSHA256": "50fc3cbf21b76235201b368b5b1186633edb8ef0a087fc05195dd446b0754a07",
+      "runtime": "/assets/game/models/space-kit__rocket_fuelB.glb",
+      "runtimeSHA256": "03a10879a121df18ded6359e11747d32747b1f599831df3052c27d85b6d3790b",
+      "triangles": [
+        4432,
+        370
+      ]
+    },
+    {
+      "id": "space-kit/rocket_sidesA",
+      "original": "development/assets/model_sources/kenney/space-kit/rocket_sidesA.glb",
+      "originalSHA256": "1cc151d0abffb106c1761dcf2e9c2bab5a6157bd180ed9e5d80f9ee34a2269f4",
+      "runtime": "/assets/game/models/space-kit__rocket_sidesA.glb",
+      "runtimeSHA256": "f661ad0586ac3d48a64dcf618b374cc484e63d94ba458793b1d5346987763bfa",
+      "triangles": [
+        5124,
+        384
+      ]
+    },
+    {
+      "id": "space-kit/rocket_topA",
+      "original": "development/assets/model_sources/kenney/space-kit/rocket_topA.glb",
+      "originalSHA256": "29cd77e5f86546e46947781cec63dcb29b56b8f4cc66262bf1b52928eecc2c19",
+      "runtime": "/assets/game/models/space-kit__rocket_topA.glb",
+      "runtimeSHA256": "9248f41d2d4da0e747a5f8b9499ab3ec24cdc5d7079276702eeaf7711e3a5a5d",
+      "triangles": [
+        1242,
+        170
+      ]
+    },
+    {
+      "id": "space-kit/rocket_topB",
+      "original": "development/assets/model_sources/kenney/space-kit/rocket_topB.glb",
+      "originalSHA256": "341ef05f146cf0dc0fd8749b63334ebe4cedb8fbb442e816a4a5c5a6f0586169",
+      "runtime": "/assets/game/models/space-kit__rocket_topB.glb",
+      "runtimeSHA256": "f24a4d074adeef0af04c1166a2825e3ca08a2496571798aee61984088a2bef5e",
+      "triangles": [
+        2442,
+        250
+      ]
+    },
+    {
+      "id": "space-kit/rover",
+      "original": "development/assets/model_sources/kenney/space-kit/rover.glb",
+      "originalSHA256": "9784549775017e540ab84e6fc0eb8a1902dbeff9ba4285cecb97c086d2937fa5",
+      "runtime": "/assets/game/models/space-kit__rover.glb",
+      "runtimeSHA256": "4b0d68e54c2f6fc2133375878a67f72c136915fdf2c05189117cfba26e99d713",
+      "triangles": [
+        4572,
+        172
+      ]
+    },
+    {
+      "id": "space-kit/satelliteDish",
+      "original": "development/assets/model_sources/kenney/space-kit/satelliteDish.glb",
+      "originalSHA256": "db27a561b66fabda45a6ce2bcf41d650852e89e15bb9f63b68133ad1293aed8b",
+      "runtime": "/assets/game/models/space-kit__satelliteDish.glb",
+      "runtimeSHA256": "a53727c5f92b0803c73915476b3dc945576ae7e456bbb44df1f6388430debd32",
+      "triangles": [
+        15192,
+        812
+      ]
+    },
+    {
+      "id": "space-kit/satelliteDish_detailed",
+      "original": "development/assets/model_sources/kenney/space-kit/satelliteDish_detailed.glb",
+      "originalSHA256": "143dd36b2c427e3201110967a18fd836bc7aa8002dbf3e44efa42c75fbb44ae5",
+      "runtime": "/assets/game/models/space-kit__satelliteDish_detailed.glb",
+      "runtimeSHA256": "df5e0fe8cc722261c72bb5ad4bd8d8c40ece92f0b29f8904e962bd4c05d43d41",
+      "triangles": [
+        29768,
+        1260
+      ]
+    },
+    {
+      "id": "space-kit/satelliteDish_large",
+      "original": "development/assets/model_sources/kenney/space-kit/satelliteDish_large.glb",
+      "originalSHA256": "8fe696a37081a0a6f1c56ab867f447f33a498ef9f1daabb5aabc62b1ce09277e",
+      "runtime": "/assets/game/models/space-kit__satelliteDish_large.glb",
+      "runtimeSHA256": "8008ff22eb29b7315b35f3fabc2f8a3a7a7baf185fe0d3fa7d12da2d7b28eb3f",
+      "triangles": [
+        7634,
+        564
+      ]
+    },
+    {
+      "id": "space-kit/supports_high",
+      "original": "development/assets/model_sources/kenney/space-kit/supports_high.glb",
+      "originalSHA256": "48a8aa7818e0f3731aa7bd825f2030089bc16340fcebdf2a4bf60ef4a933a4da",
+      "runtime": "/assets/game/models/space-kit__supports_high.glb",
+      "runtimeSHA256": "4704223d8d86cd6b3e5dd1bf55ed7c89918a2dab8f47dfc4ada968b7b5f1bc2a",
+      "triangles": [
+        6484,
+        312
+      ]
+    },
+    {
+      "id": "space-kit/supports_low",
+      "original": "development/assets/model_sources/kenney/space-kit/supports_low.glb",
+      "originalSHA256": "e1c9df6a3c85df038673699114665736030614e31fedb04b3c71b380f5adc432",
+      "runtime": "/assets/game/models/space-kit__supports_low.glb",
+      "runtimeSHA256": "7fcffe7397a9fc49337c4ef62d4b3b65534ae3b850f4ac32eede021bb48b9588",
+      "triangles": [
+        4200,
+        184
+      ]
+    },
+    {
+      "id": "space-kit/turret_double",
+      "original": "development/assets/model_sources/kenney/space-kit/turret_double.glb",
+      "originalSHA256": "a707823a86f895f6418df2340f2e231d7d88be6c2069d3245433299cec1f9f9c",
+      "runtime": "/assets/game/models/space-kit__turret_double.glb",
+      "runtimeSHA256": "aaef3c936229bfebdce013eca9fadafb7174fed2d4e8d3274c52bbdb64308e51",
+      "triangles": [
+        9292,
+        876
+      ]
+    },
+    {
+      "id": "space-kit/turret_single",
+      "original": "development/assets/model_sources/kenney/space-kit/turret_single.glb",
+      "originalSHA256": "ef27f43718c846297f90a0b20446b13c6a1f092cd995ea730f27d6e003efd1e0",
+      "runtime": "/assets/game/models/space-kit__turret_single.glb",
+      "runtimeSHA256": "55cea2c11725bf15cfc0606ab83d79728ac8d79b18fc4455453201ab2ad4b0db",
+      "triangles": [
+        6096,
+        576
+      ]
+    },
+    {
+      "id": "space-kit/weapon_gun",
+      "original": "development/assets/model_sources/kenney/space-kit/weapon_gun.glb",
+      "originalSHA256": "f8e0edea00355789f9fac087e40c7a710468cf6a6c1c22a86426d44883f438b5",
+      "runtime": "/assets/game/models/space-kit__weapon_gun.glb",
+      "runtimeSHA256": "93ac8a0c21381f5faf79717c49364b4332000b42571f2a530bad95f93a1bcdb4",
+      "triangles": [
+        1618,
+        70
+      ]
+    },
+    {
+      "id": "space-kit/weapon_rifle",
+      "original": "development/assets/model_sources/kenney/space-kit/weapon_rifle.glb",
+      "originalSHA256": "266ffd12306a2afc2638e9a479687adf738fc3cd9e938ce8e3195ccb312a6b31",
+      "runtime": "/assets/game/models/space-kit__weapon_rifle.glb",
+      "runtimeSHA256": "2bc3dbc65d07a755bbddc3f5b3189fe38f1e5e7b90eb220d968e6056b678d4cc",
+      "triangles": [
+        1910,
+        106
+      ]
+    },
+    {
+      "id": "tower-defense-kit/enemy-ufo-b",
+      "original": "development/assets/model_sources/kenney/tower-defense-kit/enemy-ufo-b.glb",
+      "originalSHA256": "d62ec3057a6e78165f3e76affcd8cbe59816195754dccd21ac30a0ef55ad2298",
+      "runtime": "/assets/game/models/tower-defense-kit__enemy-ufo-b.glb",
+      "runtimeSHA256": "0909fe80f51227c87160077a3601d12e0aa064171171052275f414c9ecc934f8",
+      "triangles": [
+        4816,
+        236
+      ]
+    },
+    {
+      "id": "tower-defense-kit/enemy-ufo-c",
+      "original": "development/assets/model_sources/kenney/tower-defense-kit/enemy-ufo-c.glb",
+      "originalSHA256": "84d5f618e7498f97869fad53c23054a7ba629c9e70b1ce3862536355d32728db",
+      "runtime": "/assets/game/models/tower-defense-kit__enemy-ufo-c.glb",
+      "runtimeSHA256": "ed040064916b352d8f04b2e02cd4bf61983235e08cf35af63a156a46e29f8589",
+      "triangles": [
+        4011,
+        220
+      ]
+    },
+    {
+      "id": "tower-defense-kit/enemy-ufo-d",
+      "original": "development/assets/model_sources/kenney/tower-defense-kit/enemy-ufo-d.glb",
+      "originalSHA256": "55419c203d5462d2515f194252ec0b1f5db3fb6cff1961686ea639a285f4633a",
+      "runtime": "/assets/game/models/tower-defense-kit__enemy-ufo-d.glb",
+      "runtimeSHA256": "0cce1a0fb05c4ecd4e1537d2bde5973081d65e25604ed3d0b5fd29b0fff6234b",
+      "triangles": [
+        6606,
+        292
+      ]
+    },
+    {
+      "id": "tower-defense-kit/tower-round-bottom-c",
+      "original": "development/assets/model_sources/kenney/tower-defense-kit/tower-round-bottom-c.glb",
+      "originalSHA256": "24e7d10448a7f3f961f14f37469df5c56f218f9f8da4f334549ec8386784ecaa",
+      "runtime": "/assets/game/models/tower-defense-kit__tower-round-bottom-c.glb",
+      "runtimeSHA256": "1111ff5a646c26e4a9d1e2354b4e2af708ecfad6c06e67c62e73fecac98a3932",
+      "triangles": [
+        4996,
+        540
+      ]
+    },
+    {
+      "id": "tower-defense-kit/tower-round-middle-a",
+      "original": "development/assets/model_sources/kenney/tower-defense-kit/tower-round-middle-a.glb",
+      "originalSHA256": "2f070ed5b45fc189b01b234963ad7657dc390ca8d139d2c0f90fd9f384f7a124",
+      "runtime": "/assets/game/models/tower-defense-kit__tower-round-middle-a.glb",
+      "runtimeSHA256": "9b8dab126fc2e42490218b688f9aab6f491c949cbe1b3f139d937c254d27a754",
+      "triangles": [
+        11469,
+        956
+      ]
+    },
+    {
+      "id": "tower-defense-kit/tower-round-top-a",
+      "original": "development/assets/model_sources/kenney/tower-defense-kit/tower-round-top-a.glb",
+      "originalSHA256": "111e8c7e67807649bcce313a8d45a0d2a137b92d97303bd9b9ea6761b1160b85",
+      "runtime": "/assets/game/models/tower-defense-kit__tower-round-top-a.glb",
+      "runtimeSHA256": "88b70e244dc93d55134f2d62be615a6c8207d8b505d1fd7b53f274924a44a4d0",
+      "triangles": [
+        6332,
+        402
+      ]
+    },
+    {
+      "id": "tower-defense-kit/tower-square-bottom-b",
+      "original": "development/assets/model_sources/kenney/tower-defense-kit/tower-square-bottom-b.glb",
+      "originalSHA256": "2cb706d77311e7c81f78a3912c1dac4f671c3c8dfeb9d636301c4e6c7fae73ad",
+      "runtime": "/assets/game/models/tower-defense-kit__tower-square-bottom-b.glb",
+      "runtimeSHA256": "c6ba98cbd0ca3808c502908143c0cf597d5a96ded294af26e02951682531d237",
+      "triangles": [
+        3561,
+        192
+      ]
+    },
+    {
+      "id": "tower-defense-kit/weapon-cannon",
+      "original": "development/assets/model_sources/kenney/tower-defense-kit/weapon-cannon.glb",
+      "originalSHA256": "bf28e5593118cc27ebc45788e586c3bfcfbfb1686a86eb1a3cefd5c9edd6ae5f",
+      "runtime": "/assets/game/models/tower-defense-kit__weapon-cannon.glb",
+      "runtimeSHA256": "b60b4d94a28f33c5c7e75d6923468789fe4daf1b3d559f31a550214483812f39",
+      "triangles": [
+        7118,
+        322
+      ]
+    },
+    {
+      "id": "refined/drive-wheel",
+      "original": "development/assets/model_sources/kenney/tower-defense-kit/tower-round-middle-a.glb",
+      "originalSHA256": "2f070ed5b45fc189b01b234963ad7657dc390ca8d139d2c0f90fd9f384f7a124",
+      "runtime": "/assets/game/models/refined__drive-wheel.glb",
+      "runtimeSHA256": "6699fbda1cd827beb9f08416d6c2f249779790ce0128ce40867f44dfbc161a36",
+      "triangles": [
+        6940,
+        1466
+      ]
+    }
+  ],
+  "entities": [
+    {
+      "id": "static_drifter",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "none",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 3.524392787786732,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/static_drifter.png",
+        "animation": "game/assets/game/sprites/animations/enemies/static_drifter.png",
+        "portrait": "game/assets/game/portraits/static_drifter.png",
+        "death": "game/assets/game/sprites/death/enemies/static_drifter.png"
+      },
+      "sha256": {
+        "static": "9a86514846d2b714a0807241296448ecd4e3aa0806d4e513a6f9aae3060b1d98",
+        "animation": "7f512cd376a36fa90856eda3f83d1a08c62ed2a52968b5f5163845d454adb39c",
+        "portrait": "4fa528ccf30eae91ae9ce11c05c05d02bf8c5ca8fa962a147835b8979cbb3fb5",
+        "death": "2e5964072c92ab53a44481e51e8757695384846abc3bc1b3931f2c4f28d00e22"
+      }
+    },
+    {
+      "id": "spike_runner",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "runner",
+      "ability": "sprint",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.223385498658977,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/spike_runner.png",
+        "animation": "game/assets/game/sprites/animations/enemies/spike_runner.png",
+        "portrait": "game/assets/game/portraits/spike_runner.png",
+        "death": "game/assets/game/sprites/death/enemies/spike_runner.png"
+      },
+      "sha256": {
+        "static": "7108096cf0125402d31150418f419a7affcbff8ca390a979c9616c46fc788668",
+        "animation": "41db10d20fcd1f1260a1789b837fee59efbf91a0d38e0004751242a6900e7a28",
+        "portrait": "eab47e19673c31215f3ba049eb3d3b05e58b1fa2b20e4efb6fc1528d04f9e2ed",
+        "death": "e07f8dc26680447dfc46340fb6ecf092d7111bb2818fa4f2ef2295ab29195f0e"
+      }
+    },
+    {
+      "id": "shield_echo",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "shield",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 3.3884671826761346,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/shield_echo.png",
+        "animation": "game/assets/game/sprites/animations/enemies/shield_echo.png",
+        "portrait": "game/assets/game/portraits/shield_echo.png",
+        "death": "game/assets/game/sprites/death/enemies/shield_echo.png"
+      },
+      "sha256": {
+        "static": "5ac12989832afb42552a596737743453064c7ec9b7cf0e425b540bf24bdec063",
+        "animation": "9b6039845e93afda1ab24a190bcbd8c79a895864eb3bf97dfaeb4a694332712e",
+        "portrait": "95524975fac9b9bbf3626546eab817c62446f99095a12947736f636093dcdf3c",
+        "death": "9ae622e9c3d2e046b3ae06bace3199fb044eaad9cc22cf422cf100efe95ffae4"
+      }
+    },
+    {
+      "id": "tempo_amplifier",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "haste",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.4424187443186085,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1107
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/tempo_amplifier.png",
+        "animation": "game/assets/game/sprites/animations/enemies/tempo_amplifier.png",
+        "portrait": "game/assets/game/portraits/tempo_amplifier.png",
+        "death": "game/assets/game/sprites/death/enemies/tempo_amplifier.png"
+      },
+      "sha256": {
+        "static": "4f010bddf1e636c0a64c30596f5fa748bfe8fb8a15c6029f64674ae452b6a5c0",
+        "animation": "69cf470927d6d7409d5fcbfc1ac90088fb528c052b7c39deabc71aca08240635",
+        "portrait": "209698868461e259517f77d4d18e3b417d6809dbc241abd4fb082f0a2af80dd2",
+        "death": "bbfca4c3309ea441cf5585ee90a81cf7b6eca9d4c499af88f5891a714dc95a79"
+      }
+    },
+    {
+      "id": "fracture_seed",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "split",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.548796054851864,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/fracture_seed.png",
+        "animation": "game/assets/game/sprites/animations/enemies/fracture_seed.png",
+        "portrait": "game/assets/game/portraits/fracture_seed.png",
+        "death": "game/assets/game/sprites/death/enemies/fracture_seed.png"
+      },
+      "sha256": {
+        "static": "42f8c8c8fb7eed340f33bf2d742f1f655503f9c272a74272f3f98715d0436cd8",
+        "animation": "77849a6d3fc15a0e55f6977230f6435c2acbfa54b26f219babd53588e4702bef",
+        "portrait": "da376b176a435e538fc849817a9781120ffd6c841de1746a2616f9b1a4facfe5",
+        "death": "0b2a563d32126914cc8df414270b8470d4ab10eb252e23a3f61c348f2baf0abc"
+      }
+    },
+    {
+      "id": "floating_noise",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "hover",
+      "ability": "air",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.700935517433247,
+      "source": "actual game EntityRenderer",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/floating_noise.png",
+        "animation": "game/assets/game/sprites/animations/enemies/floating_noise.png",
+        "portrait": "game/assets/game/portraits/floating_noise.png",
+        "death": "game/assets/game/sprites/death/enemies/floating_noise.png"
+      },
+      "sha256": {
+        "static": "e7989c3683b6e83a11576f3d7e9293c97e6a29ce6d7aaeed303e4e7fe15a20b3",
+        "animation": "fc5af8c5aec29a6c143fb190d68c84d0da76f57b0c599073a2d7232404ee591f",
+        "portrait": "6d1509637fde0123794305c706725e370fb194682bfdb7052979ecf0bcd3ff10",
+        "death": "9ff421daa74e23f792f087262bdea82ef9dc9e20858601aa15b67470d2b3f9a9"
+      }
+    },
+    {
+      "id": "remote_hunter",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "tower_hunter",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.63371055319022,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/remote_hunter.png",
+        "animation": "game/assets/game/sprites/animations/enemies/remote_hunter.png",
+        "portrait": "game/assets/game/portraits/remote_hunter.png",
+        "death": "game/assets/game/sprites/death/enemies/remote_hunter.png"
+      },
+      "sha256": {
+        "static": "96a3041140dd431402433a1f65197883b43f945347b10deb35a702655150ed91",
+        "animation": "fa9dd6e46ba50e64fd972c23004221ffe9ec5620b0f43a1ed02ca16dcff74515",
+        "portrait": "67856f3b61e38c7a0f1ff74a5c21290f9c06705230bd2e09242718da8930d878",
+        "death": "ea6f24717a739ddba8e2a78804dbc4113cec1e0d3e605ee4e5c4b81565a29ad3"
+      }
+    },
+    {
+      "id": "siege_ram",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "siege",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.001189427261725,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1271
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/siege_ram.png",
+        "animation": "game/assets/game/sprites/animations/enemies/siege_ram.png",
+        "portrait": "game/assets/game/portraits/siege_ram.png",
+        "death": "game/assets/game/sprites/death/enemies/siege_ram.png"
+      },
+      "sha256": {
+        "static": "8ad618fd7e0c4da4a26b4de08bc023c7b7df63a9b86816aff805f149d3bdd26a",
+        "animation": "f0b720dd6639175e20ffe5a3d4c57f23c0502b0e47b1def938144dae914f362c",
+        "portrait": "2a1af42ab4bdbaced2333c9ae8f382f26cc31b3610d6d61a807e98e19f3258bf",
+        "death": "7b5f2ab8946325389343714d84896e178a0528841ae4808c6582204f4e1efe97"
+      }
+    },
+    {
+      "id": "memory_medic",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "heal",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.446157958270704,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/memory_medic.png",
+        "animation": "game/assets/game/sprites/animations/enemies/memory_medic.png",
+        "portrait": "game/assets/game/portraits/memory_medic.png",
+        "death": "game/assets/game/sprites/death/enemies/memory_medic.png"
+      },
+      "sha256": {
+        "static": "3d122340b3fe9c81314b1d77fe45e53ce627b08fb5d7dcdeee7b64609d81271a",
+        "animation": "eb3318c55aacc25b31310e8d1354d565d133c0c2f52690184050f42347115d8b",
+        "portrait": "f9f450e67ca25f6032cc6428bedcebcc0c47f1336f33938732e26301a0945410",
+        "death": "8fd4f2349adfe060ddd96180cf3ded6f264d2d9f2af0cb4e200c064a7e78b9e3"
+      }
+    },
+    {
+      "id": "bandwidth_jammer",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "jam",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.817678615239692,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1066
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/bandwidth_jammer.png",
+        "animation": "game/assets/game/sprites/animations/enemies/bandwidth_jammer.png",
+        "portrait": "game/assets/game/portraits/bandwidth_jammer.png",
+        "death": "game/assets/game/sprites/death/enemies/bandwidth_jammer.png"
+      },
+      "sha256": {
+        "static": "507bbaeeb608ed1fc7601116d2e3a0952ffc8465937910e3fab3ce5357dcbeee",
+        "animation": "47d96bfdec8da3586ec3b3c3ac76e4f273dc00dcf43944b35cca72927da6f81d",
+        "portrait": "69aba53999f328857a01b0115841f7b35ad48955258d5aea8478ad53c0ceafa1",
+        "death": "babfe713f6f6a47ae53df3141fbd75c0ef556bb0bdfea877a5a8181f2cd5d07f"
+      }
+    },
+    {
+      "id": "phase_teleporter",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "teleport",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.715303482882834,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/phase_teleporter.png",
+        "animation": "game/assets/game/sprites/animations/enemies/phase_teleporter.png",
+        "portrait": "game/assets/game/portraits/phase_teleporter.png",
+        "death": "game/assets/game/sprites/death/enemies/phase_teleporter.png"
+      },
+      "sha256": {
+        "static": "45717af17fd5c63c87aa24fbf06bef05eb9c0104fd2ed278b7f60c076902a019",
+        "animation": "77a554b5797554e68767f2099a964637759dca2822edeb3da45593bce856c19d",
+        "portrait": "9c9858052b774179f384de676a1eb1d6421574e4b79d87f018ded766c770676c",
+        "death": "3a95810d98d3d13a9110e4d7f9d0d7477d160f45abd93eb51707c67a35e0cc8b"
+      }
+    },
+    {
+      "id": "replication_node",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "copy",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.873446108359748,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1148
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/replication_node.png",
+        "animation": "game/assets/game/sprites/animations/enemies/replication_node.png",
+        "portrait": "game/assets/game/portraits/replication_node.png",
+        "death": "game/assets/game/sprites/death/enemies/replication_node.png"
+      },
+      "sha256": {
+        "static": "79b810f66e504a9d1fecd136a5c898afe84d0966952b81b716f025f88745a4d1",
+        "animation": "30c444e860a752768485dae1fdc31ef2550e9562b1b97ad930862d1a14a7d3a1",
+        "portrait": "9da9fdd7a60a2997075ba02057fd1d625abc66998030412b72f9e10ab7fd6b77",
+        "death": "a837b55cdb59d5b000e786f5e16a356d4628239de2b2149d1190b5a853dc08c4"
+      }
+    },
+    {
+      "id": "pressure_cantor",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "pressure_aura",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 2.853476839600389,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/pressure_cantor.png",
+        "animation": "game/assets/game/sprites/animations/enemies/pressure_cantor.png",
+        "portrait": "game/assets/game/portraits/pressure_cantor.png",
+        "death": "game/assets/game/sprites/death/enemies/pressure_cantor.png"
+      },
+      "sha256": {
+        "static": "6a22eed8575163fdf7b58fa9fad15b254f7cbb23f4421e27161302d5b4de4805",
+        "animation": "73ef17380b6d7074b1ae54c5a6a3334551953c8cb944e76e58c7c6e62d6b4e74",
+        "portrait": "8656484bb269a31e5e019063302592cc227c77f9d938f0b487f2a3ae72dec589",
+        "death": "8441e9181dd36f991ae55c81e9f9dff38c5ecfd3579d4a8737ac5df715eee13a"
+      }
+    },
+    {
+      "id": "armored_worm",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "armored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.930131749152723,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/armored_worm.png",
+        "animation": "game/assets/game/sprites/animations/enemies/armored_worm.png",
+        "portrait": "game/assets/game/portraits/armored_worm.png",
+        "death": "game/assets/game/sprites/death/enemies/armored_worm.png"
+      },
+      "sha256": {
+        "static": "caa8f281693b317ae502e2d9efb7a40b5e1a8857681a7175185c16494e88f9a1",
+        "animation": "e600f66577d6f7253380b7174d0266f87e9531e7b009ea9b1d90ba727b0dabad",
+        "portrait": "6906fd6efd91d77f50030f088b6fd347e9beaf6381bee878820d39f0f09eee1e",
+        "death": "3ee83fb2989ffe3393ba6224a0cbe00f551ebd71b6d85ce1d62ad5acc3e18682"
+      }
+    },
+    {
+      "id": "shield_conductor",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "group_shield",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.142810625531905,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/shield_conductor.png",
+        "animation": "game/assets/game/sprites/animations/enemies/shield_conductor.png",
+        "portrait": "game/assets/game/portraits/shield_conductor.png",
+        "death": "game/assets/game/sprites/death/enemies/shield_conductor.png"
+      },
+      "sha256": {
+        "static": "716956cbee176840f37d51e8742e8fa8eedae1680c7714d07c2899e87a0a5b73",
+        "animation": "0cf4f9900aaa195b2cb7eeec72d13c2da2ea9b843b7c5febd8d80e494b890859",
+        "portrait": "1a83266e65a89c22ce35210dec35642091c981f1a22e670fd179604beba54d83",
+        "death": "3c8cc4b75f12817934bc07ed18b09d735ba661922c4d3796b73f0c65ac596f7f"
+      }
+    },
+    {
+      "id": "signal_summoner",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "summon",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.755041191395194,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1066
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/signal_summoner.png",
+        "animation": "game/assets/game/sprites/animations/enemies/signal_summoner.png",
+        "portrait": "game/assets/game/portraits/signal_summoner.png",
+        "death": "game/assets/game/sprites/death/enemies/signal_summoner.png"
+      },
+      "sha256": {
+        "static": "0368ba8174051f252f4fa41b1c1e5944e2ad4d1d270c24527877231debaf5dcd",
+        "animation": "982ca001a6410f28543b898c2398399a7ee8438e14d2c8e99936d581448847e3",
+        "portrait": "9c8d9468c92011b518e3c085346ab4b43f226786eb75e5fcb78912f29be3f312",
+        "death": "516d2c2e6946da1da3432052e9c764cf565a34276b9ac62b7fdbd6e09f8d5dc2"
+      }
+    },
+    {
+      "id": "resistance_corruptor",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "hover",
+      "ability": "corrode_resistance",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 2.553339870116878,
+      "source": "actual game EntityRenderer",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/resistance_corruptor.png",
+        "animation": "game/assets/game/sprites/animations/enemies/resistance_corruptor.png",
+        "portrait": "game/assets/game/portraits/resistance_corruptor.png",
+        "death": "game/assets/game/sprites/death/enemies/resistance_corruptor.png"
+      },
+      "sha256": {
+        "static": "4ea294ff7cbb16dc5db1edb482636cfe6f96f13310a74871c862e5f52fab3b56",
+        "animation": "3a4150dacad1a9d870346af9e5e10817c093c8e8255192f27719202ff66f4ab7",
+        "portrait": "0b4169c627d9d6bbda8f77cb46a69bfcdb2667248a6459984a2ed1e6dcb9e661",
+        "death": "258c0c301098da516d71748a948c133492b68173aa5dd34df19ef7c8085f2c1f"
+      }
+    },
+    {
+      "id": "detonation_shell",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "explode",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.591510334290897,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1066
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/detonation_shell.png",
+        "animation": "game/assets/game/sprites/animations/enemies/detonation_shell.png",
+        "portrait": "game/assets/game/portraits/detonation_shell.png",
+        "death": "game/assets/game/sprites/death/enemies/detonation_shell.png"
+      },
+      "sha256": {
+        "static": "61c5141aa79f825a90a7b27564c3cdb85293f49e43be8686117d1c2e382d0378",
+        "animation": "22280b49420b210aa6f6b64172d1469ff1f47d9da2d4e26b4d459ec2b3762981",
+        "portrait": "56aadf6920c6a2d59edacb4b06ad699a71f416e24b11e4c32f91578a43f0b03f",
+        "death": "476d993bb7977f428eb3e2f8218545784cac377f544e9bafbdc80975857eca4e"
+      }
+    },
+    {
+      "id": "frequency_hunter",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "crawler",
+      "ability": "tower_hunter",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.256184551548054,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.14759999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/frequency_hunter.png",
+        "animation": "game/assets/game/sprites/animations/enemies/frequency_hunter.png",
+        "portrait": "game/assets/game/portraits/frequency_hunter.png",
+        "death": "game/assets/game/sprites/death/enemies/frequency_hunter.png"
+      },
+      "sha256": {
+        "static": "33b8c205ae696217472e00251686ebefc17003cf797305df5daaae762a589132",
+        "animation": "e6c1f071869ae555c11ef3373957a10378091390c8babd338a5786e5ef7ae413",
+        "portrait": "78a89440f116e011434c8e69eb6820680579f31484adda674cd2326976ff0f9f",
+        "death": "15e038be7455b2d89f6928467a2ffefa06495c673f87c43308219220ba46cb52"
+      }
+    },
+    {
+      "id": "terrain_dismantler",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "walker",
+      "ability": "siege",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.6689720515252136,
+      "source": "actual game EntityRenderer",
+      "finalModelRuntimeSHA256": "8eaf59766ccdc094e8582d62595910542dedab5ac457931d4135a6c290851b66",
+      "finalSourceBackfillReason": "Earliest pre-refinement source SHA snapshot unavailable; regenerated once from final stable source files.",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/terrain_dismantler.png",
+        "animation": "game/assets/game/sprites/animations/enemies/terrain_dismantler.png",
+        "portrait": "game/assets/game/portraits/terrain_dismantler.png",
+        "death": "game/assets/game/sprites/death/enemies/terrain_dismantler.png"
+      },
+      "sha256": {
+        "static": "8adf89f41ad003d955225cd093af634b4c210ee481115c38505bb6352383a2e1",
+        "animation": "0d058103c349028a1ba99a2d83d037ec1598d2712a3381431da0ab1e9f8908cb",
+        "portrait": "f71abb3609c358ba872d1dd3e8101ee258e0aaed150efb91403965613fe09cc0",
+        "death": "70523b956fadb548d3bf1ccf5e99f66275cad59ce504c840875e8856cf254bf2"
+      }
+    },
+    {
+      "id": "proliferation_protocol",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "crawler",
+      "ability": "summon",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.93855188673545,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.12299999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/proliferation_protocol.png",
+        "animation": "game/assets/game/sprites/animations/enemies/proliferation_protocol.png",
+        "portrait": "game/assets/game/portraits/proliferation_protocol.png",
+        "death": "game/assets/game/sprites/death/enemies/proliferation_protocol.png"
+      },
+      "sha256": {
+        "static": "5f93c8d273a72b73b2f8ac4912daa2e9fa8953e9e317cce7463a627aa341b00b",
+        "animation": "7f095f306f97c3f073d2b01ae5e5d1182c3aa60a1305574770ef7fb80d5de7fa",
+        "portrait": "40d0fb8ab45ae51cc746df495d1153a24268900c8890838d8d9c904492480a2d",
+        "death": "ffe4e2d1190d4d285344a47bedbd8cb4615feac1d553f3b576f796f3997b3a96"
+      }
+    },
+    {
+      "id": "spirit_taxer",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "hover",
+      "ability": "corrode_resistance",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 3.7930425874669567,
+      "source": "actual game EntityRenderer",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/spirit_taxer.png",
+        "animation": "game/assets/game/sprites/animations/enemies/spirit_taxer.png",
+        "portrait": "game/assets/game/portraits/spirit_taxer.png",
+        "death": "game/assets/game/sprites/death/enemies/spirit_taxer.png"
+      },
+      "sha256": {
+        "static": "55592e7a22f73520bdbf667b20564143686c1fe1781d310edbc0c0c24d58a94c",
+        "animation": "0fdf02e01eeb25a8679a8e5a30e7597956f25979dbe9554d4d6f2e58fb6f0370",
+        "portrait": "4ed4c33e23a25d8b85a7b558f04ba1e587db4d18cbc2c42a599d10923531338c",
+        "death": "411c196782a5e2b5fd05db32a0116998fea8316f2d20fab3e5cf9662126eed73"
+      }
+    },
+    {
+      "id": "scrap_bulwark",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "armored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.925441939887561,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1435
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "finalModelRuntimeSHA256": "f8e2320ab25cb3e8905ffa56724456253952c34d533392f33477ef00d76a7f19",
+      "finalSourceBackfillReason": "Earliest pre-refinement source SHA snapshot unavailable; regenerated once from final stable source files.",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/scrap_bulwark.png",
+        "animation": "game/assets/game/sprites/animations/enemies/scrap_bulwark.png",
+        "portrait": "game/assets/game/portraits/scrap_bulwark.png",
+        "death": "game/assets/game/sprites/death/enemies/scrap_bulwark.png"
+      },
+      "sha256": {
+        "static": "c920fc3baca7fa0ea24279395c0d3132fb72a90c7af5ffb2e20dcae129ed351f",
+        "animation": "984bb9f1cf989aea72143bf7511894d9710bd123fcfaf64895af90fb76a23683",
+        "portrait": "823a1d21fbed0888d2c1a83ab8d19f43d7da72173ee9ce6f129a447d4cb1d561",
+        "death": "c24daeb37d2d2a814526884d2e8bf69a4cb3a5f0ea5c7b63664c1324cd7bb029"
+      }
+    },
+    {
+      "id": "echo_glider",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "hover",
+      "ability": "haste",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.11353880564956,
+      "source": "actual game EntityRenderer",
+      "flightSpeeds": [
+        0,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/echo_glider.png",
+        "animation": "game/assets/game/sprites/animations/enemies/echo_glider.png",
+        "portrait": "game/assets/game/portraits/echo_glider.png",
+        "death": "game/assets/game/sprites/death/enemies/echo_glider.png"
+      },
+      "sha256": {
+        "static": "6b87dfd9cd7810a0ecdcbba545f5731fed24ce48980217331d360e00e56d176e",
+        "animation": "a9fb03f3cb654f4e4570bfab8f5a5a4ff8d668c59a03a25bc69b509407b58581",
+        "portrait": "a887d6607ed5179f29e34fe1d1ddeb0c528198d2003a5d2d4dad9bbd20afcaf5",
+        "death": "e56c38a59e4a5671f99c622d378150ad51db1c032f3e10949dc429801d8bb0fd"
+      }
+    },
+    {
+      "id": "noise_bell",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "crawler",
+      "ability": "pressure_aura",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.343967902513647,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.11889999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/noise_bell.png",
+        "animation": "game/assets/game/sprites/animations/enemies/noise_bell.png",
+        "portrait": "game/assets/game/portraits/noise_bell.png",
+        "death": "game/assets/game/sprites/death/enemies/noise_bell.png"
+      },
+      "sha256": {
+        "static": "c694fca422b2cb22680af9c53ce8ca26900f1c33e3498183eee66065d7512e4c",
+        "animation": "02d8ac7aef7f7de7e7b4884f4f487b830612d9f9323f3c0c48a575b2f4104946",
+        "portrait": "bdadf1d5e789de172c1bf2c7062a690f5ea3e144cfef2aebe510c316684306c8",
+        "death": "16fc1237879454ac108bb0471ba154b4cf3995c0184bac23231ab613bdd84a44"
+      }
+    },
+    {
+      "id": "memory_runner",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "runner",
+      "ability": "sprint",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.86379357510626,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/memory_runner.png",
+        "animation": "game/assets/game/sprites/animations/enemies/memory_runner.png",
+        "portrait": "game/assets/game/portraits/memory_runner.png",
+        "death": "game/assets/game/sprites/death/enemies/memory_runner.png"
+      },
+      "sha256": {
+        "static": "08564265e25a1f8a55af9576fdc07e058a39875408ff5f03ad19920f8cecc6f7",
+        "animation": "eae81add3bfc24496008bdc2649c3503f6ddc91ee59f8726a2e3bea12e78fffb",
+        "portrait": "9e7e85a2545f005db24933f5ef446ead41060c9e8b8d2e5bdd13787625371541",
+        "death": "bbbeb6fec47796f43b8240698545d495462f1652479288c1c71776ee5eb98462"
+      }
+    },
+    {
+      "id": "repair_skiff",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "hover",
+      "ability": "heal",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 3.0213834561814137,
+      "source": "actual game EntityRenderer",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/repair_skiff.png",
+        "animation": "game/assets/game/sprites/animations/enemies/repair_skiff.png",
+        "portrait": "game/assets/game/portraits/repair_skiff.png",
+        "death": "game/assets/game/sprites/death/enemies/repair_skiff.png"
+      },
+      "sha256": {
+        "static": "4ba58e46240481682e9222d2a0df0cce7989fc1cbeff7c8e7fa52ff855dff4f2",
+        "animation": "d5c7dfaad42c8b72962b553de51b575a6a9f6185871a642d91478c0e84af2901",
+        "portrait": "39b428125349ebf0187d051df3225f3e73ec912f29f59994f6ce480b573b5052",
+        "death": "0c8ccebfef2aa522780536b5464cc1db52422301a9b24e71e443246fa7d1820b"
+      }
+    },
+    {
+      "id": "archive_warden",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "crawler",
+      "ability": "group_shield",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.439203649469126,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1271
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/archive_warden.png",
+        "animation": "game/assets/game/sprites/animations/enemies/archive_warden.png",
+        "portrait": "game/assets/game/portraits/archive_warden.png",
+        "death": "game/assets/game/sprites/death/enemies/archive_warden.png"
+      },
+      "sha256": {
+        "static": "4aaa6fd59beeaf7e2b3809c968408499523f5c5fc843645161cbe2c3a4d591c3",
+        "animation": "3f75eb39491effb855461dc82756970fac3d83e452e6e0fd995d54080ab7e11c",
+        "portrait": "04babd17b0d906c425c0252d3827aa0b9c071435dcb05a6b1ec9d08853d4ed9b",
+        "death": "7c35a96146ff09e067adde4a9446f2d0fc5a48cd1e4ad77545878dd6c91b91e0"
+      }
+    },
+    {
+      "id": "ordered_sentinel",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "armored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.32975819984337,
+      "source": "actual game EntityRenderer",
+      "finalModelRuntimeSHA256": "5da032635560114149d91c4afe5ede5d9b10674523d999a8f9821b9b38751c10",
+      "finalSourceBackfillReason": "Earliest pre-refinement source SHA snapshot unavailable; regenerated once from final stable source files.",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/ordered_sentinel.png",
+        "animation": "game/assets/game/sprites/animations/enemies/ordered_sentinel.png",
+        "portrait": "game/assets/game/portraits/ordered_sentinel.png",
+        "death": "game/assets/game/sprites/death/enemies/ordered_sentinel.png"
+      },
+      "sha256": {
+        "static": "e6d91fd616d21a0933c07e7559395a33491b4c7d15a9e110b32f3daf403f7954",
+        "animation": "cb4b885bbd8f979d501252d2451c6fd373faee661f75e3108c6790b28a51dd52",
+        "portrait": "6e5e47b8d2d05314088a0f35e4ab0f3be5f18ebdf5154d804dc35dd550c74a24",
+        "death": "cc778e8b1f31ba10905d42e4998360d8cb6323b60c8e13406b404d7b91f930db"
+      }
+    },
+    {
+      "id": "null_wing",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "hover",
+      "ability": "jam",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 3.6227181975289833,
+      "source": "actual game EntityRenderer",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/null_wing.png",
+        "animation": "game/assets/game/sprites/animations/enemies/null_wing.png",
+        "portrait": "game/assets/game/portraits/null_wing.png",
+        "death": "game/assets/game/sprites/death/enemies/null_wing.png"
+      },
+      "sha256": {
+        "static": "306c71e4564aa22df39911cccc6d01d15520153744b613598f49ecdb285b2792",
+        "animation": "806220774aea19b04e119c1ad2c873dd04e61045c35f056127647829aead7b7e",
+        "portrait": "ba7413e034559fe915b6258c465778b61abb521b8a3d9a67f74dff0344b3de86",
+        "death": "7278e9f8df60068fb58977f85530f1f273cf1014937cf54f6522437dfbc609ba"
+      }
+    },
+    {
+      "id": "entropy_engine",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "crawler",
+      "ability": "siege",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.6240178193809705,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.13119999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/entropy_engine.png",
+        "animation": "game/assets/game/sprites/animations/enemies/entropy_engine.png",
+        "portrait": "game/assets/game/portraits/entropy_engine.png",
+        "death": "game/assets/game/sprites/death/enemies/entropy_engine.png"
+      },
+      "sha256": {
+        "static": "eb0a29de288b52e24b6ac776bb303ea75138657012ca70a45c69f2ae718f3642",
+        "animation": "8e6942256c1783dfb1b2bfa7c9bb5c70b082290f92f9bb2f8686147883c10b92",
+        "portrait": "691fde5c617c5dd3b9ecfb3ed71deae25e540dc50c6a2d6c8ba66ec05aae4d2d",
+        "death": "69ce7f50ec689875bae4f50e523ee438b2ccc6e115c1797c2ad301c1ac00c3e6"
+      }
+    },
+    {
+      "id": "noise_hive",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "crawler",
+      "ability": "summon",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.978020386255595,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.13119999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/noise_hive.png",
+        "animation": "game/assets/game/sprites/animations/enemies/noise_hive.png",
+        "portrait": "game/assets/game/portraits/noise_hive.png",
+        "death": "game/assets/game/sprites/death/enemies/noise_hive.png"
+      },
+      "sha256": {
+        "static": "f62aea01d059e15239b9cfe618793355afb69accd12bb81c958a3cc707647d06",
+        "animation": "6a44a712ac4c1d630205ebde419b83b7d75a883f3c3df5523c0d2dcf3f9519da",
+        "portrait": "4827221fa2f6bdc6a830fa7de60cba2ac931e4d62e95acbc890d2b0831e5066b",
+        "death": "cba2f5a25331da181b50a2ecd83285812ba1bcc65e73b2a36db0e3dbede46117"
+      }
+    },
+    {
+      "id": "mirror_censor",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "crawler",
+      "ability": "copy",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.380247120837643,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1558
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/mirror_censor.png",
+        "animation": "game/assets/game/sprites/animations/enemies/mirror_censor.png",
+        "portrait": "game/assets/game/portraits/mirror_censor.png",
+        "death": "game/assets/game/sprites/death/enemies/mirror_censor.png"
+      },
+      "sha256": {
+        "static": "d82d8446dc2aeb623d4771777eff2c4249e6e44c1231ee7c29c464079363bc1d",
+        "animation": "d9255550b12ea55f8c6f99b0c246532ef93c0715c7297737eae79eb469c6d673",
+        "portrait": "43d445b249b73fe609028a21bc13c43580d79c97faf6eeebf3d1d1ee785ffe0b",
+        "death": "f7cf61d7e852af3b01613b3bbfa80923b367e8f40511f5390ad965582e1aa81f"
+      }
+    },
+    {
+      "id": "memory_reforger",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "crawler",
+      "ability": "heal",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.1916612317369175,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1558
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/memory_reforger.png",
+        "animation": "game/assets/game/sprites/animations/enemies/memory_reforger.png",
+        "portrait": "game/assets/game/portraits/memory_reforger.png",
+        "death": "game/assets/game/sprites/death/enemies/memory_reforger.png"
+      },
+      "sha256": {
+        "static": "59cc140b9a62b606db3dd5a1c113bc014600b5e37061940d47d0e6eba08a20f2",
+        "animation": "09a0ae00f514eb2f923de3c6b579a43b31df8caa5dfd1faef28237179544c120",
+        "portrait": "2f69fb8f80cfe6d180d5f51e3c4d0526ad6dc544e15112b32f79074949c744db",
+        "death": "650d6a744173edc45eee879eecd05a7af3c03ad9988411e39d89714ea8a34767"
+      }
+    },
+    {
+      "id": "bandwidth_requisitioner",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "crawler",
+      "ability": "jam",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.556305426888889,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 8,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.12299999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/bandwidth_requisitioner.png",
+        "animation": "game/assets/game/sprites/animations/enemies/bandwidth_requisitioner.png",
+        "portrait": "game/assets/game/portraits/bandwidth_requisitioner.png",
+        "death": "game/assets/game/sprites/death/enemies/bandwidth_requisitioner.png"
+      },
+      "sha256": {
+        "static": "dcd19ede386b71a3022acd47749cb0c94f68cdb53d6431bb44bd326a9d595d61",
+        "animation": "01dac1504c91eb6f9d3eddd86b13d7cff582c833e083f57fc3980d0666d5c09d",
+        "portrait": "779b0bece2726edcc48c44309512bdb5cbaac9b5250e6ec915a9725f1bb6b581",
+        "death": "0c69a7e40e57e5d313419ec0bfe5c02fac407d56b8ca2009def1a5411fbebbfa"
+      }
+    },
+    {
+      "id": "chorus_overseer",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "hover",
+      "ability": "group_shield",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.0972339894646534,
+      "source": "actual game EntityRenderer",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/chorus_overseer.png",
+        "animation": "game/assets/game/sprites/animations/enemies/chorus_overseer.png",
+        "portrait": "game/assets/game/portraits/chorus_overseer.png",
+        "death": "game/assets/game/sprites/death/enemies/chorus_overseer.png"
+      },
+      "sha256": {
+        "static": "b61ef226a2e4b3e6e64f8358f7990da2da6d61435cbfc430ee7ec6331c3af405",
+        "animation": "5e47b3524715e90a849ea040d11b980349d9d85bfd6a7709e7726eae5061a081",
+        "portrait": "7b80f574e33f7f87feda9951ba3acfe37f2442749924d5ef9a5af7e48b1513bb",
+        "death": "221be21352ca5daf9b8a989c4b9e272166147c70c0fb4b302d4f62ecd728a95a"
+      }
+    },
+    {
+      "id": "zero_frequency_mind",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "crawler",
+      "ability": "siege",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.432242862133317,
+      "source": "actual game EntityRenderer",
+      "rollingWheels": 8,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.12299999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "finalModelRuntimeSHA256": "c75b29763a9519741f744879104c8c7f355aa02f23f82426132531b72044dfc8",
+      "finalSourceBackfillReason": "Earliest pre-refinement source SHA snapshot unavailable; regenerated once from final stable source files.",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/zero_frequency_mind.png",
+        "animation": "game/assets/game/sprites/animations/enemies/zero_frequency_mind.png",
+        "portrait": "game/assets/game/portraits/zero_frequency_mind.png",
+        "death": "game/assets/game/sprites/death/enemies/zero_frequency_mind.png"
+      },
+      "sha256": {
+        "static": "102beafd6cd513153130d78057dad381824190f222221159bc3deadd9cc6d011",
+        "animation": "955f717c39d638017c7a20dd67510f52bbc521bc9e3bc2f0c7b8d510da230035",
+        "portrait": "c081c1a9ff4309f2ce7c11d0f41feed6b1cd663854fb99adcdadff96c28eac2b",
+        "death": "a2ab08f4b82b4c8e1775f6f57991f4100a8880325c8239c96815ebbab29aceb4"
+      }
+    },
+    {
+      "id": "anchor_bulwark",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "melee",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.523193015341629,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/anchor_bulwark.png",
+        "animation": "game/assets/game/sprites/animations/towers/anchor_bulwark.png",
+        "portrait": "game/assets/game/portraits/anchor_bulwark.png"
+      },
+      "sha256": {
+        "static": "b68a1b62f97e9fcb8cca7ba01099db7de1528a92cbd11817b32ac212a4c969da",
+        "animation": "555b79609c93cff2946b9075719badf736d6cde28bc27bb918153edda3ec1665",
+        "portrait": "38a24fa88fb16a4e0ea6b8d46b97f051e287bc026f55d2cc98d299eaf1b2b754"
+      }
+    },
+    {
+      "id": "phase_blade",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "melee",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.523193015341629,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/phase_blade.png",
+        "animation": "game/assets/game/sprites/animations/towers/phase_blade.png",
+        "portrait": "game/assets/game/portraits/phase_blade.png"
+      },
+      "sha256": {
+        "static": "506a02f52e8dcefb3874b7c8116dfe85f5c3268b065a765d4e092379dc500dba",
+        "animation": "bc428a9a2f409011380c1885f5f58eaa268c7afae95f905f7ca968ef650de724",
+        "portrait": "b148ca37e4d164a0bab19576ec58d0fc6b49b116e5b4d358678d32fb06d53c9e"
+      }
+    },
+    {
+      "id": "boundary_riveter",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "melee",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.523193015341629,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/boundary_riveter.png",
+        "animation": "game/assets/game/sprites/animations/towers/boundary_riveter.png",
+        "portrait": "game/assets/game/portraits/boundary_riveter.png"
+      },
+      "sha256": {
+        "static": "be9cfeed35fea6036beedbcfe2fe7f3cc6bbaa39ad73c2e06a224ae6ecd9395c",
+        "animation": "6602372c802ef256a07197fd5167739157e4d97778b9007856c3ce74feb8cbf7",
+        "portrait": "77d2bcc6ccc98c548f57d25b60b317e4431ecad1f9a511608db83dbfaa2c769f"
+      }
+    },
+    {
+      "id": "resonance_guard",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "melee",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.523193015341629,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/resonance_guard.png",
+        "animation": "game/assets/game/sprites/animations/towers/resonance_guard.png",
+        "portrait": "game/assets/game/portraits/resonance_guard.png"
+      },
+      "sha256": {
+        "static": "df432758d62ab70e2e8d326591445b4bdbc74a6a10a777b9e6b821f660818290",
+        "animation": "36640cb72accabb7a44262746cecd28a9bf349a04052ec3436b2971a1118336e",
+        "portrait": "91581eb639fbd079ea92361e3f211b7809f6fc43e8ec3eb34114a62d70581f51"
+      }
+    },
+    {
+      "id": "pulse_array",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "ranged",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.523193015341629,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/pulse_array.png",
+        "animation": "game/assets/game/sprites/animations/towers/pulse_array.png",
+        "portrait": "game/assets/game/portraits/pulse_array.png"
+      },
+      "sha256": {
+        "static": "db14c9059f6a69a60207cba8cd1fca620f19a7005808228ca3e651287105a4f5",
+        "animation": "762ce9e35025c8b1727dab5cb03673eedd7d0590e82abbb1a0ecd7f488c41e5c",
+        "portrait": "7576fbce19ea097dea1f0e74048031db1be2d1138190da68778ac9666b5f2bd2"
+      }
+    },
+    {
+      "id": "focus_rail",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "ranged",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.523193015341629,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/focus_rail.png",
+        "animation": "game/assets/game/sprites/animations/towers/focus_rail.png",
+        "portrait": "game/assets/game/portraits/focus_rail.png"
+      },
+      "sha256": {
+        "static": "f07edf575056d3c35ef2f47f33d6bd648e167374c6b0419a120c749f128d2e39",
+        "animation": "d9877e3c8e939057d4c94fcb16a0faf07affee3b020971703edda199c2322f44",
+        "portrait": "2cf8923aae9b3bfc000be788559bc35dbc03a74fe3b6177e27a88f4c42e679f3"
+      }
+    },
+    {
+      "id": "arc_mortar",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "ranged",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.523193015341629,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/arc_mortar.png",
+        "animation": "game/assets/game/sprites/animations/towers/arc_mortar.png",
+        "portrait": "game/assets/game/portraits/arc_mortar.png"
+      },
+      "sha256": {
+        "static": "de9fd5b266bdfb92f16664e786cf9b6c56f57e4efbaef579e78135b532905b13",
+        "animation": "bf5bf5b96c78e1f187ba36f44e2786b5ca3a82510a1b074f93f75af681ffccb3",
+        "portrait": "031848a67c8f8897a898333ddd5948ef8530c5eba03b40fff6b73b8812efb805"
+      }
+    },
+    {
+      "id": "drone_loom",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "ranged",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.523193015341629,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/drone_loom.png",
+        "animation": "game/assets/game/sprites/animations/towers/drone_loom.png",
+        "portrait": "game/assets/game/portraits/drone_loom.png"
+      },
+      "sha256": {
+        "static": "d4bdd78f4da18893af015b959e6daca4bf24d822ec2197a7f51b6994aeb5c4cb",
+        "animation": "d2705e9d9c89a58a4ff947e5e542644fe65055dc37f974a1757a6bc687dc99d5",
+        "portrait": "1db4b2509441c7a9ee78d2454c934631d25024b749708909a345b9eb1dee7601"
+      }
+    },
+    {
+      "id": "bandwidth_relay",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "support",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.523193015341629,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/bandwidth_relay.png",
+        "animation": "game/assets/game/sprites/animations/towers/bandwidth_relay.png",
+        "portrait": "game/assets/game/portraits/bandwidth_relay.png"
+      },
+      "sha256": {
+        "static": "bef052b1b5def49482a7d70e2d4560e9600c1e83e8478d45c337caf77b753cab",
+        "animation": "ab90c5a74ce0bd077065eda3a3afa2c015292eb82e414fafab888fb04e6c35bd",
+        "portrait": "5925081018a53f469b2c783734a81622982b7f09539ce0fd7a509b6ce3010da2"
+      }
+    },
+    {
+      "id": "memory_mechanic",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "support",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.523193015341629,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/memory_mechanic.png",
+        "animation": "game/assets/game/sprites/animations/towers/memory_mechanic.png",
+        "portrait": "game/assets/game/portraits/memory_mechanic.png"
+      },
+      "sha256": {
+        "static": "becadd337e9a5cdd0a4e0e3ad93a568e06221b3d9c2c657a91a51adde07578b3",
+        "animation": "705478e87e27c2636af00f3d423f7907febacc9b9aaf0ec8c5fe6ec2fa42a60c",
+        "portrait": "7fbf3358332dca863baf8340b0d20f40d6f7dc139f3d711968cd93219bf28761"
+      }
+    },
+    {
+      "id": "frequency_choir",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "support",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.523193015341629,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/frequency_choir.png",
+        "animation": "game/assets/game/sprites/animations/towers/frequency_choir.png",
+        "portrait": "game/assets/game/portraits/frequency_choir.png"
+      },
+      "sha256": {
+        "static": "48878e8114a41e41c47646b3ade9f48357aa24bc6a2b99ec8659d4b8750d6214",
+        "animation": "86f016e248387f91a6c5ba728db4666565c5ee792aabb84b0e01acfd30c5d939",
+        "portrait": "66a1dbaffe5bd4145f867a78384a66c025ee3eac5e7535617658f3fee847fef4"
+      }
+    },
+    {
+      "id": "resistance_beacon",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "support",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.523193015341629,
+      "source": "actual game EntityRenderer",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/resistance_beacon.png",
+        "animation": "game/assets/game/sprites/animations/towers/resistance_beacon.png",
+        "portrait": "game/assets/game/portraits/resistance_beacon.png"
+      },
+      "sha256": {
+        "static": "84cb9be1cf9c469f85f40ba75850c8428771e0ab99176e6b1ac6eb5af579cee2",
+        "animation": "2f8d89a2c74a7400119e19159ca65db6abb69ab8c733d31fd8194b3c00941f4a",
+        "portrait": "7b1233735b4c189019c8d585d840f49d608a6a25fee17025b115eb123721c809"
+      }
+    }
+  ],
+  "refinement": {
+    "nearBevelSegments": 5,
+    "nearBevelWidth": 0.032,
+    "wheelCircumferenceSegments": 64,
+    "cableFiltering": "before common source normalization",
+    "shellSubdivision": "vaults and dishes with preserved panel edges"
+  },
+  "sourceTools": [
+    "development/web-tools/export-realtime-models.py",
+    "development/web-tools/refine-model-surfaces.py",
+    "development/web-tests/helpers/enemy-review.mjs"
+  ]
+}

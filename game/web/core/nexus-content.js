@@ -3,7 +3,7 @@ const messenger = (id,act,name,title,art,color,quote,gifts) => ({id,act,name,tit
 const gift = (id,name,description,fx={},grant={}) => ({id,name,description,fx,grant,exclusive:'nexus'});
 export const messengers = Object.fromEntries([
   messenger('far_watcher',0,'望隙者','在高处读懂来路','third-eye','#e7d59c','让视线先抵达危险。',[
-    gift('nexus_horizon','远界之瞳','远程在二级及以上高地伤害 +35%；近战攻击 −15%。',{highground_damage:.35,melee_attack:-.15}),
+    gift('nexus_horizon','远界之瞳',"远程在二级及以上高地时伤害 +35%；近战攻击 −15%。",{highground_damage:.35,melee_attack:-.15}),
     gift('nexus_lens','透隙长镜','直接攻击射程 +25%、远程忽略 6 点护甲；所有构造最大耐久 −15%。',{direct_range:.25,ranged_pierce:6,hp:-.15}),
     gift('nexus_terraces','浮阶印记','地形改造费用 −70%、搬迁费用 −50%；敌人在距火种 12 格外死亡时压力 −30%。',{terrain_discount:.7,move_discount:.5,far_pressure:.3})]),
   messenger('oath_keeper',0,'守诺人','为脆弱留下位置','templar-eye','#aac7cc','站在这里，本身就是一个回答。',[
@@ -28,7 +28,7 @@ export const messengers = Object.fromEntries([
     gift('nexus_open_channel','众声天线','永久有效带宽 +10、抵消 4 点敌方干扰；所有构造攻击 −10%。',{bandwidth:10,jam_resist:4,attack:-.1})]),
   messenger('winter_listener',1,'听雪客','使冲击缓慢抵达','brain-freeze','#b2cbe3','安静，是给自己留下反应的时间。',[
     gift('nexus_stillness','静止回廊','每名敌人出现时被减速 8 秒（基础减速 40%，受控制压力影响）；死亡压力降低 20%。',{nexus_spawn_slow:8,pressure_reduction:.2}),
-    gift('nexus_silence','雪中钟舌','永久抗性 +5；每场战斗中完全吸收一次死亡压力，临时抗性 +1，最多 +5。',{resistance:5,resistance_stack:5}),
+    gift('nexus_silence','雪中钟舌',"永久抗性 +5；战斗中每完全吸收一次死亡压力，本场临时抗性 +1，最多 +5。",{resistance:5,resistance_stack:5}),
     gift('nexus_distance','千步雪线','敌人在距火种 12 格外死亡时压力 −65%；直接攻击射程 +20%。',{far_pressure:.65,direct_range:.2})]),
   messenger('pulse_diver',1,'潜潮者','从低谷取回力量','tentacle-heart','#cf9dae','我记得你仍在呼吸。',[
     gift('nexus_red_tide','绯潮心核','精神低于 35% 时全体攻击 +70%、范围 +20%；维修费用 +30%。',{low_spirit_damage:.7,crisis_range:.2,repair_discount:-.3}),
@@ -36,7 +36,7 @@ export const messengers = Object.fromEntries([
     gift('nexus_sacrifice','深潜筹码','立即损失最多 35 精神（至少保留 1），获得 140 专注；永久带宽 +7。',{bandwidth:7},{focus:140,spiritCost:35})]),
   messenger('star_judge',2,'星衡官','称量最后一次选择','star-pupil','#e5c791','权重属于仍能作出选择的人。',[
     gift('nexus_verdict','断讯判词','对首领伤害 +65%、对精英伤害 +30%；普通敌人死亡压力 +20%。',{nexus_boss_damage:.65,nexus_elite_damage:.3,nexus_normal_pressure:.2}),
-    gift('nexus_precision','唯一答案','优先级设为最高生命时，远程伤害 +45%、忽略 10 点护甲；远程间隔变为原来的 1.15 倍。',{high_hp_damage:.45,ranged_pierce:10,nexus_ranged_delay:.15}),
+    gift('nexus_precision','唯一答案',"优先级设为最高生命时，远程伤害 +45%、忽略 10 点护甲；远程攻击间隔变为原来的 1.15 倍。",{high_hp_damage:.45,ranged_pierce:10,nexus_ranged_delay:.15}),
     gift('nexus_quiet_end','终曲休止符','每场开战获得 50 点火种屏障、抗性 +3；付费升阶费用 +30%。',{nexus_shield:50,resistance:3,nexus_upgrade_tax:.3})]),
   messenger('foreign_voice',2,'异声旅人','保留不相同的声音','alien-stare','#a8d9bc','把不同留在这里，世界就还有出口。',[
     gift('nexus_ensemble','异声合奏','启用的构造同时含近战、远程、支援时，全体攻击 +40%；固定有效带宽 +6，维修费用 +20%。',{nexus_trinity:.4,bandwidth:6,repair_discount:-.2}),
@@ -47,7 +47,7 @@ export const messengers = Object.fromEntries([
     gift('nexus_reserve','空白频段','每场开战时，每 1 点空闲有效带宽转为 4 点火种屏障，上限 60；固定有效带宽 +4。',{nexus_reserve_shield:4,bandwidth:4}),
     gift('nexus_home','回声归所','每场胜利额外恢复 15 精神，所有存活构造恢复 35% 最大耐久；立即恢复 30 精神。',{nexus_post_heal:15,nexus_post_repair:.35},{heal:30})]),
   messenger('scarred_dawn',2,'残曦','替最后一线光作证','one-eyed','#e3aa83','把伤痕带过去，它也属于你。',[
-    gift('nexus_last_stand','破晓誓约','每场每个近战首次受到普通敌人的致命攻击时保留 1 耐久；近战攻击 +60%、受到攻击伤害 −20%。',{melee_guard:1,melee_attack:.6,melee_reduction:.2}),
+    gift('nexus_last_stand','破晓誓约',"每场战斗中，每个近战构造首次受到普通敌人的致命攻击时保留 1 点耐久；近战攻击 +60%、受到的攻击伤害 −20%。",{melee_guard:1,melee_attack:.6,melee_reduction:.2}),
     gift('nexus_rebirth','余烬再生','每场首次将要损毁的启用构造保留 50% 最大耐久；所有构造最大耐久 +20%。',{nexus_rebirth:1,hp:.2}),
     gift('nexus_final_charge','最后的电荷','立即获得 220 专注；全体攻击 +35%、间隔缩短为原来的 1/1.2；最大精神稳定降低 25。',{attack:.35,haste:.2},{focus:220,maxSpirit:-25})])
 ].map(x=>[x.id,x]));
@@ -55,7 +55,7 @@ const additionalGifts={
  far_watcher:[
   gift('nexus_watchline','三角观测镜','直接攻击射程 +18%、对空伤害 +35%；构造最大耐久 −10%。',{direct_range:.18,anti_air_damage:.35,hp:-.1}),
   gift('nexus_floating_stairs','可携浮阶','地形费用 −50%、远程范围 +15%；付费升阶费用 +15%。',{terrain_discount:.5,ranged_range:.15,nexus_upgrade_tax:.15}),
-  gift('nexus_target_notes','标靶手记','远程忽略 4 护甲；最高生命优先时，远程伤害 +30%；维修费用 +15%。',{high_hp_damage:.3,ranged_pierce:4,repair_discount:-.15})],
+  gift('nexus_target_notes','标靶手记',"远程忽略 4 点护甲；最高生命优先时，远程伤害 +30%；维修费用 +15%。",{high_hp_damage:.3,ranged_pierce:4,repair_discount:-.15})],
  oath_keeper:[
   gift('nexus_shared_burden','共同承重','近战最大耐久 +35%；支援覆盖内友军护甲 +3；立即获得 50 专注。',{melee_hp:.35,support_armor:3},{focus:50}),
   gift('nexus_rebuke','裂甲誓言','近战攻击 +35%、攻击忽略 20% 护甲；最大精神 −10。',{melee_attack:.35,armor_pierce:.2},{maxSpirit:-10}),
@@ -77,16 +77,16 @@ const additionalGifts={
   gift('nexus_auxiliary_bus','辅助母线','固定有效带宽 +8；中继自身带宽占用 −1；抵消 2 点敌方干扰。',{bandwidth:8,relay_cost:1,jam_resist:2}),
   gift('nexus_resonant_workshop','共振工位','支援效果强度 +30%、维修量 +35%；付费升阶费用 +20%。',{support_power:.3,support_efficiency:.35,nexus_upgrade_tax:.2})],
  winter_listener:[
-  gift('nexus_quiet_margin','静默余量','永久抗性 +4、火种每场屏障 +20；固定有效带宽 −3。',{resistance:4,nexus_shield:20,bandwidth:-3}),
+  gift('nexus_quiet_margin','静默余量',"永久抗性 +4、每场火种屏障 +20；固定有效带宽 −3。",{resistance:4,nexus_shield:20,bandwidth:-3}),
   gift('nexus_distant_snow','远雪标记','直接攻击射程 +30%；12 格外的死亡压力 −40%；近战攻击 −15%。',{direct_range:.3,far_pressure:.4,melee_attack:-.15}),
   gift('nexus_slow_echo','缓声层','敌人出生减速 5 秒；处于减速状态的敌人死亡压力 −30%。',{nexus_spawn_slow:5,slow_pressure:.3})],
  pulse_diver:[
   gift('nexus_deep_reserve','深潮储备','损失最多 25 精神（至少保留 1），获得 180 专注；维修费用 −35%。',{repair_discount:.35},{spiritCost:25,focus:180}),
-  gift('nexus_survival_pulse','求生频率','精神低于 35% 时，全体攻击 +55%、范围 +15%；每场屏障 +15。',{low_spirit_damage:.55,crisis_range:.15,nexus_shield:15}),
+  gift('nexus_survival_pulse','求生频率',"精神低于 35% 时，全体攻击 +55%、范围 +15%；每场火种屏障 +15。",{low_spirit_damage:.55,crisis_range:.15,nexus_shield:15}),
   gift('nexus_return_tide','回潮线','近战攻击 +45%、最大耐久 +30%；战斗胜利额外恢复 10 精神。',{melee_attack:.45,melee_hp:.3,nexus_post_heal:10})],
  star_judge:[
   gift('nexus_decree_breaker','破令准星','对首领伤害 +50%、对精英伤害 +50%；所有攻击忽略 25% 护甲。',{nexus_boss_damage:.5,nexus_elite_damage:.5,armor_pierce:.25}),
-  gift('nexus_last_measure','终末刻度','远程忽略 12 护甲、最高生命优先时伤害 +35%；近战攻击 −20%。',{ranged_pierce:12,high_hp_damage:.35,melee_attack:-.2}),
+  gift('nexus_last_measure','终末刻度',"远程忽略 12 点护甲、最高生命优先时伤害 +35%；近战攻击 −20%。",{ranged_pierce:12,high_hp_damage:.35,melee_attack:-.2}),
   gift('nexus_signal_dam','断讯堤坝','每场火种屏障 +70、抗性 +2；固定有效带宽 −4。',{nexus_shield:70,resistance:2,bandwidth:-4})],
  foreign_voice:[
   gift('nexus_open_ensemble','开放合奏','同时启用三类构造时全体攻击 +55%；背包容量 +2（最多 20 格）。',{nexus_trinity:.55},{capacity:2}),
@@ -98,7 +98,7 @@ const additionalGifts={
   gift('nexus_archive_cart','档案运输车','背包容量 +4（最多 20 格）、固定有效带宽 +8；付费升阶费用 −30%。',{bandwidth:8,upgrade_discount:.3},{capacity:4})],
  scarred_dawn:[
   gift('nexus_daybreak_guard','曙光防壁','近战最大耐久 +70%、承伤 −25%；支援覆盖内友军护甲 +4。',{melee_hp:.7,melee_reduction:.25,support_armor:4}),
-  gift('nexus_ember_return','余烬回响','每场首个将损毁的启用构造恢复至半耐久；胜利后存活构造修复 25%。',{nexus_rebirth:1,nexus_post_repair:.25}),
+  gift('nexus_ember_return','余烬回响',"每场首个将损毁的启用构造恢复至 50% 最大耐久；胜利后存活构造恢复 25% 最大耐久。",{nexus_rebirth:1,nexus_post_repair:.25}),
   gift('nexus_dawn_overclock','破晓超频','全体攻速 +30%、攻击 +25%，固定有效带宽 +6；最大精神 −20。',{haste:.3,attack:.25,bandwidth:6},{maxSpirit:-20})]
 };
 for(const [id,gifts]of Object.entries(additionalGifts))messengers[id].gifts.push(...gifts);

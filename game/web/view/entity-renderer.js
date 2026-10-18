@@ -1,10 +1,12 @@
 import * as T from '../../assets/third_party/three/three.bundle.js';
+import {animateEnemy} from './enemy-animation-bank.js';
+import {reflectGeometryX} from './model-reflection.js';
 
 const radians=Math.PI/180,S=Math.sin(55*radians),C=Math.cos(55*radians),TAU=Math.PI*2;
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const PALETTE={
- towers:{dark:0x27343d,metal:0xb1bdc5,ivory:0xd7dfdf,accent:0x529e9b,glow:0x80f0df,gold:0xcaa565,armor:0x47747b,blade:0xd3e5ed},
- enemies:{dark:0x302c39,metal:0xb9a5a6,ivory:0xd4c5c0,accent:0xc65a53,glow:0xff8c60,gold:0xc89864,armor:0x674455,blade:0xe2cdcc}
+ towers:{dark:0x27343d,metal:0xb1bdc5,ivory:0xd7dfdf,accent:0x529e9b,glow:0x80f0df,gold:0xcaa565,armor:0x47747b,blade:0xd3e5ed,rubber:0x27292c},
+ enemies:{dark:0x302c39,metal:0xb9a5a6,ivory:0xd4c5c0,accent:0xc65a53,glow:0xff8c60,gold:0xc89864,armor:0x674455,blade:0xe2cdcc,rubber:0x29272d}
 };
 const degreesToRadians=values=>values.map(v=>v*radians);
 const surfaceFor=(surface,finish)=>finish==='native'||surface==='dark'?surface:surface==='accent'||finish==='blade'||finish==='glow'?finish:surface==='metal'?'metal':finish;
@@ -23,6 +25,7 @@ export class EntityRenderer{
   this.depthMesh=new T.Mesh(new T.BufferGeometry(),this.depthMaterial);this.depthMesh.renderOrder=-10;this.depthMesh.frustumCulled=false;this.depthMesh.castShadow=true;this.scene.add(this.depthMesh);
   this.position=new T.Vector3();this.scale=new T.Vector3();this.euler=new T.Euler(0,0,0,'ZYX');this.quat=new T.Quaternion();this.rootQuat=new T.Quaternion();this.spinQuat=new T.Quaternion();this.spinAxis=new T.Vector3(0,0,1);this.matrix=new T.Matrix4();this.rootMatrix=new T.Matrix4();this.color=new T.Color();this.up=new T.Vector3(0,1,0);
   this.axis=new T.Quaternion().setFromAxisAngle(new T.Vector3(1,0,0),-Math.PI/2);this.inverseAxis=this.axis.clone().invert();
+  this.rigCache=new WeakMap();this.rigRoot=new T.Matrix4();this.rigLocal=new T.Matrix4();this.rigPivot=new T.Matrix4();this.rigOffset=new T.Matrix4();this.unitScale=new T.Vector3(1,1,1);
   this.stats={mode:'realtime-webgl',ready:false,drawCalls:0,triangles:0,instances:0,entities:0,sourceCount:0,lod:[0,0]};
   this.readyPromise=this.load().catch(error=>{this.errors.push(String(error?.message||error));onError(`实时模型加载失败：${error?.message||error}`);return false;});
  }
@@ -45,18 +48,22 @@ export class EntityRenderer{
   for(const definition of Object.values(this.catalog.entities))for(const [name,parts]of Object.entries(definition.variants))definition.variants[name]=parts.map(part=>({...part,rotation:degreesToRadians(part.rotation)}));
   this.ready=true;this.stats.ready=true;this.stats.sourceCount=this.sources.size;return true;
  }
- material(kind,surface,ghost){
-  const key=`${kind}:${surface}:${ghost?'ghost':'solid'}`;if(this.materials.has(key))return this.materials.get(key);
-  const metal={metal:.94,blade:.99,dark:.68,ivory:.58,gold:.94,armor:.48,accent:.46,glow:.18}[surface];
-  const roughness={metal:.22,blade:.14,dark:.42,ivory:.28,gold:.24,armor:.46,accent:.4,glow:.23}[surface];
-  const color=PALETTE[kind][surface],glow=surface==='glow';
-  const material=new T.MeshStandardMaterial({color,metalness:metal,roughness,map:glow?null:this.surfaceColor,roughnessMap:this.surfaceRoughness,normalMap:glow?null:this.surfaceNormal,normalScale:new T.Vector2(.32,.32),emissive:glow?color:0x000000,emissiveIntensity:glow?.62:0,envMapIntensity:1.1,transparent:ghost,opacity:ghost?.44:1,depthWrite:!ghost});
-  if(!glow){material.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`#ifdef USE_MAP\n vec3 wearSample=texture2D(map,vMapUv).rgb;\n float wear=dot(wearSample,vec3(0.2126,0.7152,0.0722));\n diffuseColor.rgb*=mix(0.56,1.06,sqrt(clamp(wear*4.0,0.0,1.0)));\n#endif`);};material.customProgramCacheKey=()=> 'mindrealm-metal-wear-v1';}
+ material(kind,surface,ghost,dying=false){
+  const key=`${kind}:${surface}:${dying?'dying':ghost?'ghost':'solid'}`;if(this.materials.has(key))return this.materials.get(key);
+  const metal={metal:.94,blade:.99,dark:.68,ivory:.58,gold:.94,armor:.48,accent:.46,glow:.18,rubber:.02}[surface];
+  const roughness={metal:.22,blade:.14,dark:.42,ivory:.28,gold:.24,armor:.46,accent:.4,glow:.23,rubber:.78}[surface];
+  const color=PALETTE[kind][surface],glow=surface==='glow',rubber=surface==='rubber';
+  const material=new T.MeshStandardMaterial({color,metalness:metal,roughness,map:glow||rubber?null:this.surfaceColor,roughnessMap:rubber?null:this.surfaceRoughness,normalMap:glow||rubber?null:this.surfaceNormal,normalScale:new T.Vector2(.32,.32),emissive:glow?color:0x000000,emissiveIntensity:glow?.62:0,envMapIntensity:rubber?.45:1.1,transparent:ghost||dying,opacity:ghost?.44:1,depthWrite:!ghost&&!dying});
+  material.onBeforeCompile=shader=>{
+   if(!glow&&!rubber)shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`#ifdef USE_MAP\n vec3 wearSample=texture2D(map,vMapUv).rgb;\n float wear=dot(wearSample,vec3(0.2126,0.7152,0.0722));\n diffuseColor.rgb*=mix(0.56,1.06,sqrt(clamp(wear*4.0,0.0,1.0)));\n#endif`);
+   if(dying)shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\n#ifdef USE_COLOR\n diffuseColor.a*=clamp(vColor.r,0.0,1.0);\n#endif').replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\n#ifdef USE_COLOR\n totalEmissiveRadiance*=clamp(vColor.r,0.0,1.0);\n#endif');
+  };
+  material.customProgramCacheKey=()=>`mindrealm-metal-wear-v3:${dying}:${rubber}`;
   this.materials.set(key,material);return material;
  }
- batch(part,kind,surface,ghost){
-  const key=`${part.key}:${kind}:${surface}:${ghost?'g':'s'}`;let batch=this.batches.get(key);
-  if(!batch){const material=this.material(kind,surface,ghost);batch={geometry:part.geometry,material,count:0,capacity:16,mesh:null};this.batches.set(key,batch);this.replaceMesh(batch);}
+ batch(part,kind,surface,ghost,dying=false){
+  const key=`${part.key}:${kind}:${surface}:${dying?'d':ghost?'g':'s'}`;let batch=this.batches.get(key);
+  if(!batch){const material=this.material(kind,surface,ghost,dying);batch={geometry:part.geometry,material,count:0,capacity:16,mesh:null};this.batches.set(key,batch);this.replaceMesh(batch);}
   if(batch.count===batch.capacity){batch.capacity*=2;this.replaceMesh(batch);}
   return batch;
  }
@@ -99,26 +106,42 @@ export class EntityRenderer{
   let facing=pose.facing||0,turn=this.turns.get(pose.key),clock=pose.clock||0;
   if(turn&&!ghost&&!this.iconMode&&!reducedMotion){const delta=((facing-turn.angle+Math.PI)%TAU+TAU)%TAU-Math.PI,step=clamp((clock-turn.clock)/1000,0,.1)*18;facing=turn.angle+clamp(delta,-step,step);}
   this.turns.set(pose.key,{angle:facing,clock});this.present.add(pose.key);
+  const authoredRig=enemy&&definition.visualRevision===2,animation=authoredRig?animateEnemy(type,{...pose,reducedMotion,hit:pose.hit||0,moving:pose.moving||pose.action==='move',worldTravel:pose.travel||0,travel:(pose.travel||0)/size,speed:(pose.speed||0)/size,modelScale:size}):null;
+  if(authoredRig&&!animation)throw Error(`缺少专属怪物动作 ${type}`);
   const falling=pose.action==='death'?clamp(pose.progress,0,1):0;
-  this.rootQuat.setFromAxisAngle(this.up,facing);if(falling&&!reducedMotion)this.rootQuat.multiply(this.spinQuat.setFromAxisAngle(this.spinAxis,falling*.65));this.position.set(g.x,g.h*.95+.025,g.z);this.scale.set(size,size*(falling?1-falling*.72:wreck?.33:1),size);
-  if(pose.action==='hover'&&!reducedMotion)this.position.y+=Math.sin(pose.progress*TAU)*size*.085;
+  const flightDrop=authoredRig&&pose.air&&pose.action==='death'?1.3*.95*Math.min(1,((reducedMotion?1:falling)/.74)**2):0;
+  this.rootQuat.setFromAxisAngle(this.up,facing);if(falling&&!reducedMotion&&!authoredRig)this.rootQuat.multiply(this.spinQuat.setFromAxisAngle(this.spinAxis,falling*.65));this.position.set(g.x,g.h*.95+.025-flightDrop,g.z);this.scale.set(size,size*(!authoredRig&&(falling||wreck)?falling?1-falling*.72:.33:1),size);
+  if(pose.action==='hover'&&!reducedMotion&&!authoredRig)this.position.y+=Math.sin(pose.progress*TAU)*size*.085;
   this.rootMatrix.compose(this.position,this.rootQuat,this.scale);
+  let rigMatrices,rigStamp=0;
+  if(authoredRig){
+   let cached=this.rigCache.get(definition);if(!cached){cached=new Map(definition.rig.map(j=>[j.id,{...j,matrix:new T.Matrix4()}]));this.rigCache.set(definition,cached);}
+   const rootPose=animation.root||{};this.authoredTransform(rootPose.rotation||[0,0,0],rootPose.position||[0,0,0],this.rigRoot);this.rootMatrix.multiply(this.rigRoot);
+   for(const joint of cached.values()){
+    const delta=animation.joints?.[joint.id]||{},[x,y,z]=joint.pivot;
+    this.rigPivot.makeTranslation(x,z,-y);this.authoredTransform(delta.rotation||[0,0,0],delta.position||[0,0,0],this.rigLocal);this.rigOffset.makeTranslation(-x,-z,y);
+    joint.matrix.copy(this.rigPivot).multiply(this.rigLocal).multiply(this.rigOffset);if(joint.parent)joint.matrix.premultiply(cached.get(joint.parent).matrix);
+    for(let i=0;i<16;i++)rigStamp+=joint.matrix.elements[i]*(i+1);
+   }
+   rigMatrices=cached;
+  }
   const active=!['disabled','wreck','preview','death'].includes(pose.action),cycle=active&&['move','hover'].includes(pose.action)&&!reducedMotion?Math.sin(pose.progress*TAU):0;
   const progress=clamp(pose.progress||0,0,1),attack=pose.action==='attack'?(reducedMotion?.8:progress<.17?-.36*Math.sin(progress/.17*Math.PI):Math.sin((progress-.17)/.83*Math.PI)*Math.exp(-(progress-.17)*1.6)):0;
   const cast=pose.action==='cast'?(reducedMotion?.7:Math.sin(progress*Math.PI)*.55+.3):0;
   this.stats.lod[level]++;
-  if(!ghost)this.shadowParts.push(`${pose.key}:${type}:${pose.variant}:${g.x.toFixed(3)}:${g.z.toFixed(3)}:${g.h}:${size.toFixed(3)}:${facing.toFixed(3)}:${wreck}:${falling.toFixed(3)}:${level}:${cycle.toFixed(3)}:${attack.toFixed(3)}:${cast.toFixed(3)}`);
+  if(!ghost)this.shadowParts.push(`${pose.key}:${type}:${pose.variant}:${g.x.toFixed(3)}:${g.z.toFixed(3)}:${g.h}:${size.toFixed(3)}:${facing.toFixed(3)}:${wreck}:${falling.toFixed(3)}:${level}:${cycle.toFixed(3)}:${attack.toFixed(3)}:${cast.toFixed(3)}:${rigStamp.toFixed(4)}`);
   for(const part of parts){
    if(level===1&&part.detail)continue;
    let [px,py,pz]=part.position,[rx,ry,rz]=part.rotation;const motion=part.motion,side=motion.endsWith('L')?-1:1;
-   if(motion.startsWith('leg')){rx+=cycle*.44*side;py+=cycle*.15*side;pz+=Math.max(0,Math.cos(progress*TAU)*side)*.12*Math.abs(cycle);}
+   if(authoredRig){} // Independent hierarchical animation replaces generic oscillation.
+   else if(motion.startsWith('leg')){rx+=cycle*.44*side;py+=cycle*.15*side;pz+=Math.max(0,Math.cos(progress*TAU)*side)*.12*Math.abs(cycle);}
    else if(motion.startsWith('wheel')){} // Spin around the part's original axle below.
    else if(motion.startsWith('drive')){py+=cycle*.11*side;pz+=cycle*.045*side;}
    else if(motion.startsWith('segment')){const index=Number(motion.at(-1))||0;px+=cycle?Math.sin(progress*TAU+index*.85)*.23:0;rz+=cycle*.13;if(index===2){py-=attack*.29;rx-=attack*.14;}}
    else if(motion.startsWith('blade')){ry+=attack*.62*side;rz+=attack*.62*side;py-=Math.max(0,attack)*.34;}
    else if(/^(barrel|hammer|mortar)/.test(motion)){py+=attack*.28;rx-=attack*(motion==='mortar'?.28:.15);rx+=cast*.1;}
    else if(motion.startsWith('loader'))py+=attack*.18;
-   else if(/^(tool|arm)/.test(motion)){rx+=(attack*.34+cast*.39)*side;rz+=(attack*.17+cast*.33)*side;py-=attack*.12+cast*.17;}
+   else if(/^(tool|arm)/.test(motion)){rx+=attack*.34+cast*.39;rz+=(attack*.17+cast*.33)*side;py-=attack*.12+cast*.17;}
    else if(motion.startsWith('shield')){px+=cast*.17*side;py-=attack*.22;rz+=(cast*.29-attack*.12)*side;}
    else if(/^(sensor|speaker)/.test(motion)){rz+=cycle*.13+cast*.23*side;rx+=cast*.24;}
    else if(/^(fin|brace)/.test(motion))ry+=(cycle*.09+cast*.26)*side;
@@ -126,14 +149,16 @@ export class EntityRenderer{
    else if(motion==='ring'||motion==='gate'){rz+=cast*.28;pz+=cast*.09;}
    else if(['core','head','engine'].includes(motion)){pz+=cast*.15;rz+=cast*.13;if(motion==='head')rx-=attack*.18;}
    else if(motion==='body'){if(enemy){rx-=attack*.16;py-=attack*.16;}if(['walker','runner'].includes(definition.locomotion)){rz+=cycle*.045;pz+=Math.abs(cycle)*.045;}else if(definition.locomotion==='crawler'){ry+=cycle*.045;pz+=cycle*.035;}}
-   this.position.set(px,pz,-py);this.euler.set(rx,ry,rz,'ZYX');this.quat.setFromEuler(this.euler);if(motion.startsWith('wheel')&&active&&pose.action==='move'&&!reducedMotion)this.quat.multiply(this.spinQuat.setFromAxisAngle(this.spinAxis,progress*TAU*2));this.quat.premultiply(this.axis).multiply(this.inverseAxis);this.scale.set(part.size[0],part.size[2],part.size[1]);this.matrix.compose(this.position,this.quat,this.scale).premultiply(this.rootMatrix);
-   for(const primitive of this.sources.get(part.source)[level]){
-    const surface=surfaceFor(primitive.surface,part.finish),batch=this.batch(primitive,definition.kind,surface,ghost),index=batch.count++;
-    batch.mesh.setMatrixAt(index,this.matrix);const shade=wreck?.28:pose.action==='disabled'?.36:opacity<1?opacity:1,hit=pose.hit||0;this.color.setRGB(shade*(1+hit*.75),shade*(1+hit*.75),shade*(1+hit*.75));batch.mesh.setColorAt(index,this.color);
+   this.position.set(px,pz,-py);this.euler.set(rx,ry,rz,'ZYX');this.quat.setFromEuler(this.euler);if(motion.startsWith('wheel')&&active&&pose.action==='move'&&!reducedMotion)this.quat.multiply(this.spinQuat.setFromAxisAngle(this.spinAxis,progress*TAU*2));this.quat.premultiply(this.axis).multiply(this.inverseAxis);this.scale.set(part.size[0],part.size[2],part.size[1]);this.matrix.compose(this.position,this.quat,this.scale);if(rigMatrices)this.matrix.premultiply(rigMatrices.get(part.joint).matrix);this.matrix.premultiply(this.rootMatrix);
+   for(const sourcePrimitive of this.sources.get(part.source)[level]){
+    const primitive=part.mirrorX?(sourcePrimitive.reflected??=( {geometry:reflectGeometryX(sourcePrimitive.geometry),surface:sourcePrimitive.surface,key:sourcePrimitive.key+':reflected-x'} )):sourcePrimitive;
+    const dying=enemy&&pose.action==='death'&&opacity<1,surface=part.source==='refined/drive-wheel'&&primitive.surface==='dark'?'rubber':surfaceFor(primitive.surface,part.finish),batch=this.batch(primitive,definition.kind,surface,ghost,dying),index=batch.count++;
+    batch.mesh.setMatrixAt(index,this.matrix);const shade=dying?clamp(opacity,0,1):wreck?.28:pose.action==='disabled'?.36:opacity<1?opacity:1,hit=dying?0:pose.hit||0;this.color.setRGB(shade*(1+hit*.75),shade*(1+hit*.75),shade*(1+hit*.75));batch.mesh.setColorAt(index,this.color);
    }
   }
   this.frames.push({key:pose.key,type,variant:pose.variant,action:pose.action,facing,progress:pose.progress,lod:level,size,parts:parts.length});
  }
+ authoredTransform(rotation,position,matrix){this.position.set(position[0],position[2],-position[1]);this.euler.set(...rotation,'ZYX');this.quat.setFromEuler(this.euler).premultiply(this.axis).multiply(this.inverseAxis);return matrix.compose(this.position,this.quat,this.unitScale);}
  addDrone(drone,geometry,clock){
   if(!this.ready)return;if(!this.droneDefinition){const source=this.catalog.entities.drone_loom.variants.T1.find(p=>p.motion.startsWith('drone'));this.droneDefinition={kind:'towers',role:'projectile',locomotion:'hover',bounds:{x:.55,y:.29,z:.78},variants:{base:[{...source,position:[0,0,0],rotation:[0,0,0],motion:'body'}]}};}
   this.add('tracking_drone',{key:`drone:${drone.id}`,variant:'base',action:'idle',clock,progress:0,facing:drone.facing}, {...geometry,fp:[.75,.9]},{definition:this.droneDefinition});
@@ -150,6 +175,13 @@ export class EntityRenderer{
   this.keyLight.position.set(-7,10,6);this.keyLight.target.position.set(0,b.y*.5,0);Object.assign(this.keyLight.shadow.camera,{left:-span,right:span,top:span,bottom:-span,near:.5,far:35});this.keyLight.shadow.camera.updateProjectionMatrix();
   this.add(type,{key:'icon',clock:0,action:'idle',progress:0,facing:0,variant},{x:0,z:0,h:0,fp:[2,2]});this.flush();return this.canvas;
  }
+ renderStudy(type,variant,{cell=512,action='idle',progress=0,clock=0,travel=0,facing=0,stage='release',phase=0,hit=0,yaw=Math.PI/4,speed=1,moving=action==='move',reducedMotion=false,...state}={}){
+  const definition=this.catalog.entities[type],b=definition.bounds,air=state.air?1.3:0,span=Math.max(b.x,b.z,b.y*1.05)+air*.95;
+  this.begin({x:0,z:0,yaw,width:cell,height:cell,scale:cell/(span*1.34),focusY:b.y*.44+air*.475},null,cell,cell);this.iconMode=true;
+  this.keyLight.position.set(-7,10,6);this.keyLight.target.position.set(0,b.y*.5,0);
+  Object.assign(this.keyLight.shadow.camera,{left:-span,right:span,top:span,bottom:-span,near:.5,far:35});this.keyLight.shadow.camera.updateProjectionMatrix();
+  this.add(type,{...state,key:'study:'+type,clock,action,progress,travel,speed,moving,facing,variant,stage,phase,hit},{x:0,z:0,h:air,fp:[2,2]},{reducedMotion});this.flush();return this.canvas;
+ }
  snapshot(){return {...this.stats,lod:[...this.stats.lod],errors:[...this.errors]};}
- destroy(){this.disposed=true;for(const batch of this.batches.values())batch.mesh.dispose();for(const lod of this.sources.values())for(const list of lod)for(const part of list)part.geometry.dispose();for(const material of this.materials.values())material.dispose();this.environment?.dispose();this.surfaceNormal?.dispose();this.surfaceRoughness?.dispose();this.surfaceColor?.dispose();this.keyLight.shadow.map?.dispose();this.depthMesh.geometry.dispose();this.depthMaterial.dispose();this.renderer.dispose();this.batches.clear();this.sources.clear();}
+ destroy(){this.disposed=true;for(const batch of this.batches.values())batch.mesh.dispose();for(const lod of this.sources.values())for(const list of lod)for(const part of list){part.geometry.dispose();part.reflected?.geometry.dispose();}for(const material of this.materials.values())material.dispose();this.environment?.dispose();this.surfaceNormal?.dispose();this.surfaceRoughness?.dispose();this.surfaceColor?.dispose();this.keyLight.shadow.map?.dispose();this.depthMesh.geometry.dispose();this.depthMaterial.dispose();this.renderer.dispose();this.batches.clear();this.sources.clear();}
 }

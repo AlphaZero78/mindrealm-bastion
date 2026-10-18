@@ -227,7 +227,7 @@ function ability(state,e,active) {
       emit(state,{...event,amount:damage,label:'精神征收 −2'});
     }emit(state,{...event,label:'抗性腐蚀'});break;
     case 'sprint':e.sprintUntil=b.time+2.5;emit(state,{...event,label:'尖峰冲刺'});break;
-    case 'siege':if(boss){const targets=aliveUnits(state).filter(u=>distance(unitCenter(u),e)<10+e.phase).sort((a,c)=>distance(unitCenter(a),e)-distance(unitCenter(c),e));for(const u of targets.slice(0,3+e.phase))hitUnit(state,e,u,e.attack*(.65+e.phase*.1),active,{actionKind:'shock',secondary:true});emit(state,{...event,radius:10+e.phase,targets:targets.slice(0,3+e.phase).map(u=>u.uid),label:`零频冲击 · 波及 ${3+e.phase} 个构造`});}break;
+    case 'siege':if(boss){const targets=aliveUnits(state).filter(u=>distance(unitCenter(u),e)<10+e.phase).sort((a,c)=>distance(unitCenter(a),e)-distance(unitCenter(c),e));for(const u of targets.slice(0,3+e.phase))hitUnit(state,e,u,e.attack*(.65+e.phase*.1),active,{actionKind:'shock',secondary:true});emit(state,{...event,radius:10+e.phase,targets:targets.slice(0,3+e.phase).map(u=>u.uid),label:`零频冲击 · 波及 ${3+e.phase} 座构造`});}break;
     case 'pressure_aura':e.pressureAuraUntil=b.time+4;emit(state,{...event,label:'死亡压力增幅'});break;
     case 'haste':e.hasteUntil=b.time+4;emit(state,{...event,label:'加速脉冲'});break;
     case 'shield':e.shield=Math.max(e.shield,e.maxHp*.15);emit(state,{...event,label:'回声护盾'});break;
@@ -294,7 +294,7 @@ function moveEnemy(state,e,dt,active) {
   if(victims.length){aim(e,unitCenter(victims[0]),victims[0].uid,'unit');if(e.cooldown<=0){
     hitUnit(state,e,victims[0],e.attack,active);e.cooldown=e.kind==='boss'?1.4:1.15;
     if(e.dead||state.spirit<=0)return;
-    if(advance?.enabled){e.blockedAttacks=(e.blockedAttacks||0)+1;if(e.blockedAttacks>=advance.attacks){e.pushWarningUntil=b.time+advance.warning;emit(state,{type:'warning',stage:'windup',actionKind:'push-windup',ability:'push',enemy:e.id,x:e.x,z:e.z,duration:advance.warning,endsAt:e.pushWarningUntil,label:`破阵蓄力 · ${advance.warning}秒后推进`});}}
+    if(advance?.enabled){e.blockedAttacks=(e.blockedAttacks||0)+1;if(e.blockedAttacks>=advance.attacks){e.pushWarningUntil=b.time+advance.warning;emit(state,{type:'warning',stage:'windup',actionKind:'push-windup',ability:'push',enemy:e.id,x:e.x,z:e.z,duration:advance.warning,endsAt:e.pushWarningUntil,label:`破阵蓄力 · ${advance.warning} 秒后推进`});}}
     // Ranged hunters and siege units fire finite volleys, then advance into the
     // defense. A repair loop outside both sides' attack ranges cannot stall a run.
     if(hunter&&!advancing){e.volleyShots=(e.volleyShots||0)+1;if(e.volleyShots>=3){e.volleyShots=0;e.advanceUntil=b.time+2.5;emit(state,{type:'warning',action:'advance',until:e.advanceUntil,x:e.x,z:e.z,enemy:e.id,label:'齐射结束 · 向火种推进'});}}
@@ -483,7 +483,7 @@ export function itemPreview(state,uid,targetUid=null) {
   if(item.id==='cleanser'&&!b.jam&&!b.corrosion&&!live.some(e=>e.jamUntil>b.time||e.corrosionUntil>b.time))return fail('当前没有带宽干扰或抗性腐蚀。');
   let target=null,amount=null;
   if(item.target==='unit'){
-    target=state.units.find(u=>u.uid===targetUid);if(!target)return fail('请选择一个受损的存活构造。');
+    target=state.units.find(u=>u.uid===targetUid);if(!target)return fail("请选择一座受损的存活构造。");
     if(target.hp<=0||target.hp>=unitStats(state,target).maxHp)return fail('目标需要存活且耐久未满。');
     if(combat&&!onField(target))return fail('战斗中只能修复已部署构造。');
     amount=Math.min(unitStats(state,target).maxHp-target.hp,unitStats(state,target).maxHp*.35);

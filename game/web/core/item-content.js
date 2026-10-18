@@ -9,5 +9,5 @@ export const items = Object.fromEntries([
   {id:'insulator',name:'绝缘药剂',icon:'resistance',color:'#b2b0f0',price:40,stage:'battle',duration:20,effect:'resistance',value:3,description:'死亡压力抗性提高 3 点，持续 20 秒。'},
   {id:'pulse_bomb',name:'解调爆弹',icon:'burst',color:'#f5a2ab',price:60,stage:'battle',description:'对当前全部敌人造成 120 点伤害，穿过护甲，先消耗护盾；击杀照常产生死亡压力。'},
   {id:'cleanser',name:'净频溶剂',icon:'bandwidth',color:'#9ce1e8',price:30,stage:'battle',description:'清除当前带宽干扰与抗性腐蚀，恢复被禁用构造；后续干扰仍可生效。'},
-  {id:'fortify',name:'装甲涂层',icon:'armor',color:'#cad5a0',price:40,stage:'battle',duration:18,effect:'armor',value:5,description:'所有构造防御提高 5 点，持续 18 秒。'}
+  {id:'fortify',name:'装甲涂层',icon:'armor',color:'#cad5a0',price:40,stage:'battle',duration:18,effect:'armor',value:5,description:"所有构造护甲提高 5 点，持续 18 秒。"}
 ].map(item=>[item.id,item]));

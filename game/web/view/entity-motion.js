@@ -3,6 +3,7 @@ const fraction=value=>((value%1)+1)%1;
 const keyOf=(entity,kind)=>`${kind}:${kind==='unit'?entity.uid:entity.id}`;
 const angleTo=(from,to)=>Number.isFinite(to?.x)&&Number.isFinite(to?.z)?Math.atan2(to.x-from.x,to.z-from.z):null;
 const actionOf=kind=>['melee','direct','indirect','drone','chain','ranged','siege','terrain','breach','attack'].includes(kind)?'attack':['repair','heal','buff','phase','cast','ability-release','surge-release'].includes(kind)?'cast':kind;
+const abilityDeadlines={jam:'jamUntil',corrode_resistance:'corrosionUntil',pressure_aura:'pressureAuraUntil',haste:'hasteUntil',sprint:'sprintUntil'};
 
 /** Presentation state only. Combat seconds drive every action, hit and corpse.
  * This class never writes to a run, draws randomness or advances the simulation. */
@@ -28,6 +29,8 @@ export class EntityMotion {
    const at=Number.isFinite(event.time)?event.time*1000:this.clock,sourceKey=`${event.sourceKind}:${event.sourceId}`,track=this.tracks.get(sourceKey);
    if(track&&!event.secondary&&['attack','cast','buff','heal','phase'].includes(event.action)){
     track.actionAt=at;track.action=event.action;track.stage=event.stage;
+    if(event.stage==='windup'&&Number.isFinite(event.endsAt)){track.windupAt=at;track.windupUntil=event.endsAt*1000;track.windupKind=event.actionKind;}
+    if(event.stage==='release'&&event.actionKind==='ability-release')track.abilityAt=at;
     const facing=Number.isFinite(event.facing)?event.facing:angleTo(event.from,event.to);if(Number.isFinite(facing))track.facing=facing;
    }
    const target=this.tracks.get(`${event.targetKind}:${event.targetId}`);
@@ -44,7 +47,8 @@ export class EntityMotion {
  }
  addDeath(entity,at){
   const existing=this.deaths.find(death=>death.entity.id===entity.id);if(existing){existing.entity={...existing.entity,...entity};existing.at=Math.min(existing.at,at);return;}
-  this.deaths.push({entity:{...entity},at});if(this.deaths.length>48)this.deaths.splice(0,this.deaths.length-48);
+  const tracked=this.tracks.get(keyOf(entity,'enemy'))?.entity;
+  this.deaths.push({entity:{...tracked,...entity},at});if(this.deaths.length>48)this.deaths.splice(0,this.deaths.length-48);
  }
  sample(entity,kind,{reducedMotion=false,ghost=false,variants=['T1']}={}){
   const track=this.tracks.get(keyOf(entity,kind)),clock=this.clock/1000;
@@ -60,9 +64,18 @@ export class EntityMotion {
   const lastAt=Math.max(track?.actionAt??-Infinity,stateAt),age=(this.clock-lastAt)/1000;
   const lastKind=actionOf(stateAt>=(track?.actionAt??-Infinity)?(entity.actionKind||entity.lastActionKind||'idle'):(track?.action||'idle'));
   const castUntil=Math.max(entity.pushWarningUntil||0,entity.surgeWarningUntil||0,Number.isFinite(entity.castUntil)?entity.castUntil:entity.warningUntil||0);
-  const windup=kind==='enemy'&&castUntil>clock;
+  const pendingRelease=kind==='enemy'&&!inactive&&age<0&&age>=-.075&&['cast','buff','heal','phase'].includes(lastKind)&&track?.windupUntil>=lastAt-.1;
+  // Ordinary siege prepares a transport/pressure lock and has no damage cast
+  // event. Its real warning still needs a display-clock tail and a mechanical
+  // reset; a later attack takes priority without creating another core event.
+  const siegeReset=kind==='enemy'&&!inactive&&entity.ability==='siege'&&entity.kind!=='boss'&&track?.windupKind==='ability-windup'&&lastAt<track.windupUntil;
+  const pendingReset=siegeReset&&this.clock<track.windupUntil&&(this.battle?.time||0)*1000>=track.windupUntil-.1;
+  const visualCastUntil=pendingRelease||pendingReset?Math.max(castUntil,track.windupUntil/1000):castUntil;
+  const windup=kind==='enemy'&&visualCastUntil>clock;
+  const resetAge=siegeReset?(this.clock-track.windupUntil)/1000:Infinity,settling=resetAge>=0&&resetAge<.42;
   if(!inactive){
-   if(windup){action='cast';progress=clamp(1-(castUntil-clock)/1.5,0,1);pose=8;}
+   if(windup){action='cast';const start=track?.windupUntil>=visualCastUntil*1000-.1?track.windupAt/1000:visualCastUntil-(entity.surgeWarningUntil>clock?1.5:1.1);progress=clamp((clock-start)/Math.max(.001,visualCastUntil-start),0,1);pose=8;}
+   else if(settling){action='cast';progress=resetAge/.42;pose=9;}
    else if(age>=0&&age<.42&&['attack','cast','buff','heal','phase'].includes(lastKind)){
     action=['buff','heal','phase','cast'].includes(lastKind)?'cast':'attack';progress=age/.42;
     pose=action==='cast'?9:age<.07?5:age<.18?6:7;
@@ -72,7 +85,12 @@ export class EntityMotion {
   }
   if(reducedMotion){if(action==='move'||action==='hover'){pose=0;progress=0;}else if(action==='attack'){pose=6;progress=0;}else if(action==='cast'){progress=0;}}
   if(inactive){action=ghost?'preview':disabled?'disabled':'wreck';pose=0;progress=0;}
-  return {key:keyOf(entity,kind),clock:this.clock,action,pose,progress,variant,variantIndex,row:variantIndex*10+pose,facing,hit:reducedMotion?0:hit,spawn:track&&!reducedMotion&&!inactive?clamp(1-(this.clock-track.spawnAt)/350,0,1):0};
+  const travel=Math.max(0,(entity.motion?.distance||0)-Math.hypot(entity.motion?.dx||0,entity.motion?.dz||0)*(1-this.interpolation));
+  const moving=kind==='enemy'&&!inactive&&Math.hypot(entity.motion?.dx||0,entity.motion?.dz||0)>.00001;
+  const speed=moving&&entity.motion?.dt>0?Math.hypot(entity.motion.dx||0,entity.motion.dz||0)/entity.motion.dt:entity.speed||0;
+  const secondaryUntil=(entity.phase||0)>0?(entity.type==='noise_hive'?entity.hasteUntil||0:entity.type==='chorus_overseer'?entity.jamUntil||0:0):0;
+  const abilityUntil=entity[abilityDeadlines[entity.ability]]||secondaryUntil;
+  return {key:keyOf(entity,kind),clock:this.clock,action,pose,progress,variant,variantIndex,row:variantIndex*10+pose,facing,hit:reducedMotion?0:hit,travel,air:!!entity.air,speed,moving,stage:windup?'windup':settling?'release':track?.stage||'release',ability:entity.ability||'none',actionKind:windup?track?.windupKind||'ability-windup':settling?'ability-release':entity.actionKind||track?.action||'idle',phase:entity.phase||0,sprinting:entity.sprintUntil>clock,boosted:entity.hasteUntil>clock,shieldFraction:Math.max(0,(entity.shield||0)/Math.max(1,entity.maxHp||1)),abilityActive:abilityUntil>clock,abilityRemaining:Math.max(0,abilityUntil-clock),abilityElapsed:Math.max(0,(this.clock-(track?.abilityAt??this.clock))/1000),spawn:track&&!reducedMotion&&!inactive?clamp(1-(this.clock-track.spawnAt)/350,0,1):0};
  }
  snapshot(){return {clock:this.clock,tracked:this.tracks.size,deaths:this.deaths.map(d=>({id:d.entity.id,age:this.clock-d.at}))};}
 }

@@ -95,8 +95,8 @@ export function chooseNexus(state,id) {
   if(grant.capacity){const bag=ensureInventory(state);bag.capacity=Math.min(MAX_CAPACITY,bag.capacity+grant.capacity);}
   if(grant.spiritCost)state.spirit=Math.max(1,state.spirit-grant.spiritCost);
   for(const [u,maxHp] of before)u.hp=Math.min(Rules.unitStats(state,u).maxHp,Rules.unitStats(state,u).maxHp*u.hp/maxHp);
-  room.choice=id;state.phase='map';record(state,`心神枢纽 · ${messengers[room.messenger].name}：选择${gift.name}`);
-  return ok({reason:`获得${gift.name}，本幕路线已开放`});
+  room.choice=id;state.phase='map';record(state,`心神枢纽 · ${messengers[room.messenger].name}：选择 ${gift.name}`);
+  return ok({reason:`获得 ${gift.name}，本幕路线已开放`});
 }
 
 export function addUnit(state, id, tier = 1, branch = null) {
@@ -134,7 +134,7 @@ export function enterNode(state, id) {
   if (!node) return fail('只能选择当前高亮连接的下一节点。');
   const bag=inventoryStatus(state);if(bag.overflow)return fail(`背包 ${bag.used}/${bag.capacity}，请先移除至少 ${bag.overflow} 个构造。`);
   state.currentNode = node; state.floor = node.floor; state.bossReveal = Math.max(state.bossReveal, node.floor >= state.maps[state.act].floors - 2 ? 3 : node.floor >= Math.floor(state.maps[state.act].floors / 2) ? 2 : 1);
-  if (node.type === 'unknown') { node.originalType = 'unknown'; node.type = node.revealType; node.map_icon_id = 'unknown'; [node.name, node.risk, node.reward] = nodeInfo[node.type]; record(state, `未知信号揭示为${node.type==='event'?'事件':node.name}`); }
+  if (node.type === 'unknown') { node.originalType = 'unknown'; node.type = node.revealType; node.map_icon_id = 'unknown'; [node.name, node.risk, node.reward] = nodeInfo[node.type]; record(state, `未知信号揭示为 ${node.type==='event'?'事件':node.name}`); }
   const rng = seededRandom(`${state.seed}:service:${node.id}`);
   if (node.type === 'shop' && !node.stock) node.stock = { units: shuffle(state.contentPool.towers, rng).slice(0, difficultyProfile(state).revision>=5?6:3).map((id, i) => ({ id, key: `unit${i}`, sold: false })), relics: shuffle(state.contentPool.relics.filter(id => !state.relics.includes(id)), rng).slice(0, 3).map((id, i) => ({ id, key: `relic${i}`, sold: false })) };
   if(node.type==='shop')ensureShopStock(state);
@@ -154,21 +154,21 @@ export function enterNode(state, id) {
 
 function completeNode(state) {
   const node = state.currentNode;
-  if (node && !node.completed) { node.completed = true; const canonical = state.maps[state.act].nodes.find(n => n.id === node.id); if (canonical) Object.assign(canonical, node); state.visited.push(node.id); state.stats.completedNodes++; record(state, `完成${node.name || node.type}`); }
+  if (node && !node.completed) { node.completed = true; const canonical = state.maps[state.act].nodes.find(n => n.id === node.id); if (canonical) Object.assign(canonical, node); state.visited.push(node.id); state.stats.completedNodes++; record(state, `完成 ${node.name || node.type}`); }
   state.nextNodes = node ? [...node.next] : state.nextNodes;
   state.phase = state.rewardQueue.length ? 'reward' : 'map';
   if (!state.rewardQueue.length && state.nextAct !== undefined) state.phase='interlude';
 }
 function enterNextAct(state) {
   state.act = state.nextAct; delete state.nextAct; state.floor = -1; state.currentNode = null; state.bossReveal = 1; state.nextNodes = state.maps[state.act].nodes.filter(n => n.floor === 0).map(n => n.id); state.phase = 'map';
-  record(state, `进入${acts[state.act].name}`);
+  record(state, `进入 ${acts[state.act].name}`);
   const room=ensureNexus(state)[state.act];if(!room.choice&&!room.skipped)state.phase='nexus';
 }
 
 export function continueAct(state){
-  if(state.phase!=='interlude'||!Number.isInteger(state.nextAct)||state.nextAct!==state.act+1||state.nextAct>2||state.rewardQueue.length)return fail('请先完成本幕战斗与奖励。');
+  if(state.phase!=='interlude'||!Number.isInteger(state.nextAct)||state.nextAct!==state.act+1||state.nextAct>2||state.rewardQueue.length)return fail("请先完成本幕战斗并领取奖励。");
   const bag=inventoryStatus(state);if(bag.overflow)return fail(`背包已超出 ${bag.overflow} 格，请先整理构造。`);
-  enterNextAct(state);state.battle=null;state.preBattle=null;return ok({reason:`已进入${acts[state.act].name}`});
+  enterNextAct(state);state.battle=null;state.preBattle=null;return ok({reason:`已进入 ${acts[state.act].name}`});
 }
 
 export function addXP(state, amount) {
@@ -177,7 +177,7 @@ export function addXP(state, amount) {
   while (state.depth < 12 && state.xp >= xpRequirement(state)) {
     state.xp -= xpRequirement(state); state.depth++; levels++; state.maxSpirit += 5; heal(state, difficultyProfile(state).revision>=3?6:10); state.bandwidth += levelBandwidth(state) + effects(state).level_bandwidth; state.resistance++;
     state.pendingUnitRewards++; if (state.depth % 2 === 0) state.pendingTalents++;
-    record(state, `精神深度达到${state.depth}`);
+    record(state, `精神深度达到 ${state.depth}`);
   }
   return levels;
 }
@@ -220,7 +220,7 @@ export function chooseReward(state, id, payload={}) {
   if (reward.kind === 'unit') addUnit(state, id, reward.tier || 1, reward.tier === 2 ? reward.branch || 'A' : null);
   if (reward.kind === 'relic' || reward.kind === 'talent') { const list = reward.kind === 'relic' ? state.relics : state.talents; if (list.includes(id)) return fail('已经拥有该奖励。'); list.push(id); discover(state, reward.kind === 'relic' ? 'relics' : 'talents', id); }
   if (reward.kind === 'upgrade') { const [uid, branch] = id.split(':'); const r = Rules.upgrade(state, uid, branch, {free:true}); if (!r.ok) return r; }
-  record(state, id==='skip'?'放弃道具':`选择${towers[id]?.name || relics[id]?.name || talents[id]?.name || items[id]?.name || id}`); state.rewardQueue.shift();
+  record(state, id==='skip'?'放弃道具':`选择 ${towers[id]?.name || relics[id]?.name || talents[id]?.name || items[id]?.name || id}`); state.rewardQueue.shift();
   // Refill later offers from their saved order, keeping three unowned options
   // whenever the pool has enough. No interface action advances a random stream.
   for (const offer of state.rewardQueue) if (offer.kind === 'talent' || offer.kind === 'relic') offer.options = (offer.reserves || offer.options).filter(choice => !(offer.kind === 'talent' ? state.talents : state.relics).includes(choice)).slice(0, 3);
@@ -271,7 +271,7 @@ function eventEffectPreview(state,fx,payload,data){
   if(fx.free_repairs){const targets=remaining.filter(u=>u.hp<Rules.unitStats(state,u).maxHp).sort((a,b)=>(Rules.unitStats(state,b).maxHp-b.hp)-(Rules.unitStats(state,a).maxHp-a.hp)).slice(0,fx.free_repairs);details.push(targets.length?`修满 ${targets.map(u=>towers[u.type].name).join('、')}；受修构造回仓库`:'所有构造耐久已满');}
   for(const [key,[name,percent]] of Object.entries(eventModifierInfo))if(fx[key])details.push(`${name} ${sign(fx[key])}${Number((fx[key]*(percent?100:1)).toFixed(2))}${percent?'%':''}`);
   if(fx.boss_reveal)details.push(`公开首领：${enemies[state.maps[state.act].boss].name}`);
-  if(fx.gain_clue)details.push((state.eventClues||[]).includes(fx.gain_clue)?`已持有${eventClues[fx.gain_clue].name}，改得 80 经验`:`获得线索：${eventClues[fx.gain_clue].name}（${eventClues[fx.gain_clue].description}）`);
+  if(fx.gain_clue)details.push((state.eventClues||[]).includes(fx.gain_clue)?`已持有 ${eventClues[fx.gain_clue].name}，改得 80 经验`:`获得线索：${eventClues[fx.gain_clue].name}（${eventClues[fx.gain_clue].description}）`);
   if(fx.consume_clue)details.push(`交出线索：${eventClues[fx.consume_clue].name}`);
   if(fx.battle)details.push('随后进入精英战；胜利获得单位、收藏品与精英战专注');
   const failures=[];
@@ -284,7 +284,7 @@ function eventEffectPreview(state,fx,payload,data){
   if(fx.item_capacity&&bag.itemCapacity>=MAX_ITEM_CAPACITY)failures.push('道具槽已满');
   if((fx.unit||fx.unit_t2)&&!unitId)failures.push('缺少所需职责的构造候选');
   if((fx.tower_hp||fx.tower_damage)&&(!target||fx.tower_damage&&target.hp<=0))failures.push('缺少可承担调整的存活构造');
-  if(fx.consume_clue&&!(state.eventClues||[]).includes(fx.consume_clue))failures.push(`缺少${eventClues[fx.consume_clue].name}`);
+  if(fx.consume_clue&&!(state.eventClues||[]).includes(fx.consume_clue))failures.push(`缺少 ${eventClues[fx.consume_clue].name}`);
   return {details,failures,recycleUid:recycled?.uid,itemUid:consumed?.uid,targetUid:target?.uid,unitId,canPay:failures.length===0};
 }
 export function eventPreview(state,index,payload={},options={}){
@@ -314,7 +314,7 @@ export function nodeAction(state, action, payload = {}) {
   if (action === 'cancel') return ok({ cancelled: true });
   if (action === 'leave') { if (!['workshop', 'shop'].includes(node.type)) return fail('请先选择一项服务。'); completeNode(state); return ok(); }
   if (node.type === 'camp') {
-    if (action === 'heal') { const rate = difficultyProfile(state).campHeal; heal(state, state.maxSpirit * rate); record(state, `营地恢复${Math.round(rate * 100)}%最大精神`); }
+    if (action === 'heal') { const rate = difficultyProfile(state).campHeal; heal(state, state.maxSpirit * rate); record(state, `营地恢复 ${Math.round(rate * 100)}% 最大精神`); }
     else if (action === 'repair') { const result = Rules.repair(state, payload.uid, {free:true}); if (!result.ok) return result; }
     else if (action === 'upgrade') { const result = Rules.upgrade(state, payload.uid, payload.branch, {free:true}); if (!result.ok) return result; }
     else return fail('营地只能选择恢复精神、维修或升阶中的一项。');
@@ -329,15 +329,15 @@ export function nodeAction(state, action, payload = {}) {
     ensureShopStock(state);const bag=ensureInventory(state);
     if(action==='sell-unit'){
       const unit=inventoryStatus(state).stored.find(u=>u.uid===payload.uid);if(!unit)return fail('只能出售仓库构造。');
-      const value=unit.tier*20,result=discardUnits(state,[unit.uid]);if(!result.ok)return result;state.focus+=value;record(state,`出售${towers[unit.type].name}，获得${value}专注`);return ok();
+      const value=unit.tier*20,result=discardUnits(state,[unit.uid]);if(!result.ok)return result;state.focus+=value;record(state,`出售 ${towers[unit.type].name}，获得 ${value} 专注`);return ok();
     }
     if(action==='shop-service'){
       const kind=payload.id,base={capacity:65,pouch:90,heal:40}[kind];if(!base||node.stock.services[kind])return fail('该项服务已使用。');
       if(kind==='capacity'&&bag.capacity>=MAX_CAPACITY||kind==='pouch'&&bag.itemCapacity>=MAX_ITEM_CAPACITY||kind==='heal'&&state.spirit>=state.maxSpirit)return fail('当前已达到该服务的上限。');
-      const price=servicePrice(state,base);if(state.focus<price)return fail(`需要${price}专注。`);
+      const price=servicePrice(state,base);if(state.focus<price)return fail(`需要 ${price} 专注。`);
       state.focus-=price;node.stock.services[kind]=true;
       if(kind==='capacity')bag.capacity=Math.min(MAX_CAPACITY,bag.capacity+2);else if(kind==='pouch')bag.itemCapacity++;else heal(state,20);
-      record(state,`购买${{capacity:'背包扩容',pouch:'道具槽扩容',heal:'精神恢复'}[kind]}，花费${price}专注`);return ok();
+      record(state,`购买 ${{capacity:'背包扩容',pouch:'道具槽扩容',heal:'精神恢复'}[kind]}，花费 ${price} 专注`);return ok();
     }
     const kind = action === 'buy-unit' ? 'units' : action === 'buy-relic' ? 'relics' : action==='buy-item'?'items':null;
     if (!kind) return fail('请选择货架上的物品。');
@@ -345,20 +345,20 @@ export function nodeAction(state, action, payload = {}) {
     if (!item || item.sold) return fail('这件物品已售出或不在货架上。');
     if (kind === 'relics' && state.relics.includes(item.id)) return fail('已经拥有该收藏品。');
     const price = shopPrice(state,kind,item);
-    if (state.focus < price) return fail(`专注不足，需要${price}。`);
+    if (state.focus < price) return fail(`专注不足，需要 ${price}。`);
     if(kind==='items'){const result=addItem(state,item.id,payload.replaceUid??null);if(!result.ok)return result;}
     state.focus -= price; item.sold = true;
     if (kind === 'units') addUnit(state, item.id,item.tier||1,item.branch||null); else if(kind==='relics'){ state.relics.push(item.id); discover(state, 'relics', item.id); }
-    record(state, `购买${towers[item.id]?.name || relics[item.id]?.name || items[item.id]?.name}，花费${price}专注`); return ok();
+    record(state, `购买 ${towers[item.id]?.name || relics[item.id]?.name || items[item.id]?.name}，花费 ${price} 专注`); return ok();
   }
   if (node.type === 'treasure' && action === 'treasure') {
     if (!node.options.length) { state.focus += 120; completeNode(state); return ok(); }
     if (!node.options.includes(payload.id) || state.relics.includes(payload.id)) return fail('请选择宝库展示的一件未持有收藏品。');
-    state.relics.push(payload.id); discover(state, 'relics', payload.id); record(state, `宝库选择${relics[payload.id].name}`); completeNode(state); return ok();
+    state.relics.push(payload.id); discover(state, 'relics', payload.id); record(state, `宝库选择 ${relics[payload.id].name}`); completeNode(state); return ok();
   }
   if (node.type === 'event' && action === 'event') {
     if (!Number.isInteger(payload.index)) return fail('请选择有效的事件行动。');
-    if (node.eventData.outcome) return fail('这次事件已经作出选择，请阅读后续并继续。');
+    if (node.eventData.outcome) return fail("本次事件已完成选择，请阅读后续并继续。");
     const preview = eventPreview(state, payload.index,payload,{resolveRisk:true});
     if (!preview || !preview.canChoose) return fail('不能支付这项选择的费用。');
     const fx = preview.effects, data = node.eventData;
@@ -411,8 +411,8 @@ export function nodeAction(state, action, payload = {}) {
 export function getSummary(state) {
   const stats = state.stats, won = state.phase === 'won', reasons = [];
   if (stats.breachDamage > stats.pressure) reasons.push('突破伤害是主要精神损失'); else if (stats.pressure > 0) reasons.push('死亡压力是主要精神损失');
-  if (stats.destroyed > 0) reasons.push(`${stats.destroyed}次构造被摧毁`);
-  if (stats.overloadSeconds > 5) reasons.push(`带宽过载累计${Math.round(stats.overloadSeconds)}秒`);
+  if (stats.destroyed > 0) reasons.push(`构造被摧毁 ${stats.destroyed} 次`);
+  if (stats.overloadSeconds > 5) reasons.push(`带宽过载累计 ${Math.round(stats.overloadSeconds)} 秒`);
   if (!won && state.currentNode?.type === 'event' && state.spirit <= 0) reasons.unshift('事件交换耗尽精神稳定');
   if (!state.units.some(u => u.hp > 0 && u.x !== null && towers[u.type].targets === 'all')) reasons.push('防线缺少存活对空火力');
   const fragments = stats.completedNodes * 2 + stats.elites * 5 + (won ? 50 : 0) + stats.bosses.length * 10;

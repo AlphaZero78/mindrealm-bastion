@@ -91,7 +91,7 @@ export function difficultySummary(value=0) {
     if(p.level>=5)lines.push('营地精神恢复为最大值的 20%。');
     if(p.level>=6)lines.push(`死亡压力提高 ${percent(p.pressureMultiplier)}。`);
     if(p.level>=7)lines.push('商店、维修和升级费用提高 15%。');
-    if(p.level>=8)lines.push('存在带宽干扰时，额外降低 2 带宽。');
+    if(p.level>=8)lines.push("存在带宽干扰时，额外降低 2 点带宽。");
     if(p.level>=9)lines.push('首领能力间隔缩短 20%。');
     return lines;
   }
