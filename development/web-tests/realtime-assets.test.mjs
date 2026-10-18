@@ -10,7 +10,9 @@ const bytes=path=>readFile(new URL('../../'+(path.startsWith('development/')||pa
 test('all 49 realtime assemblies and 109 variants resolve to real licensed GLBs with two detail levels',async()=>{
  const models=JSON.parse(await bytes('assets/game/models/models.json'));assert.deepEqual(Object.keys(models.entities).sort(),[...Object.keys(towers),...Object.keys(enemies)].sort());
  let variants=0;for(const entity of Object.values(models.entities)){for(const [id,parts]of Object.entries(entity.variants)){variants++;assert.ok(parts.length>=4,id);for(const p of parts){assert.ok(models.sources[p.source],p.source);assert.ok([...p.size,...p.position,...p.rotation].every(Number.isFinite));assert.ok(p.size.every(v=>v>0));}}assert.ok(Object.values(entity.bounds).every(v=>v>0));}
- assert.equal(variants,109);assert.equal(Object.keys(models.sources).length,49);
+ assert.equal(variants,109);assert.equal(Object.keys(models.sources).length,50);
+ assert.equal(models.sources['refined/drive-wheel'].derivedFrom,'tower-defense-kit/tower-round-middle-a');
+ assert.equal(models.sources['refined/drive-wheel'].circularSegments,64);
  for(const source of Object.values(models.sources)){
   const data=await bytes(source.path.slice(1));assert.equal(data.readUInt32LE(0),0x46546c67);assert.equal(data.readUInt32LE(4),2);assert.equal(data.readUInt32LE(8),data.length);
   const doc=JSON.parse(data.toString('utf8',20,20+data.readUInt32LE(12)).trim());assert.ok(!doc.buffers.some(b=>b.uri));assert.ok(!doc.images?.length);assert.deepEqual([...new Set(doc.nodes.filter(n=>n.mesh!==undefined).map(n=>n.extras.lod))].sort(),[0,1]);

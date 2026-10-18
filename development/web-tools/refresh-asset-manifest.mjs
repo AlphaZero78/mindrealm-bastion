@@ -56,6 +56,7 @@ export async function runtimeAssetPaths(root = projectRoot) {
     ...Object.keys(towers).map(id => `assets/game/sprites/towers/${id}.png`),
     ...Object.keys(enemies).map(id => `assets/game/sprites/enemies/${id}.png`),
     ...Object.values(ENTITY_ART).map(art => art.animationPath.slice(1)),
+    ...Object.values(ENTITY_ART).filter(art => art.deathPath).map(art => art.deathPath.slice(1)),
     ...Object.values(AUDIO_FILES).map(path => path.replace(/^\//, '')),
     ...cssAssets,
     ...Object.values(messengers).map(m=>`assets/third_party/game-icons/${m.art}.svg`),

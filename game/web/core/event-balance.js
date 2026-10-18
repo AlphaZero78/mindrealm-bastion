@@ -44,9 +44,9 @@ export function eventRequirements(state,choice){
  const requirement=choice.requires||{},rows=[],alive=state.units.filter(u=>u.hp>0),add=(met,text)=>rows.push({met,text});
  if(requirement.depth)add(state.depth>=requirement.depth,`需要精神深度 ${requirement.depth}（当前 ${state.depth}）`);
  if(requirement.resistance)add(state.resistance>=requirement.resistance,`需要基础抗性 ${requirement.resistance}（当前 ${state.resistance}）`);
- if(requirement.role){const count=alive.filter(u=>towers[u.type].role===requirement.role).length;add(count>=requirement.count,`需要 ${requirement.count} 座存活${{melee:'近战',ranged:'远程',support:'支援'}[requirement.role]}（当前 ${count}）`);}
+ if(requirement.role){const count=alive.filter(u=>towers[u.type].role===requirement.role).length;add(count>=requirement.count,`需要 ${requirement.count} 座存活${{melee:'近战',ranged:'远程',support:'支援'}[requirement.role]}构造（当前 ${count}）`);}
  if(requirement.tier){const count=alive.filter(u=>u.tier>=requirement.tier).length;add(count>=requirement.count,`需要 ${requirement.count} 座 T${requirement.tier} 以上存活构造（当前 ${count}）`);}
- if(requirement.distinct_roles){const count=new Set(alive.map(u=>towers[u.type].role)).size;add(count>=requirement.distinct_roles,`需要近战、远程、支援三类存活构造（当前 ${count} 类）`);}
+ if(requirement.distinct_roles){const count=new Set(alive.map(u=>towers[u.type].role)).size;add(count>=requirement.distinct_roles,`需要近战、远程、支援 3 类存活构造（当前 ${count} 类）`);}
  if(requirement.damaged){const count=state.units.filter(u=>u.hp<unitStats(state,u).maxHp).length;add(count>=requirement.damaged,`需要受损构造（当前 ${count} 座）`);}
  if(requirement.injured)add(state.spirit<state.maxSpirit,'需要火种尚未恢复至上限');
  const clue=choice.effects.consume_clue;if(clue)add((state.eventClues||[]).includes(clue),`需要线索：${eventClues[clue].name}`);

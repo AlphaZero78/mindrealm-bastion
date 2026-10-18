@@ -119,7 +119,7 @@ export function createSaveStore(storage = globalThis.localStorage, prefix = 'min
   return {
     save(state) {
       if (!state || typeof state !== 'object') return { ok: false, reason: '没有可保存的单局。' };
-      if (state.phase === 'battle' && !state.preBattle) return { ok: false, reason: '缺少战前快照，拒绝保存半场战斗。' };
+      if (state.phase === 'battle' && !state.preBattle) return { ok: false, reason: "缺少战前快照，无法保存进行中的战斗。" };
       const source = state.phase === 'battle' ? state.preBattle : state;
       if (!validRun(source)) return { ok: false, reason: '数据结构无效，未覆盖现有存档。' };
       const safe = clone(source), runId = state.runId || `${state.seed}:${Date.now().toString(36)}:${Math.random().toString(36).slice(2, 8)}`;
@@ -160,7 +160,7 @@ export function settleProfile(profile, state) {
 export function unlockArchive(profile, id) {
   if (!enemies[id] || enemies[id].kind !== 'boss') return { ok: false, reason: '未知档案。' };
   if (profile.unlockedArchives.includes(id)) return { ok: false, reason: '已经解锁。' };
-  if (profile.fragments < 30) return { ok: false, reason: '需要30记忆碎片。' };
+  if (profile.fragments < 30) return { ok: false, reason: "需要 30 记忆碎片。" };
   profile.fragments -= 30; profile.unlockedArchives.push(id); return { ok: true };
 }
 
@@ -168,7 +168,7 @@ export function unlockContent(profile, id) {
   const pack = contentUnlocks.find(pack => pack.id === id);
   if (!validProfile(profile) || !pack) return { ok: false, reason: '未知构筑档案。' };
   if (profile.unlockedContent.includes(id)) return { ok: false, reason: '该内容已经加入后续单局。' };
-  if (profile.fragments < pack.cost) return { ok: false, reason: `需要${pack.cost}记忆碎片。` };
+  if (profile.fragments < pack.cost) return { ok: false, reason: `需要 ${pack.cost} 记忆碎片。` };
   profile.fragments -= pack.cost; profile.unlockedContent.push(id);
-  return { ok: true, reason: `${pack.name}已解锁，从下一局开始进入内容池。` };
+  return { ok: true, reason: `${pack.name} 已解锁，从下一局开始进入内容池。` };
 }

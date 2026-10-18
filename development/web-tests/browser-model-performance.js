@@ -3,15 +3,16 @@ async page=>{
  const issues=[];page.on('pageerror',e=>issues.push(e.message));page.on('console',m=>{if(['error','warning'].includes(m.type()))issues.push(m.text());});
  await page.reload();await page.waitForFunction(()=>window.__mindrealm?.field.realtime?.ready);const cases=[];
  for(const size of [{width:1440,height:900},{width:1920,height:1080}]){
-  await page.setViewportSize(size);
+  await page.setViewportSize(size);await page.bringToFront();
   const result=await page.evaluate(async()=>{
    const R=await import('/web/core/state.js'),C=await import('/web/core/content.js'),Rules=await import('/web/core/rules.js'),T=await import('/assets/third_party/three/three.bundle.js'),View=await import('/web/view/battlefield.js');
    const s=R.newRun('realtime-stress');R.chooseNexus(s,s.nexus[0].options[0]);R.enterNode(s,R.availableNodes(s)[0].id);s.units=[];s.bandwidth=500;s.depth=12;
    for(const cell of s.terrain.cells)if(!cell.protected){cell.h=0;cell.ramp=-1;}s.terrain.revision++;
    const kinds=Object.keys(C.towers);
-   for(let i=0;i<24;i++){const u=R.addUnit(s,kinds[i%12],3,i%2?'A':'B'),col=i%6,row=Math.floor(i/6),x=4+col*6,z=7+row*6;if(C.towers[u.type].role==='ranged')for(let dz=0;dz<3;dz++)for(let dx=0;dx<3;dx++)s.terrain.cells[(z+dz)*41+x+dx].h=1;
+   for(let i=0;i<24;i++){const type=kinds[i%12],u=R.addUnit(s,type==='bandwidth_relay'&&i>=kinds.length?'memory_mechanic':type,3,i%2?'A':'B'),col=i%6,row=Math.floor(i/6),x=4+col*6,z=7+row*6;if(C.towers[u.type].role==='ranged')for(const cell of Rules.footprint(s,u,x,z))s.terrain.cells[cell.z*s.terrain.size+cell.x].h=1;
     const verdict=Rules.deploy(s,u.uid,x,z);if(!verdict.ok){for(let z=1;z<37&&u.x===null;z++)for(let x=1;x<37&&u.x===null;x++)Rules.deploy(s,u.uid,x,z);}
    }
+   if(s.units.filter(u=>u.x!==null).length!==24)throw Error('Stress fixture requires 24 actually deployed T3 constructions');
    const enemyKinds=Object.keys(C.enemies);s.battle={time:12,enemies:[],drones:Array.from({length:96},(_,i)=>({id:`stress-drone-${i}`,x:8+i%12*2.2,z:11+Math.floor(i/12)*2.3,h:2.2,facing:i*.5,motion:{dx:0,dz:0,dh:0}})),disabled:[],itemBuffs:[],itemShield:0,nexusShield:0};
    for(let i=0;i<100;i++){const type=enemyKinds[i%enemyKinds.length],c=C.enemies[type];s.battle.enemies.push({...c,id:`probe${i}`,type,x:9+(i%10)*2.4,z:10+Math.floor(i/10)*2.2,h:0,hp:c.hp,maxHp:c.hp,phase:i%3,facing:0,motion:{dx:.01,dz:.015,distance:i*.2,dt:.05},lastActionAt:0,castUntil:0,shield:0});}
    const q=window.__mindrealm;q.getSettings().tutorial=false;q.getSettings().uiScale=1;q.getSettings().reducedMotion=false;q.loadState(s);const state=q.getState(),field=q.field;field.frameBoard();field.changeZoom(1.18);field.render(performance.now());

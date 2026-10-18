@@ -1,0 +1,4143 @@
+{
+  "date": "2026-10-15",
+  "scope": "paired geometry reflection, clear structural levels, balanced tower upgrades",
+  "bakeInputs": {
+    "format": 1,
+    "createdAtUTC": "2026-10-15T11:50:57.054Z",
+    "catalogFileSHA256": "67a338aafcc0e1be77157104eb6154f0703f48ade0108946c1c6fb24947412a8",
+    "sources": {
+      "space-kit/alien": {
+        "path": "/assets/game/models/space-kit__alien.glb",
+        "sha256": "425bdbcd1881b7fe807199554941a0e040a4a6e05e9cd53296f701e62497f505"
+      },
+      "space-kit/barrel": {
+        "path": "/assets/game/models/space-kit__barrel.glb",
+        "sha256": "ae747f81efb18280959cb7323ae4edaa2c74274dc4155a4e6a038083fb22d2c7"
+      },
+      "space-kit/corridor_wall": {
+        "path": "/assets/game/models/space-kit__corridor_wall.glb",
+        "sha256": "f658f4c4a42995f1f620e29a572bb6c5d34f1215b0b83fc2a74723d8ccd95053"
+      },
+      "space-kit/corridor_wallCorner": {
+        "path": "/assets/game/models/space-kit__corridor_wallCorner.glb",
+        "sha256": "1d00d205edff9c046d70b8e554a5658093933091a0be2ae4faa576cd599a2dff"
+      },
+      "space-kit/craft_cargoA": {
+        "path": "/assets/game/models/space-kit__craft_cargoA.glb",
+        "sha256": "8dd65051ad2e5dfe86d5a696cab465f36f9004a9ddef6ec86f750ba524d8107d"
+      },
+      "space-kit/craft_cargoB": {
+        "path": "/assets/game/models/space-kit__craft_cargoB.glb",
+        "sha256": "f9cd4f541f76a0131477b99000c62bba2acf22782df5d46d9df69c265a2fb939"
+      },
+      "space-kit/craft_miner": {
+        "path": "/assets/game/models/space-kit__craft_miner.glb",
+        "sha256": "ed6bc2059a4dde645cc0b4b335c30b75f62c732d3984308e1a04bf53e1be10c7"
+      },
+      "space-kit/craft_racer": {
+        "path": "/assets/game/models/space-kit__craft_racer.glb",
+        "sha256": "f88d718cdc8f8250fb8ce54365224079e3a2cbfd1d1aa3077ea3cb63cd10ca8e"
+      },
+      "space-kit/craft_speederA": {
+        "path": "/assets/game/models/space-kit__craft_speederA.glb",
+        "sha256": "8445795105de2cac6220fac83e254faa25243d8025ca9cc5b2853e00e3d6ad28"
+      },
+      "space-kit/craft_speederB": {
+        "path": "/assets/game/models/space-kit__craft_speederB.glb",
+        "sha256": "33f23c11928bda1121439629657312458ca1e2dc6445976c2246a02f0f3ebba9"
+      },
+      "space-kit/desk_computerScreen": {
+        "path": "/assets/game/models/space-kit__desk_computerScreen.glb",
+        "sha256": "bc13cf586b1bd411717634fa6a18e98a62e29ee683342640e6c3d700c66ff6df"
+      },
+      "space-kit/gate_complex": {
+        "path": "/assets/game/models/space-kit__gate_complex.glb",
+        "sha256": "d4f48f1c64096bae8091e136af988b8eb7ea0582e8ad2f850c1ea4cd08debc04"
+      },
+      "space-kit/gate_simple": {
+        "path": "/assets/game/models/space-kit__gate_simple.glb",
+        "sha256": "63a1c188243168d04e8e3dad88ac2ed32714a05a8b5aa00146a45554c61af530"
+      },
+      "space-kit/hangar_roundA": {
+        "path": "/assets/game/models/space-kit__hangar_roundA.glb",
+        "sha256": "0848372021120042dd1bdadc1a8db9a60d3448ad51fa5458b00f75044c01f094"
+      },
+      "space-kit/hangar_roundB": {
+        "path": "/assets/game/models/space-kit__hangar_roundB.glb",
+        "sha256": "76accbe44b00726e90b792114fa39e803b288f8f732e5625335c4607173102c6"
+      },
+      "space-kit/machine_barrel": {
+        "path": "/assets/game/models/space-kit__machine_barrel.glb",
+        "sha256": "0f4fee13ca3e3057f20f070ef8c8948801fc7e978c6c442afc9245084437d52e"
+      },
+      "space-kit/machine_barrelLarge": {
+        "path": "/assets/game/models/space-kit__machine_barrelLarge.glb",
+        "sha256": "606310c90f6b6669fe01aa9fcb6fe0539805865491b8fa3b7e355e968f42da11"
+      },
+      "space-kit/machine_generator": {
+        "path": "/assets/game/models/space-kit__machine_generator.glb",
+        "sha256": "3cf415459af9f88972d7e897fdf74e59716a76204400d2a73f87087152ee1967"
+      },
+      "space-kit/machine_generatorLarge": {
+        "path": "/assets/game/models/space-kit__machine_generatorLarge.glb",
+        "sha256": "e3215031ed277950e4abd13d7c76a4803f870dbb10d7b77024c3eb840988d449"
+      },
+      "space-kit/machine_wireless": {
+        "path": "/assets/game/models/space-kit__machine_wireless.glb",
+        "sha256": "cf01c248334ec356dc82aee17afb54a5d66914af39898e68e8a4e8acf60801f3"
+      },
+      "space-kit/pipe_ring": {
+        "path": "/assets/game/models/space-kit__pipe_ring.glb",
+        "sha256": "bdb8b380c5ab114bf77ef7644a3e6deef05faae06cdb960158455451f53997cb"
+      },
+      "space-kit/pipe_ringHigh": {
+        "path": "/assets/game/models/space-kit__pipe_ringHigh.glb",
+        "sha256": "55a37fe13bf1b909afde8fd6f5b89563222faa4347df91cfb37d68b3f1ef2f80"
+      },
+      "space-kit/rocket_baseA": {
+        "path": "/assets/game/models/space-kit__rocket_baseA.glb",
+        "sha256": "eac35dad7f1179d33d293c4771d99ab4017f6c2007ef70519b6f5a94c98918dd"
+      },
+      "space-kit/rocket_baseB": {
+        "path": "/assets/game/models/space-kit__rocket_baseB.glb",
+        "sha256": "e8f2719b0167a08cd64921b612e7f4dcc61577f987da9aca18b6214afae173b4"
+      },
+      "space-kit/rocket_finsA": {
+        "path": "/assets/game/models/space-kit__rocket_finsA.glb",
+        "sha256": "0b25ae739cfd72dff14f5fac61984d2a1d73b65fa1b824542bb7693417e1ad18"
+      },
+      "space-kit/rocket_finsB": {
+        "path": "/assets/game/models/space-kit__rocket_finsB.glb",
+        "sha256": "80f9a03e7c7da00d1c0b650c11d14263eec250566e89f82cc09bb34b7c9b6913"
+      },
+      "space-kit/rocket_fuelA": {
+        "path": "/assets/game/models/space-kit__rocket_fuelA.glb",
+        "sha256": "bb8ebde4e9fe436cc3cfed136b90de942087f276241895ed5b82ff8745e590f5"
+      },
+      "space-kit/rocket_fuelB": {
+        "path": "/assets/game/models/space-kit__rocket_fuelB.glb",
+        "sha256": "03a10879a121df18ded6359e11747d32747b1f599831df3052c27d85b6d3790b"
+      },
+      "space-kit/rocket_sidesA": {
+        "path": "/assets/game/models/space-kit__rocket_sidesA.glb",
+        "sha256": "f661ad0586ac3d48a64dcf618b374cc484e63d94ba458793b1d5346987763bfa"
+      },
+      "space-kit/rocket_topA": {
+        "path": "/assets/game/models/space-kit__rocket_topA.glb",
+        "sha256": "9248f41d2d4da0e747a5f8b9499ab3ec24cdc5d7079276702eeaf7711e3a5a5d"
+      },
+      "space-kit/rocket_topB": {
+        "path": "/assets/game/models/space-kit__rocket_topB.glb",
+        "sha256": "f24a4d074adeef0af04c1166a2825e3ca08a2496571798aee61984088a2bef5e"
+      },
+      "space-kit/rover": {
+        "path": "/assets/game/models/space-kit__rover.glb",
+        "sha256": "4b0d68e54c2f6fc2133375878a67f72c136915fdf2c05189117cfba26e99d713"
+      },
+      "space-kit/satelliteDish": {
+        "path": "/assets/game/models/space-kit__satelliteDish.glb",
+        "sha256": "a53727c5f92b0803c73915476b3dc945576ae7e456bbb44df1f6388430debd32"
+      },
+      "space-kit/satelliteDish_detailed": {
+        "path": "/assets/game/models/space-kit__satelliteDish_detailed.glb",
+        "sha256": "df5e0fe8cc722261c72bb5ad4bd8d8c40ece92f0b29f8904e962bd4c05d43d41"
+      },
+      "space-kit/satelliteDish_large": {
+        "path": "/assets/game/models/space-kit__satelliteDish_large.glb",
+        "sha256": "8008ff22eb29b7315b35f3fabc2f8a3a7a7baf185fe0d3fa7d12da2d7b28eb3f"
+      },
+      "space-kit/supports_high": {
+        "path": "/assets/game/models/space-kit__supports_high.glb",
+        "sha256": "4704223d8d86cd6b3e5dd1bf55ed7c89918a2dab8f47dfc4ada968b7b5f1bc2a"
+      },
+      "space-kit/supports_low": {
+        "path": "/assets/game/models/space-kit__supports_low.glb",
+        "sha256": "7fcffe7397a9fc49337c4ef62d4b3b65534ae3b850f4ac32eede021bb48b9588"
+      },
+      "space-kit/turret_double": {
+        "path": "/assets/game/models/space-kit__turret_double.glb",
+        "sha256": "aaef3c936229bfebdce013eca9fadafb7174fed2d4e8d3274c52bbdb64308e51"
+      },
+      "space-kit/turret_single": {
+        "path": "/assets/game/models/space-kit__turret_single.glb",
+        "sha256": "55cea2c11725bf15cfc0606ab83d79728ac8d79b18fc4455453201ab2ad4b0db"
+      },
+      "space-kit/weapon_gun": {
+        "path": "/assets/game/models/space-kit__weapon_gun.glb",
+        "sha256": "93ac8a0c21381f5faf79717c49364b4332000b42571f2a530bad95f93a1bcdb4"
+      },
+      "space-kit/weapon_rifle": {
+        "path": "/assets/game/models/space-kit__weapon_rifle.glb",
+        "sha256": "2bc3dbc65d07a755bbddc3f5b3189fe38f1e5e7b90eb220d968e6056b678d4cc"
+      },
+      "tower-defense-kit/enemy-ufo-b": {
+        "path": "/assets/game/models/tower-defense-kit__enemy-ufo-b.glb",
+        "sha256": "0909fe80f51227c87160077a3601d12e0aa064171171052275f414c9ecc934f8"
+      },
+      "tower-defense-kit/enemy-ufo-c": {
+        "path": "/assets/game/models/tower-defense-kit__enemy-ufo-c.glb",
+        "sha256": "ed040064916b352d8f04b2e02cd4bf61983235e08cf35af63a156a46e29f8589"
+      },
+      "tower-defense-kit/enemy-ufo-d": {
+        "path": "/assets/game/models/tower-defense-kit__enemy-ufo-d.glb",
+        "sha256": "0cce1a0fb05c4ecd4e1537d2bde5973081d65e25604ed3d0b5fd29b0fff6234b"
+      },
+      "tower-defense-kit/tower-round-bottom-c": {
+        "path": "/assets/game/models/tower-defense-kit__tower-round-bottom-c.glb",
+        "sha256": "1111ff5a646c26e4a9d1e2354b4e2af708ecfad6c06e67c62e73fecac98a3932"
+      },
+      "tower-defense-kit/tower-round-middle-a": {
+        "path": "/assets/game/models/tower-defense-kit__tower-round-middle-a.glb",
+        "sha256": "9b8dab126fc2e42490218b688f9aab6f491c949cbe1b3f139d937c254d27a754"
+      },
+      "tower-defense-kit/tower-round-top-a": {
+        "path": "/assets/game/models/tower-defense-kit__tower-round-top-a.glb",
+        "sha256": "88b70e244dc93d55134f2d62be615a6c8207d8b505d1fd7b53f274924a44a4d0"
+      },
+      "tower-defense-kit/tower-square-bottom-b": {
+        "path": "/assets/game/models/tower-defense-kit__tower-square-bottom-b.glb",
+        "sha256": "c6ba98cbd0ca3808c502908143c0cf597d5a96ded294af26e02951682531d237"
+      },
+      "tower-defense-kit/weapon-cannon": {
+        "path": "/assets/game/models/tower-defense-kit__weapon-cannon.glb",
+        "sha256": "b60b4d94a28f33c5c7e75d6923468789fe4daf1b3d559f31a550214483812f39"
+      },
+      "refined/drive-wheel": {
+        "path": "/assets/game/models/refined__drive-wheel.glb",
+        "sha256": "6699fbda1cd827beb9f08416d6c2f249779790ce0128ce40867f44dfbc161a36"
+      }
+    },
+    "models": {
+      "anchor_bulwark": {
+        "definitionSHA256": "f309c95f929b4ed028ba4089d14b60f9be1088e0ccfe3f72114e4aac022da2dc",
+        "runtimeSHA256": "f309c95f929b4ed028ba4089d14b60f9be1088e0ccfe3f72114e4aac022da2dc"
+      },
+      "phase_blade": {
+        "definitionSHA256": "3c799cd5e5660056a58e3fe68fdcf6ed4a66678892fe33fb2c501f21f764d9a7",
+        "runtimeSHA256": "edf0b359e4a4b5dc996d6e9721b091980cb57e55588471c233260ff36743e22b"
+      },
+      "boundary_riveter": {
+        "definitionSHA256": "5e5e12e50f94646d6ffb364c271b6615cdce6c18ebf32273cae564d3d090c165",
+        "runtimeSHA256": "5e5e12e50f94646d6ffb364c271b6615cdce6c18ebf32273cae564d3d090c165"
+      },
+      "resonance_guard": {
+        "definitionSHA256": "fd1cacc7981bbd487098df801cceddd1d8875ab7a2f6e804020f9ba03a5acf0d",
+        "runtimeSHA256": "fd1cacc7981bbd487098df801cceddd1d8875ab7a2f6e804020f9ba03a5acf0d"
+      },
+      "pulse_array": {
+        "definitionSHA256": "f1c8626a6044191444b78551a062d3a0b38f2a74a9ddfc0d6a9b88b7ad375fbb",
+        "runtimeSHA256": "f1c8626a6044191444b78551a062d3a0b38f2a74a9ddfc0d6a9b88b7ad375fbb"
+      },
+      "focus_rail": {
+        "definitionSHA256": "e969c14a8584e0700d16105794f7d7d1ae98ebefa69e58810bcda2b41a2486b6",
+        "runtimeSHA256": "e969c14a8584e0700d16105794f7d7d1ae98ebefa69e58810bcda2b41a2486b6"
+      },
+      "arc_mortar": {
+        "definitionSHA256": "583658df2dd573b9edbe87157d0a2cbcf4b0ad2ef65624ce79eafa6071839490",
+        "runtimeSHA256": "583658df2dd573b9edbe87157d0a2cbcf4b0ad2ef65624ce79eafa6071839490"
+      },
+      "drone_loom": {
+        "definitionSHA256": "7bf85f4be6dc3ebe4d9e1f9c4e2a4b49d71aa91845aec3aaad8ce272ef582b54",
+        "runtimeSHA256": "7bf85f4be6dc3ebe4d9e1f9c4e2a4b49d71aa91845aec3aaad8ce272ef582b54"
+      },
+      "bandwidth_relay": {
+        "definitionSHA256": "c339c3b217a3480dd0d64f83ca1fe495e256bc19c9fc73a9fa86891518cb2a49",
+        "runtimeSHA256": "c339c3b217a3480dd0d64f83ca1fe495e256bc19c9fc73a9fa86891518cb2a49"
+      },
+      "memory_mechanic": {
+        "definitionSHA256": "bc58270bdc763b33156c949684acd60879e9f98cecb5d4bf4e53a097cceab23b",
+        "runtimeSHA256": "a7e51d12dc5a2a896f29173d29d308b40dbb8bc889b5fb178f2611bc838922a1"
+      },
+      "frequency_choir": {
+        "definitionSHA256": "a49506c94e77b42cf9a43c3eaf492bdab228acc152e75a36f1e17bd47952cfd3",
+        "runtimeSHA256": "a49506c94e77b42cf9a43c3eaf492bdab228acc152e75a36f1e17bd47952cfd3"
+      },
+      "resistance_beacon": {
+        "definitionSHA256": "32d357decf4a0e244fcddd0cf9cab6141fa24df649c0e492574d4692e007cc39",
+        "runtimeSHA256": "32d357decf4a0e244fcddd0cf9cab6141fa24df649c0e492574d4692e007cc39"
+      },
+      "static_drifter": {
+        "definitionSHA256": "1da4735d9603f8f72041dbe12f6de8a6613b1271e300f090fb415fdc73c12a7f",
+        "runtimeSHA256": "838706ea3ca20ba39196a0cf7a0e6d7776b5b98167e4dc6a32ec0e2aa0adb5b3"
+      },
+      "spike_runner": {
+        "definitionSHA256": "6890e8a5d908f3556ffc9646192f7e4e287d0fc3e140a06c5601e44f367aff76",
+        "runtimeSHA256": "39c6f55dbe585b3e51ddd3fea886ed6e7b8347fe3a315490fcc515a24c5ff6d2"
+      },
+      "shield_echo": {
+        "definitionSHA256": "9a1b6e9df421b60fd3177f2b98e6b7c09194a268617939e8115246305eb58736",
+        "runtimeSHA256": "2a72f41379f22dc833eb5215449b7a525a4cb775d94a856f9774784c0574f629"
+      },
+      "tempo_amplifier": {
+        "definitionSHA256": "8b2b0cb3f12e254ea117be836093d57a6cc7284c5040dc4dd4f5ec61d12eaaab",
+        "runtimeSHA256": "f1082bf89cc8751010cce5a482373cc161305a123b02b137d56bdadc597e40af"
+      },
+      "fracture_seed": {
+        "definitionSHA256": "dd729a50d9c20c1228b4699074c8c8978786a5ab671774548e3b9add3b1a2e73",
+        "runtimeSHA256": "b3e205834a8ee10a75a548fb6b2bf741f60ca6786b67d75dc13c34c4f42df36c"
+      },
+      "floating_noise": {
+        "definitionSHA256": "84645d9d5e1c3f26d66a3dad7f7755c40d969b6e56ac4fe9b1970b44ce938468",
+        "runtimeSHA256": "5e883f159cbb5f79c867432343cc7369fb30097d87fe44bbd9f413552d9b872b"
+      },
+      "remote_hunter": {
+        "definitionSHA256": "0954e9e5f00d956e2c114117c59b37b4d88183eedb14063e938d7ad0757f9d86",
+        "runtimeSHA256": "d0350c0c01e9712ddcbdd03742fa03277661500d77289ae907ddf56f0a4c2a78"
+      },
+      "siege_ram": {
+        "definitionSHA256": "d4ad437d33e64c948f5d78f8364a27833bf6ac2f1881c8a13d6db1c6e4258cd7",
+        "runtimeSHA256": "842edad7fd7423df5d844a0adef029ba89752ee0bf606b21d653b9b77caecaab"
+      },
+      "memory_medic": {
+        "definitionSHA256": "2820e33d6538d72d9ebf85f1d5fee2d470cb452d75afbcb95210fa5c1001515e",
+        "runtimeSHA256": "1c87c639044391d33843dfb96a4e1e88c1af532f122cb8b181d2c3f5428a7d69"
+      },
+      "bandwidth_jammer": {
+        "definitionSHA256": "63548d7ca73256d51342a411cfcb8e07e6f9667ace8e6e54703374d11eed5bec",
+        "runtimeSHA256": "1ab246e6583bb841fda3ed8d546cf325ef166cd03fc79cecd33a14938d61bef2"
+      },
+      "phase_teleporter": {
+        "definitionSHA256": "4225198f070e08c983a6b629adad887f69192cfb34401d1d642eaa4cba7dc5c3",
+        "runtimeSHA256": "88d778680843763045449dbc9a878fdae480028935beff38f37ee890e328ce0e"
+      },
+      "replication_node": {
+        "definitionSHA256": "69cc44f90dc6adac3fcb29128a04fb1d7f55cbd29fc3fa9ee4f5ea17a41b13f7",
+        "runtimeSHA256": "c4ba6f3f3bcf2147da014e4cc2aa70b50803289b42c8c5846c9155daf7fb2deb"
+      },
+      "pressure_cantor": {
+        "definitionSHA256": "71dbe5818a3975bb2608391f97a0c99045f4c8a1c14e0a9291526b48e30dd1f7",
+        "runtimeSHA256": "6102b4933099c1a60d016a64b990f2fe1763c3b7419e48b6a216a138892ae98e"
+      },
+      "armored_worm": {
+        "definitionSHA256": "68a11f14bf11f45c2e2f6894c6731d38a05e308ca3d8bacda2eb31ff0de86f12",
+        "runtimeSHA256": "1e4cd08fcb221a1b53dbe1206b2aa59d4fa952cc9510ac7e7914819a41935c97"
+      },
+      "shield_conductor": {
+        "definitionSHA256": "36ed71d9e3c6da3996b0a820e3c6843c9cb752400b4f5821cb8aaa8657d847f5",
+        "runtimeSHA256": "9af5c692f0151df8e9e2a27de69e871ae235ad36c1eaac4b5a9e1dca5e0d07ed"
+      },
+      "signal_summoner": {
+        "definitionSHA256": "40e68671682448d5f93e9e3c28080189322e92f0a74f003e5cfcec51f8249f06",
+        "runtimeSHA256": "4d2e3f2af043739618efcb7aded21e3d19c3f318bb6c9a6020726db71e49fa90"
+      },
+      "resistance_corruptor": {
+        "definitionSHA256": "ed56986f38df95bbb902b3c0abebde61317c77b9d9b444f5d230a180de1109c8",
+        "runtimeSHA256": "d4ba93cf3a58b6c40d15636f0d8ca314490370970908c0b2f74848cb5e328efb"
+      },
+      "detonation_shell": {
+        "definitionSHA256": "deb81dd582c257774f29fec56cc58c97f6ab25e8271a011b80834bd03bffcc40",
+        "runtimeSHA256": "f9c371f6891acf4e783c85c6655674ebc485ab4914ca9afa6fa9a34a3e14f4c0"
+      },
+      "frequency_hunter": {
+        "definitionSHA256": "17c3933f1c59211db49547537f716465d7a10a5e4b0266b844a769c72ac8fe04",
+        "runtimeSHA256": "5681978421048bb47686b8ee3f3b81d988f9dd4b97f552ae6db8a2d645e003b1"
+      },
+      "terrain_dismantler": {
+        "definitionSHA256": "4bef7aaa55bda6e7d6e704159455be4fd1bc3e1b6da6794ad88f6357fb22857d",
+        "runtimeSHA256": "b1592934a3dfde1c7ecb3e5589dc88bb66d68332986f21884acaf1aa494b8792"
+      },
+      "proliferation_protocol": {
+        "definitionSHA256": "32c74c92f8b7b3d4d90b001c46386c8e83da79d85a7223ac54800a1942076d55",
+        "runtimeSHA256": "af5cf9d3366da80a3e660d2a43624b4607c9d43fed212bead6b2ba1374a91d66"
+      },
+      "spirit_taxer": {
+        "definitionSHA256": "ff3e499086a663c2bc3657ec1b1477666f463d4398aeb04b97c6d3efda8b03fb",
+        "runtimeSHA256": "149840632fc8d09d4e0f3604cc7b9c3fae7767f4c7a15775e8bbb1eb0eff47a7"
+      },
+      "scrap_bulwark": {
+        "definitionSHA256": "e93d0cb6be0a9c51985e0c2c5b2bb572fd8a7c0b6fd24b3a8cb748c8f7b7a2ca",
+        "runtimeSHA256": "ebfb472fe0b3dfdb3a04720167be4af742cbcf4032ced41497f730e3a37175fc"
+      },
+      "echo_glider": {
+        "definitionSHA256": "1e027bad28c37a13912257938a49802f38fd515fb3e18cd252a4e2617cd6f0e0",
+        "runtimeSHA256": "a8258cfa164312ead31b6e1c87d797f0396b9ed250774eda57846c83607b489e"
+      },
+      "noise_bell": {
+        "definitionSHA256": "097cbd977a399e2044fc5ee940003722efc83b76e46b8dcc7b5b6c7747bc64f3",
+        "runtimeSHA256": "df600c0839ffd93efc0ff8e3230774127ecc0fa969993b0c80f2c7bc5cbba39a"
+      },
+      "memory_runner": {
+        "definitionSHA256": "7f9a2053b41e094938179bce85e2d074b94190ec0bb03c2ac81b451af4b41c18",
+        "runtimeSHA256": "9168c3a44cfcc3f28aecbdbe3d66a8e382ee73f344d962222bd66dd568318957"
+      },
+      "repair_skiff": {
+        "definitionSHA256": "a735b3ef58954c0526535a540d6b5eb5ca6309b2679bad480ed8172b662e6d29",
+        "runtimeSHA256": "7f77fe226ea928a64aaecfcfe00c666b8d353f47d9f83408f3b0421eee479ae7"
+      },
+      "archive_warden": {
+        "definitionSHA256": "867bbab432c767c4afef2d184bb67781686d23f8765dcf051ddca4582bcd39d5",
+        "runtimeSHA256": "5ea1ed05ebb60c96446383b27b2e923312b140724fd737f879ca3fd3c5f9c52e"
+      },
+      "ordered_sentinel": {
+        "definitionSHA256": "707c9be391855fa509ed0ecdaf90349913ec1f65aa110b61e0070830a79cf139",
+        "runtimeSHA256": "9072ef82f63c06eaf03d494fa52c29ac08d1c14c3ead450b08423a4bf682215c"
+      },
+      "null_wing": {
+        "definitionSHA256": "8e96529e03e50e67bd68a3bc5e1f062e664a6d5b94df52c2d355a9d260adeb33",
+        "runtimeSHA256": "696a555bfa0d6fd345049c7b5f36fd2047ca6ad6d62ee3ee1784457356b58db7"
+      },
+      "entropy_engine": {
+        "definitionSHA256": "6b83ec5461f4aab4239fcbe0918893a01527e043a24cbaa08982acedbb0e6f3d",
+        "runtimeSHA256": "3d1cde37f9c7931b29fa5285fb6b88c390800a04ddc631a41e6b351dd846f24e"
+      },
+      "noise_hive": {
+        "definitionSHA256": "31632493530862d525f3ed8f3c11d00e558508ccfaa4c278ba9d83aff7a21c1b",
+        "runtimeSHA256": "48cc01a8c243be3881cd7ed7567e065a41910e1e7f5825820c09a8f458eaa97d"
+      },
+      "mirror_censor": {
+        "definitionSHA256": "c5617dd43202d7cba3f4b7c69870526fe3e887860bddffb71a0c6da31985e323",
+        "runtimeSHA256": "854c679d82aaa271001249eca77853836eca1a008c899f34554beb5cba4477e8"
+      },
+      "memory_reforger": {
+        "definitionSHA256": "b5def8e8ea0df746b5e76c1e335c755883aee12f6ea9379bf62485c06b4a130f",
+        "runtimeSHA256": "457a0d411d4a3c480898c91eaf2cc0c8a1358a0d8b48ef95f315ef2fab68a475"
+      },
+      "bandwidth_requisitioner": {
+        "definitionSHA256": "33cc36d0d42734cbe52cc194f16fe7ac9136b43a39c9f62f2a28008034d9687d",
+        "runtimeSHA256": "f20186686da89b070ea778ff0997603b4743d4ba695da6736a16efd9258f73a3"
+      },
+      "chorus_overseer": {
+        "definitionSHA256": "4367f2eefd22eb16082b4a90fe5d334a6c3be1e96199872c9e0b35eb45f12564",
+        "runtimeSHA256": "c8f099ff08cd2456492ad7ea73f0f568003075ef0a5c88b29bbccb25cdb78ff8"
+      },
+      "zero_frequency_mind": {
+        "definitionSHA256": "69f1ecd0c4a1c59ce98f389878e442de1327426b36cb08aed1f08f8b0c3ae2c2",
+        "runtimeSHA256": "12b6fd0d29e2941dad268b4db87eb9f7182d3ee349196704c199b705e20cb02e"
+      }
+    },
+    "authoring": {
+      "static_drifter": "a15ff94dfeb6e03ce8e3174e7779d96c2a26c41baa9f5061bb51caf4168a919a",
+      "spike_runner": "4142dc39317b466e1cfd96c8db3e467057c348f9aa1e37db3efaf5a1bc9bafc2",
+      "shield_echo": "287301f787418901dbed5fc5a23e17461d9c78964b52a2c4c6a13b9225047bd4",
+      "tempo_amplifier": "7ecfb5a3be9c94dce75b623304959fd887a5fd0833e78467de69979515ff13fe",
+      "fracture_seed": "d40ea7dbac5f0292d5faa9cbb3810f3a875c5f1d0f915efd31b037e2cb3df1a6",
+      "floating_noise": "e5ac24624235c3288e22e05d5891735582e962af913ee63debab8da8541cde01",
+      "remote_hunter": "efef7fa8f3c7645a52ade547819a2837faee01174e81f7067f7bc4b67b73dc3a",
+      "siege_ram": "3e02e60691bcb373feecce8bf447c0e216a9b2ffbc432312111cbdd5e6a4ccca",
+      "memory_medic": "47c504914d93b860dbcb23e9d13b265e4136f780cf5289e20ae63b9964035c75",
+      "bandwidth_jammer": "c7f39b98cc8f68e4a507f2378422e543cc0c71f8900280ee3203de3fdbd0511a",
+      "phase_teleporter": "3aedb6ee53baf5239b8e89289f30d2932bc4a8ff4aa99ac0cac8dd7382826538",
+      "replication_node": "d227f8ec6e6fac3530e829f88b8ce294b46f06da13bc1459f18dc451d2d4bbaa",
+      "pressure_cantor": "ea984869e2f3e0fec602c3ce463f3c8a978b58ffbd4f6771223a7303b17ea354",
+      "armored_worm": "773821166567ee9cf7c2327017e903c339c4581a773d0589ffbf6f0f0c1df2e6",
+      "shield_conductor": "ea93d11289c9c5602191e58f401b871e28bf39c064c73931341422e163fe7328",
+      "signal_summoner": "8c544f29bdf64c49b6a3b736523d5cf3627f6aab6a201b74844a259deaea5e07",
+      "resistance_corruptor": "69ac72c4df0812698ebd8b71949d5380eaebb0be402151c01605987716b97df0",
+      "detonation_shell": "cad4a47f23c5934463093cde11fc02161b1d8d4950abd8e234550e1f5cf23f1c",
+      "frequency_hunter": "0133b4961de3febe13f30a24463f6a80f6fcff0c73dfa6f2a84db09f4009bd01",
+      "terrain_dismantler": "8d3d53e4523d0331ed0cd1db95be3b8af55bd5b21bb741962b1ffda73eb0cdad",
+      "proliferation_protocol": "883798b03b8c70d76b783980ea47155e314c6ae2c67d559bed13db33f6d615b3",
+      "spirit_taxer": "621db3d1043bc3c38443405213c20608cc7092c2197c75588d10e47852e6d4c8",
+      "scrap_bulwark": "2f1e0391ca1c3f1306a9beb3454fd3710878bcd1191734eef6cc015be0f5ce4f",
+      "echo_glider": "5b6137f84619e7ddaac03d5485d0fd78bea1d05e115283c76ca74fd869ec1725",
+      "noise_bell": "e380885bb03781141c29235226851fd84b0f9fd8d9608c06550d6911db6b9581",
+      "memory_runner": "2f8f7fa9ed28e452f64abe6aa7d57f16f124a53f8387eedc615a26c8bc5048ff",
+      "repair_skiff": "c83cb7d354e5a426aee00dedc08cafc1affc206606e4d2277f2dcb47b47cb9ec",
+      "archive_warden": "e746557c181646aa56d8414072eccf241ec710602646b9c7d01b3195b32ed8f8",
+      "ordered_sentinel": "e0daafffe31c692d05b7423b65cdeda2ee0400a5f338d29fa6d4532c5a7bcbd6",
+      "null_wing": "1e590e80558c99366b663418fbad004c55279b267ae1fa7f00755aa1bf702880",
+      "entropy_engine": "4f0e78cfe59f16756f4898a66d97bbad50d1fffa522c2229a347c5b62550026e",
+      "noise_hive": "1315b3c9b400e3d91010efa158502c53dc053406c0c51d166e3edda6933526a7",
+      "mirror_censor": "71baa64a0d6cf6b7811dbf43c8ca733f32116c737b0aedd7524e36c99f882b3e",
+      "memory_reforger": "67878648839df1df5fcc7b9df9f22a62f6aef22ad563d864d7155a9287d0e3a7",
+      "bandwidth_requisitioner": "00ef1c54a7f92699103dd826bbe807cc583deddda91c8fdbf9c115aa8f854e47",
+      "chorus_overseer": "fef14953a967db32a9765c249d1f0634a753e4d2532aff55d2f1afd09b0b2117",
+      "zero_frequency_mind": "7a1f573c3a0e784d7b874108bc562fca9350cc0564c9967c00b85364b80da789"
+    },
+    "renderCode": {
+      "game/web/view/entity-renderer.js": "6f3e8dbf6cb6ba9feb6652dbcf62178a1150909c665a8ddd709bc7d231d8f5a7",
+      "game/web/view/model-reflection.js": "f21080adddd049766498f0572c92c40a6e2b7589d517bc03576ca78e3c176676",
+      "game/web/view/enemy-rig.js": "7680a3bae2786f557d1a70e066aa93512bd7036c36094aeb2f54d3221568d415",
+      "game/web/view/enemy-animation-bank.js": "6aa5d1fc51e08b431c4c296199ddb6ad0bf74c86cacb077ae881528e7fb35367",
+      "development/web-tests/helpers/enemy-review.mjs": "002b938f08605c83fa49e33b3be8526f105809adaa2e2cb6a5b04f59d775bef5",
+      "game/web/view/enemy-animations/archive-warden.js": "828df1e737fa950953328ee2c6ad563c79cb1c7df3b061fac0b7bbbc4c76843e",
+      "game/web/view/enemy-animations/armored-worm.js": "f2e6996c1bd02e7bbe4d1ae6cbc242a75fcd9c1bd835d55dcbfe584cbf11579a",
+      "game/web/view/enemy-animations/bandwidth-jammer.js": "d60ce848fad54b01e7462154a593dccbda3b3b31efe11d63cb33d53c254080c3",
+      "game/web/view/enemy-animations/bandwidth-requisitioner.js": "80ed6c646efa09aaabe14391b621947a0c39fe589194e587b97b83eee3dfd183",
+      "game/web/view/enemy-animations/chorus-overseer.js": "7a4dd9e7f9646d58bd66ff5595274a3c148d82b8bc58ba9c13c3d8b64a7075ce",
+      "game/web/view/enemy-animations/detonation-shell.js": "9e17896abc83ce8a35acb4b9506e5d2d09c6fd5cb7395dad4a17ea05b7c5d46e",
+      "game/web/view/enemy-animations/echo-glider.js": "c957a378c235a8951ab8bcbaa4730b34addfe5f1dba64246b752eb6e9b82fda3",
+      "game/web/view/enemy-animations/entropy-engine.js": "ed951ece935cc0b7538fb5304aa806a0816da6e68502ecc784d63e5f43c5b006",
+      "game/web/view/enemy-animations/floating-noise.js": "808e9326ec118e0a47ff3fc1c19793c811513b0d780ce0de423bca70390ceeca",
+      "game/web/view/enemy-animations/fracture-seed.js": "56eaab7b761db119155eb477d9bece49aef127890c2c002f5b579e37520d505b",
+      "game/web/view/enemy-animations/frequency-hunter.js": "803b8ebcb9295288f3658eae95dde3f28ae9bcb24eb355d7775702ea5961e2ba",
+      "game/web/view/enemy-animations/memory-medic.js": "b7e14aaa3fe57340ed4e25ffd6fabdbba56842205122be9caf44fe45fad531c1",
+      "game/web/view/enemy-animations/memory-reforger.js": "af4eeee4e66e1ac77647420d8a7028468b52de8e046fe6014b777389979d9442",
+      "game/web/view/enemy-animations/memory-runner.js": "748b2d2423407335f80338764257ecc28289ea390ffefeb59372bf7c4e1cb82c",
+      "game/web/view/enemy-animations/mirror-censor.js": "eb2a12b355ac6b51bcdff0505f47e605d8cf3ac835deb135399b631c8ded1e12",
+      "game/web/view/enemy-animations/noise-bell.js": "66e7ed1cb2feccee9237d76161c4392cc315df0728657727e7753a84ce255b74",
+      "game/web/view/enemy-animations/noise-hive.js": "51616ce8c53623c72134c591316134b9f7f62ad1d31636522f900e27de45eda6",
+      "game/web/view/enemy-animations/null-wing.js": "7eb96a5d601a9c2e2fd36958dfc7cba00d94e63eed5302cf086e16433e365ed9",
+      "game/web/view/enemy-animations/ordered-sentinel.js": "ead312a317fccee877b87f596a07d28722543b0f275659d6c0401337cd75835a",
+      "game/web/view/enemy-animations/phase-teleporter.js": "347ba766c00c0d2a89207d7fc0a569ef84993ac201cb9b386db2ae545d652d29",
+      "game/web/view/enemy-animations/pressure-cantor.js": "d78102cfcfba40caf077aaf24b42f8fe076415edbdec6bbfc746690247058343",
+      "game/web/view/enemy-animations/proliferation-protocol.js": "fd5a9b68835ea8cd640d27f98e2b762a7251b106b461433b54444a773417dbd1",
+      "game/web/view/enemy-animations/remote-hunter.js": "0388c70ff3b8fdc1b121fbaff04b8206fe2335b1ac429c3da1d8128d0b9fa2f9",
+      "game/web/view/enemy-animations/repair-skiff.js": "679fe60b9544fa4c14a89bb21c44da0f4bb28e3a574392fc8c8622a0b79c09b0",
+      "game/web/view/enemy-animations/replication-node.js": "4cec1eaaa07f6808a8e86323f22164644752b11df9dc499a440dd188f1fdb51b",
+      "game/web/view/enemy-animations/resistance-corruptor.js": "745c5ae9e170faf9eb79e51dee51882371fdfa88dfdbcb9db743ed6008f0739a",
+      "game/web/view/enemy-animations/scrap-bulwark.js": "b8c453942a021df3e06d3f09698ed5df0f6b6d6b677ab654a3cb2cbf92a5acc0",
+      "game/web/view/enemy-animations/shield-conductor.js": "27b8f2666904834a7e4815f387aa68af8a444cf5cce3ccca709087a6a7c710ce",
+      "game/web/view/enemy-animations/shield-echo.js": "34009b35777e634c036c63cf2db90581c0ce7a0bd764db0f4d4240013a3e9146",
+      "game/web/view/enemy-animations/siege-ram.js": "eaa7ec40215e88b50e5eaf2d34171e96df21dde73752f52198d87e1dc7677f61",
+      "game/web/view/enemy-animations/signal-summoner.js": "e81c0eaf01a608d8878dc62dd46c90defeda96c699fb2a351643fe34f4bbd5d0",
+      "game/web/view/enemy-animations/spike-runner.js": "ec0b35f26fbfcb0b977f3373fd30efd7025f2fe7942ef025829cd063cc48a74e",
+      "game/web/view/enemy-animations/spirit-taxer.js": "ad13ea1a3ff30663a3208e49466ec42085a5b19c0a6a9f38401e48c1f2eae29d",
+      "game/web/view/enemy-animations/static-drifter.js": "e374ea546efa25ae8b28f814a9a8d4ab026b2f0928d363bbbf36a8738661bb57",
+      "game/web/view/enemy-animations/tempo-amplifier.js": "52ea0acdaf8c41832e1e8c0b3f7a17e7fdd41b5a2618e76298c909e96ce8cabd",
+      "game/web/view/enemy-animations/terrain-dismantler.js": "172b25d23a9f78ae3139107308187f770d95dbcbf25e244ba9c5f24bae412e36",
+      "game/web/view/enemy-animations/zero-frequency-mind.js": "a11ef27907e638f2d5ad6e8b935f16f4f3c45ffc7d46364d3453e4a5c3fc19ab"
+    }
+  },
+  "models": [
+    {
+      "id": "anchor_bulwark",
+      "kind": "towers",
+      "partsBefore": {
+        "T1": 11,
+        "T2A": 14,
+        "T2B": 14,
+        "T3A": 18,
+        "T3B": 18
+      },
+      "partsAfter": {
+        "T1": 9,
+        "T2A": 12,
+        "T2B": 12,
+        "T3A": 14,
+        "T3B": 14
+      },
+      "reflectedParts": {
+        "T1": 1,
+        "T2A": 2,
+        "T2B": 2,
+        "T3A": 3,
+        "T3B": 3
+      }
+    },
+    {
+      "id": "phase_blade",
+      "kind": "towers",
+      "partsBefore": {
+        "T1": 10,
+        "T2A": 13,
+        "T2B": 13,
+        "T3A": 17,
+        "T3B": 17
+      },
+      "partsAfter": {
+        "T1": 10,
+        "T2A": 13,
+        "T2B": 13,
+        "T3A": 15,
+        "T3B": 15
+      },
+      "reflectedParts": {
+        "T1": 2,
+        "T2A": 3,
+        "T2B": 3,
+        "T3A": 4,
+        "T3B": 4
+      }
+    },
+    {
+      "id": "boundary_riveter",
+      "kind": "towers",
+      "partsBefore": {
+        "T1": 11,
+        "T2A": 14,
+        "T2B": 14,
+        "T3A": 18,
+        "T3B": 18
+      },
+      "partsAfter": {
+        "T1": 9,
+        "T2A": 12,
+        "T2B": 12,
+        "T3A": 14,
+        "T3B": 14
+      },
+      "reflectedParts": {
+        "T1": 1,
+        "T2A": 2,
+        "T2B": 2,
+        "T3A": 3,
+        "T3B": 3
+      }
+    },
+    {
+      "id": "resonance_guard",
+      "kind": "towers",
+      "partsBefore": {
+        "T1": 11,
+        "T2A": 14,
+        "T2B": 14,
+        "T3A": 18,
+        "T3B": 18
+      },
+      "partsAfter": {
+        "T1": 9,
+        "T2A": 12,
+        "T2B": 12,
+        "T3A": 14,
+        "T3B": 14
+      },
+      "reflectedParts": {
+        "T1": 1,
+        "T2A": 2,
+        "T2B": 2,
+        "T3A": 3,
+        "T3B": 3
+      }
+    },
+    {
+      "id": "pulse_array",
+      "kind": "towers",
+      "partsBefore": {
+        "T1": 9,
+        "T2A": 12,
+        "T2B": 12,
+        "T3A": 16,
+        "T3B": 16
+      },
+      "partsAfter": {
+        "T1": 7,
+        "T2A": 10,
+        "T2B": 10,
+        "T3A": 12,
+        "T3B": 12
+      },
+      "reflectedParts": {
+        "T1": 0,
+        "T2A": 1,
+        "T2B": 1,
+        "T3A": 2,
+        "T3B": 2
+      }
+    },
+    {
+      "id": "focus_rail",
+      "kind": "towers",
+      "partsBefore": {
+        "T1": 11,
+        "T2A": 14,
+        "T2B": 14,
+        "T3A": 18,
+        "T3B": 18
+      },
+      "partsAfter": {
+        "T1": 9,
+        "T2A": 12,
+        "T2B": 12,
+        "T3A": 14,
+        "T3B": 14
+      },
+      "reflectedParts": {
+        "T1": 1,
+        "T2A": 2,
+        "T2B": 2,
+        "T3A": 3,
+        "T3B": 3
+      }
+    },
+    {
+      "id": "arc_mortar",
+      "kind": "towers",
+      "partsBefore": {
+        "T1": 10,
+        "T2A": 13,
+        "T2B": 12,
+        "T3A": 17,
+        "T3B": 16
+      },
+      "partsAfter": {
+        "T1": 8,
+        "T2A": 11,
+        "T2B": 10,
+        "T3A": 13,
+        "T3B": 12
+      },
+      "reflectedParts": {
+        "T1": 1,
+        "T2A": 2,
+        "T2B": 1,
+        "T3A": 3,
+        "T3B": 2
+      }
+    },
+    {
+      "id": "drone_loom",
+      "kind": "towers",
+      "partsBefore": {
+        "T1": 11,
+        "T2A": 14,
+        "T2B": 14,
+        "T3A": 18,
+        "T3B": 18
+      },
+      "partsAfter": {
+        "T1": 9,
+        "T2A": 12,
+        "T2B": 12,
+        "T3A": 14,
+        "T3B": 14
+      },
+      "reflectedParts": {
+        "T1": 1,
+        "T2A": 2,
+        "T2B": 2,
+        "T3A": 3,
+        "T3B": 3
+      }
+    },
+    {
+      "id": "bandwidth_relay",
+      "kind": "towers",
+      "partsBefore": {
+        "T1": 11,
+        "T2A": 14,
+        "T2B": 14,
+        "T3A": 18,
+        "T3B": 18
+      },
+      "partsAfter": {
+        "T1": 9,
+        "T2A": 12,
+        "T2B": 12,
+        "T3A": 14,
+        "T3B": 14
+      },
+      "reflectedParts": {
+        "T1": 1,
+        "T2A": 2,
+        "T2B": 2,
+        "T3A": 3,
+        "T3B": 3
+      }
+    },
+    {
+      "id": "memory_mechanic",
+      "kind": "towers",
+      "partsBefore": {
+        "T1": 13,
+        "T2A": 16,
+        "T2B": 16,
+        "T3A": 20,
+        "T3B": 20
+      },
+      "partsAfter": {
+        "T1": 11,
+        "T2A": 14,
+        "T2B": 14,
+        "T3A": 16,
+        "T3B": 16
+      },
+      "reflectedParts": {
+        "T1": 2,
+        "T2A": 3,
+        "T2B": 3,
+        "T3A": 4,
+        "T3B": 4
+      }
+    },
+    {
+      "id": "frequency_choir",
+      "kind": "towers",
+      "partsBefore": {
+        "T1": 11,
+        "T2A": 14,
+        "T2B": 14,
+        "T3A": 18,
+        "T3B": 18
+      },
+      "partsAfter": {
+        "T1": 9,
+        "T2A": 15,
+        "T2B": 13,
+        "T3A": 17,
+        "T3B": 15
+      },
+      "reflectedParts": {
+        "T1": 1,
+        "T2A": 3,
+        "T2B": 2,
+        "T3A": 4,
+        "T3B": 3
+      }
+    },
+    {
+      "id": "resistance_beacon",
+      "kind": "towers",
+      "partsBefore": {
+        "T1": 11,
+        "T2A": 14,
+        "T2B": 14,
+        "T3A": 18,
+        "T3B": 18
+      },
+      "partsAfter": {
+        "T1": 9,
+        "T2A": 12,
+        "T2B": 12,
+        "T3A": 14,
+        "T3B": 14
+      },
+      "reflectedParts": {
+        "T1": 1,
+        "T2A": 2,
+        "T2B": 2,
+        "T3A": 3,
+        "T3B": 3
+      }
+    },
+    {
+      "id": "static_drifter",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 43
+      },
+      "partsAfter": {
+        "base": 35
+      },
+      "reflectedParts": {
+        "base": 12
+      }
+    },
+    {
+      "id": "spike_runner",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 40
+      },
+      "partsAfter": {
+        "base": 37
+      },
+      "reflectedParts": {
+        "base": 14
+      }
+    },
+    {
+      "id": "shield_echo",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 43
+      },
+      "partsAfter": {
+        "base": 37
+      },
+      "reflectedParts": {
+        "base": 14
+      }
+    },
+    {
+      "id": "tempo_amplifier",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 40
+      },
+      "partsAfter": {
+        "base": 29
+      },
+      "reflectedParts": {
+        "base": 6
+      }
+    },
+    {
+      "id": "fracture_seed",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 44
+      },
+      "partsAfter": {
+        "base": 41
+      },
+      "reflectedParts": {
+        "base": 17
+      }
+    },
+    {
+      "id": "floating_noise",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 45
+      },
+      "partsAfter": {
+        "base": 39
+      },
+      "reflectedParts": {
+        "base": 8
+      }
+    },
+    {
+      "id": "remote_hunter",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 44
+      },
+      "partsAfter": {
+        "base": 39
+      },
+      "reflectedParts": {
+        "base": 12
+      }
+    },
+    {
+      "id": "siege_ram",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 38
+      },
+      "partsAfter": {
+        "base": 30
+      },
+      "reflectedParts": {
+        "base": 7
+      }
+    },
+    {
+      "id": "memory_medic",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 48
+      },
+      "partsAfter": {
+        "base": 39
+      },
+      "reflectedParts": {
+        "base": 17
+      }
+    },
+    {
+      "id": "bandwidth_jammer",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 38
+      },
+      "partsAfter": {
+        "base": 27
+      },
+      "reflectedParts": {
+        "base": 5
+      }
+    },
+    {
+      "id": "phase_teleporter",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 44
+      },
+      "partsAfter": {
+        "base": 44
+      },
+      "reflectedParts": {
+        "base": 17
+      }
+    },
+    {
+      "id": "replication_node",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 40
+      },
+      "partsAfter": {
+        "base": 28
+      },
+      "reflectedParts": {
+        "base": 7
+      }
+    },
+    {
+      "id": "pressure_cantor",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 43
+      },
+      "partsAfter": {
+        "base": 37
+      },
+      "reflectedParts": {
+        "base": 11
+      }
+    },
+    {
+      "id": "armored_worm",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 44
+      },
+      "partsAfter": {
+        "base": 44
+      },
+      "reflectedParts": {
+        "base": 17
+      }
+    },
+    {
+      "id": "shield_conductor",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 44
+      },
+      "partsAfter": {
+        "base": 40
+      },
+      "reflectedParts": {
+        "base": 15
+      }
+    },
+    {
+      "id": "signal_summoner",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 39
+      },
+      "partsAfter": {
+        "base": 27
+      },
+      "reflectedParts": {
+        "base": 4
+      }
+    },
+    {
+      "id": "resistance_corruptor",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 42
+      },
+      "partsAfter": {
+        "base": 39
+      },
+      "reflectedParts": {
+        "base": 7
+      }
+    },
+    {
+      "id": "detonation_shell",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 40
+      },
+      "partsAfter": {
+        "base": 27
+      },
+      "reflectedParts": {
+        "base": 6
+      }
+    },
+    {
+      "id": "frequency_hunter",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 50
+      },
+      "partsAfter": {
+        "base": 45
+      },
+      "reflectedParts": {
+        "base": 11
+      }
+    },
+    {
+      "id": "terrain_dismantler",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 54
+      },
+      "partsAfter": {
+        "base": 48
+      },
+      "reflectedParts": {
+        "base": 15
+      }
+    },
+    {
+      "id": "proliferation_protocol",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 44
+      },
+      "partsAfter": {
+        "base": 42
+      },
+      "reflectedParts": {
+        "base": 7
+      }
+    },
+    {
+      "id": "spirit_taxer",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 52
+      },
+      "partsAfter": {
+        "base": 45
+      },
+      "reflectedParts": {
+        "base": 14
+      }
+    },
+    {
+      "id": "scrap_bulwark",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 36
+      },
+      "partsAfter": {
+        "base": 24
+      },
+      "reflectedParts": {
+        "base": 7
+      }
+    },
+    {
+      "id": "echo_glider",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 43
+      },
+      "partsAfter": {
+        "base": 27
+      },
+      "reflectedParts": {
+        "base": 3
+      }
+    },
+    {
+      "id": "noise_bell",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 43
+      },
+      "partsAfter": {
+        "base": 42
+      },
+      "reflectedParts": {
+        "base": 4
+      }
+    },
+    {
+      "id": "memory_runner",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 42
+      },
+      "partsAfter": {
+        "base": 31
+      },
+      "reflectedParts": {
+        "base": 12
+      }
+    },
+    {
+      "id": "repair_skiff",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 44
+      },
+      "partsAfter": {
+        "base": 33
+      },
+      "reflectedParts": {
+        "base": 9
+      }
+    },
+    {
+      "id": "archive_warden",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 52
+      },
+      "partsAfter": {
+        "base": 49
+      },
+      "reflectedParts": {
+        "base": 12
+      }
+    },
+    {
+      "id": "ordered_sentinel",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 44
+      },
+      "partsAfter": {
+        "base": 32
+      },
+      "reflectedParts": {
+        "base": 12
+      }
+    },
+    {
+      "id": "null_wing",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 44
+      },
+      "partsAfter": {
+        "base": 29
+      },
+      "reflectedParts": {
+        "base": 8
+      }
+    },
+    {
+      "id": "entropy_engine",
+      "kind": "enemies",
+      "partsBefore": {
+        "base": 54
+      },
+      "partsAfter": {
+        "base": 49
+      },
+      "reflectedParts": {
+        "base": 9
+      }
+    },
+    {
+      "id": "noise_hive",
+      "kind": "enemies",
+      "partsBefore": {
+        "phase1": 48,
+        "phase2": 52,
+        "phase3": 56
+      },
+      "partsAfter": {
+        "phase1": 46,
+        "phase2": 50,
+        "phase3": 54
+      },
+      "reflectedParts": {
+        "phase1": 14,
+        "phase2": 16,
+        "phase3": 18
+      }
+    },
+    {
+      "id": "mirror_censor",
+      "kind": "enemies",
+      "partsBefore": {
+        "phase1": 47,
+        "phase2": 53,
+        "phase3": 61
+      },
+      "partsAfter": {
+        "phase1": 45,
+        "phase2": 51,
+        "phase3": 59
+      },
+      "reflectedParts": {
+        "phase1": 12,
+        "phase2": 15,
+        "phase3": 19
+      }
+    },
+    {
+      "id": "memory_reforger",
+      "kind": "enemies",
+      "partsBefore": {
+        "phase1": 40,
+        "phase2": 44,
+        "phase3": 52
+      },
+      "partsAfter": {
+        "phase1": 38,
+        "phase2": 42,
+        "phase3": 50
+      },
+      "reflectedParts": {
+        "phase1": 10,
+        "phase2": 12,
+        "phase3": 16
+      }
+    },
+    {
+      "id": "bandwidth_requisitioner",
+      "kind": "enemies",
+      "partsBefore": {
+        "phase1": 48,
+        "phase2": 54,
+        "phase3": 60
+      },
+      "partsAfter": {
+        "phase1": 48,
+        "phase2": 54,
+        "phase3": 60
+      },
+      "reflectedParts": {
+        "phase1": 14,
+        "phase2": 17,
+        "phase3": 19
+      }
+    },
+    {
+      "id": "chorus_overseer",
+      "kind": "enemies",
+      "partsBefore": {
+        "phase1": 60,
+        "phase2": 60,
+        "phase3": 60
+      },
+      "partsAfter": {
+        "phase1": 57,
+        "phase2": 57,
+        "phase3": 57
+      },
+      "reflectedParts": {
+        "phase1": 13,
+        "phase2": 13,
+        "phase3": 13
+      }
+    },
+    {
+      "id": "zero_frequency_mind",
+      "kind": "enemies",
+      "partsBefore": {
+        "phase1": 57,
+        "phase2": 57,
+        "phase3": 57
+      },
+      "partsAfter": {
+        "phase1": 53,
+        "phase2": 53,
+        "phase3": 53
+      },
+      "reflectedParts": {
+        "phase1": 13,
+        "phase2": 13,
+        "phase3": 13
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "static_drifter",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "none",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 3.524392787786732,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "01-enemy-static_drifter",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/static_drifter.png",
+        "animation": "game/assets/game/sprites/animations/enemies/static_drifter.png",
+        "portrait": "game/assets/game/portraits/static_drifter.png",
+        "death": "game/assets/game/sprites/death/enemies/static_drifter.png"
+      },
+      "sha256": {
+        "static": "f7e5d35a9f81075dc92e15b1c95c3634ad8682a7bfc8fb56c9288cb4bbf3ca2b",
+        "animation": "0acc8446cbb2abb88e067f9b958c8b0b8a4cb598b190badb7d9702cf488dd67d",
+        "portrait": "9b8c88f2cfb466683158e37dad193cdf66c5b833964172ce00867cc4fe04285c",
+        "death": "9260157c375dd00e385b90e034bf4c09fc3b97c8309ddbf055c57c443a321562"
+      }
+    },
+    {
+      "id": "spike_runner",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "runner",
+      "ability": "sprint",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.223385498658977,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "01-enemy-static_drifter",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/spike_runner.png",
+        "animation": "game/assets/game/sprites/animations/enemies/spike_runner.png",
+        "portrait": "game/assets/game/portraits/spike_runner.png",
+        "death": "game/assets/game/sprites/death/enemies/spike_runner.png"
+      },
+      "sha256": {
+        "static": "f3718ed323517761bd5003796a36fba4ee6502416eae4e3d06752641123540ec",
+        "animation": "a508a068868d5e5ccc7d963fb08aee1ec87a19a6bc9496300e6d9e345ef5b5ac",
+        "portrait": "f8486c28848eaf4e4b920a41fc31f678add5b536da03a711ff97260a4e5db437",
+        "death": "6c2982391592054c08da2b0d76f383db16802b80467e2ca5d587d74360b7a22d"
+      }
+    },
+    {
+      "id": "shield_echo",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "shield",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 3.3884671826761346,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "01-enemy-static_drifter",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/shield_echo.png",
+        "animation": "game/assets/game/sprites/animations/enemies/shield_echo.png",
+        "portrait": "game/assets/game/portraits/shield_echo.png",
+        "death": "game/assets/game/sprites/death/enemies/shield_echo.png"
+      },
+      "sha256": {
+        "static": "fb51e549720c1e54ad8b24f59ebedb9170addc6a7f58ef399b579518b4c588a1",
+        "animation": "0ab835aeb8d2e0379c9ed13a717a8c583daa1ff9421df46c8c359adc58b00cd9",
+        "portrait": "f58ddb60545530396f30e20e8642a27b00e1fd2e3a011d84e998d19ddcb0ab07",
+        "death": "c9cfc307423e3c721ab030988ec2b08ce6cbf038470c843b000c5b366b0d09f7"
+      }
+    },
+    {
+      "id": "tempo_amplifier",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "haste",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.4424187443186085,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "37-rolling-tempo_amplifier",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1107
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/tempo_amplifier.png",
+        "animation": "game/assets/game/sprites/animations/enemies/tempo_amplifier.png",
+        "portrait": "game/assets/game/portraits/tempo_amplifier.png",
+        "death": "game/assets/game/sprites/death/enemies/tempo_amplifier.png"
+      },
+      "sha256": {
+        "static": "263d4b719eb1660dcf54bad98ed161835ddb152176c0e0a88b6958cc6f2bea92",
+        "animation": "a11305be1c7e7efcef5b5135b224dbe9d5a381cd9090ab2f5ac1d3944b1233ce",
+        "portrait": "ac627851135501c255f3f074bf65157d944129f74431f4d9e6ab5234bcdb7e90",
+        "death": "43f8fd7fe3e654c40b103545412c747dd2f9e1c497478e43e14a3f393f9879e1"
+      }
+    },
+    {
+      "id": "fracture_seed",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "split",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.548796054851864,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "02-enemy-tempo_amplifier",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/fracture_seed.png",
+        "animation": "game/assets/game/sprites/animations/enemies/fracture_seed.png",
+        "portrait": "game/assets/game/portraits/fracture_seed.png",
+        "death": "game/assets/game/sprites/death/enemies/fracture_seed.png"
+      },
+      "sha256": {
+        "static": "8e06e3d6c607f649192eaa0b06c9171608d0d8a197f4817f393b938c4efd43f6",
+        "animation": "225a10ea4713607d8510ee33337a74c893b042eac8b1536e3243e1f99337861a",
+        "portrait": "89052a488cb6fe69b1fa0e5252466f4a31e74f17701e3803da074bf1c3100f9f",
+        "death": "67f91f1778744a4fccc44f4646c60dbcc9541e7514f79938204fcd105fd6aead"
+      }
+    },
+    {
+      "id": "floating_noise",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "hover",
+      "ability": "air",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.700935517433247,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "30-flight-floating_noise",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/floating_noise.png",
+        "animation": "game/assets/game/sprites/animations/enemies/floating_noise.png",
+        "portrait": "game/assets/game/portraits/floating_noise.png",
+        "death": "game/assets/game/sprites/death/enemies/floating_noise.png"
+      },
+      "sha256": {
+        "static": "18c0ed34ae335a28cbc01e68af8aae50645b8fe476ff2a49d8da10418ac6879a",
+        "animation": "775f42904be90c9c7188fb14cd9da685ed8adebde4c2d6d02d84b0ce347e52bd",
+        "portrait": "c902052c0af552a89f5603cb9114d8dcf0401d84696c2f2e9395997a74e4bfba",
+        "death": "a742773addaf28cfd31e0147e827f2ba57dd7b79beec41fd719c993760db48f8"
+      }
+    },
+    {
+      "id": "remote_hunter",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "tower_hunter",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.63371055319022,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "03-enemy-remote_hunter",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/remote_hunter.png",
+        "animation": "game/assets/game/sprites/animations/enemies/remote_hunter.png",
+        "portrait": "game/assets/game/portraits/remote_hunter.png",
+        "death": "game/assets/game/sprites/death/enemies/remote_hunter.png"
+      },
+      "sha256": {
+        "static": "e6df7486f1f4db7bc26ea89ec7f20804f81970fe1f3706fab1d875823de8dbac",
+        "animation": "77bb0c158b04a63a2ec720e97cc68ab7c26bde6b097d38275e677b1af2da5356",
+        "portrait": "82d21131de6bf6a57c9c0c3320551cb0ce677b939579efb3466f0e47453a36b7",
+        "death": "f04551aa3b6a72d255a3e221caf51ab4d7976be682230586f38a11cc1adc07d1"
+      }
+    },
+    {
+      "id": "siege_ram",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "siege",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.001189427261725,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "37-rolling-tempo_amplifier",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1271
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/siege_ram.png",
+        "animation": "game/assets/game/sprites/animations/enemies/siege_ram.png",
+        "portrait": "game/assets/game/portraits/siege_ram.png",
+        "death": "game/assets/game/sprites/death/enemies/siege_ram.png"
+      },
+      "sha256": {
+        "static": "f5697401813c08941c541a6ac846b12a7c0a665ce5c505e278a6d0b6e25790c2",
+        "animation": "b3a15b31589d0feb6981cc818945d5687d75da3e7d1622a81781822b03c1399b",
+        "portrait": "78b1631f527ce06836351cd58a78a2d84e9a64ab864f5c49b757022aa155d821",
+        "death": "3b6f1ae646c62c68f7ffd15e63ebd62336d71c0a8673927dc38ec2bfa87f23fe"
+      }
+    },
+    {
+      "id": "memory_medic",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "heal",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.446157958270704,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "03-enemy-remote_hunter",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/memory_medic.png",
+        "animation": "game/assets/game/sprites/animations/enemies/memory_medic.png",
+        "portrait": "game/assets/game/portraits/memory_medic.png",
+        "death": "game/assets/game/sprites/death/enemies/memory_medic.png"
+      },
+      "sha256": {
+        "static": "3000a9cd2bfdb782e0ffa655bf32436ca2731cee51f3ada250c4099f9759ba4d",
+        "animation": "4fa09a772bf64414917d9cbde04db1498aef1ee6636eced93cc640d4e0b12499",
+        "portrait": "f8b03e47bedfc821e7df5bc5fc1711945fc0afd0d2da4bcd93bb0b611e5baba8",
+        "death": "098127ae3e8cfcaf4f0d8a72ad15fc309ef4b55c5a6efc15012477579dc1d6c0"
+      }
+    },
+    {
+      "id": "bandwidth_jammer",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "jam",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.817678615239692,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "37-rolling-tempo_amplifier",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1066
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/bandwidth_jammer.png",
+        "animation": "game/assets/game/sprites/animations/enemies/bandwidth_jammer.png",
+        "portrait": "game/assets/game/portraits/bandwidth_jammer.png",
+        "death": "game/assets/game/sprites/death/enemies/bandwidth_jammer.png"
+      },
+      "sha256": {
+        "static": "327245a66bb28710cfe164587256c93197adc11a379beb64197a08ec1294acb6",
+        "animation": "0693f92b97b85e172c4dbc43401bad95a64bc01ba43fd76a9700c6cba9999e9c",
+        "portrait": "e71784c2e71d2beae2fb254a8b1a8738d92db453fe497d5456ddce035abbba07",
+        "death": "daafe249e3c5384a682984b55e6beb6d0cf19db4dcf01f6bf95c059cd70f685b"
+      }
+    },
+    {
+      "id": "phase_teleporter",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "teleport",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.715303482882834,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "04-enemy-bandwidth_jammer",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/phase_teleporter.png",
+        "animation": "game/assets/game/sprites/animations/enemies/phase_teleporter.png",
+        "portrait": "game/assets/game/portraits/phase_teleporter.png",
+        "death": "game/assets/game/sprites/death/enemies/phase_teleporter.png"
+      },
+      "sha256": {
+        "static": "0b136b86a46e1bf8b2f16c5a519dda68963b7f7f759f3ac44e031f1bced1d679",
+        "animation": "b6363e055d1f28e1a3736c52d08f4c6297e4b2c9746cfa7529b14db09dbd687c",
+        "portrait": "4d51de40ad08a7ef33ef83b31aed11f6a08279ddbf5dc95e1b965e58c78fa54a",
+        "death": "2261e541f31a076c841ee648ccc48dc02584b675ebbb7c11257de6b022bd9481"
+      }
+    },
+    {
+      "id": "replication_node",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "copy",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.873446108359748,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "38-rolling-replication_node",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1148
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/replication_node.png",
+        "animation": "game/assets/game/sprites/animations/enemies/replication_node.png",
+        "portrait": "game/assets/game/portraits/replication_node.png",
+        "death": "game/assets/game/sprites/death/enemies/replication_node.png"
+      },
+      "sha256": {
+        "static": "301bd9bb9a3b7fcdf8fe63dd4c484862b593afd46305ac7b7fdbfe10fc4c9d86",
+        "animation": "4e3ced10a9d2b8f972a7a9dd9191521436b1c7a073837e04f90afa8ad54743a5",
+        "portrait": "6d9c441095febebfbde1d5138c17637b4f4cb37f48efbe3e3922b9dbc279d1b5",
+        "death": "1090a00df0cfb91832b58f35b9705c457824080291699e3f441f1978d2cc4db8"
+      }
+    },
+    {
+      "id": "pressure_cantor",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "pressure_aura",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 2.823082720200196,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "05-enemy-pressure_cantor",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/pressure_cantor.png",
+        "animation": "game/assets/game/sprites/animations/enemies/pressure_cantor.png",
+        "portrait": "game/assets/game/portraits/pressure_cantor.png",
+        "death": "game/assets/game/sprites/death/enemies/pressure_cantor.png"
+      },
+      "sha256": {
+        "static": "42e68a5bf6bf228b975d0ea0e65253878226af1ac7ea544a2cb66da8b38e4e59",
+        "animation": "6d2cea55daafe66c705d2b96b9572bf1ed8500c6c709c071c45a7cb79a3cf8f0",
+        "portrait": "1b1ea40d29194df21ea1cee9d3fdceba4f62fdde6ba1a033c5dc93c9c4878858",
+        "death": "d3928cedee121817d79dbb16bcfbbd13820710ddc4a7705b9a40d006d888d3e5"
+      }
+    },
+    {
+      "id": "armored_worm",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "armored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.884045849808165,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "05-enemy-pressure_cantor",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/armored_worm.png",
+        "animation": "game/assets/game/sprites/animations/enemies/armored_worm.png",
+        "portrait": "game/assets/game/portraits/armored_worm.png",
+        "death": "game/assets/game/sprites/death/enemies/armored_worm.png"
+      },
+      "sha256": {
+        "static": "d8a62a95f62557904f00c1e712e734d0746577580c790013dbb01b3a60e6e808",
+        "animation": "c62d09f37146c963c991cfef3e0e019b19c0337fe00abb19b59946d38146affe",
+        "portrait": "984109042652d46cee1d61d2deee20de025b1e3e72e49d5fa220ffc85d2f78dc",
+        "death": "5afe7539b12f829ebac453223d33436afb63523cadf34b70b0f3813279115699"
+      }
+    },
+    {
+      "id": "shield_conductor",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "group_shield",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.142810625531905,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "05-enemy-pressure_cantor",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/shield_conductor.png",
+        "animation": "game/assets/game/sprites/animations/enemies/shield_conductor.png",
+        "portrait": "game/assets/game/portraits/shield_conductor.png",
+        "death": "game/assets/game/sprites/death/enemies/shield_conductor.png"
+      },
+      "sha256": {
+        "static": "d0df46122116ac1e622e645c0c8ebd723918fe93aa0b28589f3827fc3def175f",
+        "animation": "74ed3b859df6e518f71b675d1bacd66aaa159c6cd2c389490b3223873c25a689",
+        "portrait": "24afd60fc8d8effe763845ae1beb591e422a0076a5557e19dd360501a4b832b1",
+        "death": "da06a84a63e7928b313922916370edf3820b251175a032df46f484b840aa7cfb"
+      }
+    },
+    {
+      "id": "signal_summoner",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "summon",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.755041191395194,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "38-rolling-replication_node",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1066
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/signal_summoner.png",
+        "animation": "game/assets/game/sprites/animations/enemies/signal_summoner.png",
+        "portrait": "game/assets/game/portraits/signal_summoner.png",
+        "death": "game/assets/game/sprites/death/enemies/signal_summoner.png"
+      },
+      "sha256": {
+        "static": "58e8e12f786d9453db1a4493bb1d5eb9237db33c90dd76d8b8efa303ddf49d8f",
+        "animation": "7f638a8c0b0b90d33cc175a0b41b9788884d722c23c15d012d8e30a00e382a2f",
+        "portrait": "b8edb401a7f243e94006dd70bfa043cd822270b4ba8860dcbc6b1454ec4e3935",
+        "death": "8499c93e2aa24a76dc1255e1e29b9e2d940019e256a9f9dd1e995fa741a5607e"
+      }
+    },
+    {
+      "id": "resistance_corruptor",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "hover",
+      "ability": "corrode_resistance",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 2.553339870116878,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "31-flight-resistance_corruptor",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/resistance_corruptor.png",
+        "animation": "game/assets/game/sprites/animations/enemies/resistance_corruptor.png",
+        "portrait": "game/assets/game/portraits/resistance_corruptor.png",
+        "death": "game/assets/game/sprites/death/enemies/resistance_corruptor.png"
+      },
+      "sha256": {
+        "static": "7d769623770da7bf1fb583871eec224aa138469bcabe01dea21092bbd281b0c9",
+        "animation": "d17bc437dbc49ed874fca89e900fcbadbf70f37c42d681ab9d399819f56a719d",
+        "portrait": "659efa570f34acb59846be517cbb285f48daaefa3e611f05228fc54d980a8cf2",
+        "death": "ed2c4b5431058209d222c96185ca71c8c9f5c0599993abc0c5ad65774ae9357f"
+      }
+    },
+    {
+      "id": "detonation_shell",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "explode",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.591510334290897,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "38-rolling-replication_node",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1066
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/detonation_shell.png",
+        "animation": "game/assets/game/sprites/animations/enemies/detonation_shell.png",
+        "portrait": "game/assets/game/portraits/detonation_shell.png",
+        "death": "game/assets/game/sprites/death/enemies/detonation_shell.png"
+      },
+      "sha256": {
+        "static": "5780e10489b2c40e8c7719efd1e1d9426fc548805dc6810eb0211343250ee450",
+        "animation": "ca4f8a4d1e37d24421df6c05738fb25e80f037fdc1a997823c3b75f08249fda9",
+        "portrait": "c79d378f413a0a5bacee2a5d11d3ffd5837390490099c3538e67c566979b7811",
+        "death": "940dd3905c6ca250eef2dd25ba6f6a9420173f57d120e4e858563c585d908e8a"
+      }
+    },
+    {
+      "id": "frequency_hunter",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "crawler",
+      "ability": "tower_hunter",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.256184551548054,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "39-rolling-frequency_hunter",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.14759999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/frequency_hunter.png",
+        "animation": "game/assets/game/sprites/animations/enemies/frequency_hunter.png",
+        "portrait": "game/assets/game/portraits/frequency_hunter.png",
+        "death": "game/assets/game/sprites/death/enemies/frequency_hunter.png"
+      },
+      "sha256": {
+        "static": "675628214a27304dc9e8233543a25539fb837358e3cbc19bbf1ca501910b0564",
+        "animation": "d12129834f2793eac4abfae171d6780eb9690f5fc2f5f7c9d775c3d9ce48aaf8",
+        "portrait": "d738889e48dd8e251d4557bc49e919bf756675d1e7653f0e7368cadc40caf22a",
+        "death": "479174bf59e317d23e2b287384a368d98dd80e6edcf850bfb2708d3e9f8261ce"
+      }
+    },
+    {
+      "id": "terrain_dismantler",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "walker",
+      "ability": "siege",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.6689720515252136,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "07-enemy-frequency_hunter",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/terrain_dismantler.png",
+        "animation": "game/assets/game/sprites/animations/enemies/terrain_dismantler.png",
+        "portrait": "game/assets/game/portraits/terrain_dismantler.png",
+        "death": "game/assets/game/sprites/death/enemies/terrain_dismantler.png"
+      },
+      "sha256": {
+        "static": "998e5bd4ab69d27187ff91e7f6a92bff9539775f65b95566a3e1647d4e81bddf",
+        "animation": "c80031a958146a2833f45fcfb61bcb0199d15688981438b79ad3cf75796a8455",
+        "portrait": "f972107391daa0850dfc43a0b8ed726460f1d5bdcf300fe46bd811fbd2159bc8",
+        "death": "62ec3ec1e9f57d2d3fe3ab7afa7a9beca6ed6ed4aa0e218ced95b122947fd638"
+      }
+    },
+    {
+      "id": "proliferation_protocol",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "crawler",
+      "ability": "summon",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.93855188673545,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "39-rolling-frequency_hunter",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.12299999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/proliferation_protocol.png",
+        "animation": "game/assets/game/sprites/animations/enemies/proliferation_protocol.png",
+        "portrait": "game/assets/game/portraits/proliferation_protocol.png",
+        "death": "game/assets/game/sprites/death/enemies/proliferation_protocol.png"
+      },
+      "sha256": {
+        "static": "b27a2f673dc0c5c9b5ca1d346f7915aaa1888cb44a528b8c990d5de0f101271a",
+        "animation": "663beb0b228449d2f52b3003e659f27189bf836abfdcee6677b666e6279f9764",
+        "portrait": "67d17c3e08618c46da1b634fa73ad8a9c5c89125d91daa151c5a263e43b6e2bc",
+        "death": "1c26998d03564d6451793b892c01a137ed8e78eb295619539b3c0b2f8ec8dbee"
+      }
+    },
+    {
+      "id": "spirit_taxer",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "hover",
+      "ability": "corrode_resistance",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 3.7930425874669567,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "32-flight-spirit_taxer",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/spirit_taxer.png",
+        "animation": "game/assets/game/sprites/animations/enemies/spirit_taxer.png",
+        "portrait": "game/assets/game/portraits/spirit_taxer.png",
+        "death": "game/assets/game/sprites/death/enemies/spirit_taxer.png"
+      },
+      "sha256": {
+        "static": "8924b112b4bbdf3dccf86d94b8ea18ff1b5213787b35ce11e0f38fd38885cd56",
+        "animation": "29a523d5060ebfc942f5afeeedb579513aa6aec5b9f56ed946994549f05112a0",
+        "portrait": "4f27760bc62dc799bf42b87524854d304fde744bd5dceb2abb161cb9bd1998ae",
+        "death": "f9ee2188c269829c8d480827d1d05faa714690f553c999a33d28214037148b55"
+      }
+    },
+    {
+      "id": "scrap_bulwark",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "armored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.925441939887561,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "39-rolling-frequency_hunter",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1435
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/scrap_bulwark.png",
+        "animation": "game/assets/game/sprites/animations/enemies/scrap_bulwark.png",
+        "portrait": "game/assets/game/portraits/scrap_bulwark.png",
+        "death": "game/assets/game/sprites/death/enemies/scrap_bulwark.png"
+      },
+      "sha256": {
+        "static": "6b5bf8406713b573df500b70796b55268ad060fe4196e68a3d05fc0c2134dd82",
+        "animation": "ffcff728746b55343f2f5855c989d4983e5633dfeb8c95aa2502403afb754ca4",
+        "portrait": "b30027a3958b7814449c2cf345323949e9cd89e5c7f4c3926e3af371c58ea547",
+        "death": "e3c4178ee38b827a826baa946307cebe7db73e249269fe5987966c16b5e1ba22"
+      }
+    },
+    {
+      "id": "echo_glider",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "hover",
+      "ability": "haste",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.11353880564956,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "36-flight-echo_glider",
+      "flightSpeeds": [
+        0,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/echo_glider.png",
+        "animation": "game/assets/game/sprites/animations/enemies/echo_glider.png",
+        "portrait": "game/assets/game/portraits/echo_glider.png",
+        "death": "game/assets/game/sprites/death/enemies/echo_glider.png"
+      },
+      "sha256": {
+        "static": "4e9326502a73fa7c780f566c626f8789ba1dd1f9773600bcb69c8c5c6dbdc96a",
+        "animation": "ef2bc9dca622dcbc97018cbf8c00532fa78d7203c2ce896483b2c84daa2866ea",
+        "portrait": "1e99a01981c125c55948e8c711673f0b2141cc46ff6c219ed44afd7726d8e6fe",
+        "death": "143a1971e218dbb43a1e2997dbc89ed460b59bcc8992f8aecf8c5f15ebaea5e8"
+      }
+    },
+    {
+      "id": "noise_bell",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "crawler",
+      "ability": "pressure_aura",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.343967902513647,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "40-rolling-noise_bell",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.11889999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/noise_bell.png",
+        "animation": "game/assets/game/sprites/animations/enemies/noise_bell.png",
+        "portrait": "game/assets/game/portraits/noise_bell.png",
+        "death": "game/assets/game/sprites/death/enemies/noise_bell.png"
+      },
+      "sha256": {
+        "static": "7e635ad52d4ee21f311df54a9b5492dc4e3b51ac35f16e46c5dedfda626b2dc2",
+        "animation": "c390293af49cf8ecbf76d2128ff8a4ccae7e883e0652eae04606356689c92276",
+        "portrait": "c7de6c7cc098d47587791ca379dda90a27b92ec2f166d89049fa204bc0c71ac4",
+        "death": "92ef49f965ccd693d64cec29400072bfc05673b82ffd95debb8529e362bc5bda"
+      }
+    },
+    {
+      "id": "memory_runner",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "runner",
+      "ability": "sprint",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.756030193684827,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "09-enemy-noise_bell",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/memory_runner.png",
+        "animation": "game/assets/game/sprites/animations/enemies/memory_runner.png",
+        "portrait": "game/assets/game/portraits/memory_runner.png",
+        "death": "game/assets/game/sprites/death/enemies/memory_runner.png"
+      },
+      "sha256": {
+        "static": "5701a2a9553091d277bcb0f0d33e33170ce34de3c0e1614ede2463aca846b914",
+        "animation": "bc608a2084491fe2d579de5e0d234447e49d2b4a9a13ca9d2bc023244d225052",
+        "portrait": "a25c814cea6743c03adddf9994a5dee3b41671e3410c1a8f8022fcd821a5cdd7",
+        "death": "9b22bff0425f56d0130b0500adebf0cee0c6c08b365ac0e776a1caa092d37813"
+      }
+    },
+    {
+      "id": "repair_skiff",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "hover",
+      "ability": "heal",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 2.8872050518187784,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "33-flight-repair_skiff",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer; low-angle nozzle inspection, identical clock/travel/world position; actual speed command and measured joint rotations",
+      "flightCell": 512,
+      "flightControlDeltas": {
+        "trimL": [
+          -0.037529411764705874,
+          0,
+          0
+        ],
+        "trimR": [
+          -0.037529411764705874,
+          0,
+          0
+        ],
+        "liftLF": [
+          0.0648235294117647,
+          0,
+          0
+        ],
+        "liftRF": [
+          0.0648235294117647,
+          0,
+          0
+        ],
+        "liftLR": [
+          0.0648235294117647,
+          0,
+          0
+        ],
+        "liftRR": [
+          0.0648235294117647,
+          0,
+          0
+        ]
+      },
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/repair_skiff.png",
+        "animation": "game/assets/game/sprites/animations/enemies/repair_skiff.png",
+        "portrait": "game/assets/game/portraits/repair_skiff.png",
+        "death": "game/assets/game/sprites/death/enemies/repair_skiff.png"
+      },
+      "sha256": {
+        "static": "0ef3fa0f198ba37aed44d8c71b1f5a788a499567c09334d0e1493410d4cc5528",
+        "animation": "12de306233c24ee16a6e0f8bf252c1b912cb8dc07913b2cfd141cdd518094463",
+        "portrait": "da661a2a06c6840530007e400d6582d06aa28061f5792cd233ea098c7a850dcd",
+        "death": "721f29ed23e213adb275058651862076bb06e475cfa4bd3e3ba045f4bdbe483b"
+      }
+    },
+    {
+      "id": "archive_warden",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "crawler",
+      "ability": "group_shield",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.439203649469126,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "40-rolling-noise_bell",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1271
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/archive_warden.png",
+        "animation": "game/assets/game/sprites/animations/enemies/archive_warden.png",
+        "portrait": "game/assets/game/portraits/archive_warden.png",
+        "death": "game/assets/game/sprites/death/enemies/archive_warden.png"
+      },
+      "sha256": {
+        "static": "30261651872c434b92c74cfcbb78253f8a0167e2892fbf282c48600f91a73f05",
+        "animation": "e478d49a3693f5418824b0b914b5acc071129b26b29d5911705d7db606fe915b",
+        "portrait": "eb753b9b2dfac5335409e40507451db837b2d4c72624b6a18693f12204e276e2",
+        "death": "cfb5e45c7e3b0ef185285b2f097b300a27f4508b5cefa9b1c0579208ea79fe4a"
+      }
+    },
+    {
+      "id": "ordered_sentinel",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "armored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.32975819984337,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "10-enemy-archive_warden",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/ordered_sentinel.png",
+        "animation": "game/assets/game/sprites/animations/enemies/ordered_sentinel.png",
+        "portrait": "game/assets/game/portraits/ordered_sentinel.png",
+        "death": "game/assets/game/sprites/death/enemies/ordered_sentinel.png"
+      },
+      "sha256": {
+        "static": "b8f336308e6c6ff47ebd3b3bf59f2f009c5c77fde673952e106137065e7492d0",
+        "animation": "394ee9481eacdb7ebf6e74255da3260c6b36b454ae394dcc88988367f5338d36",
+        "portrait": "8d3686245b0d5f9410ee4f200fc04d7218052b26a688f19ba25140adf23f46fa",
+        "death": "772c906e3e016718f918eb52d28bd4e6ec79cc5fde1bea18d55382f9b3200630"
+      }
+    },
+    {
+      "id": "null_wing",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "hover",
+      "ability": "jam",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 3.6227181975289833,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "34-flight-null_wing",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/null_wing.png",
+        "animation": "game/assets/game/sprites/animations/enemies/null_wing.png",
+        "portrait": "game/assets/game/portraits/null_wing.png",
+        "death": "game/assets/game/sprites/death/enemies/null_wing.png"
+      },
+      "sha256": {
+        "static": "b259c5cc6aca6465e2b84fb741b087d03f708e4bf817e65b90c46ef16584ae90",
+        "animation": "871c5872df3a5828e5ec43ae712b9d661dcbe8fdf4eb90f0be4cbf9a742f0d2c",
+        "portrait": "053d4ce1e9e277eb8c10c5e112e40c688966da27922eb05823ce11a98206b46f",
+        "death": "7f153d97b7d1401f236f9513a70964ac29ac4a01ccadbf61b7929186f477769f"
+      }
+    },
+    {
+      "id": "entropy_engine",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "crawler",
+      "ability": "siege",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.6240178193809705,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "40-rolling-noise_bell",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.13119999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/entropy_engine.png",
+        "animation": "game/assets/game/sprites/animations/enemies/entropy_engine.png",
+        "portrait": "game/assets/game/portraits/entropy_engine.png",
+        "death": "game/assets/game/sprites/death/enemies/entropy_engine.png"
+      },
+      "sha256": {
+        "static": "e5579e639a3fbb94d0fec89323eeb7b84ef3a82a72bb613fa9ef906ac3ab6d4c",
+        "animation": "fe56d8313b19e947751854ff439885a22e4b1549721ed70a7e44872a26e2af59",
+        "portrait": "5a255d4d0460edd58eeb80024984538a132ba06ee0ce44c0af575dd58e656894",
+        "death": "0c609f291fe830bd2276ebfba9a320f13e92237ecc17f71dd61d2208aaed2939"
+      }
+    },
+    {
+      "id": "noise_hive",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "crawler",
+      "ability": "summon",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.978020386255595,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "41-rolling-boss-noise_hive",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.13119999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/noise_hive.png",
+        "animation": "game/assets/game/sprites/animations/enemies/noise_hive.png",
+        "portrait": "game/assets/game/portraits/noise_hive.png",
+        "death": "game/assets/game/sprites/death/enemies/noise_hive.png"
+      },
+      "sha256": {
+        "static": "b8dfa41070b4c427b56604d14817940ac8a9ef7e82e3452e064d331193e87502",
+        "animation": "15a31b2d3eadc600285234837aeb6eb1405c8d55e7f401647d9aa15254bd4bd8",
+        "portrait": "6ff4b2a2615aa1de5492b80a825abf9f39941988b83a302d7e5a1feadc721ae5",
+        "death": "6ba67842c702be8ee193975a23c60ac8070c72d86ef30b2bcc78062ef01fcf81"
+      }
+    },
+    {
+      "id": "mirror_censor",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "crawler",
+      "ability": "copy",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.380247120837643,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "42-rolling-boss-mirror_censor",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1558
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/mirror_censor.png",
+        "animation": "game/assets/game/sprites/animations/enemies/mirror_censor.png",
+        "portrait": "game/assets/game/portraits/mirror_censor.png",
+        "death": "game/assets/game/sprites/death/enemies/mirror_censor.png"
+      },
+      "sha256": {
+        "static": "dd842acf700c33f3f43cba91f51433fc40ed042932310048ce9307c427695c0c",
+        "animation": "4fc00b6791f8e48efba608b0a2bd6cbd7045f0ecd64218cd9556dd8681876906",
+        "portrait": "1d5bae1af483cd790f7680d89d1f14dadd56d9c7113b9292b59e4b2c624be0ab",
+        "death": "928f25665a714d21c79754c30ae42492ee70910670a73c73ce9a15e1198fc932"
+      }
+    },
+    {
+      "id": "memory_reforger",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "crawler",
+      "ability": "heal",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.1916612317369175,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "43-rolling-boss-memory_reforger",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1558
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/memory_reforger.png",
+        "animation": "game/assets/game/sprites/animations/enemies/memory_reforger.png",
+        "portrait": "game/assets/game/portraits/memory_reforger.png",
+        "death": "game/assets/game/sprites/death/enemies/memory_reforger.png"
+      },
+      "sha256": {
+        "static": "eee4eaba853c12de43673835b09a5d97b77b43642133078ee3743217a29e225a",
+        "animation": "9eb492eadf33f5cf92e9ed646bcae76a19e5ebde0fca68e571c891d4dfa052eb",
+        "portrait": "ccb3bdbb0240f8a70de2d78991eb0b529aabbc53d19cc95e8fde209de5878f4e",
+        "death": "c90dfe41d19ed909720069d481b18bff477b1cd0af198624df7209f1fe9ef27f"
+      }
+    },
+    {
+      "id": "bandwidth_requisitioner",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "crawler",
+      "ability": "jam",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.556305426888889,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "44-rolling-boss-bandwidth_requisitioner",
+      "rollingWheels": 8,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.12299999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/bandwidth_requisitioner.png",
+        "animation": "game/assets/game/sprites/animations/enemies/bandwidth_requisitioner.png",
+        "portrait": "game/assets/game/portraits/bandwidth_requisitioner.png",
+        "death": "game/assets/game/sprites/death/enemies/bandwidth_requisitioner.png"
+      },
+      "sha256": {
+        "static": "476683578d2a08ac2eab6ba04bda9a9d5702f1df0bc23b59f4ce146a4a2ba7a3",
+        "animation": "47370a126b32e0e7a74054e675b0b26fc3c766d766cc0210764327056256fb14",
+        "portrait": "c694f4caf27044ce04abe50a6554bfb78500dc9d528e27239465c6e3f9d2f1ee",
+        "death": "6c7eb27e0d0a93b5f4b0489a0658a1e1707dade7e88af8abe380a03eeeb3a5e3"
+      }
+    },
+    {
+      "id": "chorus_overseer",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "hover",
+      "ability": "group_shield",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.0972339894646534,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "35-flight-chorus_overseer",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/chorus_overseer.png",
+        "animation": "game/assets/game/sprites/animations/enemies/chorus_overseer.png",
+        "portrait": "game/assets/game/portraits/chorus_overseer.png",
+        "death": "game/assets/game/sprites/death/enemies/chorus_overseer.png"
+      },
+      "sha256": {
+        "static": "5a582f179e395f447ef52fee52e4a410e74f0f3815e3baf152581a912e8fc364",
+        "animation": "094069da33c47af83a0a2f24807c610f9d7bbaee35258dd0981810d275e93cd9",
+        "portrait": "c349e31e80bad2ea11e091526de0e1f1896b91685537f71f9ace57272862c1ff",
+        "death": "9743900396600cd2125c7d129b5a16fa641c8ec7099303a4829e55d6bc57c57e"
+      }
+    },
+    {
+      "id": "zero_frequency_mind",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "crawler",
+      "ability": "siege",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.432242862133317,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "45-rolling-boss-zero_frequency_mind",
+      "rollingWheels": 8,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.12299999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/zero_frequency_mind.png",
+        "animation": "game/assets/game/sprites/animations/enemies/zero_frequency_mind.png",
+        "portrait": "game/assets/game/portraits/zero_frequency_mind.png",
+        "death": "game/assets/game/sprites/death/enemies/zero_frequency_mind.png"
+      },
+      "sha256": {
+        "static": "294e5668c375dc3e3d5973d3ba2b4bff39b6b1f919c8dea8ecd4c694481babf1",
+        "animation": "c599f4a37ab3e9f33ec08c190ea157865aac3d80809977fa1286a72eff3199e0",
+        "portrait": "f4fb837e6d7496e718d47f346e60c1dde8248bc004f644dfd9ee860fc0798734",
+        "death": "b116f99406c5eda4dd21204f7beac577719aab4b65cdb349434607fc6f2648f7"
+      }
+    },
+    {
+      "id": "anchor_bulwark",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "melee",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.391118359030214,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "18-tower-anchor_bulwark",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/anchor_bulwark.png",
+        "animation": "game/assets/game/sprites/animations/towers/anchor_bulwark.png",
+        "portrait": "game/assets/game/portraits/anchor_bulwark.png"
+      },
+      "sha256": {
+        "static": "2bfc484be4291b3fe8ace009c8f1bd8e56f4af08243800fe07c584ad0ad5872e",
+        "animation": "979ccda9ac9d1e49b143e640b65b5b9c387483ecc0a6067ed6cfc9eea03ade2e",
+        "portrait": "ae4053df5b291b4b1b2e4c70a8402d963904caa622829dfa30243a17c3867d20"
+      }
+    },
+    {
+      "id": "phase_blade",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "melee",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.513247242071386,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "19-tower-phase_blade",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/phase_blade.png",
+        "animation": "game/assets/game/sprites/animations/towers/phase_blade.png",
+        "portrait": "game/assets/game/portraits/phase_blade.png"
+      },
+      "sha256": {
+        "static": "1c6a9f97fb42a6553b7b7e602ed5824fce2909bae49f6e5b712ea58c4350b948",
+        "animation": "2a98d08ad0e667f903246e5127a69aa260012ec0fe50c91d997b81ca99a6286c",
+        "portrait": "cc8888a68f9096e905dfaff655dd92a475e75389089d60e79460f63620fea579"
+      }
+    },
+    {
+      "id": "boundary_riveter",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "melee",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.378542873360679,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "20-tower-boundary_riveter",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/boundary_riveter.png",
+        "animation": "game/assets/game/sprites/animations/towers/boundary_riveter.png",
+        "portrait": "game/assets/game/portraits/boundary_riveter.png"
+      },
+      "sha256": {
+        "static": "d8814791e01db24b6fd06e27e6220f77499b23f8520327a86e86886adb4ce05a",
+        "animation": "3716d1e5edc6d5cc3739303707f6d87fc310621c0be724a4fc7019f8ef952830",
+        "portrait": "363e5ea61dfdd8be2968167ca0d8186a4ddd76f22819989984f85b9ed85ac3c0"
+      }
+    },
+    {
+      "id": "resonance_guard",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "melee",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.513247242071386,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "21-tower-resonance_guard",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/resonance_guard.png",
+        "animation": "game/assets/game/sprites/animations/towers/resonance_guard.png",
+        "portrait": "game/assets/game/portraits/resonance_guard.png"
+      },
+      "sha256": {
+        "static": "c37c67545fe08360b3ab763c7f22259a5263ccb55003f37c736eb1fedd7b3c42",
+        "animation": "e4a2443a4ccac460f07cfb88da7acb50fe6f5e4884318fd3db761104f59096df",
+        "portrait": "677a5bd006830fdea80c5bc2049a2ab4c8b326bb90f819b9c0ebc55d327b1fe9"
+      }
+    },
+    {
+      "id": "pulse_array",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "ranged",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.513247242071386,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "22-tower-pulse_array",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/pulse_array.png",
+        "animation": "game/assets/game/sprites/animations/towers/pulse_array.png",
+        "portrait": "game/assets/game/portraits/pulse_array.png"
+      },
+      "sha256": {
+        "static": "3762f0e41af0e9df764615cf6a9a466361636f8f7e745ecd6150849002777d78",
+        "animation": "f1173fa7e7b40f9bdc1a8649b5106c63421510b854dca889d125d82ddf546180",
+        "portrait": "df043ad29ac72a4c75ac8bc4d3c1fd946b0327c0931190a1170c38f2bdf157ca"
+      }
+    },
+    {
+      "id": "focus_rail",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "ranged",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.378542873360679,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "23-tower-focus_rail",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/focus_rail.png",
+        "animation": "game/assets/game/sprites/animations/towers/focus_rail.png",
+        "portrait": "game/assets/game/portraits/focus_rail.png"
+      },
+      "sha256": {
+        "static": "28cc49025664df602b0fd27a183fe1d92a4dad1d0a54737b9f327e6638afb127",
+        "animation": "ca8dc50be0d5393a6728db6d8635fde36b30a59ad9c31cc8a434605c4f8af894",
+        "portrait": "0941bcd6d28d37cb2e3e4dc6f3c98a35f4fb0228629c7e7f07e9d762ebcfface"
+      }
+    },
+    {
+      "id": "arc_mortar",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "ranged",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.513247242071386,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "24-tower-arc_mortar",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/arc_mortar.png",
+        "animation": "game/assets/game/sprites/animations/towers/arc_mortar.png",
+        "portrait": "game/assets/game/portraits/arc_mortar.png"
+      },
+      "sha256": {
+        "static": "df9c0bc9b2a38f696ecec86f21ae710f636a67ad81c571926a2bcbbb7c24115f",
+        "animation": "27a1c182bec13c4912462017fbc8548bda32f3a17c22489be131931bbe7d78b6",
+        "portrait": "06758ecdfb1d8dbe1cdb83885a34a2e8345a169f52af8d94c1b5d4b81fd2373e"
+      }
+    },
+    {
+      "id": "drone_loom",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "ranged",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.378542873360679,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "25-tower-drone_loom",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/drone_loom.png",
+        "animation": "game/assets/game/sprites/animations/towers/drone_loom.png",
+        "portrait": "game/assets/game/portraits/drone_loom.png"
+      },
+      "sha256": {
+        "static": "c2617ab0a77f30c9b6410ae22f381395695bc75f9bb34d9134539f3e440154bc",
+        "animation": "3c34a15843e8830d7434e0d2a753366b03985e13e7a9e2bdfbb7c7e4620751ce",
+        "portrait": "8c03c04895b9d40a853ec8817f603a97ce64b09838d8526680f799f0743e1476"
+      }
+    },
+    {
+      "id": "bandwidth_relay",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "support",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.378542873360679,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "26-tower-bandwidth_relay",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/bandwidth_relay.png",
+        "animation": "game/assets/game/sprites/animations/towers/bandwidth_relay.png",
+        "portrait": "game/assets/game/portraits/bandwidth_relay.png"
+      },
+      "sha256": {
+        "static": "712a7f2691b0e9bec6aebc3e7d0c1b6766316f0229bfd28dea55fab604509e97",
+        "animation": "529000c5a69e0984c7bbec154accd6b913ddcecbfeddcc3e08e0bce34c53bd78",
+        "portrait": "7399dc81714503d0fa324ea8a15d6247cd7b404edd5c2d977dd2dbf24ecfa94f"
+      }
+    },
+    {
+      "id": "memory_mechanic",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "support",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.513247242071386,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "27-tower-memory_mechanic",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/memory_mechanic.png",
+        "animation": "game/assets/game/sprites/animations/towers/memory_mechanic.png",
+        "portrait": "game/assets/game/portraits/memory_mechanic.png"
+      },
+      "sha256": {
+        "static": "888db5968c84421cd99c9cf1a28d712248fde65b38057204a7bfa5e81d786992",
+        "animation": "eb752260791b190b801cb7389e546b3190c3048056075b85fa73a6eaf4efcac9",
+        "portrait": "079c1a39eef313d5bac1ffaa9ba0673f9b2bae3d6584c5b375c9d768a317e3a1"
+      }
+    },
+    {
+      "id": "frequency_choir",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "support",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.513247242071386,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "28-tower-frequency_choir",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/frequency_choir.png",
+        "animation": "game/assets/game/sprites/animations/towers/frequency_choir.png",
+        "portrait": "game/assets/game/portraits/frequency_choir.png"
+      },
+      "sha256": {
+        "static": "561edeae0504af1d477712c5ac194c8066c6ac2fa94b3cecb979a31569ee05e6",
+        "animation": "73bf26e2b7631dccf361f1f6b937a99f4ba8be95d7d426064818dd45103dd839",
+        "portrait": "913bc543838676ff7de2368256bc37744d86c715cf2289f2751e179ae5f8c7f1"
+      }
+    },
+    {
+      "id": "resistance_beacon",
+      "kind": "towers",
+      "variants": [
+        "T1",
+        "T2A",
+        "T2B",
+        "T3A",
+        "T3B"
+      ],
+      "role": "support",
+      "locomotion": "anchored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 0,
+      "rows": 50,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.378542873360679,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "29-tower-resistance_beacon",
+      "paths": {
+        "static": "game/assets/game/sprites/towers/resistance_beacon.png",
+        "animation": "game/assets/game/sprites/animations/towers/resistance_beacon.png",
+        "portrait": "game/assets/game/portraits/resistance_beacon.png"
+      },
+      "sha256": {
+        "static": "bcb1db9443e75f19c48f1fbb04274a9f2db036977d2f25ddbcc215edb50f6b1d",
+        "animation": "846ae29b38d5fc109708fee80d91f23673d6e940abb3a51b915ef27568e79cc5",
+        "portrait": "c3a317eb6b651b75d849ef350c7a2e49b92d7393c09e9a470f7bff6cc39c6d8a"
+      }
+    }
+  ],
+  "inspection": {
+    "ok": true,
+    "entities": 49,
+    "cells": 8720,
+    "records": [
+      {
+        "id": "static_drifter",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          511,
+          367,
+          579,
+          342
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 480,
+        "minimumGutter": 5
+      },
+      {
+        "id": "spike_runner",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          230,
+          180,
+          284,
+          221
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 363,
+        "minimumGutter": 6
+      },
+      {
+        "id": "shield_echo",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          333,
+          521,
+          220,
+          243
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 1053,
+        "minimumGutter": 5
+      },
+      {
+        "id": "tempo_amplifier",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          13,
+          16,
+          15,
+          8
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          674
+        ],
+        "attackChangedPixels": 299,
+        "minimumGutter": 7
+      },
+      {
+        "id": "fracture_seed",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          186,
+          199,
+          203,
+          191
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 249,
+        "minimumGutter": 5
+      },
+      {
+        "id": "floating_noise",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          3,
+          10,
+          7,
+          6
+        ],
+        "flightControlChangedPixels": [
+          49
+        ],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 301,
+        "minimumGutter": 6
+      },
+      {
+        "id": "remote_hunter",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          144,
+          140,
+          98,
+          75
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 188,
+        "minimumGutter": 7
+      },
+      {
+        "id": "siege_ram",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          3,
+          3,
+          1,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          2964
+        ],
+        "attackChangedPixels": 261,
+        "minimumGutter": 6
+      },
+      {
+        "id": "memory_medic",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          186,
+          221,
+          215,
+          253
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 276,
+        "minimumGutter": 5
+      },
+      {
+        "id": "bandwidth_jammer",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          483
+        ],
+        "attackChangedPixels": 108,
+        "minimumGutter": 7
+      },
+      {
+        "id": "phase_teleporter",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          173,
+          172,
+          175,
+          118
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 316,
+        "minimumGutter": 5
+      },
+      {
+        "id": "replication_node",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          4248
+        ],
+        "attackChangedPixels": 213,
+        "minimumGutter": 7
+      },
+      {
+        "id": "pressure_cantor",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          467,
+          550,
+          578,
+          582
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 771,
+        "minimumGutter": 5
+      },
+      {
+        "id": "armored_worm",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          140,
+          115,
+          150,
+          17
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 153,
+        "minimumGutter": 5
+      },
+      {
+        "id": "shield_conductor",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          333,
+          241,
+          383,
+          223
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 289,
+        "minimumGutter": 5
+      },
+      {
+        "id": "signal_summoner",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          0,
+          0,
+          3,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          1354
+        ],
+        "attackChangedPixels": 251,
+        "minimumGutter": 7
+      },
+      {
+        "id": "resistance_corruptor",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 7,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [
+          447
+        ],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 642,
+        "minimumGutter": 6
+      },
+      {
+        "id": "detonation_shell",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          0,
+          0,
+          3,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          1200
+        ],
+        "attackChangedPixels": 154,
+        "minimumGutter": 7
+      },
+      {
+        "id": "frequency_hunter",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          1,
+          0,
+          1,
+          3
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          2560
+        ],
+        "attackChangedPixels": 173,
+        "minimumGutter": 7
+      },
+      {
+        "id": "terrain_dismantler",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          314,
+          249,
+          252,
+          44
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 273,
+        "minimumGutter": 5
+      },
+      {
+        "id": "proliferation_protocol",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          548
+        ],
+        "attackChangedPixels": 172,
+        "minimumGutter": 6
+      },
+      {
+        "id": "spirit_taxer",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 7,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [
+          466
+        ],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 299,
+        "minimumGutter": 6
+      },
+      {
+        "id": "scrap_bulwark",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          1719
+        ],
+        "attackChangedPixels": 273,
+        "minimumGutter": 7
+      },
+      {
+        "id": "echo_glider",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 9,
+        "moveChangedPixels": [
+          1,
+          2,
+          0,
+          3
+        ],
+        "flightControlChangedPixels": [
+          128
+        ],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 37,
+        "minimumGutter": 8
+      },
+      {
+        "id": "noise_bell",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          720
+        ],
+        "attackChangedPixels": 160,
+        "minimumGutter": 7
+      },
+      {
+        "id": "memory_runner",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          169,
+          199,
+          157,
+          205
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 315,
+        "minimumGutter": 5
+      },
+      {
+        "id": "repair_skiff",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 7,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [
+          444
+        ],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 32,
+        "minimumGutter": 5
+      },
+      {
+        "id": "archive_warden",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          712
+        ],
+        "attackChangedPixels": 373,
+        "minimumGutter": 7
+      },
+      {
+        "id": "ordered_sentinel",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          236,
+          230,
+          229,
+          235
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 169,
+        "minimumGutter": 5
+      },
+      {
+        "id": "null_wing",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [
+          26
+        ],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 48,
+        "minimumGutter": 5
+      },
+      {
+        "id": "entropy_engine",
+        "variants": 1,
+        "cells": 80,
+        "uniquePoses": 10,
+        "moveChangedPixels": [
+          0,
+          1,
+          1,
+          1
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          913
+        ],
+        "attackChangedPixels": 320,
+        "minimumGutter": 7
+      },
+      {
+        "id": "noise_hive",
+        "variants": 3,
+        "cells": 240,
+        "uniquePoses": 30,
+        "moveChangedPixels": [
+          1,
+          1,
+          6,
+          6
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          1454,
+          1323,
+          1488
+        ],
+        "attackChangedPixels": 319,
+        "minimumGutter": 6
+      },
+      {
+        "id": "mirror_censor",
+        "variants": 3,
+        "cells": 240,
+        "uniquePoses": 30,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          373,
+          375,
+          379
+        ],
+        "attackChangedPixels": 281,
+        "minimumGutter": 7
+      },
+      {
+        "id": "memory_reforger",
+        "variants": 3,
+        "cells": 240,
+        "uniquePoses": 30,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          396,
+          397,
+          421
+        ],
+        "attackChangedPixels": 240,
+        "minimumGutter": 7
+      },
+      {
+        "id": "bandwidth_requisitioner",
+        "variants": 3,
+        "cells": 240,
+        "uniquePoses": 30,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          555,
+          560,
+          561
+        ],
+        "attackChangedPixels": 398,
+        "minimumGutter": 6
+      },
+      {
+        "id": "chorus_overseer",
+        "variants": 3,
+        "cells": 240,
+        "uniquePoses": 21,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [
+          256,
+          287,
+          339
+        ],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 29,
+        "minimumGutter": 9
+      },
+      {
+        "id": "zero_frequency_mind",
+        "variants": 3,
+        "cells": 240,
+        "uniquePoses": 30,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [
+          726,
+          728,
+          714
+        ],
+        "attackChangedPixels": 285,
+        "minimumGutter": 6
+      },
+      {
+        "id": "anchor_bulwark",
+        "variants": 5,
+        "cells": 400,
+        "uniquePoses": 30,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 306,
+        "minimumGutter": 6
+      },
+      {
+        "id": "phase_blade",
+        "variants": 5,
+        "cells": 400,
+        "uniquePoses": 28,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 439,
+        "minimumGutter": 8
+      },
+      {
+        "id": "boundary_riveter",
+        "variants": 5,
+        "cells": 400,
+        "uniquePoses": 30,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 198,
+        "minimumGutter": 7
+      },
+      {
+        "id": "resonance_guard",
+        "variants": 5,
+        "cells": 400,
+        "uniquePoses": 30,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 334,
+        "minimumGutter": 8
+      },
+      {
+        "id": "pulse_array",
+        "variants": 5,
+        "cells": 400,
+        "uniquePoses": 30,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 514,
+        "minimumGutter": 8
+      },
+      {
+        "id": "focus_rail",
+        "variants": 5,
+        "cells": 400,
+        "uniquePoses": 30,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 577,
+        "minimumGutter": 7
+      },
+      {
+        "id": "arc_mortar",
+        "variants": 5,
+        "cells": 400,
+        "uniquePoses": 30,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 593,
+        "minimumGutter": 8
+      },
+      {
+        "id": "drone_loom",
+        "variants": 5,
+        "cells": 400,
+        "uniquePoses": 30,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 190,
+        "minimumGutter": 7
+      },
+      {
+        "id": "bandwidth_relay",
+        "variants": 5,
+        "cells": 400,
+        "uniquePoses": 15,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 0,
+        "minimumGutter": 7
+      },
+      {
+        "id": "memory_mechanic",
+        "variants": 5,
+        "cells": 400,
+        "uniquePoses": 30,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 255,
+        "minimumGutter": 8
+      },
+      {
+        "id": "frequency_choir",
+        "variants": 5,
+        "cells": 400,
+        "uniquePoses": 15,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 0,
+        "minimumGutter": 8
+      },
+      {
+        "id": "resistance_beacon",
+        "variants": 5,
+        "cells": 400,
+        "uniquePoses": 21,
+        "moveChangedPixels": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "flightControlChangedPixels": [],
+        "wheelControlChangedPixels": [],
+        "attackChangedPixels": 0,
+        "minimumGutter": 7
+      }
+    ],
+    "failures": []
+  },
+  "acceptance": {
+    "completedAtUTC": "2026-10-15T12:37:38.959033+00:00",
+    "nodeTests": {
+      "passed": 271,
+      "failed": 0,
+      "skipped": 0,
+      "fullRuns": 1
+    },
+    "assets": {
+      "required": 367,
+      "hashes": 411,
+      "licenses": 10,
+      "fullRuns": 1
+    },
+    "pixelInspection": {
+      "entities": 49,
+      "livingCells": 8720,
+      "passed": true,
+      "fullRuns": 1,
+      "focusedResponseChecks": 1,
+      "focusedEntity": "repair_skiff"
+    },
+    "fallback": {
+      "status": "ENEMY_FALLBACK_ART_AND_DEATH_OK",
+      "living": 37,
+      "death": 10,
+      "reducedDeath": 10,
+      "animationImages": 49,
+      "deathImages": 37,
+      "expectedAccelerationFailure": [
+        "图形加速初始化失败：THREE.WebGLRenderer: Error creating WebGL context."
+      ],
+      "unexpected": [],
+      "issues": []
+    },
+    "fullRun": {
+      "status": "MINDREALM_BROWSER_48_NODES_WIN",
+      "seed": "reference-0",
+      "pressure": 0,
+      "completedNodes": 48,
+      "bosses": [
+        "noise_hive",
+        "memory_reforger",
+        "chorus_overseer"
+      ],
+      "actualRafSamples": 6,
+      "renderErrors": [],
+      "audioErrors": [],
+      "browserErrors": [],
+      "scope": "Legal UI route choices with fixed-step battle advancement and separate actual-RAF samples."
+    },
+    "stressPerformance": {
+      "ok": true,
+      "cases": [
+        {
+          "viewport": [
+            1440,
+            900
+          ],
+          "units": 24,
+          "enemies": 100,
+          "drones": 96,
+          "renderer": {
+            "mode": "realtime-webgl",
+            "ready": true,
+            "drawCalls": 532,
+            "triangles": 8544824,
+            "instances": 4962,
+            "entities": 220,
+            "sourceCount": 50,
+            "lod": [
+              16,
+              204
+            ],
+            "geometries": 139,
+            "textures": 7,
+            "width": 1190,
+            "height": 554,
+            "errors": []
+          },
+          "renderMs": {
+            "n": 180,
+            "median": 10.6,
+            "p95": 16,
+            "max": 17.3
+          },
+          "frameMs": {
+            "n": 179,
+            "median": 15.9,
+            "p95": 203.5,
+            "max": 230.9
+          },
+          "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5060 Laptop GPU (0x00002D59) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "maxProjectionError": 5.084229945850415e-13,
+          "errors": []
+        },
+        {
+          "viewport": [
+            1920,
+            1080
+          ],
+          "units": 24,
+          "enemies": 100,
+          "drones": 96,
+          "renderer": {
+            "mode": "realtime-webgl",
+            "ready": true,
+            "drawCalls": 564,
+            "triangles": 8797140,
+            "instances": 4984,
+            "entities": 220,
+            "sourceCount": 50,
+            "lod": [
+              20,
+              200
+            ],
+            "geometries": 154,
+            "textures": 7,
+            "width": 1670,
+            "height": 712,
+            "errors": []
+          },
+          "renderMs": {
+            "n": 180,
+            "median": 12.1,
+            "p95": 15.9,
+            "max": 17.5
+          },
+          "frameMs": {
+            "n": 179,
+            "median": 65.7,
+            "p95": 256.5,
+            "max": 297.2
+          },
+          "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5060 Laptop GPU (0x00002D59) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "maxProjectionError": 6.707764283195243e-13,
+          "errors": []
+        }
+      ],
+      "issues": []
+    },
+    "knownLimitations": [
+      "At 24 T3 constructions, 100 enemies and 96 drones, actual frame intervals remain uneven; see frameMs alongside CPU renderMs."
+    ],
+    "harnessRecovery": {
+      "interruptedPerformanceReport": "interrupted-performance.json",
+      "partialFirstRunReport": "partial-first-run-act1.json",
+      "reason": "A dependent page navigation interrupted an unfinished performance command. A fresh isolated browser session completed the final sequence serially."
+    }
+  }
+}

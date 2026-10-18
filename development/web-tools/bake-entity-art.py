@@ -45,8 +45,8 @@ def sp(name, size, position=(0, 0, 0), motion='fixed', rotation=(0, 0, 0), finis
 
 
 def pair(source, size, spread, y=0, z=0, motion='arm', rotation=(0, 0, 0), finish='native'):
-    return [sp(source, size, (sign * spread, y, z), motion + ('L' if sign < 0 else 'R'),
-               (rotation[0], rotation[1] * sign, rotation[2] * sign), finish) for sign in [-1, 1]]
+    return [dict(sp(source, size, (sign * spread, y, z), motion + ('L' if sign < 0 else 'R'),
+               (rotation[0], rotation[1] * sign, rotation[2] * sign), finish), **({'mirrorX': True} if sign < 0 else {})) for sign in [-1, 1]]
 
 
 def tower(id, role, parts, branch_a, branch_b):
@@ -70,24 +70,25 @@ tower('anchor_bulwark', 'melee', [base_square(), td('tower-round-top-a', (1.2, 1
     [sp('weapon_gun', (.5, .98, .44), (0, -.75, .7), 'hammer'), *pair('rocket_finsB', (.25, .68, .55), .85, -.58, .45, 'shield')],
     [*pair('corridor_wallCorner', (.5, .8, .85), .9, .25, .42, 'shield', finish='armor'), sp('machine_generator', (.65,.5,.4),(0,.38,1.03),'core')])
 tower('phase_blade', 'melee', [base_round(), sp('alien', (.8, .7, 1.35), (0,0,.37), 'body'),
+    *pair('machine_barrel',(.22,.22,.56),.63,-.38,.08,'fixed',finish='metal'),
     *pair('rocket_finsB', (.26, .58, 1.15), .63, -.38, .6, 'blade', (12, 28, 0), 'blade')],
     [*pair('rocket_fuelB', (.34,.42,.62), .52,.25,.86,'core'), sp('rocket_topB',(.42,.4,.53),(0,0,1.62),'head',finish='accent')],
     [*pair('weapon_rifle',(.24,1.05,.26),.66,-.43,.96,'blade',(0,0,8),'blade'), sp('rocket_finsA',(.72,.42,.58),(0,.22,1.14),'fin',finish='metal')])
 tower('boundary_riveter', 'melee', [base_square(), sp('machine_generatorLarge',(1.05,.83,.7),(0,.14,.34),'body'),
-    sp('weapon_gun',(.78,.88,.58),(0,-.58,.64),'hammer'), *pair('supports_high',(.22,.65,.88),.75,0,.38,'brace',finish='metal')],
+    sp('weapon_gun',(.78,.88,.58),(0,-.58,.64),'hammer'), *pair('machine_barrel',(.22,.36,1.04),.65,0,.08,'brace',finish='metal')],
     [sp('rocket_fuelB',(.65,.55,.72),(0,.13,1.0),'core'), *pair('weapon_gun',(.33,.92,.3),.52,-.5,.75,'barrel')],
     [*pair('corridor_wall',(.24,.86,.94),.90,.13,.38,'shield',finish='armor'), sp('pipe_ring',(.96,.84,.25),(0,0,1.02),'ring',finish='metal')])
 tower('resonance_guard', 'melee', [base_round(), reactor(), sp('satelliteDish',(.98,.56,.91),(0,-.40,.76),'shield'),
     *pair('rocket_sidesA',(.27,.64,.77),.66,.13,.42,'shield',finish='armor')],
     [*pair('satelliteDish',(.62,.43,.64),.74,-.36,.93,'shield'), sp('rocket_topA',(.4,.4,.38),(0,.15,1.39),'core',finish='gold')],
-    [sp('pipe_ring', (1.52,1.25,.28),(0,0,.57),'ring',finish='metal'), *pair('corridor_wallCorner',(.36,.58,.78),.9,.0,.45,'shield',finish='armor')])
+    [sp('rocket_fuelA', (1.52,1.25,.20),(0,0,.48),'ring',finish='metal'), *pair('corridor_wallCorner',(.36,.58,.78),.9,.0,.45,'shield',finish='armor')])
 tower('pulse_array', 'ranged', [base_round(), td('tower-round-middle-a',(1.02,.92,.46),(0,0,.4)),
     sp('turret_double',(1.36,1.43,.61),(0,-.12,.81),'barrel')],
-    [sp('turret_double',(.9,1.46,.42),(0,-.08,1.37),'barrel'), *pair('rocket_fuelA',(.26,.5,.48),.77,.24,.60,'core')],
+    [sp('turret_double',(.9,1.46,.42),(0,-.08,1.37),'barrel'), *pair('rocket_fuelA',(.26,.5,1.00),.77,.24,.08,'core')],
     [*pair('weapon_rifle',(.28,1.88,.26),.43,-.10,.96,'barrel'), sp('satelliteDish',(.4,.4,.56),(0,.4,1.28),'sensor')])
 tower('focus_rail', 'ranged', [base_square(), sp('turret_single',(.98,1.53,.58),(0,-.24,.52),'barrel'),
     *pair('weapon_rifle',(.22,1.96,.23),.32,-.21,.94,'barrel'), sp('machine_wireless',(.4,.43,.52),(0,.32,.81),'sensor')],
-    [*pair('rocket_fuelA',(.22,.85,.4),.61,.11,.59,'core'), sp('weapon_rifle',(.25,2.0,.28),(0,-.22,1.30),'barrel')],
+    [*pair('rocket_fuelA',(.22,.85,.91),.61,.11,.08,'core'), sp('weapon_rifle',(.25,2.0,.28),(0,-.22,1.30),'barrel')],
     [sp('satelliteDish_detailed',(.80,.68,.67),(0,.49,1.11),'sensor'), *pair('corridor_wall',(.14,.64,.54),.59,.06,.46,'shield',finish='armor')])
 tower('arc_mortar', 'ranged', [base_round(), td('weapon-cannon',(1.4,1.65,.89),(0,-.12,.45),'mortar',(0,0,0)),
     *pair('rocket_fuelA',(.36,.54,.58),.83,.21,.43,'loader',finish='gold')],
@@ -98,22 +99,23 @@ tower('drone_loom', 'ranged', [base_square(), sp('hangar_roundA',(1.44,1.20,.74)
     [*pair('craft_speederB',(.52,.64,.28),.59,-.40,1.75,'drone'), sp('rocket_fuelA',(.47,.5,.39),(0,.0,.94),'core')],
     [*pair('weapon_gun',(.3,.78,.25),.83,-.24,1.25,'barrel'), sp('satelliteDish_detailed',(.68,.49,.49),(0,.38,1.41),'sensor')])
 tower('bandwidth_relay', 'support', [base_square(), sp('machine_wireless',(1.01,.88,1.27),(0,0,.36),'core'),
-    sp('satelliteDish_detailed',(1.38,.68,.73),(0,-.1,1.39),'sensor'), *pair('rocket_fuelA',(.23,.43,.66),.67,.16,.48,'core')],
-    [*pair('satelliteDish',(.6,.40,.67),.83,-.1,1.17,'sensor'), sp('pipe_ring',(.87,.69,.17),(0,0,.96),'ring',finish='gold')],
+    sp('satelliteDish_detailed',(1.38,.68,.73),(0,-.1,1.39),'sensor'), *pair('rocket_fuelA',(.23,.43,1.06),.67,.16,.08,'core')],
+    [*pair('satelliteDish',(.6,.40,.67),.83,-.1,1.12,'sensor'), sp('rocket_fuelA',(.87,.69,.17),(0,0,.96),'ring',finish='gold')],
     [*pair('rocket_finsA',(.30,.58,1.14),.72,.22,.72,'fin',finish='metal'), sp('machine_generator',(.65,.62,.5),(0,.15,1.94),'core')])
 tower('memory_mechanic', 'support', [base_round(), sp('machine_generator',(1.07,.98,.9),(0,.16,.4),'body'),
-    *pair('supports_high',(.23,.43,.78),.67,-.10,.51,'arm'), *pair('weapon_gun',(.35,.89,.28),.70,-.40,1.08,'tool',(-18,0,0),'gold'),
+    *pair('machine_barrel',(.22,.30,1.13),.67,-.10,.08,'arm'), *pair('weapon_gun',(.35,.89,.28),.70,-.40,1.08,'tool',(-18,0,0),'gold'),
     sp('desk_computerScreen',(.48,.32,.35),(0,-.37,1.15),'screen',finish='accent')],
-    [*pair('weapon_rifle',(.24,1.23,.24),.76,-.36,1.4,'tool',finish='gold'), sp('rocket_fuelB',(.55,.50,.52),(0,.27,1.20),'core')],
+    [*pair('weapon_rifle',(.24,1.23,.24),.76,-.36,1.31,'tool',finish='gold'), sp('rocket_fuelB',(.55,.50,.52),(0,.27,1.20),'core')],
     [*pair('machine_barrel',(.40,.40,.71),.69,.36,.48,'reservoir',finish='ivory'), sp('satelliteDish',(.63,.39,.54),(0,.28,1.36),'sensor')])
 tower('frequency_choir', 'support', [base_round(), sp('machine_generatorLarge',(.9,.85,.84),(0,.12,.39),'body'),
-    *pair('satelliteDish_large',(.55,.56,1.03),.67,-.12,.68,'speaker'), sp('rocket_topB',(.5,.47,.6),(0,.06,1.16),'core',finish='gold')],
-    [*pair('satelliteDish',(.60,.46,.55),.77,.19,1.46,'speaker'), sp('pipe_ring',(.86,.83,.17),(0,0,1.11),'ring',finish='gold')],
-    [*pair('machine_wireless',(.33,.43,.91),.78,.31,.77,'sensor'), sp('satelliteDish_detailed',(.69,.51,.50),(0,.09,1.81),'speaker')])
+    *pair('satelliteDish_large',(.55,.56,1.63),.67,-.12,.08,'speaker'), sp('rocket_topB',(.5,.47,.6),(0,.06,1.16),'core',finish='gold')],
+    [sp('corridor_wall',(1.64,.36,.09),(0,.19,1.18),'fixed',finish='metal'), *pair('machine_barrel',(.15,.15,.22),.77,.19,1.25,'fixed',finish='metal'),
+     *pair('satelliteDish',(.60,.46,.55),.77,.19,1.46,'speaker'), sp('rocket_fuelA',(.66,.65,.14),(0,.06,1.14),'ring',finish='gold')],
+    [*pair('machine_wireless',(.33,.43,1.60),.78,.31,.08,'sensor'), sp('machine_barrel',(.16,.18,.28),(0,.09,1.50),'fixed',finish='gold'), sp('satelliteDish_detailed',(.69,.51,.50),(0,.09,1.69),'speaker')])
 tower('resistance_beacon', 'support', [base_square(), sp('rocket_baseB',(.90,.85,1.2),(0,0,.37),'body'),
-    sp('rocket_topA',(.69,.68,.58),(0,0,1.54),'core',finish='gold'), *pair('rocket_finsB',(.35,.67,.91),.61,.06,.78,'fin',finish='ivory')],
+    sp('rocket_topA',(.69,.68,.58),(0,0,1.54),'core',finish='gold'), *pair('rocket_finsB',(.35,.67,1.61),.61,.06,.08,'fin',finish='ivory')],
     [*pair('satelliteDish',(.48,.39,.60),.66,-.1,1.49,'sensor'), sp('machine_generator',(.55,.45,.39),(0,.22,1.29),'core')],
-    [*pair('corridor_wall',(.21,.63,1.0),.77,.0,.68,'shield',finish='armor'), sp('pipe_ring',(.93,.82,.24),(0,0,1.86),'ring',finish='gold')])
+    [*pair('corridor_wall',(.21,.63,1.0),.77,.0,.68,'shield',finish='armor'), sp('rocket_fuelA',(.78,.77,.14),(0,0,1.54),'ring',finish='gold')])
 
 rover = lambda size=(1.55,1.45,.61): sp('rover',size,(0,0,.06),'body')
 alien = lambda: sp('alien',(.83,.62,1.32),(0,0,.32),'body')
@@ -234,14 +236,14 @@ def finish_for_color(color, name=''):
     return 'metal'
 
 
-def template(source, kind, finish):
-    key = (source, kind, finish)
+def template(source, kind, finish, exclude_nodes=()):
+    key = (source, kind, finish, tuple(exclude_nodes))
     if key in TEMPLATES:
         return TEMPLATES[key]
     before = set(bpy.data.objects)
     bpy.ops.import_scene.gltf(filepath=str(SOURCES / (source + '.glb')))
     added = set(bpy.data.objects) - before
-    meshes = [o for o in added if o.type == 'MESH']
+    meshes = [o for o in added if o.type == 'MESH' and not any(name in o.name.lower() for name in exclude_nodes)]
     # Apply source hierarchy and import coordinate conversion, then normalize.
     all_points = [o.matrix_world @ v.co for o in meshes for v in o.data.vertices]
     low = Vector(tuple(min(v[i] for v in all_points) for i in range(3)))
@@ -295,16 +297,11 @@ def assembly_parts(recipe, variant):
         parts+=pair('supports_low',(.19,1.12,.19),width,0,.29,'drive',finish='gold')
     if recipe['kind'] == 'towers' and variant != 'T1':
         additions = recipe['branch_a' if variant.endswith('A') else 'branch_b']
-        parts += additions
+        parts += [dict(p,size=tuple(v*1.10 for v in p['size'])) for p in additions] if variant.startswith('T3') else additions
         if variant.startswith('T3'):
-            # Third tier gains a second physically separate module bank and rear
-            # stabilizers, rather than enlarging/recoloring the complete sprite.
-            parts += pair('rocket_finsA',(.32,.65,.68),.93,.49,.23,'brace',finish='metal')
-            for p in additions[:2]:
-                q = dict(p)
-                q['size'] = tuple(v*.72 for v in p['size'])
-                q['position'] = (p['position'][0]*.82, p['position'][1]+.28, p['position'][2]+.43)
-                parts.append(q)
+            # Third-tier branch machinery grows on its existing mount. A pair
+            # of low rear plates reinforces the base; no floating second bank.
+            parts += pair('corridor_wall',(.16,.47,.38),.78,.48,.23,'brace',finish='armor')
     elif recipe['role'] == 'boss':
         phase = int(variant[-1])
         if phase >= 2:
@@ -405,6 +402,8 @@ def create_instance(recipe, parts, pose, direction, offset, scale):
         pos,rot = pose_part(p,pose,recipe)
         local = Matrix.Translation(pos) @ Matrix.Rotation(rot.z,4,'Z') @ Matrix.Rotation(rot.y,4,'Y') @ Matrix.Rotation(rot.x,4,'X')
         local @= Matrix.Diagonal((*p['size'],1))
+        if p.get('mirrorX'):
+            local @= Matrix.Diagonal((-1,1,1,1))
         for mesh in template(p['source'],recipe['kind'],p['finish']):
             obj = bpy.data.objects.new(p['motion'],mesh)
             bpy.context.scene.collection.objects.link(obj)
@@ -524,9 +523,15 @@ def main():
     argv=sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else []
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',required=True)
-    parser.add_argument('--ids',default=','.join(RECIPES))
+    parser.add_argument('--ids',default=','.join(id for id, recipe in RECIPES.items() if recipe['kind']=='towers'))
     parser.add_argument('--source-cache')
+    parser.add_argument('--legacy-reference',action='store_true',help='Export historical Blender tower references only')
     args=parser.parse_args(argv)
+    requested=args.ids.split(',')
+    if not args.legacy_reference:
+        parser.error('Current tower and enemy artwork uses the refined runtime meshes. Use the local enemy-review baker; --legacy-reference is for historical tower references only.')
+    if any(id in RECIPES and RECIPES[id]['kind']=='enemies' for id in requested):
+        parser.error('Enemy artwork uses the independently authored runtime rigs. Use the local enemy-review baker; this Blender tool builds towers only.')
     output=Path(args.output).resolve()
     if output==ROOT or ROOT in output.parents:
         parser.error('Bake to an external staging directory, inspect, then copy approved PNGs into assets/game/sprites.')

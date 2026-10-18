@@ -1,0 +1,1431 @@
+{
+  "date": "2026-10-15",
+  "pass": "symmetry-and-assembly",
+  "source": "Actual game EntityRenderer with reflected source geometry and independent rigs",
+  "cell": 80,
+  "directions": 8,
+  "poseRows": 10,
+  "deathRows": 4,
+  "entities": [
+    {
+      "id": "static_drifter",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "none",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 3.524392787786732,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "01-enemy-static_drifter",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/static_drifter.png",
+        "animation": "game/assets/game/sprites/animations/enemies/static_drifter.png",
+        "portrait": "game/assets/game/portraits/static_drifter.png",
+        "death": "game/assets/game/sprites/death/enemies/static_drifter.png"
+      },
+      "sha256": {
+        "static": "f7e5d35a9f81075dc92e15b1c95c3634ad8682a7bfc8fb56c9288cb4bbf3ca2b",
+        "animation": "0acc8446cbb2abb88e067f9b958c8b0b8a4cb598b190badb7d9702cf488dd67d",
+        "portrait": "9b8c88f2cfb466683158e37dad193cdf66c5b833964172ce00867cc4fe04285c",
+        "death": "9260157c375dd00e385b90e034bf4c09fc3b97c8309ddbf055c57c443a321562"
+      }
+    },
+    {
+      "id": "spike_runner",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "runner",
+      "ability": "sprint",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.223385498658977,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "01-enemy-static_drifter",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/spike_runner.png",
+        "animation": "game/assets/game/sprites/animations/enemies/spike_runner.png",
+        "portrait": "game/assets/game/portraits/spike_runner.png",
+        "death": "game/assets/game/sprites/death/enemies/spike_runner.png"
+      },
+      "sha256": {
+        "static": "f3718ed323517761bd5003796a36fba4ee6502416eae4e3d06752641123540ec",
+        "animation": "a508a068868d5e5ccc7d963fb08aee1ec87a19a6bc9496300e6d9e345ef5b5ac",
+        "portrait": "f8486c28848eaf4e4b920a41fc31f678add5b536da03a711ff97260a4e5db437",
+        "death": "6c2982391592054c08da2b0d76f383db16802b80467e2ca5d587d74360b7a22d"
+      }
+    },
+    {
+      "id": "shield_echo",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "shield",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 3.3884671826761346,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "01-enemy-static_drifter",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/shield_echo.png",
+        "animation": "game/assets/game/sprites/animations/enemies/shield_echo.png",
+        "portrait": "game/assets/game/portraits/shield_echo.png",
+        "death": "game/assets/game/sprites/death/enemies/shield_echo.png"
+      },
+      "sha256": {
+        "static": "fb51e549720c1e54ad8b24f59ebedb9170addc6a7f58ef399b579518b4c588a1",
+        "animation": "0ab835aeb8d2e0379c9ed13a717a8c583daa1ff9421df46c8c359adc58b00cd9",
+        "portrait": "f58ddb60545530396f30e20e8642a27b00e1fd2e3a011d84e998d19ddcb0ab07",
+        "death": "c9cfc307423e3c721ab030988ec2b08ce6cbf038470c843b000c5b366b0d09f7"
+      }
+    },
+    {
+      "id": "tempo_amplifier",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "haste",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.4424187443186085,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "37-rolling-tempo_amplifier",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1107
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/tempo_amplifier.png",
+        "animation": "game/assets/game/sprites/animations/enemies/tempo_amplifier.png",
+        "portrait": "game/assets/game/portraits/tempo_amplifier.png",
+        "death": "game/assets/game/sprites/death/enemies/tempo_amplifier.png"
+      },
+      "sha256": {
+        "static": "263d4b719eb1660dcf54bad98ed161835ddb152176c0e0a88b6958cc6f2bea92",
+        "animation": "a11305be1c7e7efcef5b5135b224dbe9d5a381cd9090ab2f5ac1d3944b1233ce",
+        "portrait": "ac627851135501c255f3f074bf65157d944129f74431f4d9e6ab5234bcdb7e90",
+        "death": "43f8fd7fe3e654c40b103545412c747dd2f9e1c497478e43e14a3f393f9879e1"
+      }
+    },
+    {
+      "id": "fracture_seed",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "split",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.548796054851864,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "02-enemy-tempo_amplifier",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/fracture_seed.png",
+        "animation": "game/assets/game/sprites/animations/enemies/fracture_seed.png",
+        "portrait": "game/assets/game/portraits/fracture_seed.png",
+        "death": "game/assets/game/sprites/death/enemies/fracture_seed.png"
+      },
+      "sha256": {
+        "static": "8e06e3d6c607f649192eaa0b06c9171608d0d8a197f4817f393b938c4efd43f6",
+        "animation": "225a10ea4713607d8510ee33337a74c893b042eac8b1536e3243e1f99337861a",
+        "portrait": "89052a488cb6fe69b1fa0e5252466f4a31e74f17701e3803da074bf1c3100f9f",
+        "death": "67f91f1778744a4fccc44f4646c60dbcc9541e7514f79938204fcd105fd6aead"
+      }
+    },
+    {
+      "id": "floating_noise",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "hover",
+      "ability": "air",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.700935517433247,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "30-flight-floating_noise",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/floating_noise.png",
+        "animation": "game/assets/game/sprites/animations/enemies/floating_noise.png",
+        "portrait": "game/assets/game/portraits/floating_noise.png",
+        "death": "game/assets/game/sprites/death/enemies/floating_noise.png"
+      },
+      "sha256": {
+        "static": "18c0ed34ae335a28cbc01e68af8aae50645b8fe476ff2a49d8da10418ac6879a",
+        "animation": "775f42904be90c9c7188fb14cd9da685ed8adebde4c2d6d02d84b0ce347e52bd",
+        "portrait": "c902052c0af552a89f5603cb9114d8dcf0401d84696c2f2e9395997a74e4bfba",
+        "death": "a742773addaf28cfd31e0147e827f2ba57dd7b79beec41fd719c993760db48f8"
+      }
+    },
+    {
+      "id": "remote_hunter",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "tower_hunter",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.63371055319022,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "03-enemy-remote_hunter",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/remote_hunter.png",
+        "animation": "game/assets/game/sprites/animations/enemies/remote_hunter.png",
+        "portrait": "game/assets/game/portraits/remote_hunter.png",
+        "death": "game/assets/game/sprites/death/enemies/remote_hunter.png"
+      },
+      "sha256": {
+        "static": "e6df7486f1f4db7bc26ea89ec7f20804f81970fe1f3706fab1d875823de8dbac",
+        "animation": "77bb0c158b04a63a2ec720e97cc68ab7c26bde6b097d38275e677b1af2da5356",
+        "portrait": "82d21131de6bf6a57c9c0c3320551cb0ce677b939579efb3466f0e47453a36b7",
+        "death": "f04551aa3b6a72d255a3e221caf51ab4d7976be682230586f38a11cc1adc07d1"
+      }
+    },
+    {
+      "id": "siege_ram",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "siege",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.001189427261725,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "37-rolling-tempo_amplifier",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1271
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/siege_ram.png",
+        "animation": "game/assets/game/sprites/animations/enemies/siege_ram.png",
+        "portrait": "game/assets/game/portraits/siege_ram.png",
+        "death": "game/assets/game/sprites/death/enemies/siege_ram.png"
+      },
+      "sha256": {
+        "static": "f5697401813c08941c541a6ac846b12a7c0a665ce5c505e278a6d0b6e25790c2",
+        "animation": "b3a15b31589d0feb6981cc818945d5687d75da3e7d1622a81781822b03c1399b",
+        "portrait": "78b1631f527ce06836351cd58a78a2d84e9a64ab864f5c49b757022aa155d821",
+        "death": "3b6f1ae646c62c68f7ffd15e63ebd62336d71c0a8673927dc38ec2bfa87f23fe"
+      }
+    },
+    {
+      "id": "memory_medic",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "heal",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.446157958270704,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "03-enemy-remote_hunter",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/memory_medic.png",
+        "animation": "game/assets/game/sprites/animations/enemies/memory_medic.png",
+        "portrait": "game/assets/game/portraits/memory_medic.png",
+        "death": "game/assets/game/sprites/death/enemies/memory_medic.png"
+      },
+      "sha256": {
+        "static": "3000a9cd2bfdb782e0ffa655bf32436ca2731cee51f3ada250c4099f9759ba4d",
+        "animation": "4fa09a772bf64414917d9cbde04db1498aef1ee6636eced93cc640d4e0b12499",
+        "portrait": "f8b03e47bedfc821e7df5bc5fc1711945fc0afd0d2da4bcd93bb0b611e5baba8",
+        "death": "098127ae3e8cfcaf4f0d8a72ad15fc309ef4b55c5a6efc15012477579dc1d6c0"
+      }
+    },
+    {
+      "id": "bandwidth_jammer",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "jam",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.817678615239692,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "37-rolling-tempo_amplifier",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1066
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/bandwidth_jammer.png",
+        "animation": "game/assets/game/sprites/animations/enemies/bandwidth_jammer.png",
+        "portrait": "game/assets/game/portraits/bandwidth_jammer.png",
+        "death": "game/assets/game/sprites/death/enemies/bandwidth_jammer.png"
+      },
+      "sha256": {
+        "static": "327245a66bb28710cfe164587256c93197adc11a379beb64197a08ec1294acb6",
+        "animation": "0693f92b97b85e172c4dbc43401bad95a64bc01ba43fd76a9700c6cba9999e9c",
+        "portrait": "e71784c2e71d2beae2fb254a8b1a8738d92db453fe497d5456ddce035abbba07",
+        "death": "daafe249e3c5384a682984b55e6beb6d0cf19db4dcf01f6bf95c059cd70f685b"
+      }
+    },
+    {
+      "id": "phase_teleporter",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "teleport",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.715303482882834,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "04-enemy-bandwidth_jammer",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/phase_teleporter.png",
+        "animation": "game/assets/game/sprites/animations/enemies/phase_teleporter.png",
+        "portrait": "game/assets/game/portraits/phase_teleporter.png",
+        "death": "game/assets/game/sprites/death/enemies/phase_teleporter.png"
+      },
+      "sha256": {
+        "static": "0b136b86a46e1bf8b2f16c5a519dda68963b7f7f759f3ac44e031f1bced1d679",
+        "animation": "b6363e055d1f28e1a3736c52d08f4c6297e4b2c9746cfa7529b14db09dbd687c",
+        "portrait": "4d51de40ad08a7ef33ef83b31aed11f6a08279ddbf5dc95e1b965e58c78fa54a",
+        "death": "2261e541f31a076c841ee648ccc48dc02584b675ebbb7c11257de6b022bd9481"
+      }
+    },
+    {
+      "id": "replication_node",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "copy",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.873446108359748,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "38-rolling-replication_node",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1148
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/replication_node.png",
+        "animation": "game/assets/game/sprites/animations/enemies/replication_node.png",
+        "portrait": "game/assets/game/portraits/replication_node.png",
+        "death": "game/assets/game/sprites/death/enemies/replication_node.png"
+      },
+      "sha256": {
+        "static": "301bd9bb9a3b7fcdf8fe63dd4c484862b593afd46305ac7b7fdbfe10fc4c9d86",
+        "animation": "4e3ced10a9d2b8f972a7a9dd9191521436b1c7a073837e04f90afa8ad54743a5",
+        "portrait": "6d9c441095febebfbde1d5138c17637b4f4cb37f48efbe3e3922b9dbc279d1b5",
+        "death": "1090a00df0cfb91832b58f35b9705c457824080291699e3f441f1978d2cc4db8"
+      }
+    },
+    {
+      "id": "pressure_cantor",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "pressure_aura",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 2.823082720200196,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "05-enemy-pressure_cantor",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/pressure_cantor.png",
+        "animation": "game/assets/game/sprites/animations/enemies/pressure_cantor.png",
+        "portrait": "game/assets/game/portraits/pressure_cantor.png",
+        "death": "game/assets/game/sprites/death/enemies/pressure_cantor.png"
+      },
+      "sha256": {
+        "static": "42e68a5bf6bf228b975d0ea0e65253878226af1ac7ea544a2cb66da8b38e4e59",
+        "animation": "6d2cea55daafe66c705d2b96b9572bf1ed8500c6c709c071c45a7cb79a3cf8f0",
+        "portrait": "1b1ea40d29194df21ea1cee9d3fdceba4f62fdde6ba1a033c5dc93c9c4878858",
+        "death": "d3928cedee121817d79dbb16bcfbbd13820710ddc4a7705b9a40d006d888d3e5"
+      }
+    },
+    {
+      "id": "armored_worm",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "armored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.884045849808165,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "05-enemy-pressure_cantor",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/armored_worm.png",
+        "animation": "game/assets/game/sprites/animations/enemies/armored_worm.png",
+        "portrait": "game/assets/game/portraits/armored_worm.png",
+        "death": "game/assets/game/sprites/death/enemies/armored_worm.png"
+      },
+      "sha256": {
+        "static": "d8a62a95f62557904f00c1e712e734d0746577580c790013dbb01b3a60e6e808",
+        "animation": "c62d09f37146c963c991cfef3e0e019b19c0337fe00abb19b59946d38146affe",
+        "portrait": "984109042652d46cee1d61d2deee20de025b1e3e72e49d5fa220ffc85d2f78dc",
+        "death": "5afe7539b12f829ebac453223d33436afb63523cadf34b70b0f3813279115699"
+      }
+    },
+    {
+      "id": "shield_conductor",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "group_shield",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.142810625531905,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "05-enemy-pressure_cantor",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/shield_conductor.png",
+        "animation": "game/assets/game/sprites/animations/enemies/shield_conductor.png",
+        "portrait": "game/assets/game/portraits/shield_conductor.png",
+        "death": "game/assets/game/sprites/death/enemies/shield_conductor.png"
+      },
+      "sha256": {
+        "static": "d0df46122116ac1e622e645c0c8ebd723918fe93aa0b28589f3827fc3def175f",
+        "animation": "74ed3b859df6e518f71b675d1bacd66aaa159c6cd2c389490b3223873c25a689",
+        "portrait": "24afd60fc8d8effe763845ae1beb591e422a0076a5557e19dd360501a4b832b1",
+        "death": "da06a84a63e7928b313922916370edf3820b251175a032df46f484b840aa7cfb"
+      }
+    },
+    {
+      "id": "signal_summoner",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "summon",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.755041191395194,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "38-rolling-replication_node",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1066
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/signal_summoner.png",
+        "animation": "game/assets/game/sprites/animations/enemies/signal_summoner.png",
+        "portrait": "game/assets/game/portraits/signal_summoner.png",
+        "death": "game/assets/game/sprites/death/enemies/signal_summoner.png"
+      },
+      "sha256": {
+        "static": "58e8e12f786d9453db1a4493bb1d5eb9237db33c90dd76d8b8efa303ddf49d8f",
+        "animation": "7f638a8c0b0b90d33cc175a0b41b9788884d722c23c15d012d8e30a00e382a2f",
+        "portrait": "b8edb401a7f243e94006dd70bfa043cd822270b4ba8860dcbc6b1454ec4e3935",
+        "death": "8499c93e2aa24a76dc1255e1e29b9e2d940019e256a9f9dd1e995fa741a5607e"
+      }
+    },
+    {
+      "id": "resistance_corruptor",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "hover",
+      "ability": "corrode_resistance",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 2.553339870116878,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "31-flight-resistance_corruptor",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/resistance_corruptor.png",
+        "animation": "game/assets/game/sprites/animations/enemies/resistance_corruptor.png",
+        "portrait": "game/assets/game/portraits/resistance_corruptor.png",
+        "death": "game/assets/game/sprites/death/enemies/resistance_corruptor.png"
+      },
+      "sha256": {
+        "static": "7d769623770da7bf1fb583871eec224aa138469bcabe01dea21092bbd281b0c9",
+        "animation": "d17bc437dbc49ed874fca89e900fcbadbf70f37c42d681ab9d399819f56a719d",
+        "portrait": "659efa570f34acb59846be517cbb285f48daaefa3e611f05228fc54d980a8cf2",
+        "death": "ed2c4b5431058209d222c96185ca71c8c9f5c0599993abc0c5ad65774ae9357f"
+      }
+    },
+    {
+      "id": "detonation_shell",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "explode",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.591510334290897,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "38-rolling-replication_node",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1066
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/detonation_shell.png",
+        "animation": "game/assets/game/sprites/animations/enemies/detonation_shell.png",
+        "portrait": "game/assets/game/portraits/detonation_shell.png",
+        "death": "game/assets/game/sprites/death/enemies/detonation_shell.png"
+      },
+      "sha256": {
+        "static": "5780e10489b2c40e8c7719efd1e1d9426fc548805dc6810eb0211343250ee450",
+        "animation": "ca4f8a4d1e37d24421df6c05738fb25e80f037fdc1a997823c3b75f08249fda9",
+        "portrait": "c79d378f413a0a5bacee2a5d11d3ffd5837390490099c3538e67c566979b7811",
+        "death": "940dd3905c6ca250eef2dd25ba6f6a9420173f57d120e4e858563c585d908e8a"
+      }
+    },
+    {
+      "id": "frequency_hunter",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "crawler",
+      "ability": "tower_hunter",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.256184551548054,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "39-rolling-frequency_hunter",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.14759999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/frequency_hunter.png",
+        "animation": "game/assets/game/sprites/animations/enemies/frequency_hunter.png",
+        "portrait": "game/assets/game/portraits/frequency_hunter.png",
+        "death": "game/assets/game/sprites/death/enemies/frequency_hunter.png"
+      },
+      "sha256": {
+        "static": "675628214a27304dc9e8233543a25539fb837358e3cbc19bbf1ca501910b0564",
+        "animation": "d12129834f2793eac4abfae171d6780eb9690f5fc2f5f7c9d775c3d9ce48aaf8",
+        "portrait": "d738889e48dd8e251d4557bc49e919bf756675d1e7653f0e7368cadc40caf22a",
+        "death": "479174bf59e317d23e2b287384a368d98dd80e6edcf850bfb2708d3e9f8261ce"
+      }
+    },
+    {
+      "id": "terrain_dismantler",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "walker",
+      "ability": "siege",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.6689720515252136,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "07-enemy-frequency_hunter",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/terrain_dismantler.png",
+        "animation": "game/assets/game/sprites/animations/enemies/terrain_dismantler.png",
+        "portrait": "game/assets/game/portraits/terrain_dismantler.png",
+        "death": "game/assets/game/sprites/death/enemies/terrain_dismantler.png"
+      },
+      "sha256": {
+        "static": "998e5bd4ab69d27187ff91e7f6a92bff9539775f65b95566a3e1647d4e81bddf",
+        "animation": "c80031a958146a2833f45fcfb61bcb0199d15688981438b79ad3cf75796a8455",
+        "portrait": "f972107391daa0850dfc43a0b8ed726460f1d5bdcf300fe46bd811fbd2159bc8",
+        "death": "62ec3ec1e9f57d2d3fe3ab7afa7a9beca6ed6ed4aa0e218ced95b122947fd638"
+      }
+    },
+    {
+      "id": "proliferation_protocol",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "crawler",
+      "ability": "summon",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.93855188673545,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "39-rolling-frequency_hunter",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.12299999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/proliferation_protocol.png",
+        "animation": "game/assets/game/sprites/animations/enemies/proliferation_protocol.png",
+        "portrait": "game/assets/game/portraits/proliferation_protocol.png",
+        "death": "game/assets/game/sprites/death/enemies/proliferation_protocol.png"
+      },
+      "sha256": {
+        "static": "b27a2f673dc0c5c9b5ca1d346f7915aaa1888cb44a528b8c990d5de0f101271a",
+        "animation": "663beb0b228449d2f52b3003e659f27189bf836abfdcee6677b666e6279f9764",
+        "portrait": "67d17c3e08618c46da1b634fa73ad8a9c5c89125d91daa151c5a263e43b6e2bc",
+        "death": "1c26998d03564d6451793b892c01a137ed8e78eb295619539b3c0b2f8ec8dbee"
+      }
+    },
+    {
+      "id": "spirit_taxer",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "hover",
+      "ability": "corrode_resistance",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 3.7930425874669567,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "32-flight-spirit_taxer",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/spirit_taxer.png",
+        "animation": "game/assets/game/sprites/animations/enemies/spirit_taxer.png",
+        "portrait": "game/assets/game/portraits/spirit_taxer.png",
+        "death": "game/assets/game/sprites/death/enemies/spirit_taxer.png"
+      },
+      "sha256": {
+        "static": "8924b112b4bbdf3dccf86d94b8ea18ff1b5213787b35ce11e0f38fd38885cd56",
+        "animation": "29a523d5060ebfc942f5afeeedb579513aa6aec5b9f56ed946994549f05112a0",
+        "portrait": "4f27760bc62dc799bf42b87524854d304fde744bd5dceb2abb161cb9bd1998ae",
+        "death": "f9ee2188c269829c8d480827d1d05faa714690f553c999a33d28214037148b55"
+      }
+    },
+    {
+      "id": "scrap_bulwark",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "crawler",
+      "ability": "armored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.925441939887561,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "39-rolling-frequency_hunter",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1435
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/scrap_bulwark.png",
+        "animation": "game/assets/game/sprites/animations/enemies/scrap_bulwark.png",
+        "portrait": "game/assets/game/portraits/scrap_bulwark.png",
+        "death": "game/assets/game/sprites/death/enemies/scrap_bulwark.png"
+      },
+      "sha256": {
+        "static": "6b5bf8406713b573df500b70796b55268ad060fe4196e68a3d05fc0c2134dd82",
+        "animation": "ffcff728746b55343f2f5855c989d4983e5633dfeb8c95aa2502403afb754ca4",
+        "portrait": "b30027a3958b7814449c2cf345323949e9cd89e5c7f4c3926e3af371c58ea547",
+        "death": "e3c4178ee38b827a826baa946307cebe7db73e249269fe5987966c16b5e1ba22"
+      }
+    },
+    {
+      "id": "echo_glider",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "hover",
+      "ability": "haste",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.11353880564956,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "36-flight-echo_glider",
+      "flightSpeeds": [
+        0,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/echo_glider.png",
+        "animation": "game/assets/game/sprites/animations/enemies/echo_glider.png",
+        "portrait": "game/assets/game/portraits/echo_glider.png",
+        "death": "game/assets/game/sprites/death/enemies/echo_glider.png"
+      },
+      "sha256": {
+        "static": "4e9326502a73fa7c780f566c626f8789ba1dd1f9773600bcb69c8c5c6dbdc96a",
+        "animation": "ef2bc9dca622dcbc97018cbf8c00532fa78d7203c2ce896483b2c84daa2866ea",
+        "portrait": "1e99a01981c125c55948e8c711673f0b2141cc46ff6c219ed44afd7726d8e6fe",
+        "death": "143a1971e218dbb43a1e2997dbc89ed460b59bcc8992f8aecf8c5f15ebaea5e8"
+      }
+    },
+    {
+      "id": "noise_bell",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "crawler",
+      "ability": "pressure_aura",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.343967902513647,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "40-rolling-noise_bell",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.11889999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/noise_bell.png",
+        "animation": "game/assets/game/sprites/animations/enemies/noise_bell.png",
+        "portrait": "game/assets/game/portraits/noise_bell.png",
+        "death": "game/assets/game/sprites/death/enemies/noise_bell.png"
+      },
+      "sha256": {
+        "static": "7e635ad52d4ee21f311df54a9b5492dc4e3b51ac35f16e46c5dedfda626b2dc2",
+        "animation": "c390293af49cf8ecbf76d2128ff8a4ccae7e883e0652eae04606356689c92276",
+        "portrait": "c7de6c7cc098d47587791ca379dda90a27b92ec2f166d89049fa204bc0c71ac4",
+        "death": "92ef49f965ccd693d64cec29400072bfc05673b82ffd95debb8529e362bc5bda"
+      }
+    },
+    {
+      "id": "memory_runner",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "runner",
+      "ability": "sprint",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.756030193684827,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "09-enemy-noise_bell",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/memory_runner.png",
+        "animation": "game/assets/game/sprites/animations/enemies/memory_runner.png",
+        "portrait": "game/assets/game/portraits/memory_runner.png",
+        "death": "game/assets/game/sprites/death/enemies/memory_runner.png"
+      },
+      "sha256": {
+        "static": "5701a2a9553091d277bcb0f0d33e33170ce34de3c0e1614ede2463aca846b914",
+        "animation": "bc608a2084491fe2d579de5e0d234447e49d2b4a9a13ca9d2bc023244d225052",
+        "portrait": "a25c814cea6743c03adddf9994a5dee3b41671e3410c1a8f8022fcd821a5cdd7",
+        "death": "9b22bff0425f56d0130b0500adebf0cee0c6c08b365ac0e776a1caa092d37813"
+      }
+    },
+    {
+      "id": "repair_skiff",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "hover",
+      "ability": "heal",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 2.8872050518187784,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "33-flight-repair_skiff",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer; low-angle nozzle inspection, identical clock/travel/world position; actual speed command and measured joint rotations",
+      "flightCell": 512,
+      "flightControlDeltas": {
+        "trimL": [
+          -0.037529411764705874,
+          0,
+          0
+        ],
+        "trimR": [
+          -0.037529411764705874,
+          0,
+          0
+        ],
+        "liftLF": [
+          0.0648235294117647,
+          0,
+          0
+        ],
+        "liftRF": [
+          0.0648235294117647,
+          0,
+          0
+        ],
+        "liftLR": [
+          0.0648235294117647,
+          0,
+          0
+        ],
+        "liftRR": [
+          0.0648235294117647,
+          0,
+          0
+        ]
+      },
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/repair_skiff.png",
+        "animation": "game/assets/game/sprites/animations/enemies/repair_skiff.png",
+        "portrait": "game/assets/game/portraits/repair_skiff.png",
+        "death": "game/assets/game/sprites/death/enemies/repair_skiff.png"
+      },
+      "sha256": {
+        "static": "0ef3fa0f198ba37aed44d8c71b1f5a788a499567c09334d0e1493410d4cc5528",
+        "animation": "12de306233c24ee16a6e0f8bf252c1b912cb8dc07913b2cfd141cdd518094463",
+        "portrait": "da661a2a06c6840530007e400d6582d06aa28061f5792cd233ea098c7a850dcd",
+        "death": "721f29ed23e213adb275058651862076bb06e475cfa4bd3e3ba045f4bdbe483b"
+      }
+    },
+    {
+      "id": "archive_warden",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "crawler",
+      "ability": "group_shield",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.439203649469126,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "40-rolling-noise_bell",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1271
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/archive_warden.png",
+        "animation": "game/assets/game/sprites/animations/enemies/archive_warden.png",
+        "portrait": "game/assets/game/portraits/archive_warden.png",
+        "death": "game/assets/game/sprites/death/enemies/archive_warden.png"
+      },
+      "sha256": {
+        "static": "30261651872c434b92c74cfcbb78253f8a0167e2892fbf282c48600f91a73f05",
+        "animation": "e478d49a3693f5418824b0b914b5acc071129b26b29d5911705d7db606fe915b",
+        "portrait": "eb753b9b2dfac5335409e40507451db837b2d4c72624b6a18693f12204e276e2",
+        "death": "cfb5e45c7e3b0ef185285b2f097b300a27f4508b5cefa9b1c0579208ea79fe4a"
+      }
+    },
+    {
+      "id": "ordered_sentinel",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "walker",
+      "ability": "armored",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.32975819984337,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "10-enemy-archive_warden",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/ordered_sentinel.png",
+        "animation": "game/assets/game/sprites/animations/enemies/ordered_sentinel.png",
+        "portrait": "game/assets/game/portraits/ordered_sentinel.png",
+        "death": "game/assets/game/sprites/death/enemies/ordered_sentinel.png"
+      },
+      "sha256": {
+        "static": "b8f336308e6c6ff47ebd3b3bf59f2f009c5c77fde673952e106137065e7492d0",
+        "animation": "394ee9481eacdb7ebf6e74255da3260c6b36b454ae394dcc88988367f5338d36",
+        "portrait": "8d3686245b0d5f9410ee4f200fc04d7218052b26a688f19ba25140adf23f46fa",
+        "death": "772c906e3e016718f918eb52d28bd4e6ec79cc5fde1bea18d55382f9b3200630"
+      }
+    },
+    {
+      "id": "null_wing",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "normal",
+      "locomotion": "hover",
+      "ability": "jam",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 3.6227181975289833,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "34-flight-null_wing",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/null_wing.png",
+        "animation": "game/assets/game/sprites/animations/enemies/null_wing.png",
+        "portrait": "game/assets/game/portraits/null_wing.png",
+        "death": "game/assets/game/sprites/death/enemies/null_wing.png"
+      },
+      "sha256": {
+        "static": "b259c5cc6aca6465e2b84fb741b087d03f708e4bf817e65b90c46ef16584ae90",
+        "animation": "871c5872df3a5828e5ec43ae712b9d661dcbe8fdf4eb90f0be4cbf9a742f0d2c",
+        "portrait": "053d4ce1e9e277eb8c10c5e112e40c688966da27922eb05823ce11a98206b46f",
+        "death": "7f153d97b7d1401f236f9513a70964ac29ac4a01ccadbf61b7929186f477769f"
+      }
+    },
+    {
+      "id": "entropy_engine",
+      "kind": "enemies",
+      "variants": [
+        "base"
+      ],
+      "role": "elite",
+      "locomotion": "crawler",
+      "ability": "siege",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 10,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.6240178193809705,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "40-rolling-noise_bell",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.13119999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/entropy_engine.png",
+        "animation": "game/assets/game/sprites/animations/enemies/entropy_engine.png",
+        "portrait": "game/assets/game/portraits/entropy_engine.png",
+        "death": "game/assets/game/sprites/death/enemies/entropy_engine.png"
+      },
+      "sha256": {
+        "static": "e5579e639a3fbb94d0fec89323eeb7b84ef3a82a72bb613fa9ef906ac3ab6d4c",
+        "animation": "fe56d8313b19e947751854ff439885a22e4b1549721ed70a7e44872a26e2af59",
+        "portrait": "5a255d4d0460edd58eeb80024984538a132ba06ee0ce44c0af575dd58e656894",
+        "death": "0c609f291fe830bd2276ebfba9a320f13e92237ecc17f71dd61d2208aaed2939"
+      }
+    },
+    {
+      "id": "noise_hive",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "crawler",
+      "ability": "summon",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 5.978020386255595,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "41-rolling-boss-noise_hive",
+      "rollingWheels": 6,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.13119999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/noise_hive.png",
+        "animation": "game/assets/game/sprites/animations/enemies/noise_hive.png",
+        "portrait": "game/assets/game/portraits/noise_hive.png",
+        "death": "game/assets/game/sprites/death/enemies/noise_hive.png"
+      },
+      "sha256": {
+        "static": "b8dfa41070b4c427b56604d14817940ac8a9ef7e82e3452e064d331193e87502",
+        "animation": "15a31b2d3eadc600285234837aeb6eb1405c8d55e7f401647d9aa15254bd4bd8",
+        "portrait": "6ff4b2a2615aa1de5492b80a825abf9f39941988b83a302d7e5a1feadc721ae5",
+        "death": "6ba67842c702be8ee193975a23c60ac8070c72d86ef30b2bcc78062ef01fcf81"
+      }
+    },
+    {
+      "id": "mirror_censor",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "crawler",
+      "ability": "copy",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.380247120837643,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "42-rolling-boss-mirror_censor",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1558
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/mirror_censor.png",
+        "animation": "game/assets/game/sprites/animations/enemies/mirror_censor.png",
+        "portrait": "game/assets/game/portraits/mirror_censor.png",
+        "death": "game/assets/game/sprites/death/enemies/mirror_censor.png"
+      },
+      "sha256": {
+        "static": "dd842acf700c33f3f43cba91f51433fc40ed042932310048ce9307c427695c0c",
+        "animation": "4fc00b6791f8e48efba608b0a2bd6cbd7045f0ecd64218cd9556dd8681876906",
+        "portrait": "1d5bae1af483cd790f7680d89d1f14dadd56d9c7113b9292b59e4b2c624be0ab",
+        "death": "928f25665a714d21c79754c30ae42492ee70910670a73c73ce9a15e1198fc932"
+      }
+    },
+    {
+      "id": "memory_reforger",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "crawler",
+      "ability": "heal",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.1916612317369175,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "43-rolling-boss-memory_reforger",
+      "rollingWheels": 4,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.1558
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/memory_reforger.png",
+        "animation": "game/assets/game/sprites/animations/enemies/memory_reforger.png",
+        "portrait": "game/assets/game/portraits/memory_reforger.png",
+        "death": "game/assets/game/sprites/death/enemies/memory_reforger.png"
+      },
+      "sha256": {
+        "static": "eee4eaba853c12de43673835b09a5d97b77b43642133078ee3743217a29e225a",
+        "animation": "9eb492eadf33f5cf92e9ed646bcae76a19e5ebde0fca68e571c891d4dfa052eb",
+        "portrait": "ccb3bdbb0240f8a70de2d78991eb0b529aabbc53d19cc95e8fde209de5878f4e",
+        "death": "c90dfe41d19ed909720069d481b18bff477b1cd0af198624df7209f1fe9ef27f"
+      }
+    },
+    {
+      "id": "bandwidth_requisitioner",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "crawler",
+      "ability": "jam",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.556305426888889,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "44-rolling-boss-bandwidth_requisitioner",
+      "rollingWheels": 8,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.12299999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/bandwidth_requisitioner.png",
+        "animation": "game/assets/game/sprites/animations/enemies/bandwidth_requisitioner.png",
+        "portrait": "game/assets/game/portraits/bandwidth_requisitioner.png",
+        "death": "game/assets/game/sprites/death/enemies/bandwidth_requisitioner.png"
+      },
+      "sha256": {
+        "static": "476683578d2a08ac2eab6ba04bda9a9d5702f1df0bc23b59f4ce146a4a2ba7a3",
+        "animation": "47370a126b32e0e7a74054e675b0b26fc3c766d766cc0210764327056256fb14",
+        "portrait": "c694f4caf27044ce04abe50a6554bfb78500dc9d528e27239465c6e3f9d2f1ee",
+        "death": "6c7eb27e0d0a93b5f4b0489a0658a1e1707dade7e88af8abe380a03eeeb3a5e3"
+      }
+    },
+    {
+      "id": "chorus_overseer",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "hover",
+      "ability": "group_shield",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 4.0972339894646534,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "35-flight-chorus_overseer",
+      "flightSpeeds": [
+        0.15,
+        1.5
+      ],
+      "flightSource": "actual game EntityRenderer, same clock/travel, actual flight command response",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/chorus_overseer.png",
+        "animation": "game/assets/game/sprites/animations/enemies/chorus_overseer.png",
+        "portrait": "game/assets/game/portraits/chorus_overseer.png",
+        "death": "game/assets/game/sprites/death/enemies/chorus_overseer.png"
+      },
+      "sha256": {
+        "static": "5a582f179e395f447ef52fee52e4a410e74f0f3815e3baf152581a912e8fc364",
+        "animation": "094069da33c47af83a0a2f24807c610f9d7bbaee35258dd0981810d275e93cd9",
+        "portrait": "c349e31e80bad2ea11e091526de0e1f1896b91685537f71f9ace57272862c1ff",
+        "death": "9743900396600cd2125c7d129b5a16fa641c8ec7099303a4829e55d6bc57c57e"
+      }
+    },
+    {
+      "id": "zero_frequency_mind",
+      "kind": "enemies",
+      "variants": [
+        "phase1",
+        "phase2",
+        "phase3"
+      ],
+      "role": "boss",
+      "locomotion": "crawler",
+      "ability": "siege",
+      "cell": 80,
+      "directions": 8,
+      "poseRows": 10,
+      "deathRows": 4,
+      "rows": 30,
+      "baseline": 0.72,
+      "bearing": 0,
+      "elevation": 55,
+      "framing": 6.432242862133317,
+      "source": "actual game EntityRenderer",
+      "bakeBatch": "45-rolling-boss-zero_frequency_mind",
+      "rollingWheels": 8,
+      "rollingCell": 512,
+      "rollingTravel": [
+        0,
+        0.12299999999999998
+      ],
+      "rollingSource": "actual game EntityRenderer; same clock, speed and world position; actual tyre travel changes",
+      "paths": {
+        "static": "game/assets/game/sprites/enemies/zero_frequency_mind.png",
+        "animation": "game/assets/game/sprites/animations/enemies/zero_frequency_mind.png",
+        "portrait": "game/assets/game/portraits/zero_frequency_mind.png",
+        "death": "game/assets/game/sprites/death/enemies/zero_frequency_mind.png"
+      },
+      "sha256": {
+        "static": "294e5668c375dc3e3d5973d3ba2b4bff39b6b1f919c8dea8ecd4c694481babf1",
+        "animation": "c599f4a37ab3e9f33ec08c190ea157865aac3d80809977fa1286a72eff3199e0",
+        "portrait": "f4fb837e6d7496e718d47f346e60c1dde8248bc004f644dfd9ee860fc0798734",
+        "death": "b116f99406c5eda4dd21204f7beac577719aab4b65cdb349434607fc6f2648f7"
+      }
+    }
+  ]
+}

@@ -157,7 +157,7 @@ export function placement(state,unit,x,z) {
   if(cells.some(c=>cellAt(state,c.x,c.z).ramp>=0))return fail('斜坡上不能部署构造');
   const stats=unitStats(state,unit);
   if(difficultyProfile(state).revision>=5&&unit.type==='bandwidth_relay'&&state.units.some(other=>other.uid!==unit.uid&&other.type==='bandwidth_relay'&&onField(other)))return fail('战场最多部署 1 座带宽中继；请先撤回现有中继，或维修后送回仓库');
-  if(stats.role==='ranged'&&h<1)return fail('远程构造需要高度 1–4 的高台');
+  if(stats.role==='ranged'&&h<1)return fail("远程构造需要高度 1～4 的高台");
   if(stats.role==='melee'&&h!==0)return fail('近战构造需要高度 0 的地面');
   const occupied=new Set(state.units.filter(u=>u.uid!==unit.uid&&u.hp>0&&onField(u)).flatMap(u=>footprint(state,u).map(c=>`${c.x},${c.z}`)));
   if(cells.some(c=>occupied.has(`${c.x},${c.z}`)))return fail('格位被其他构造占用');
@@ -196,7 +196,7 @@ export function growthPreview(state,uid,branch,{free=false,fusion=false}={}) {
   if(u.tier===1&&!['A','B'].includes(branch))return failure('请选择 A 或 B 分支');
   if(u.tier===2&&branch&&branch!==u.branch)return failure('T3 必须沿原分支成长');
   const materials=fusion?state.units.filter(t=>t.uid!==u.uid&&t.type===u.type&&t.tier===u.tier&&(u.tier===1||t.branch===u.branch)).slice(0,2):[];
-  if(fusion&&materials.length<2)return failure('需要另外两个同类型、同阶、同分支构造');
+  if(fusion&&materials.length<2)return failure("需要另外 2 座同类型、同阶、同分支构造");
   const cost=free||fusion?0:upgradeCost(state,u),next={...u,tier:u.tier+1,branch:u.branch||branch};
   const trial={...state,units:state.units.filter(t=>!materials.includes(t)).map(t=>t.uid===u.uid?next:t)};
   let bandwidth=bandwidthState(trial),returnToStorage=false;
@@ -291,7 +291,7 @@ export function previewTerrain(state,command) {
     } else if(after.h!==cell.h) after.ramp=-1;
     if(after.h!==cell.h||after.ramp!==cell.ramp)result.cells.push({...p,before:{...cell},after,h:after.h,ramp:after.ramp});
   }
-  if(!result.cells.length)return fail('没有可改变的格子（高度范围 0–4）');
+  if(!result.cells.length)return fail("没有可改变的格子（高度范围 0～4）");
   result.cost=terrainCost(state,result.cells.length);
   const terrain={...state.terrain,cells:state.terrain.cells.slice(),revision:0};for(const c of result.cells)terrain.cells[c.z*terrain.size+c.x]=c.after;
   const trial={...state,terrain};
@@ -320,7 +320,7 @@ export function previewTerrainBatch(state,commands) {
   let cost=0,count=0,last;const changed=new Map();
   for(const command of commands){last=applyTerrain(trial,command);if(!last.ok)return {...last,cost:cost+last.cost};cost+=last.cost;count+=last.cells.length;
     for(const c of last.cells){const key=c.z*trial.terrain.size+c.x;changed.set(key,{...c,before:changed.get(key)?.before||c.before});}}
-  return {ok:true,cost,count,cells:[...changed.values()],paths:last.paths,barriers:last.barriers,trial,reason:`${commands.length} 笔 / ${count} 格次 · ${cost} 专注`};
+  return {ok:true,cost,count,cells:[...changed.values()],paths:last.paths,barriers:last.barriers,trial,reason:`${commands.length} 笔操作 · ${count} 次格子修改 · ${cost} 专注`};
 }
 export function applyTerrainBatch(state,commands) {
   const p=previewTerrainBatch(state,commands);if(!p.ok)return p;
@@ -332,7 +332,7 @@ export function undoTerrain(state) {
   if(state.phase!=='prep')return failure('只能在战前撤销');
   const last=state.terrainUndo?.at(-1);if(!last)return failure('没有可撤销的地形操作');
   const occupied=new Set(state.units.filter(u=>onField(u)&&u.hp>0).flatMap(u=>footprint(state,u).map(c=>`${c.x},${c.z}`)));
-  if(last.cells.some(c=>occupied.has(`${c.x},${c.z}`)))return failure('改造格已有构造，请先撤回再撤销');
+  if(last.cells.some(c=>occupied.has(`${c.x},${c.z}`)))return failure("改造格上已有构造，请先撤回构造，再撤销地形操作。");
   for(const c of last.cells)state.terrain.cells[c.z*state.terrain.size+c.x]={...c.before};
   state.terrainUndo.pop();state.focus+=last.cost;state.terrainEdits=last.editsBefore??Math.max(0,(state.terrainEdits||0)-last.cells.length);state.terrain.revision=(state.terrain.revision||0)+1;
   return {ok:true,reason:`已撤销，退回 ${last.cost} 专注`,cost:-last.cost};

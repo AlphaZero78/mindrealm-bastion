@@ -3,9 +3,9 @@ const scene=(id,description)=>({path:`/assets/game/nexus/${id}.png`,description}
 // Each messenger has a dedicated narrative scene. Icons remain on gift cards
 // and the route map, where the same compact symbol identifies their patron.
 export const NEXUS_ART={
- far_watcher:scene('far_watcher','望隙者在高处调焦三镜观测器，仔细观察远处来路。'),
+ far_watcher:scene('far_watcher',"望隙者在高处为三镜观测器调焦，观察远处来路。"),
  oath_keeper:scene('oath_keeper','守诺人在门边稳住护板，为脆弱的构造扣好防护束带。'),
- seed_healer:scene('seed_healer','续火医师在来访者身边修复便携火种，耐心观察火光和对方的神情。'),
+ seed_healer:scene('seed_healer',"续火医师在来访者身边修复便携火种，观察火光和对方的神情。"),
  archive_child:scene('archive_child','拾忆童子在工作台上拼接记忆碎片，尝试新的组合。'),
  crystal_cartographer:scene('crystal_cartographer','晶图师沿山脊测量，在金属测量台上记录地形。'),
  chorus_weaver:scene('chorus_weaver','和声织者连接各处的通信线路，让分散的人重新听见彼此。'),

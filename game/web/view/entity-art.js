@@ -32,44 +32,44 @@ const definitions={
 const ART_BOUNDS={
   "anchor_bulwark": {
     "bounds": {
-      "x": 13,
+      "x": 14,
       "y": 22,
-      "width": 54,
-      "height": 53
+      "width": 52,
+      "height": 52
     },
     "iconBounds": {
       "x": 16,
-      "y": 28,
+      "y": 30,
       "width": 48,
-      "height": 44
+      "height": 42
     },
-    "minVisibleSpan": 34
+    "minVisibleSpan": 32
   },
   "arc_mortar": {
     "bounds": {
-      "x": 15,
-      "y": 22,
-      "width": 50,
+      "x": 17,
+      "y": 27,
+      "width": 46,
+      "height": 45
+    },
+    "iconBounds": {
+      "x": 20,
+      "y": 27,
+      "width": 40,
+      "height": 44
+    },
+    "minVisibleSpan": 36
+  },
+  "bandwidth_relay": {
+    "bounds": {
+      "x": 18,
+      "y": 20,
+      "width": 44,
       "height": 53
     },
     "iconBounds": {
       "x": 17,
-      "y": 21,
-      "width": 46,
-      "height": 51
-    },
-    "minVisibleSpan": 37
-  },
-  "bandwidth_relay": {
-    "bounds": {
-      "x": 15,
-      "y": 21,
-      "width": 50,
-      "height": 54
-    },
-    "iconBounds": {
-      "x": 17,
-      "y": 23,
+      "y": 22,
       "width": 46,
       "height": 49
     },
@@ -77,610 +77,655 @@ const ART_BOUNDS={
   },
   "boundary_riveter": {
     "bounds": {
-      "x": 15,
-      "y": 24,
-      "width": 50,
-      "height": 51
-    },
-    "iconBounds": {
-      "x": 17,
-      "y": 26,
-      "width": 46,
-      "height": 46
-    },
-    "minVisibleSpan": 34
-  },
-  "drone_loom": {
-    "bounds": {
-      "x": 15,
-      "y": 16,
-      "width": 50,
-      "height": 59
-    },
-    "iconBounds": {
-      "x": 17,
-      "y": 27,
-      "width": 46,
-      "height": 45
-    },
-    "minVisibleSpan": 40
-  },
-  "focus_rail": {
-    "bounds": {
-      "x": 15,
-      "y": 22,
-      "width": 50,
-      "height": 53
-    },
-    "iconBounds": {
-      "x": 17,
-      "y": 20,
-      "width": 46,
-      "height": 52
-    },
-    "minVisibleSpan": 35
-  },
-  "frequency_choir": {
-    "bounds": {
-      "x": 15,
-      "y": 21,
-      "width": 50,
-      "height": 54
-    },
-    "iconBounds": {
-      "x": 17,
-      "y": 23,
-      "width": 46,
-      "height": 49
-    },
-    "minVisibleSpan": 36
-  },
-  "memory_mechanic": {
-    "bounds": {
-      "x": 12,
-      "y": 17,
-      "width": 57,
-      "height": 58
-    },
-    "iconBounds": {
-      "x": 17,
-      "y": 29,
-      "width": 46,
-      "height": 43
-    },
-    "minVisibleSpan": 35
-  },
-  "phase_blade": {
-    "bounds": {
-      "x": 8,
-      "y": 19,
-      "width": 64,
-      "height": 56
-    },
-    "iconBounds": {
-      "x": 14,
-      "y": 27,
-      "width": 52,
-      "height": 45
-    },
-    "minVisibleSpan": 35
-  },
-  "pulse_array": {
-    "bounds": {
-      "x": 15,
-      "y": 21,
-      "width": 50,
-      "height": 54
-    },
-    "iconBounds": {
-      "x": 17,
-      "y": 23,
-      "width": 46,
-      "height": 49
-    },
-    "minVisibleSpan": 34
-  },
-  "resistance_beacon": {
-    "bounds": {
-      "x": 15,
-      "y": 23,
-      "width": 50,
-      "height": 52
-    },
-    "iconBounds": {
-      "x": 17,
-      "y": 27,
-      "width": 46,
-      "height": 45
-    },
-    "minVisibleSpan": 36
-  },
-  "resonance_guard": {
-    "bounds": {
-      "x": 15,
-      "y": 24,
-      "width": 50,
-      "height": 51
-    },
-    "iconBounds": {
-      "x": 17,
-      "y": 32,
-      "width": 46,
-      "height": 40
-    },
-    "minVisibleSpan": 34
-  },
-  "archive_warden": {
-    "bounds": {
-      "x": 14,
-      "y": 16,
-      "width": 52,
-      "height": 60
-    },
-    "iconBounds": {
-      "x": 18,
-      "y": 27,
-      "width": 44,
-      "height": 43
-    },
-    "minVisibleSpan": 40
-  },
-  "armored_worm": {
-    "bounds": {
-      "x": 15,
-      "y": 30,
-      "width": 50,
-      "height": 44
-    },
-    "iconBounds": {
-      "x": 24,
-      "y": 34,
-      "width": 32,
-      "height": 39
-    },
-    "minVisibleSpan": 34
-  },
-  "bandwidth_jammer": {
-    "bounds": {
-      "x": 18,
-      "y": 27,
-      "width": 44,
-      "height": 49
-    },
-    "iconBounds": {
-      "x": 19,
-      "y": 29,
-      "width": 42,
-      "height": 41
-    },
-    "minVisibleSpan": 34
-  },
-  "bandwidth_requisitioner": {
-    "bounds": {
-      "x": 19,
-      "y": 24,
-      "width": 43,
-      "height": 52
-    },
-    "iconBounds": {
-      "x": 18,
-      "y": 29,
-      "width": 44,
-      "height": 40
-    },
-    "minVisibleSpan": 38
-  },
-  "chorus_overseer": {
-    "bounds": {
-      "x": 4,
-      "y": 7,
-      "width": 72,
-      "height": 68
-    },
-    "iconBounds": {
-      "x": 6,
-      "y": 14,
-      "width": 68,
-      "height": 52
-    },
-    "minVisibleSpan": 48
-  },
-  "detonation_shell": {
-    "bounds": {
-      "x": 18,
-      "y": 30,
-      "width": 44,
-      "height": 46
-    },
-    "iconBounds": {
-      "x": 19,
-      "y": 36,
-      "width": 42,
-      "height": 34
-    },
-    "minVisibleSpan": 34
-  },
-  "echo_glider": {
-    "bounds": {
-      "x": 8,
-      "y": 20,
-      "width": 64,
-      "height": 54
-    },
-    "iconBounds": {
-      "x": 7,
-      "y": 27,
-      "width": 67,
-      "height": 41
-    },
-    "minVisibleSpan": 50
-  },
-  "entropy_engine": {
-    "bounds": {
-      "x": 13,
-      "y": 24,
-      "width": 54,
-      "height": 52
-    },
-    "iconBounds": {
-      "x": 19,
-      "y": 31,
-      "width": 42,
-      "height": 46
-    },
-    "minVisibleSpan": 38
-  },
-  "floating_noise": {
-    "bounds": {
-      "x": 17,
-      "y": 24,
-      "width": 46,
-      "height": 44
-    },
-    "iconBounds": {
-      "x": 18,
-      "y": 31,
-      "width": 45,
-      "height": 35
-    },
-    "minVisibleSpan": 39
-  },
-  "fracture_seed": {
-    "bounds": {
-      "x": 18,
-      "y": 32,
-      "width": 44,
-      "height": 44
-    },
-    "iconBounds": {
-      "x": 19,
-      "y": 41,
-      "width": 42,
-      "height": 29
-    },
-    "minVisibleSpan": 34
-  },
-  "frequency_hunter": {
-    "bounds": {
-      "x": 14,
-      "y": 23,
-      "width": 52,
-      "height": 53
-    },
-    "iconBounds": {
-      "x": 19,
-      "y": 28,
-      "width": 42,
-      "height": 42
-    },
-    "minVisibleSpan": 38
-  },
-  "memory_medic": {
-    "bounds": {
-      "x": 14,
-      "y": 21,
-      "width": 52,
-      "height": 48
-    },
-    "iconBounds": {
-      "x": 23,
-      "y": 22,
-      "width": 34,
-      "height": 42
-    },
-    "minVisibleSpan": 33
-  },
-  "memory_reforger": {
-    "bounds": {
-      "x": 14,
-      "y": 23,
-      "width": 52,
-      "height": 53
-    },
-    "iconBounds": {
-      "x": 18,
-      "y": 29,
-      "width": 44,
-      "height": 40
-    },
-    "minVisibleSpan": 38
-  },
-  "memory_runner": {
-    "bounds": {
-      "x": 11,
-      "y": 17,
-      "width": 58,
-      "height": 52
-    },
-    "iconBounds": {
-      "x": 21,
-      "y": 18,
-      "width": 39,
-      "height": 46
-    },
-    "minVisibleSpan": 36
-  },
-  "mirror_censor": {
-    "bounds": {
-      "x": 5,
-      "y": 7,
-      "width": 70,
-      "height": 68
-    },
-    "iconBounds": {
-      "x": 6,
-      "y": 13,
-      "width": 68,
-      "height": 51
-    },
-    "minVisibleSpan": 45
-  },
-  "noise_bell": {
-    "bounds": {
-      "x": 18,
-      "y": 23,
-      "width": 44,
-      "height": 53
-    },
-    "iconBounds": {
-      "x": 19,
-      "y": 28,
-      "width": 42,
-      "height": 42
-    },
-    "minVisibleSpan": 38
-  },
-  "noise_hive": {
-    "bounds": {
-      "x": 12,
-      "y": 22,
-      "width": 56,
-      "height": 53
-    },
-    "iconBounds": {
-      "x": 15,
-      "y": 26,
-      "width": 50,
-      "height": 41
-    },
-    "minVisibleSpan": 36
-  },
-  "null_wing": {
-    "bounds": {
-      "x": 9,
-      "y": 18,
-      "width": 62,
-      "height": 55
-    },
-    "iconBounds": {
-      "x": 12,
-      "y": 24,
-      "width": 56,
-      "height": 40
-    },
-    "minVisibleSpan": 51
-  },
-  "ordered_sentinel": {
-    "bounds": {
-      "x": 3,
-      "y": 11,
-      "width": 74,
-      "height": 64
-    },
-    "iconBounds": {
-      "x": 17,
-      "y": 20,
-      "width": 46,
-      "height": 51
-    },
-    "minVisibleSpan": 42
-  },
-  "phase_teleporter": {
-    "bounds": {
-      "x": 23,
-      "y": 21,
-      "width": 34,
-      "height": 48
-    },
-    "iconBounds": {
-      "x": 22,
-      "y": 22,
-      "width": 37,
-      "height": 42
-    },
-    "minVisibleSpan": 33
-  },
-  "pressure_cantor": {
-    "bounds": {
-      "x": 25,
-      "y": 21,
-      "width": 30,
-      "height": 48
-    },
-    "iconBounds": {
-      "x": 24,
-      "y": 27,
-      "width": 32,
-      "height": 37
-    },
-    "minVisibleSpan": 33
-  },
-  "proliferation_protocol": {
-    "bounds": {
-      "x": 18,
-      "y": 24,
-      "width": 44,
-      "height": 52
-    },
-    "iconBounds": {
-      "x": 19,
-      "y": 31,
-      "width": 42,
-      "height": 39
-    },
-    "minVisibleSpan": 38
-  },
-  "remote_hunter": {
-    "bounds": {
       "x": 16,
-      "y": 27,
+      "y": 24,
       "width": 48,
       "height": 49
     },
     "iconBounds": {
       "x": 19,
-      "y": 31,
+      "y": 30,
       "width": 42,
-      "height": 39
+      "height": 41
     },
-    "minVisibleSpan": 35
+    "minVisibleSpan": 32
   },
-  "repair_skiff": {
+  "drone_loom": {
     "bounds": {
-      "x": 12,
-      "y": 22,
-      "width": 56,
-      "height": 54
+      "x": 17,
+      "y": 17,
+      "width": 46,
+      "height": 56
     },
     "iconBounds": {
-      "x": 19,
-      "y": 32,
-      "width": 42,
-      "height": 36
-    },
-    "minVisibleSpan": 38
-  },
-  "replication_node": {
-    "bounds": {
       "x": 18,
-      "y": 31,
+      "y": 25,
       "width": 44,
-      "height": 45
+      "height": 46
     },
-    "iconBounds": {
-      "x": 19,
-      "y": 34,
-      "width": 42,
-      "height": 36
-    },
-    "minVisibleSpan": 34
+    "minVisibleSpan": 40
   },
-  "resistance_corruptor": {
+  "focus_rail": {
     "bounds": {
-      "x": 12,
-      "y": 18,
-      "width": 57,
+      "x": 14,
+      "y": 20,
+      "width": 52,
       "height": 53
     },
     "iconBounds": {
-      "x": 13,
-      "y": 30,
-      "width": 54,
-      "height": 32
-    },
-    "minVisibleSpan": 42
-  },
-  "scrap_bulwark": {
-    "bounds": {
-      "x": 13,
+      "x": 22,
       "y": 24,
-      "width": 54,
-      "height": 52
+      "width": 36,
+      "height": 47
     },
-    "iconBounds": {
-      "x": 19,
-      "y": 42,
-      "width": 42,
-      "height": 29
-    },
-    "minVisibleSpan": 34
+    "minVisibleSpan": 35
   },
-  "shield_conductor": {
+  "frequency_choir": {
     "bounds": {
-      "x": 18,
-      "y": 26,
-      "width": 44,
+      "x": 19,
+      "y": 22,
+      "width": 42,
       "height": 50
     },
     "iconBounds": {
       "x": 19,
-      "y": 34,
+      "y": 27,
       "width": 42,
-      "height": 36
+      "height": 44
     },
     "minVisibleSpan": 34
   },
-  "shield_echo": {
+  "memory_mechanic": {
     "bounds": {
-      "x": 17,
+      "x": 12,
       "y": 21,
-      "width": 46,
-      "height": 49
+      "width": 56,
+      "height": 51
     },
     "iconBounds": {
-      "x": 24,
-      "y": 27,
-      "width": 32,
-      "height": 38
+      "x": 21,
+      "y": 29,
+      "width": 38,
+      "height": 42
     },
-    "minVisibleSpan": 32
+    "minVisibleSpan": 34
   },
-  "siege_ram": {
+  "phase_blade": {
     "bounds": {
-      "x": 15,
-      "y": 30,
-      "width": 50,
-      "height": 46
+      "x": 11,
+      "y": 20,
+      "width": 58,
+      "height": 52
     },
     "iconBounds": {
-      "x": 19,
-      "y": 38,
-      "width": 42,
-      "height": 37
+      "x": 15,
+      "y": 31,
+      "width": 50,
+      "height": 40
     },
     "minVisibleSpan": 36
   },
-  "signal_summoner": {
+  "pulse_array": {
+    "bounds": {
+      "x": 17,
+      "y": 25,
+      "width": 46,
+      "height": 47
+    },
+    "iconBounds": {
+      "x": 21,
+      "y": 26,
+      "width": 38,
+      "height": 45
+    },
+    "minVisibleSpan": 33
+  },
+  "resistance_beacon": {
     "bounds": {
       "x": 18,
-      "y": 27,
+      "y": 22,
       "width": 44,
-      "height": 49
+      "height": 51
+    },
+    "iconBounds": {
+      "x": 21,
+      "y": 30,
+      "width": 38,
+      "height": 41
+    },
+    "minVisibleSpan": 36
+  },
+  "resonance_guard": {
+    "bounds": {
+      "x": 19,
+      "y": 25,
+      "width": 42,
+      "height": 47
+    },
+    "iconBounds": {
+      "x": 18,
+      "y": 34,
+      "width": 44,
+      "height": 37
+    },
+    "minVisibleSpan": 32
+  },
+  "archive_warden": {
+    "bounds": {
+      "x": 19,
+      "y": 27,
+      "width": 42,
+      "height": 46
+    },
+    "iconBounds": {
+      "x": 23,
+      "y": 30,
+      "width": 34,
+      "height": 40
+    },
+    "minVisibleSpan": 36
+  },
+  "armored_worm": {
+    "bounds": {
+      "x": 16,
+      "y": 35,
+      "width": 48,
+      "height": 40
+    },
+    "iconBounds": {
+      "x": 28,
+      "y": 38,
+      "width": 24,
+      "height": 37
+    },
+    "minVisibleSpan": 31
+  },
+  "bandwidth_jammer": {
+    "bounds": {
+      "x": 17,
+      "y": 22,
+      "width": 46,
+      "height": 51
+    },
+    "iconBounds": {
+      "x": 22,
+      "y": 31,
+      "width": 36,
+      "height": 41
+    },
+    "minVisibleSpan": 37
+  },
+  "bandwidth_requisitioner": {
+    "bounds": {
+      "x": 18,
+      "y": 32,
+      "width": 44,
+      "height": 42
     },
     "iconBounds": {
       "x": 19,
-      "y": 34,
+      "y": 31,
       "width": 42,
+      "height": 41
+    },
+    "minVisibleSpan": 33
+  },
+  "chorus_overseer": {
+    "bounds": {
+      "x": 13,
+      "y": 11,
+      "width": 54,
+      "height": 60
+    },
+    "iconBounds": {
+      "x": 13,
+      "y": 11,
+      "width": 54,
+      "height": 60
+    },
+    "minVisibleSpan": 41
+  },
+  "detonation_shell": {
+    "bounds": {
+      "x": 19,
+      "y": 35,
+      "width": 42,
+      "height": 38
+    },
+    "iconBounds": {
+      "x": 23,
+      "y": 33,
+      "width": 34,
+      "height": 36
+    },
+    "minVisibleSpan": 32
+  },
+  "echo_glider": {
+    "bounds": {
+      "x": 13,
+      "y": 25,
+      "width": 54,
+      "height": 47
+    },
+    "iconBounds": {
+      "x": 12,
+      "y": 28,
+      "width": 56,
+      "height": 45
+    },
+    "minVisibleSpan": 45
+  },
+  "entropy_engine": {
+    "bounds": {
+      "x": 19,
+      "y": 29,
+      "width": 42,
+      "height": 44
+    },
+    "iconBounds": {
+      "x": 23,
+      "y": 31,
+      "width": 36,
+      "height": 39
+    },
+    "minVisibleSpan": 35
+  },
+  "floating_noise": {
+    "bounds": {
+      "x": 16,
+      "y": 36,
+      "width": 47,
+      "height": 38
+    },
+    "iconBounds": {
+      "x": 26,
+      "y": 35,
+      "width": 28,
+      "height": 36
+    },
+    "minVisibleSpan": 24
+  },
+  "fracture_seed": {
+    "bounds": {
+      "x": 17,
+      "y": 31,
+      "width": 46,
+      "height": 44
+    },
+    "iconBounds": {
+      "x": 21,
+      "y": 34,
+      "width": 38,
       "height": 36
     },
     "minVisibleSpan": 34
   },
-  "spike_runner": {
+  "frequency_hunter": {
+    "bounds": {
+      "x": 19,
+      "y": 31,
+      "width": 42,
+      "height": 42
+    },
+    "iconBounds": {
+      "x": 24,
+      "y": 31,
+      "width": 32,
+      "height": 38
+    },
+    "minVisibleSpan": 33
+  },
+  "memory_medic": {
+    "bounds": {
+      "x": 16,
+      "y": 24,
+      "width": 48,
+      "height": 51
+    },
+    "iconBounds": {
+      "x": 24,
+      "y": 31,
+      "width": 32,
+      "height": 38
+    },
+    "minVisibleSpan": 33
+  },
+  "memory_reforger": {
+    "bounds": {
+      "x": 17,
+      "y": 27,
+      "width": 46,
+      "height": 46
+    },
+    "iconBounds": {
+      "x": 17,
+      "y": 26,
+      "width": 46,
+      "height": 45
+    },
+    "minVisibleSpan": 34
+  },
+  "memory_runner": {
     "bounds": {
       "x": 18,
-      "y": 26,
+      "y": 29,
       "width": 44,
+      "height": 46
+    },
+    "iconBounds": {
+      "x": 26,
+      "y": 32,
+      "width": 28,
+      "height": 39
+    },
+    "minVisibleSpan": 33
+  },
+  "mirror_censor": {
+    "bounds": {
+      "x": 19,
+      "y": 25,
+      "width": 42,
+      "height": 48
+    },
+    "iconBounds": {
+      "x": 22,
+      "y": 27,
+      "width": 36,
       "height": 43
+    },
+    "minVisibleSpan": 32
+  },
+  "noise_bell": {
+    "bounds": {
+      "x": 19,
+      "y": 29,
+      "width": 42,
+      "height": 44
+    },
+    "iconBounds": {
+      "x": 22,
+      "y": 30,
+      "width": 35,
+      "height": 41
+    },
+    "minVisibleSpan": 37
+  },
+  "noise_hive": {
+    "bounds": {
+      "x": 19,
+      "y": 26,
+      "width": 42,
+      "height": 48
+    },
+    "iconBounds": {
+      "x": 20,
+      "y": 26,
+      "width": 40,
+      "height": 44
+    },
+    "minVisibleSpan": 35
+  },
+  "null_wing": {
+    "bounds": {
+      "x": 7,
+      "y": 20,
+      "width": 66,
+      "height": 55
+    },
+    "iconBounds": {
+      "x": 21,
+      "y": 21,
+      "width": 38,
+      "height": 53
+    },
+    "minVisibleSpan": 45
+  },
+  "ordered_sentinel": {
+    "bounds": {
+      "x": 16,
+      "y": 25,
+      "width": 48,
+      "height": 50
+    },
+    "iconBounds": {
+      "x": 22,
+      "y": 30,
+      "width": 36,
+      "height": 39
+    },
+    "minVisibleSpan": 35
+  },
+  "phase_teleporter": {
+    "bounds": {
+      "x": 18,
+      "y": 27,
+      "width": 44,
+      "height": 48
+    },
+    "iconBounds": {
+      "x": 23,
+      "y": 31,
+      "width": 34,
+      "height": 39
+    },
+    "minVisibleSpan": 34
+  },
+  "pressure_cantor": {
+    "bounds": {
+      "x": 11,
+      "y": 7,
+      "width": 58,
+      "height": 68
+    },
+    "iconBounds": {
+      "x": 13,
+      "y": 16,
+      "width": 54,
+      "height": 51
+    },
+    "minVisibleSpan": 50
+  },
+  "proliferation_protocol": {
+    "bounds": {
+      "x": 19,
+      "y": 28,
+      "width": 42,
+      "height": 46
+    },
+    "iconBounds": {
+      "x": 24,
+      "y": 26,
+      "width": 32,
+      "height": 45
+    },
+    "minVisibleSpan": 34
+  },
+  "remote_hunter": {
+    "bounds": {
+      "x": 14,
+      "y": 25,
+      "width": 52,
+      "height": 48
+    },
+    "iconBounds": {
+      "x": 25,
+      "y": 35,
+      "width": 30,
+      "height": 37
+    },
+    "minVisibleSpan": 32
+  },
+  "repair_skiff": {
+    "bounds": {
+      "x": 5,
+      "y": 13,
+      "width": 70,
+      "height": 62
+    },
+    "iconBounds": {
+      "x": 13,
+      "y": 17,
+      "width": 54,
+      "height": 53
+    },
+    "minVisibleSpan": 50
+  },
+  "replication_node": {
+    "bounds": {
+      "x": 19,
+      "y": 32,
+      "width": 42,
+      "height": 41
+    },
+    "iconBounds": {
+      "x": 23,
+      "y": 32,
+      "width": 34,
+      "height": 39
+    },
+    "minVisibleSpan": 32
+  },
+  "resistance_corruptor": {
+    "bounds": {
+      "x": 8,
+      "y": 12,
+      "width": 65,
+      "height": 62
+    },
+    "iconBounds": {
+      "x": 16,
+      "y": 15,
+      "width": 48,
+      "height": 56
+    },
+    "minVisibleSpan": 48
+  },
+  "scrap_bulwark": {
+    "bounds": {
+      "x": 18,
+      "y": 31,
+      "width": 44,
+      "height": 42
+    },
+    "iconBounds": {
+      "x": 23,
+      "y": 33,
+      "width": 34,
+      "height": 37
+    },
+    "minVisibleSpan": 33
+  },
+  "shield_conductor": {
+    "bounds": {
+      "x": 18,
+      "y": 20,
+      "width": 44,
+      "height": 55
+    },
+    "iconBounds": {
+      "x": 21,
+      "y": 28,
+      "width": 38,
+      "height": 42
+    },
+    "minVisibleSpan": 36
+  },
+  "shield_echo": {
+    "bounds": {
+      "x": 12,
+      "y": 14,
+      "width": 56,
+      "height": 61
+    },
+    "iconBounds": {
+      "x": 20,
+      "y": 17,
+      "width": 40,
+      "height": 49
+    },
+    "minVisibleSpan": 43
+  },
+  "siege_ram": {
+    "bounds": {
+      "x": 19,
+      "y": 34,
+      "width": 42,
+      "height": 40
+    },
+    "iconBounds": {
+      "x": 25,
+      "y": 36,
+      "width": 30,
+      "height": 34
+    },
+    "minVisibleSpan": 30
+  },
+  "signal_summoner": {
+    "bounds": {
+      "x": 19,
+      "y": 22,
+      "width": 42,
+      "height": 51
+    },
+    "iconBounds": {
+      "x": 23,
+      "y": 21,
+      "width": 34,
+      "height": 49
+    },
+    "minVisibleSpan": 35
+  },
+  "spike_runner": {
+    "bounds": {
+      "x": 10,
+      "y": 26,
+      "width": 60,
+      "height": 48
+    },
+    "iconBounds": {
+      "x": 24,
+      "y": 32,
+      "width": 32,
+      "height": 37
+    },
+    "minVisibleSpan": 31
+  },
+  "spirit_taxer": {
+    "bounds": {
+      "x": 12,
+      "y": 17,
+      "width": 56,
+      "height": 57
+    },
+    "iconBounds": {
+      "x": 12,
+      "y": 23,
+      "width": 56,
+      "height": 47
+    },
+    "minVisibleSpan": 51
+  },
+  "static_drifter": {
+    "bounds": {
+      "x": 11,
+      "y": 5,
+      "width": 58,
+      "height": 65
+    },
+    "iconBounds": {
+      "x": 21,
+      "y": 26,
+      "width": 40,
+      "height": 40
+    },
+    "minVisibleSpan": 36
+  },
+  "tempo_amplifier": {
+    "bounds": {
+      "x": 19,
+      "y": 31,
+      "width": 42,
+      "height": 42
     },
     "iconBounds": {
       "x": 21,
@@ -690,84 +735,39 @@ const ART_BOUNDS={
     },
     "minVisibleSpan": 34
   },
-  "spirit_taxer": {
-    "bounds": {
-      "x": 11,
-      "y": 16,
-      "width": 58,
-      "height": 57
-    },
-    "iconBounds": {
-      "x": 12,
-      "y": 27,
-      "width": 56,
-      "height": 37
-    },
-    "minVisibleSpan": 46
-  },
-  "static_drifter": {
-    "bounds": {
-      "x": 25,
-      "y": 28,
-      "width": 30,
-      "height": 41
-    },
-    "iconBounds": {
-      "x": 25,
-      "y": 27,
-      "width": 30,
-      "height": 37
-    },
-    "minVisibleSpan": 32
-  },
-  "tempo_amplifier": {
-    "bounds": {
-      "x": 18,
-      "y": 34,
-      "width": 44,
-      "height": 42
-    },
-    "iconBounds": {
-      "x": 19,
-      "y": 39,
-      "width": 42,
-      "height": 31
-    },
-    "minVisibleSpan": 34
-  },
   "terrain_dismantler": {
     "bounds": {
-      "x": 11,
-      "y": 24,
-      "width": 58,
-      "height": 52
+      "x": 15,
+      "y": 26,
+      "width": 50,
+      "height": 49
     },
     "iconBounds": {
-      "x": 19,
-      "y": 32,
-      "width": 42,
-      "height": 43
+      "x": 23,
+      "y": 35,
+      "width": 34,
+      "height": 38
     },
-    "minVisibleSpan": 37
+    "minVisibleSpan": 31
   },
   "zero_frequency_mind": {
     "bounds": {
-      "x": 15,
-      "y": 21,
-      "width": 50,
-      "height": 55
+      "x": 19,
+      "y": 31,
+      "width": 42,
+      "height": 43
     },
     "iconBounds": {
-      "x": 18,
-      "y": 27,
-      "width": 44,
-      "height": 42
+      "x": 19,
+      "y": 31,
+      "width": 42,
+      "height": 40
     },
-    "minVisibleSpan": 38
+    "minVisibleSpan": 32
   }
 };
 // END GENERATED ENTITY BOUNDS
 export const ENTITY_ART=Object.freeze(Object.fromEntries(Object.entries(definitions).map(([id,[kind,role,locomotion]])=>{
   const variants=Object.freeze(kind==='towers'?[...TOWER_VARIANTS]:role==='boss'?[...BOSS_VARIANTS]:['base']);
-  return [id,Object.freeze({cell:80,directions:8,poseRows:10,variants,rows:variants.length*10,iconRows:variants.length,bearing:0,baseline:.72,elevation:55,role,locomotion,kind,minVisibleSpan:ART_BOUNDS[id].minVisibleSpan,bounds:Object.freeze(ART_BOUNDS[id].bounds),iconBounds:Object.freeze(ART_BOUNDS[id].iconBounds),staticPath:`/assets/game/sprites/${kind}/${id}.png`,animationPath:`/assets/game/sprites/animations/${kind}/${id}.png`})];
+  return [id,Object.freeze({cell:80,directions:8,poseRows:10,variants,rows:variants.length*10,iconRows:variants.length,bearing:0,baseline:.72,elevation:55,role,locomotion,kind,minVisibleSpan:ART_BOUNDS[id].minVisibleSpan,bounds:Object.freeze(ART_BOUNDS[id].bounds),iconBounds:Object.freeze(ART_BOUNDS[id].iconBounds),staticPath:`/assets/game/sprites/${kind}/${id}.png`,animationPath:`/assets/game/sprites/animations/${kind}/${id}.png`,deathRows:kind==='enemies'?4:0,deathPath:kind==='enemies'?`/assets/game/sprites/death/enemies/${id}.png`:null})];
 })));

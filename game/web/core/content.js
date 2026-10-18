@@ -68,14 +68,14 @@ const data = {
       "branches": {
         "A": {
           "name": "反震锚",
-          "description": "每次承伤后若仍存活，立即以65%攻击力反击攻击者；反震伤害忽略护甲。",
+          "description": "每次承伤后若仍存活，立即以 65% 攻击力反击攻击者；反击伤害忽略护甲。",
           "hp_mult": 1.2,
           "attack_mult": 1.25,
           "effect": "counter"
         },
         "B": {
           "name": "深层基座",
-          "description": "获得额外护甲；3格内其他构造承伤降低18%。",
+          "description": "获得额外护甲；3 格内其他构造承伤降低 18%。",
           "hp_mult": 1.45,
           "attack_mult": 0.9,
           "effect": "guard"
@@ -87,7 +87,7 @@ const data = {
       "id": "phase_blade",
       "name": "相位刃",
       "role": "melee",
-      "description": "快速攻击地面目标，每次攻击以伤害的10%恢复自身耐久。适合持续接敌，低护甲意味着需要支援保护。",
+      "description": "快速攻击地面目标，每次攻击以伤害的 10% 恢复自身耐久。适合持续接敌，低护甲意味着需要支援保护。",
       "hp": 170,
       "attack": 34,
       "rate": 0.62,
@@ -105,14 +105,14 @@ const data = {
       "branches": {
         "A": {
           "name": "吸能刃",
-          "description": "吸血由10%提高到22%攻击伤害。",
+          "description": "吸血比例从 10% 提高至 22%，按攻击造成的伤害计算。",
           "hp_mult": 1.15,
           "attack_mult": 1.18,
           "effect": "lifesteal_plus"
         },
         "B": {
           "name": "解甲刃",
-          "description": "每次命中永久削去目标2点护甲，最低0。",
+          "description": "每次命中永久削去目标 2 点护甲，最低 0。",
           "hp_mult": 1,
           "attack_mult": 1.35,
           "effect": "armor_break"
@@ -124,7 +124,7 @@ const data = {
       "id": "boundary_riveter",
       "name": "边界铆钉",
       "role": "melee",
-      "description": "受到攻城敌人的伤害降低45%。只能守住地面，适合挡在拆障者前方，保护身后的高台和射手。",
+      "description": "受到攻城敌人的伤害降低 45%。只能守住地面，适合挡在拆障者前方，保护身后的高台和射手。",
       "hp": 315,
       "attack": 14,
       "rate": 1.35,
@@ -142,14 +142,14 @@ const data = {
       "branches": {
         "A": {
           "name": "自修铆钉",
-          "description": "连续4秒未受攻击后，每秒恢复2.5%最大耐久。",
+          "description": "连续 4 秒未受攻击后，每秒恢复 2.5% 最大耐久。",
           "hp_mult": 1.3,
           "attack_mult": 1,
           "effect": "self_repair"
         },
         "B": {
           "name": "束缚铆钉",
-          "description": "每次攻击将目标定身0.65秒。",
+          "description": "每次攻击将目标定身 0.65 秒。",
           "hp_mult": 1.12,
           "attack_mult": 1.15,
           "effect": "root"
@@ -161,7 +161,7 @@ const data = {
       "id": "resonance_guard",
       "name": "共振守卫",
       "role": "melee",
-      "description": "使3格内其他构造受到的攻击伤害降低18%；同类护盾不重复叠加。需要靠近前线，不能保护自己。",
+      "description": "使 3 格内其他构造受到的攻击伤害降低 18%；同类护盾不叠加。需要靠近前线，不能保护自己。",
       "hp": 225,
       "attack": 20,
       "rate": 1,
@@ -179,14 +179,14 @@ const data = {
       "branches": {
         "A": {
           "name": "群体共振",
-          "description": "盟友减伤覆盖从3格扩大到6格，仍降低18%承伤。",
+          "description": "盟友减伤覆盖从 3 格扩大到 6 格，仍降低 18% 承伤。",
           "hp_mult": 1.18,
           "attack_mult": 1,
           "effect": "wide_shield"
         },
         "B": {
           "name": "压力导流",
-          "description": "射程内敌人死亡时，原始精神压力降低30%。",
+          "description": "射程内敌人死亡时，原始精神压力降低 30%。",
           "hp_mult": 1.1,
           "attack_mult": 1.2,
           "effect": "pressure_sink"
@@ -216,14 +216,14 @@ const data = {
       "branches": {
         "A": {
           "name": "连锁针列",
-          "description": "命中后向目标3.5格内另一名敌人连锁一次，造成60%伤害并单独结算护甲。",
+          "description": "命中后向目标 3.5 格内另一名敌人连锁一次，造成 60% 伤害并单独结算护甲。",
           "hp_mult": 1,
           "attack_mult": 1.15,
           "effect": "chain"
         },
         "B": {
           "name": "防空针列",
-          "description": "对空伤害额外提高80%，对地仍可攻击。",
+          "description": "对空伤害额外提高 80%，对地仍可攻击。",
           "hp_mult": 1.05,
           "attack_mult": 1.25,
           "effect": "anti_air"
@@ -253,14 +253,14 @@ const data = {
       "branches": {
         "A": {
           "name": "穿透轨",
-          "description": "忽略60%护甲，贯穿弹道后方敌人造成65%伤害；每名目标独立检查高度、视线与护甲。",
+          "description": "忽略 60% 护甲，贯穿弹道后方的敌人并造成 65% 伤害；每名目标独立检查高度、视线与护甲。",
           "hp_mult": 1,
           "attack_mult": 1.2,
           "effect": "pierce"
         },
         "B": {
           "name": "处决轨",
-          "description": "目标生命低于30%时伤害额外提高65%。",
+          "description": "目标生命低于 30% 时伤害额外提高 65%。",
           "hp_mult": 1.05,
           "attack_mult": 1.35,
           "effect": "execute"
@@ -272,7 +272,7 @@ const data = {
       "id": "arc_mortar",
       "name": "弧光迫击炮",
       "role": "ranged",
-      "description": "间接攻击能越过地形；只攻击地面，爆炸半径2.3格，次级目标承受65%伤害，并减速1.2秒。适合聚集的地面敌人。",
+      "description": "间接攻击可越过地形，只攻击地面目标。爆炸半径 2.3 格，次级目标承受 65% 伤害；主目标与次级目标均减速 1.2 秒。适合应对聚集的地面敌人。",
       "hp": 120,
       "attack": 54,
       "rate": 2.2,
@@ -290,14 +290,14 @@ const data = {
       "branches": {
         "A": {
           "name": "扩散弹",
-          "description": "爆炸半径从2.3扩大到3.4格，减速持续从1.2提高到2.5秒。",
+          "description": "爆炸半径从 2.3 扩大到 3.4 格，减速持续从 1.2 提高到 2.5 秒。",
           "hp_mult": 1,
           "attack_mult": 1.12,
           "effect": "large_splash"
         },
         "B": {
           "name": "腐蚀弹",
-          "description": "每次爆炸命中使目标永久失去2点护甲，最低0。",
+          "description": "每次爆炸命中使目标永久失去 2 点护甲，最低 0。",
           "hp_mult": 1.05,
           "attack_mult": 1.25,
           "effect": "corrosion"
@@ -309,7 +309,7 @@ const data = {
       "id": "drone_loom",
       "name": "无人机织机",
       "role": "ranged",
-      "description": "无人机间接攻击地面与空中目标，能越过地形遮挡。射程较短于轨炮，适合有遮挡的高台和多入口防守。",
+      "description": "无人机间接攻击地面与空中目标，能越过地形遮挡。射程短于轨炮，适合有遮挡的高台和多入口防守。",
       "hp": 135,
       "attack": 26,
       "rate": 0.95,
@@ -327,14 +327,14 @@ const data = {
       "branches": {
         "A": {
           "name": "蜂群织机",
-          "description": "每轮派出第二架无人机，攻击另一名射程内目标并造成60%伤害。",
+          "description": "每轮派出第二架无人机，攻击射程内另一名目标并造成 60% 伤害。",
           "hp_mult": 1,
           "attack_mult": 1.1,
           "effect": "extra_drone"
         },
         "B": {
           "name": "标记织机",
-          "description": "命中后标记目标4秒，使其受到的后续伤害提高15%。",
+          "description": "命中后标记目标 4 秒，使其受到的后续伤害提高 15%。",
           "hp_mult": 1.1,
           "attack_mult": 1.15,
           "effect": "mark"
@@ -346,7 +346,7 @@ const data = {
       "id": "bandwidth_relay",
       "name": "带宽中继",
       "role": "support",
-      "description": "启用时提供额外带宽（T1为5）；自身占用带宽。损坏或过载禁用后立刻停止增益，因此应优先部署并保护它。",
+      "description": "启用时提供额外带宽（T1 为 5）；自身占用带宽。损坏或过载禁用后立刻停止增益，因此应优先部署并保护它。",
       "hp": 150,
       "attack": 0,
       "rate": 1,
@@ -372,7 +372,7 @@ const data = {
         },
         "B": {
           "name": "抗扰中继",
-          "description": "启用时吸收3点临时带宽干扰；同分支中继不叠加该缓冲。",
+          "description": "启用时吸收 3 点临时带宽干扰；同分支中继不叠加该缓冲。",
           "hp_mult": 1.35,
           "attack_mult": 1,
           "effect": "jam_resist"
@@ -402,14 +402,14 @@ const data = {
       "branches": {
         "A": {
           "name": "紧急维修",
-          "description": "对耐久低于35%的目标，每次维修量提高60%。",
+          "description": "对耐久低于 35% 的目标，每次维修量提高 60%。",
           "hp_mult": 1.1,
           "attack_mult": 1.4,
           "effect": "critical_repair"
         },
         "B": {
           "name": "装甲覆写",
-          "description": "被维修者获得3点护甲，持续3秒。",
+          "description": "维修目标获得 3 点护甲，持续 3 秒。",
           "hp_mult": 1.2,
           "attack_mult": 1.15,
           "effect": "armor_repair"
@@ -421,7 +421,7 @@ const data = {
       "id": "frequency_choir",
       "name": "频率合唱器",
       "role": "support",
-      "description": "提高范围内友军的攻击频率，并以频率加成的一半提高伤害（T1为12%频率、6%伤害）。不攻击，适合密集的支援网络。",
+      "description": "提高范围内友军的攻击频率，并以频率加成的一半提高伤害（T1 为 12% 频率、6% 伤害）。不攻击，适合密集的支援网络。",
       "hp": 125,
       "attack": 0,
       "rate": 1,
@@ -440,14 +440,14 @@ const data = {
       "branches": {
         "A": {
           "name": "激励合唱",
-          "description": "友军攻击频率额外提高12%，伤害额外提高6%；与本体阶级增益相加。",
+          "description": "友军攻击频率额外提高 12%，伤害额外提高 6%；与本体阶级增益相加。",
           "hp_mult": 1.1,
           "attack_mult": 1,
           "effect": "strong_haste"
         },
         "B": {
           "name": "迟滞合唱",
-          "description": "持续使范围内敌人移动速度降低40%，离开范围后短暂消退。保留本体的友军强化。",
+          "description": "持续使范围内敌人移动速度降低 40%，离开范围后短暂消退。保留本体的友军强化。",
           "hp_mult": 1.15,
           "attack_mult": 1,
           "effect": "slow_aura"
@@ -459,7 +459,7 @@ const data = {
       "id": "resistance_beacon",
       "name": "抗性信标",
       "role": "support",
-      "description": "启用时提高本局抗性（T1为3），直接吸收抵达火种的死亡压力。自身不攻击，损坏或禁用后停止提供抗性。",
+      "description": "启用时提高本局抗性（T1 为 3），直接吸收抵达火种的死亡压力。自身不攻击，损坏或禁用后停止提供抗性。",
       "hp": 165,
       "attack": 0,
       "rate": 1,
@@ -485,7 +485,7 @@ const data = {
         },
         "B": {
           "name": "压力滤波",
-          "description": "射程内敌人死亡时原始精神压力降低30%，并保留本体抗性。适合覆盖预计击杀区。",
+          "description": "射程内敌人死亡时原始精神压力降低 30%，并保留本体抗性。适合覆盖预计击杀区。",
           "hp_mult": 1.15,
           "attack_mult": 1,
           "effect": "pressure_filter"
@@ -946,7 +946,7 @@ const data = {
       "core_damage": 8,
       "air": false,
       "ability": "siege",
-      "hint": "会改变战场规则重点并亲自拆解屏障。",
+      "hint": "冲击附近构造，攻击并拆解地形屏障。",
       "kind": "boss"
     }
   ],
@@ -955,7 +955,7 @@ const data = {
       "id": "elevated_lens",
       "name": "高台透镜",
       "theme": "高地远程",
-      "description": "高度2以上远程伤害提高15%。",
+      "description": "高度 2 以上远程伤害提高 15%。",
       "effect": "highground_damage",
       "value": 0.15
     },
@@ -963,7 +963,7 @@ const data = {
       "id": "clear_horizon",
       "name": "澄明地平线",
       "theme": "高地远程",
-      "description": "直接射击射程提高8%。",
+      "description": "直接射击射程提高 8%。",
       "effect": "direct_range",
       "value": 0.08
     },
@@ -971,7 +971,7 @@ const data = {
       "id": "skyhook_rounds",
       "name": "天钩弹芯",
       "theme": "高地远程",
-      "description": "对飞行目标伤害提高25%。",
+      "description": "对飞行目标伤害提高 25%。",
       "effect": "anti_air_damage",
       "value": 0.25
     },
@@ -979,7 +979,7 @@ const data = {
       "id": "calibrated_scope",
       "name": "校准瞄具",
       "theme": "高地远程",
-      "description": "远程攻击忽略2点护甲。",
+      "description": "远程攻击忽略 2 点护甲。",
       "effect": "ranged_pierce",
       "value": 2
     },
@@ -987,7 +987,7 @@ const data = {
       "id": "overlook_protocol",
       "name": "俯瞰协议",
       "theme": "高地远程",
-      "description": "高度3或4的单位攻击间隔降低12%。",
+      "description": "高度 3 或 4 的单位攻击间隔降低 12%。",
       "effect": "height_rate",
       "value": 0.12
     },
@@ -995,7 +995,7 @@ const data = {
       "id": "impact_lattice",
       "name": "冲击晶格",
       "theme": "近战承伤",
-      "description": "近战最大耐久提高18%。",
+      "description": "近战最大耐久提高 18%。",
       "effect": "melee_hp",
       "value": 0.18
     },
@@ -1003,7 +1003,7 @@ const data = {
       "id": "return_current",
       "name": "回流电流",
       "theme": "近战承伤",
-      "description": "启用中的近战承伤时，将实际所受伤害的8%反射给攻击者；反震伤害忽略护甲。",
+      "description": "启用中的近战构造承伤时，将实际所受伤害的 8% 反射给攻击者；反震伤害忽略护甲。",
       "effect": "melee_reflect",
       "value": 0.08
     },
@@ -1011,7 +1011,7 @@ const data = {
       "id": "cheap_relocation",
       "name": "柔性基座",
       "theme": "近战承伤",
-      "description": "搬迁和撤回费用降低40%。",
+      "description": "搬迁和撤回费用降低 40%。",
       "effect": "relocate_discount",
       "value": 0.4
     },
@@ -1019,7 +1019,7 @@ const data = {
       "id": "repair_reserve",
       "name": "维修储备",
       "theme": "近战承伤",
-      "description": "维修费用降低25%。",
+      "description": "维修费用降低 25%。",
       "effect": "repair_discount",
       "value": 0.25
     },
@@ -1027,7 +1027,7 @@ const data = {
       "id": "lasting_anchor",
       "name": "恒定锚",
       "theme": "近战承伤",
-      "description": "低于35%耐久时护甲提高5。",
+      "description": "耐久低于 35% 时护甲提高 5 点。",
       "effect": "low_hp_armor",
       "value": 5
     },
@@ -1035,7 +1035,7 @@ const data = {
       "id": "mesh_network",
       "name": "网状心智",
       "theme": "支援网络",
-      "description": "支援范围提高15%。",
+      "description": "支援范围提高 15%。",
       "effect": "support_range",
       "value": 0.15
     },
@@ -1043,7 +1043,7 @@ const data = {
       "id": "shared_clock",
       "name": "共享时钟",
       "theme": "支援网络",
-      "description": "受支援单位攻击间隔降低8%。",
+      "description": "受支援单位攻击间隔降低 8%。",
       "effect": "support_rate",
       "value": 0.08
     },
@@ -1051,7 +1051,7 @@ const data = {
       "id": "maintenance_loop",
       "name": "维护回路",
       "theme": "支援网络",
-      "description": "每场战斗结束时，缺失耐久最多的存活构造恢复8%最大耐久；保持原位置。",
+      "description": "每场战斗结束时，缺失耐久最多的存活构造恢复 8% 最大耐久；保持原位置。",
       "effect": "post_repair",
       "value": 0.08
     },
@@ -1059,7 +1059,7 @@ const data = {
       "id": "redundant_relay",
       "name": "冗余中继",
       "theme": "支援网络",
-      "description": "战斗中的带宽干扰先由额外2点缓冲吸收。中继禁用后仍停止提供带宽。",
+      "description": "战斗中的带宽干扰先由额外 2 点缓冲吸收。中继禁用后仍停止提供带宽。",
       "effect": "overload_buffer",
       "value": 2
     },
@@ -1067,7 +1067,7 @@ const data = {
       "id": "local_shield",
       "name": "局部屏蔽",
       "theme": "支援网络",
-      "description": "支援单位附近友军获得2点护甲。",
+      "description": "支援单位附近友军获得 2 点护甲。",
       "effect": "support_armor",
       "value": 2
     },
@@ -1075,7 +1075,7 @@ const data = {
       "id": "distant_silence",
       "name": "远端静默",
       "theme": "远距压力控制",
-      "description": "距离火种12格外死亡压力降低20%。",
+      "description": "距离火种 12 格以外死亡时，死亡压力降低 20%。",
       "effect": "far_pressure",
       "value": 0.2
     },
@@ -1083,7 +1083,7 @@ const data = {
       "id": "resistance_prism",
       "name": "抗性棱镜",
       "theme": "远距压力控制",
-      "description": "精神抗性提高4。",
+      "description": "精神抗性提高 4。",
       "effect": "resistance",
       "value": 4
     },
@@ -1091,7 +1091,7 @@ const data = {
       "id": "slow_decay",
       "name": "缓释衰减",
       "theme": "远距压力控制",
-      "description": "减速目标死亡压力降低15%。",
+      "description": "减速目标死亡时，死亡压力降低 15%。",
       "effect": "slow_pressure",
       "value": 0.15
     },
@@ -1099,7 +1099,7 @@ const data = {
       "id": "clean_kill",
       "name": "洁净终止",
       "theme": "远距压力控制",
-      "description": "单次过量伤害超过目标生命25%时压力降低20%。",
+      "description": "单次攻击的过量伤害超过目标最大生命的 25% 时，死亡压力降低 20%。",
       "effect": "overkill_pressure",
       "value": 0.2
     },
@@ -1107,7 +1107,7 @@ const data = {
       "id": "pulse_absorber",
       "name": "脉冲吸收器",
       "theme": "远距压力控制",
-      "description": "每10秒完全吸收一次不高于8的压力伤害。",
+      "description": "每 10 秒完全吸收一次不高于 8 的压力伤害。",
       "effect": "pressure_absorb",
       "value": 8
     },
@@ -1115,7 +1115,7 @@ const data = {
       "id": "redline_amplifier",
       "name": "红线放大器",
       "theme": "低精神爆发",
-      "description": "精神稳定低于35%时伤害提高20%。",
+      "description": "精神稳定低于 35% 时伤害提高 20%。",
       "effect": "low_spirit_damage",
       "value": 0.2
     },
@@ -1123,7 +1123,7 @@ const data = {
       "id": "crisis_focus",
       "name": "危机专注",
       "theme": "低精神爆发",
-      "description": "精神稳定首次低于50%时获得30专注。",
+      "description": "本局精神稳定首次低于最大值的 50% 时，获得 30 专注。",
       "effect": "crisis_focus",
       "value": 30
     },
@@ -1131,7 +1131,7 @@ const data = {
       "id": "pain_filter",
       "name": "疼痛滤波器",
       "theme": "低精神爆发",
-      "description": "精神稳定低于25%时抗性提高5。",
+      "description": "精神稳定低于 25% 时抗性提高 5。",
       "effect": "crisis_resistance",
       "value": 5
     },
@@ -1139,7 +1139,7 @@ const data = {
       "id": "final_resolve",
       "name": "最终决意",
       "theme": "低精神爆发",
-      "description": "每场战斗首次致命伤害改为保留1点精神稳定。",
+      "description": "每场战斗首次致命伤害改为保留 1 点精神稳定。",
       "effect": "death_guard",
       "value": 1
     },
@@ -1147,7 +1147,7 @@ const data = {
       "id": "volatile_clarity",
       "name": "易爆清醒",
       "theme": "低精神爆发",
-      "description": "精神稳定低于35%时攻击提高15%；维修费始终增加15%。",
+      "description": "精神稳定低于 35% 时攻击提高 15%；维修费始终增加 15%。",
       "effect": "volatile",
       "value": 0.15
     },
@@ -1155,7 +1155,7 @@ const data = {
       "id": "wide_channel",
       "name": "宽信道",
       "theme": "带宽扩张",
-      "description": "带宽上限提高4。",
+      "description": "带宽上限提高 4。",
       "effect": "bandwidth",
       "value": 4
     },
@@ -1163,7 +1163,7 @@ const data = {
       "id": "compact_encoding",
       "name": "紧凑编码",
       "theme": "带宽扩张",
-      "description": "T1单位占用带宽减少1，最低1。",
+      "description": "T1 单位占用带宽减少 1，最低 1。",
       "effect": "t1_bandwidth",
       "value": 1
     },
@@ -1171,7 +1171,7 @@ const data = {
       "id": "overload_buffer",
       "name": "过载缓冲",
       "theme": "带宽扩张",
-      "description": "战斗中带宽下降先由3点缓冲吸收。",
+      "description": "战斗中带宽下降先由 3 点缓冲吸收。",
       "effect": "overload_buffer",
       "value": 3
     },
@@ -1179,7 +1179,7 @@ const data = {
       "id": "signal_dividend",
       "name": "信号红利",
       "theme": "带宽扩张",
-      "description": "战斗结束时每5点未使用带宽获得4专注。",
+      "description": "战斗结束时每 5 点未使用带宽获得 4 专注。",
       "effect": "unused_bandwidth_focus",
       "value": 4
     },
@@ -1187,7 +1187,7 @@ const data = {
       "id": "relay_efficiency",
       "name": "中继效率",
       "theme": "带宽扩张",
-      "description": "带宽中继自身占用减少1。",
+      "description": "带宽中继自身占用减少 1。",
       "effect": "relay_cost",
       "value": 1
     }
@@ -1197,7 +1197,7 @@ const data = {
       "id": "height_mastery",
       "name": "高差掌握",
       "theme": "高地远程",
-      "description": "远程单位对低处目标每级高度差额外获得3%射程与伤害，最多四级。",
+      "description": "远程单位攻击低处目标时，每级高度差额外提高 3% 射程与伤害，最多四级。",
       "effect": "height_bonus",
       "value": 0.03
     },
@@ -1205,7 +1205,7 @@ const data = {
       "id": "target_solution",
       "name": "目标解算",
       "theme": "高地远程",
-      "description": "优先级设为最高生命时，远程单位伤害提高12%。",
+      "description": "优先级设为最高生命时，远程单位伤害提高 12%。",
       "effect": "high_hp_damage",
       "value": 0.12
     },
@@ -1213,7 +1213,7 @@ const data = {
       "id": "clear_line",
       "name": "清晰射界",
       "theme": "高地远程",
-      "description": "直接攻击射程增加8%；仍需满足地形视线。",
+      "description": "直接攻击射程增加 8%；仍受地形视线限制。",
       "effect": "direct_range",
       "value": 0.08
     },
@@ -1221,7 +1221,7 @@ const data = {
       "id": "mortar_math",
       "name": "弹道数学",
       "theme": "高地远程",
-      "description": "范围轰击的爆炸半径提高18%。",
+      "description": "范围轰击的爆炸半径提高 18%。",
       "effect": "indirect_radius",
       "value": 0.18
     },
@@ -1229,7 +1229,7 @@ const data = {
       "id": "unbroken_line",
       "name": "不破阵线",
       "theme": "近战承伤",
-      "description": "每场战斗中每个近战单位首次受到普通致命攻击时保留1点耐久。",
+      "description": "每场战斗中每个近战单位首次受到普通致命攻击时保留 1 点耐久。",
       "effect": "melee_guard",
       "value": 1
     },
@@ -1237,7 +1237,7 @@ const data = {
       "id": "counter_rhythm",
       "name": "反击节律",
       "theme": "近战承伤",
-      "description": "启用中的近战每承受5次攻击后若仍存活，立即以65%攻击力反击；反震伤害忽略护甲。",
+      "description": "启用中的近战每承受 5 次攻击后若仍存活，立即以 65% 攻击力反击；反击伤害忽略护甲。",
       "effect": "counter_hits",
       "value": 5
     },
@@ -1245,7 +1245,7 @@ const data = {
       "id": "hardened_footing",
       "name": "硬化立足",
       "theme": "近战承伤",
-      "description": "近战单位受到的攻击伤害降低10%。",
+      "description": "近战单位受到的攻击伤害降低 10%。",
       "effect": "melee_reduction",
       "value": 0.1
     },
@@ -1253,7 +1253,7 @@ const data = {
       "id": "field_patch",
       "name": "现场补片",
       "theme": "近战承伤",
-      "description": "战斗结束时存活近战恢复5%耐久。",
+      "description": "战斗结束时存活近战恢复 5% 耐久。",
       "effect": "melee_post_repair",
       "value": 0.05
     },
@@ -1261,7 +1261,7 @@ const data = {
       "id": "linked_support",
       "name": "支援链接",
       "theme": "支援网络",
-      "description": "同时被至少两种不同支援覆盖的友军，维修、合唱强化和支援护甲效果提高15%；不改变全局带宽或抗性。",
+      "description": "同时被至少两种不同支援覆盖的友军，维修、合唱强化和支援护甲效果提高 15%；不改变全局带宽或抗性。",
       "effect": "support_overlap",
       "value": 0.15
     },
@@ -1277,7 +1277,7 @@ const data = {
       "id": "shield_memory",
       "name": "护盾记忆",
       "theme": "支援网络",
-      "description": "支援单位范围内的友军护甲额外提高2。",
+      "description": "支援单位范围内的友军护甲额外提高 2。",
       "effect": "support_armor",
       "value": 2
     },
@@ -1285,7 +1285,7 @@ const data = {
       "id": "distributed_clock",
       "name": "分布时钟",
       "theme": "支援网络",
-      "description": "维修型支援的维修量提高10%。",
+      "description": "维修型支援的维修量提高 10%。",
       "effect": "support_efficiency",
       "value": 0.1
     },
@@ -1293,7 +1293,7 @@ const data = {
       "id": "distance_doctrine",
       "name": "距离教义",
       "theme": "远距压力控制",
-      "description": "击杀距离每超过10格，额外降低2%压力。",
+      "description": "击杀距离每超过 10 格，额外降低 2% 压力。",
       "effect": "distance_pressure",
       "value": 0.02
     },
@@ -1301,7 +1301,7 @@ const data = {
       "id": "resistance_memory",
       "name": "抗性记忆",
       "theme": "远距压力控制",
-      "description": "完全吸收压力后临时提高1抗性，可叠3层。",
+      "description": "完全吸收压力后临时提高 1 抗性，可叠 3 层。",
       "effect": "resistance_stack",
       "value": 3
     },
@@ -1317,7 +1317,7 @@ const data = {
       "id": "soft_impact",
       "name": "柔性冲击",
       "theme": "远距压力控制",
-      "description": "范围击杀造成的总压力降低10%。",
+      "description": "范围击杀造成的总压力降低 10%。",
       "effect": "aoe_pressure",
       "value": 0.1
     },
@@ -1325,7 +1325,7 @@ const data = {
       "id": "crisis_accuracy",
       "name": "危机精度",
       "theme": "低精神爆发",
-      "description": "精神稳定低于35%时，所有构造射程提高10%。",
+      "description": "精神稳定低于 35% 时，所有构造射程提高 10%。",
       "effect": "crisis_range",
       "value": 0.1
     },
@@ -1333,7 +1333,7 @@ const data = {
       "id": "calm_aftershock",
       "name": "余震平复",
       "theme": "低精神爆发",
-      "description": "精英死亡后恢复3精神稳定。",
+      "description": "精英死亡后恢复 3 精神稳定。",
       "effect": "elite_spirit",
       "value": 3
     },
@@ -1341,7 +1341,7 @@ const data = {
       "id": "risk_conversion",
       "name": "风险转化",
       "theme": "低精神爆发",
-      "description": "精神稳定低于35%时，击杀敌人获得的专注提高20%；不影响节点奖励。",
+      "description": "精神稳定低于 35% 时，击杀敌人获得的专注提高 20%；不影响节点奖励。",
       "effect": "crisis_reward",
       "value": 0.2
     },
@@ -1349,7 +1349,7 @@ const data = {
       "id": "wakeful_rage",
       "name": "清醒之怒",
       "theme": "低精神爆发",
-      "description": "每损失10精神稳定，本场伤害提高2%。",
+      "description": "每损失 10 精神稳定，本场伤害提高 2%。",
       "effect": "lost_spirit_damage",
       "value": 0.02
     },
@@ -1357,7 +1357,7 @@ const data = {
       "id": "expanded_bus",
       "name": "扩展总线",
       "theme": "带宽扩张",
-      "description": "深度升级额外增加1带宽。",
+      "description": "深度升级额外增加 1 带宽。",
       "effect": "level_bandwidth",
       "value": 1
     },
@@ -1365,7 +1365,7 @@ const data = {
       "id": "graceful_overload",
       "name": "优雅过载",
       "theme": "带宽扩张",
-      "description": "战斗中的带宽干扰先由额外1点缓冲吸收。",
+      "description": "战斗中的带宽干扰先由额外 1 点缓冲吸收。",
       "effect": "overload_buffer",
       "value": 1
     },
@@ -1373,7 +1373,7 @@ const data = {
       "id": "priority_channel",
       "name": "优先信道",
       "theme": "带宽扩张",
-      "description": "最早部署的三个存活构造护甲提高2。",
+      "description": "最早部署的三个存活构造护甲提高 2。",
       "effect": "priority_armor",
       "value": 2
     },
@@ -1381,7 +1381,7 @@ const data = {
       "id": "relay_feedback",
       "name": "中继反馈",
       "theme": "带宽扩张",
-      "description": "恢复过载单位时使其下一次攻击强化30%。",
+      "description": "恢复过载单位时使其下一次攻击强化 30%。",
       "effect": "reactivate_damage",
       "value": 0.3
     }
@@ -1394,14 +1394,14 @@ const data = {
       "text": "一段违规频率提出交换。",
       "choices": [
         {
-          "label": "承受12精神伤害，获得60专注",
+          "label": "承受 12 精神伤害，获得 60 专注",
           "effects": {
             "spirit": -12,
             "focus": 60
           }
         },
         {
-          "label": "拒绝交易，获得2抗性",
+          "label": "拒绝交易，获得 2 抗性",
           "effects": {
             "resistance": 2
           }
@@ -1421,7 +1421,7 @@ const data = {
           }
         },
         {
-          "label": "保留它，恢复18精神稳定",
+          "label": "保留它，恢复 18 精神稳定",
           "effects": {
             "spirit": 18
           }
@@ -1435,14 +1435,14 @@ const data = {
       "text": "压缩协议可以换取即时清晰。",
       "choices": [
         {
-          "label": "永久失去2带宽，恢复30精神",
+          "label": "永久失去 2 带宽，恢复 30 精神",
           "effects": {
             "bandwidth": -2,
             "spirit": 30
           }
         },
         {
-          "label": "绕行，获得25专注",
+          "label": "绕行，获得 25 专注",
           "effects": {
             "focus": 25
           }
@@ -1456,13 +1456,13 @@ const data = {
       "text": "中继仍保留少量可用组件。",
       "choices": [
         {
-          "label": "拆取组件，获得45专注",
+          "label": "拆取组件，获得 45 专注",
           "effects": {
             "focus": 45
           }
         },
         {
-          "label": "重写固件，获得2带宽",
+          "label": "重写固件，获得 2 带宽",
           "effects": {
             "bandwidth": 2
           }
@@ -1476,13 +1476,13 @@ const data = {
       "text": "这里没有统治信号，只有自己的呼吸。",
       "choices": [
         {
-          "label": "停留，恢复25精神稳定",
+          "label": "停留，恢复 25 精神稳定",
           "effects": {
             "spirit": 25
           }
         },
         {
-          "label": "记录结构，获得80经验",
+          "label": "记录结构，获得 80 经验",
           "effects": {
             "xp": 80
           }
@@ -1496,14 +1496,14 @@ const data = {
       "text": "旧设备要求用痛觉证明身份。",
       "choices": [
         {
-          "label": "支付10精神，随机单位永久+10%耐久",
+          "label": "支付 10 精神，随机单位永久+10% 耐久",
           "effects": {
             "spirit": -10,
             "tower_hp": 0.1
           }
         },
         {
-          "label": "拆除设备，获得30专注",
+          "label": "拆除设备，获得 30 专注",
           "effects": {
             "focus": 30
           }
@@ -1517,13 +1517,13 @@ const data = {
       "text": "一个与你相近的偏频信号请求同步。",
       "choices": [
         {
-          "label": "同步，获得一个随机T1单位",
+          "label": "同步，获得一个随机 T1 单位",
           "effects": {
             "unit": 1
           }
         },
         {
-          "label": "保持独立，获得3抗性",
+          "label": "保持独立，获得 3 抗性",
           "effects": {
             "resistance": 3
           }
@@ -1537,13 +1537,13 @@ const data = {
       "text": "短暂的无噪声窗口出现。",
       "choices": [
         {
-          "label": "修复所有单位10%耐久",
+          "label": "修复所有单位 10% 耐久",
           "effects": {
             "repair_all": 0.1
           }
         },
         {
-          "label": "集中解码，获得50专注",
+          "label": "集中解码，获得 50 专注",
           "effects": {
             "focus": 50
           }
@@ -1557,14 +1557,14 @@ const data = {
       "text": "工厂要求缴纳可验证的自我片段。",
       "choices": [
         {
-          "label": "失去15精神，获得100专注",
+          "label": "失去 15 精神，获得 100 专注",
           "effects": {
             "spirit": -15,
             "focus": 100
           }
         },
         {
-          "label": "强行通过，随机单位损失20%耐久",
+          "label": "强行通过，随机单位损失 20% 耐久",
           "effects": {
             "tower_damage": 0.2
           }
@@ -1578,7 +1578,7 @@ const data = {
       "text": "空置生产线还能完成一次指令。",
       "choices": [
         {
-          "label": "复制一个T1单位",
+          "label": "复制一个 T1 单位",
           "effects": {
             "duplicate_t1": 1
           }
@@ -1598,13 +1598,13 @@ const data = {
       "text": "被删除的人留下了维护口诀。",
       "choices": [
         {
-          "label": "记住口诀，维修费永久降低10%",
+          "label": "记住口诀，维修费永久降低 10%",
           "effects": {
             "repair_discount": 0.1
           }
         },
         {
-          "label": "公开归档，获得120经验",
+          "label": "公开归档，获得 120 经验",
           "effects": {
             "xp": 120
           }
@@ -1618,14 +1618,14 @@ const data = {
       "text": "它能跨越精神层级，也可能撕裂防线。",
       "choices": [
         {
-          "label": "乘坐，获得收藏品但损失20精神",
+          "label": "乘坐，获得收藏品但损失 20 精神",
           "effects": {
             "relic": 1,
             "spirit": -20
           }
         },
         {
-          "label": "拆取动力，获得70专注",
+          "label": "拆取动力，获得 70 专注",
           "effects": {
             "focus": 70
           }
@@ -1639,13 +1639,13 @@ const data = {
       "text": "凝固的抗性可以永久吸收或临时出售。",
       "choices": [
         {
-          "label": "吸收，获得4抗性",
+          "label": "吸收，获得 4 抗性",
           "effects": {
             "resistance": 4
           }
         },
         {
-          "label": "出售，获得90专注",
+          "label": "出售，获得 90 专注",
           "effects": {
             "focus": 90
           }
@@ -1659,7 +1659,7 @@ const data = {
       "text": "自动维修机拒绝继续为统治服务。",
       "choices": [
         {
-          "label": "协助罢工，所有受损单位恢复15%",
+          "label": "协助罢工，所有受损单位恢复 15%",
           "effects": {
             "repair_all": 0.15
           }
@@ -1679,7 +1679,7 @@ const data = {
       "text": "两个版本的你争夺同一段带宽。",
       "choices": [
         {
-          "label": "保留谨慎版本，获得2带宽和2抗性",
+          "label": "保留谨慎版本，获得 2 带宽和 2 抗性",
           "effects": {
             "bandwidth": 2,
             "resistance": 2
@@ -1700,7 +1700,7 @@ const data = {
       "text": "货架被封存，但价格标签仍在闪烁。",
       "choices": [
         {
-          "label": "支付80专注，取得随机收藏品",
+          "label": "支付 80 专注，取得随机收藏品",
           "effects": {
             "focus": -80,
             "relic": 1
@@ -1721,13 +1721,13 @@ const data = {
       "text": "统治者承诺交出安宁，条件是停止抵抗。",
       "choices": [
         {
-          "label": "拒绝，获得5抗性",
+          "label": "拒绝，获得 5 抗性",
           "effects": {
             "resistance": 5
           }
         },
         {
-          "label": "伪装接受，恢复35精神但失去2带宽",
+          "label": "伪装接受，恢复 35 精神但失去 2 带宽",
           "effects": {
             "spirit": 35,
             "bandwidth": -2
@@ -1742,13 +1742,13 @@ const data = {
       "text": "无数未被抹除的意志在等待出口。",
       "choices": [
         {
-          "label": "释放它们，获得200经验",
+          "label": "释放它们，获得 200 经验",
           "effects": {
             "xp": 200
           }
         },
         {
-          "label": "借用力量，获得150专注",
+          "label": "借用力量，获得 150 专注",
           "effects": {
             "focus": 150
           }
@@ -1762,7 +1762,7 @@ const data = {
       "text": "密钥可以解除干扰，也能强化火力。",
       "choices": [
         {
-          "label": "解除干扰，获得4带宽",
+          "label": "解除干扰，获得 4 带宽",
           "effects": {
             "bandwidth": 4
           }
@@ -1782,7 +1782,7 @@ const data = {
       "text": "工坊只够执行一次全局维护。",
       "choices": [
         {
-          "label": "所有单位恢复25%耐久",
+          "label": "所有单位恢复 25% 耐久",
           "effects": {
             "repair_all": 0.25
           }
@@ -1802,13 +1802,13 @@ const data = {
       "text": "检查点无法同时处理意志与构造。",
       "choices": [
         {
-          "label": "证明意志，恢复40精神",
+          "label": "证明意志，恢复 40 精神",
           "effects": {
             "spirit": 40
           }
         },
         {
-          "label": "证明构造，获得一个T2单位",
+          "label": "证明构造，获得一个 T2 单位",
           "effects": {
             "unit_t2": 1
           }
@@ -1822,14 +1822,14 @@ const data = {
       "text": "风暴能擦除损伤，也会削弱清醒。",
       "choices": [
         {
-          "label": "进入风暴，单位全部修满但损失25精神",
+          "label": "进入风暴，所有单位完全修复但损失 25 精神",
           "effects": {
             "repair_all": 1,
             "spirit": -25
           }
         },
         {
-          "label": "收集边缘能量，获得100专注",
+          "label": "收集边缘能量，获得 100 专注",
           "effects": {
             "focus": 100
           }
@@ -1843,14 +1843,14 @@ const data = {
       "text": "档案记录了首领机制的原始版本。",
       "choices": [
         {
-          "label": "阅读，完全公开本幕首领并获得收藏品",
+          "label": "阅读，公开本幕首领全部信息并获得收藏品",
           "effects": {
             "boss_reveal": 1,
             "relic": 1
           }
         },
         {
-          "label": "销毁，获得6抗性",
+          "label": "销毁，获得 6 抗性",
           "effects": {
             "resistance": 6
           }
@@ -1864,14 +1864,14 @@ const data = {
       "text": "许多偏频者愿意共享最后一段信道。",
       "choices": [
         {
-          "label": "接入，获得5带宽但敌人压力+10%",
+          "label": "接入，获得 5 带宽但敌人压力+10%",
           "effects": {
             "bandwidth": 5,
             "pressure_mult": 0.1
           }
         },
         {
-          "label": "保持独立，恢复30精神并获得60专注",
+          "label": "保持独立，恢复 30 精神并获得 60 专注",
           "effects": {
             "spirit": 30,
             "focus": 60
@@ -1885,51 +1885,51 @@ export const acts=data.acts;
 export const towers=Object.fromEntries(data.towers.map(x=>[x.id,{...x,description:towerText[x.id][0],branches:{A:{...x.branches.A,description:towerText[x.id][1]},B:{...x.branches.B,description:towerText[x.id][2]}}}]));
 const enemyDescriptions = {
  static_drifter:'沿地面通路接近火种，攻击拦路的近战构造。没有特殊能力，适合用来判断防线基础火力。',
- spike_runner:'预警后获得65%额外移动速度，持续2.5秒。生命较低，减速和提前部署的交叉火力能阻止它穿过空隙。',
- shield_echo:'出生自带35%最大生命护盾，之后周期性补充至15%最大生命护盾。护盾先于生命承受伤害。',
- tempo_amplifier:'预警后形成6格加速光环，使附近敌人移动速度提高20%，持续4秒。优先处理它可以拆散快速推进的敌群。',
- fracture_seed:'死亡时尝试分裂出两只尖峰奔袭体；分裂消耗本场共享的10%增援预算，预算耗尽后不会分裂。',
+ spike_runner:"预警后获得 65% 额外移动速度，持续 2.5 秒。生命较低，减速和提前部署的交叉火力能阻止它穿过空隙。",
+ shield_echo:"出生自带 35% 最大生命护盾，之后周期性补充至 15% 最大生命护盾。护盾先于生命承受伤害。",
+ tempo_amplifier:"预警后形成 6 格加速光环，使附近敌人移动速度提高 20%，持续 4 秒。优先处理它可以拆散快速推进的敌群。",
+ fracture_seed:"死亡时尝试分裂出两只尖峰奔袭体；分裂消耗本场共享的 10% 增援预算，预算耗尽后不会分裂。",
  floating_noise:'飞行敌人直接越过地形和地面阻挡。需要能攻击空中的脉冲针列、轨炮或无人机提前拦截。',
- remote_hunter:'在6格距离内猎杀构造，能够攻击高台远程和支援。高地保护会削弱它从低处造成的伤害。',
- siege_ram:'可攻击3.6格内的各类构造，攻击峭壁时造成3倍地形伤害。应在它拆开屏障前集火。',
- memory_medic:'预警后恢复6格内敌人9%最大生命，包括自身。持续集火比平均分散伤害更有效。',
- bandwidth_jammer:'预警后使可用带宽降低2，持续3秒，多名干扰者可以叠加。预留带宽或使用中继缓冲能避免新部署单位停机。',
- phase_teleporter:'预警后沿当前地面路线向前迁跃最多4格。可越过一段火力区，需要纵深防线或定身拖延。',
- replication_node:'复制6格内一名非增援普通敌人；附近没有目标时生成护盾回声。复制消耗全场共享增援预算。',
- pressure_cantor:'预警后持续4秒，使6格内敌人的死亡压力提高25%。先在远离火种处击杀它能降低随后消灭敌群的风险。',
- armored_worm:'高护甲的缓慢推进者，攻击带35%穿甲。解甲刃和穿透轨可以削弱它的主要优势。',
- shield_conductor:'预警后为6格内敌人补充至12%最大生命的护盾。护盾不相加，持续输出可在下次脉冲前突破。',
- signal_summoner:'预警后召唤一只静噪漂移体，消耗全场共享增援预算。不会无限增殖。',
- resistance_corruptor:'预警后使精神抗性降低2，持续5秒，多名腐蚀者可以叠加。避免在腐蚀期间于火种附近击杀高压力目标。',
- detonation_shell:'死亡时对3.5格内构造造成1.6倍攻击力的爆炸冲击。远程击杀或分散防线能降低损失。',
- frequency_hunter:'精英远程猎杀者，能攻击6格内的各类构造。到达火种后持续攻击，不会自行离场。',
- terrain_dismantler:'精英攻城者，拆障伤害为普通攻击的3倍，能直接威胁3.6格内的各类构造。到达火种后持续攻击。',
+ remote_hunter:"在 6 格距离内猎杀构造，能够攻击高台远程和支援。高地保护会削弱它从低处造成的伤害。",
+ siege_ram:"可攻击 3.6 格内的各类构造，攻击峭壁时造成 3 倍地形伤害。应在它拆开屏障前集火。",
+ memory_medic:"预警后恢复 6 格内敌人 9% 最大生命，包括自身。持续集火比平均分散伤害更有效。",
+ bandwidth_jammer:"预警后使可用带宽降低 2，持续 3 秒，多名干扰者可以叠加。预留带宽或使用中继缓冲能避免新部署单位停机。",
+ phase_teleporter:"预警后沿当前地面路线向前迁跃最多 4 格。可越过一段火力区，需要纵深防线或定身拖延。",
+ replication_node:"复制 6 格内一名非增援普通敌人；附近没有目标时生成护盾回声。复制消耗全场共享增援预算。",
+ pressure_cantor:"预警后持续 4 秒，使 6 格内敌人的死亡压力提高 25%。先在远离火种处击杀它能降低随后消灭敌群的风险。",
+ armored_worm:"高护甲的缓慢推进者，攻击带 35% 穿甲。解甲刃和穿透轨可以削弱它的主要优势。",
+ shield_conductor:"预警后为 6 格内敌人补充至 12% 最大生命的护盾。护盾不相加，持续输出可在下次脉冲前突破。",
+ signal_summoner:'预警后召来一名援兵：第一幕为静噪漂移体，第二幕为记忆赶工者，第三幕为秩序重卫。消耗全场共享增援预算。',
+ resistance_corruptor:"预警后使精神抗性降低 2，持续 5 秒；多名腐蚀者的效果可叠加。腐蚀期间，尽量在远离火种的位置消灭高压力目标。",
+ detonation_shell:"死亡时对 3.5 格内构造造成 1.6 倍攻击力的爆炸冲击。远程击杀或分散防线能降低损失。",
+ frequency_hunter:"精英远程猎杀者，能攻击 6 格内的各类构造。到达火种后持续攻击，不会自行离场。",
+ terrain_dismantler:"精英攻城者，拆障伤害为普通攻击的 3 倍，能直接威胁 3.6 格内的各类构造。到达火种后持续攻击。",
  proliferation_protocol:'精英召唤者，预警后引入受共享增援预算限制的漂移体。到达火种后持续攻击，需要直接消灭其本体。',
- spirit_taxer:'精英精神税吏，预警后腐蚀4抗性5秒，并直接施加2精神伤害。应在高压力敌群靠近前优先消灭。',
- noise_hive:'第四敌群出现的召唤首领，预警后尝试召唤两只受共享预算限制的增援。生命降到70%和35%以下时进入更快的控制阶段。',
+ spirit_taxer:"精英精神税吏，预警后腐蚀 4 抗性 5 秒，并直接施加 2 精神伤害。应在高压力敌群靠近前优先消灭。",
+ noise_hive:"第四敌群出现的召唤首领，预警后尝试召唤两只受共享预算限制的增援。生命降到 70% 和 35% 以下时进入更快的控制阶段。",
  mirror_censor:'第四敌群出现的复制首领，预警后复制附近普通信号，数量受共享增援预算限制。生命降低会加快能力循环。',
- memory_reforger:'第四敌群出现的修复首领，预警后修复6格内敌人及自身。需要集中输出，避免让不同目标轮流接受重铸。',
- bandwidth_requisitioner:'第四敌群出现的干扰首领，预警后征用6带宽5秒。较低生命阶段进一步压迫防线，预留带宽与保护中继能稳定火力。',
- chorus_overseer:'第四敌群出现的飞行首领，预警后共享18%最大生命护盾。必须保留对空火力；后续阶段同时扰乱带宽。',
- zero_frequency_mind:'第四敌群出现的攻城首领，预警后冲击10格内最多三座构造，并能快速拆解峭壁。低生命阶段进一步改变近处战场。'
+ memory_reforger:"第四敌群出现的修复首领，预警后修复 6 格内敌人及自身。需要集中输出，避免让不同目标轮流接受重铸。",
+ bandwidth_requisitioner:"第四敌群出现的干扰首领，预警后征用 6 带宽 5 秒。较低生命阶段进一步压迫防线，预留带宽与保护中继能稳定火力。",
+ chorus_overseer:"第四敌群出现的飞行首领，预警后共享 18% 最大生命护盾。必须保留对空火力；后续阶段同时扰乱带宽。",
+ zero_frequency_mind:"第四敌群出现的攻城首领，预警后冲击 10 格内最多三座构造，并能快速拆解峭壁。低生命阶段进一步改变近处战场。"
 };
 const bossArchives = {
- noise_hive:'档案01 · 最初的服从不是命令，而是每个人都以为其他人已经答应了。母巢把这份错觉复制成噪声，直到城市只剩一种节拍。你切断母巢后，人群重新听见了彼此不同的声音。',
- mirror_censor:'档案02 · 审查官从不创造思想。它截取反抗者说过的话，复制语气，删去犹疑，再用无数个镜像替他们宣布认输。镜面破碎后，偏频者留下了一个不必与任何人相同的答案。',
- memory_reforger:'档案03 · 工厂曾为创伤提供修复，后来却开始把修复定义为遗忘。重铸机一次次抹平伤口，也抹去人们选择反抗的理由。停机之后，记忆可以疼痛，也可以成为下一次选择的依据。',
- bandwidth_requisitioner:'档案04 · 每一个思考都被登记为占用，每一段私人记忆都要缴纳信道。征用者声称只有完全清空个体，系统才能稳定。你用仍然完整的防线证明：秩序不需要以消失为代价。',
- chorus_overseer:'档案05 · 合唱最初意味着众多声音相互倾听。监管者把它改造成只能唱同一音的护盾，让每个不同的声音都像一条裂缝。信号断开时，裂缝连接起来，变成了彼此可以呼应的通路。',
- zero_frequency_mind:'档案06 · 零频主脑追求一个没有噪声、没有冲突、也没有选择的世界。它把醒觉火种称作必须拆除的故障。最后一条控制指令停止后，火种仍在燃烧，而城市开始自己决定明天。'
+ noise_hive:"档案 01 · 最初的服从源于一种错觉：每个人都以为其他人已经答应了。母巢把这份错觉复制成噪声，直到城市只剩一种节拍。你切断母巢后，人群重新听见了彼此不同的声音。",
+ mirror_censor:"档案 02 · 审查官从不创造思想。它截取反抗者说过的话，复制语气，删去犹疑，再用无数个镜像替他们宣布认输。镜面破碎后，偏频者留下了一个不必与任何人相同的答案。",
+ memory_reforger:"档案 03 · 工厂曾为创伤提供修复，后来却开始把修复定义为遗忘。重铸机一次次抹平伤口，也抹去人们选择反抗的理由。停机之后，记忆可以疼痛，也可以成为下一次选择的依据。",
+ bandwidth_requisitioner:"档案 04 · 每一个思考都被登记为占用，每一段私人记忆都要缴纳信道。征用者声称只有完全清空个体，系统才能稳定。你用仍然完整的防线证明：秩序不需要以消失为代价。",
+ chorus_overseer:"档案 05 · 合唱最初意味着众多声音相互倾听。监管者把它改造成只能唱同一音的护盾，让每个不同的声音都像一条裂缝。信号断开时，裂缝连接起来，变成了彼此可以呼应的通路。",
+ zero_frequency_mind:"档案 06 · 零频主脑追求一个没有噪声、没有冲突、也没有选择的世界。它把醒觉火种称作必须拆除的故障。最后一条控制指令停止后，火种仍在燃烧，而城市开始自己决定明天。"
 };
 const bossMechanics = {
- noise_hive:'每次召唤两只漂移体，受全场10%增援预算限制。第二阶段开始，每次能力使6格内敌人加速20%，持续3秒。',
- mirror_censor:'每次复制最多两名增援，受全场共享预算限制。第二阶段开始，每次能力为自己补充至2.5%最大生命护盾。',
- memory_reforger:'第一/二/三阶段，每次能力恢复6格内敌人及自身7%/8.5%/10%最大生命。',
- bandwidth_requisitioner:'第一/二/三阶段，每次能力征用6/8/10带宽，持续5秒；最新部署的单位最先停机。',
- chorus_overseer:'每次能力为6格内敌人补充至18%最大生命护盾。第二阶段开始额外征用6带宽，持续2秒。此首领始终飞行。',
- zero_frequency_mind:'第一/二/三阶段，冲击半径10/11/12格，最多击中3/4/5座构造，造成65%/75%/85%攻击力伤害；拆障伤害为3/4/5倍攻击力。'
+ noise_hive:"每次召唤两只漂移体，受全场 10% 增援预算限制。第二阶段开始，每次能力使 6 格内敌人加速 20%，持续 3 秒。",
+ mirror_censor:"每次复制最多两名增援，受全场共享预算限制。第二阶段开始，每次能力为自己补充至 2.5% 最大生命护盾。",
+ memory_reforger:"第一/二/三阶段，每次能力恢复 6 格内敌人及自身 7%/8.5%/10% 最大生命。",
+ bandwidth_requisitioner:"第一/二/三阶段，每次能力征用 6/8/10 带宽，持续 5 秒；最新部署的单位最先停机。",
+ chorus_overseer:"每次能力为 6 格内敌人补充至 18% 最大生命护盾。第二阶段开始额外征用 6 带宽，持续 2 秒。此首领始终飞行。",
+ zero_frequency_mind:"第一/二/三阶段，冲击半径 10/11/12 格，最多击中 3/4/5 座构造，造成 65%/75%/85% 攻击力伤害；拆障伤害为 3/4/5 倍攻击力。"
 };
-export const enemies=Object.fromEntries([...data.enemies,...actEnemies].map(x=>[x.id,{...x,description:x.description||(enemyDescriptions[x.id]+(['tower_hunter','siege'].includes(x.ability)?' 连续射击三次后显示提示并向火种推进2.5秒；贴身近战仍可阻挡。':'')),archive:bossArchives[x.id]||null,mechanics:bossMechanics[x.id] ? `${bossMechanics[x.id]} 生命低于70%/35%时进入第二/三阶段，能力间隔为6.5/5.7/4.9秒；每次能力先预警1.1秒。` : null}]));
+export const enemies=Object.fromEntries([...data.enemies,...actEnemies].map(x=>[x.id,{...x,description:x.description||(enemyDescriptions[x.id]+(['tower_hunter','siege'].includes(x.ability)?" 连续射击三次后显示提示并向火种推进 2.5 秒；贴身近战仍可阻挡。":'')),archive:bossArchives[x.id]||null,mechanics:bossMechanics[x.id] ? `${bossMechanics[x.id]} 生命低于 70%/35% 时进入第二/三阶段，能力间隔为 6.5/5.7/4.9 秒；每次能力先预警 1.1 秒。` : null}]));
 export const relics={...Object.fromEntries(data.relics.map(x=>[x.id,x])),...nexusRelics};
 export const talents=Object.fromEntries(data.talents.map(x=>[x.id,x]));
 export const legacyEvents=Object.fromEntries([...data.events,...extraEvents].map(x=>[x.id,x]));
