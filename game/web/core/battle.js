@@ -286,13 +286,22 @@ function moveEnemy(state,e,dt,active) {
   }
   const hunter=e.ability==='tower_hunter'||e.ability==='siege',attackRange=e.attackRange??(hunter?(e.ability==='tower_hunter'?6:3.6):2.15);
   const advancing=hunter&&e.advanceUntil>b.time;
-  const victims=pushing?[]:aliveUnits(state).filter(u=>(hunter||!e.air&&unitStats(state,u).role==='melee')&&distance(e,unitCenter(u))<=attackRange&&(!advancing||unitStats(state,u).role==='melee'&&distance(e,unitCenter(u))<=1.5));
-  victims.sort((a,c)=>{
-    const ta=!b.disabled.includes(a.uid)&&unitStats(state,a).ability==='taunt'?1:0,tc=!b.disabled.includes(c.uid)&&unitStats(state,c).ability==='taunt'?1:0;
-    return tc-ta||distance(e,unitCenter(a))-distance(e,unitCenter(c));
-  });
-  if(victims.length){aim(e,unitCenter(victims[0]),victims[0].uid,'unit');if(e.cooldown<=0){
-    hitUnit(state,e,victims[0],e.attack,active);e.cooldown=e.kind==='boss'?1.4:1.15;
+  // Only the best victim is used. A strict improvement preserves the original
+  // stable ordering when two units have the same taunt status and distance.
+  let victim=null,victimTaunt=-1,victimDistance=Infinity;
+  if(!pushing&&(hunter||!e.air))for(const unit of state.units){
+    if(!onField(unit)||unit.hp<=0)continue;
+    const separation=distance(e,unitCenter(unit));
+    if(!(separation<=attackRange)||advancing&&separation>1.5)continue;
+    const stats=unitStats(state,unit);
+    if((!hunter||advancing)&&stats.role!=='melee')continue;
+    const taunt=!b.disabled.includes(unit.uid)&&stats.ability==='taunt'?1:0;
+    if(!victim||taunt>victimTaunt||taunt===victimTaunt&&separation<victimDistance){
+      victim=unit;victimTaunt=taunt;victimDistance=separation;
+    }
+  }
+  if(victim){aim(e,unitCenter(victim),victim.uid,'unit');if(e.cooldown<=0){
+    hitUnit(state,e,victim,e.attack,active);e.cooldown=e.kind==='boss'?1.4:1.15;
     if(e.dead||state.spirit<=0)return;
     if(advance?.enabled){e.blockedAttacks=(e.blockedAttacks||0)+1;if(e.blockedAttacks>=advance.attacks){e.pushWarningUntil=b.time+advance.warning;emit(state,{type:'warning',stage:'windup',actionKind:'push-windup',ability:'push',enemy:e.id,x:e.x,z:e.z,duration:advance.warning,endsAt:e.pushWarningUntil,label:`破阵蓄力 · ${advance.warning} 秒后推进`});}}
     // Ranged hunters and siege units fire finite volleys, then advance into the
@@ -358,6 +367,22 @@ function advanceDrones(state,active,dt){
 }
 function towerActions(state,active,dt) {
   const b=state.battle,m=effects(state),supports=active.filter(u=>unitStats(state,u).role==='support');
+  // Positions and terrain stay fixed until tower actions finish. Reuse stable
+  // distance orderings, but rebuild when a kill appends split reinforcements.
+  // Health ordering and live eligibility must reflect every preceding attack.
+  const distanceOrders=new Map();let orderedEnemyCount=-1;
+  const attackCandidates=priority=>{
+    const alive=e=>!e.dead&&e.hp>0;
+    if(priority==='hp')return b.enemies.filter(alive).sort((a,c)=>c.hp-a.hp);
+    if(orderedEnemyCount!==b.enemies.length){distanceOrders.clear();orderedEnemyCount=b.enemies.length;}
+    const direction=priority==='far'?-1:1;
+    if(!distanceOrders.has(direction)){
+      const ranked=b.enemies.filter(alive).map(enemy=>({enemy,distance:distanceToCore(state,enemy)}));
+      ranked.sort((a,c)=>direction*(a.distance-c.distance));
+      distanceOrders.set(direction,ranked.map(({enemy})=>enemy));
+    }
+    return distanceOrders.get(direction).filter(alive);
+  };
   const current=difficultyProfile(state).revision>=5,controlDuration=difficultyProfile(state).controlDurationMultiplier;
   const passive=active.flatMap(source=>unitAuras(state,source).filter(a=>['regeneration','armor'].includes(a.id)).map(aura=>({source,aura})));
   // Stopped units leave aura coverage immediately; timed repair armor still
@@ -400,8 +425,7 @@ function towerActions(state,active,dt) {
     }
     // solveAttack is the authority for the full modified range; a separate
     // broad-phase multiplier can silently reject legal high-ground targets.
-    const candidates=b.enemies.filter(e=>!e.dead&&e.hp>0);
-    candidates.sort((a,c)=>u.priority==='hp'?c.hp-a.hp:u.priority==='far'?distanceToCore(state,c)-distanceToCore(state,a):distanceToCore(state,a)-distanceToCore(state,c));
+    const candidates=attackCandidates(u.priority);
     let target=null,solution=null;
     for(const e of candidates){const check=solveAttack(state,u,{...e,armor:Math.max(0,e.armor-e.armorBreak)});if(check.ok){target=e;solution=check;break;}}
     if(!target)continue;

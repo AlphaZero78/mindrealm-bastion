@@ -9,6 +9,10 @@ node development/web-tools/simulations.mjs
 
 测试只创建内存状态，不读取浏览器存储或玩家档案。需要保留机器可读验收结果时，给模拟命令增加 `--output`，路径应位于项目外，例如 `$env:TEMP`。`--quick` 只运行 2 个参考种子和 5 个终局场景，不能替代完整验收。
 
+性能重构前，在项目外保留基线检出，然后运行 `node development/web-tools/compare-core.mjs --baseline <基线目录>`。基线应采用当前的 `game/web/core/` 布局，并包含 `package.json` 和 `development/web-tests/helpers/`。该工具逐字段比较攻击判定、构筑效果及两个种子在压力 0、5、10 下的完整远征结果；可用 `--output <项目外路径>` 保存结果。
+
+战斗性能对照使用 `node development/web-tools/compare-combat.mjs --baseline <基线目录>`（同样支持外置 `--output`）。工具对 100 敌人、35 构造的近目标、远目标及最高生命优先级逐步比较完整状态和事件，再交替测量七轮。耗时仅作当前机器的参考，不设易受机器负载影响的相对性能断言。
+
 | 验证层 | 覆盖内容 |
 | --- | --- |
 | `rules.test.mjs` | 完整占地、所有部署失败原因、成本与取消、T1–T3 双分支和融合耐久、地形事务与撤销、斜坡与破障、所有高度组合、带宽、战中锁定 |
@@ -28,4 +32,6 @@ node development/web-tools/simulations.mjs
 
 无界面测试不能证明画面、音频、真实操作和发布入口可用；这些仍需在实际浏览器和发布版本中单独验证。
 
-难度改动使用 `difficulty-sweep.mjs` 记录各幕伤害、突破、损毁、战斗时长和构筑，并逐节点核对跨难度的计划敌人数与增援预算。`--strategy` 可选 `reference`、`defensive`、`opening`、`empty`；后两者用于验证缺少成长或部署时的失败流程。所有结果必须到达终态且源码哈希一致。实际命令、数值表和样本结果见 [难度与平衡说明](../../docs/DIFFICULTY_BALANCE.md)。参考策略的样本胜率不能当作真实玩家胜率。
+难度改动使用 `difficulty-sweep.mjs` 记录各幕伤害、突破、损毁、战斗时长和构筑，并逐节点核对跨难度的计划敌人数与增援预算。`--strategy` 可选 `reference`、`defensive`、`opening`、`empty`；后两者用于验证缺少成长或部署时的失败流程。所有结果必须到达终态且源码哈希一致。实际命令、数值表和样本结果见 [难度与平衡说明](../docs/DIFFICULTY_BALANCE.md)。参考策略的样本胜率不能当作真实玩家胜率。
+
+2026-10-17 的基线、逐轮改动、性能样本与验证范围见[持续代码审计](../docs/PERFORMANCE_AUDIT_20261017.md)。
