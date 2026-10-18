@@ -22,6 +22,70 @@ test('malformed stat modifiers, unit metadata and terrain refunds cannot overwri
 const service = (type, seed = 'service', act = 0) => { const s = newRun(seed); s.difficultyRevision=2; s.act = act; const node = s.maps[act].nodes.find(n => n.type === type) || s.maps[act].nodes.find(n => n.floor === 1); node.type = type; s.nextNodes = [node.id]; assert.equal(enterNode(s, node.id).ok, true); return s; };
 const drain = s => { let count = 0; while (s.phase === 'reward') { assert.ok(count++ < 60, '奖励队列必须有限'); assert.equal(chooseReward(s, s.rewardQueue[0].kind==='item'&&inventoryStatus(s).items.length>=inventoryStatus(s).itemCapacity?'skip':s.rewardQueue[0].options[0]).ok, true); } };
 
+test('malformed nested save structures return failure without throwing or touching storage',()=>{
+  const storage=new MemoryStorage(),store=createSaveStore(storage,'nested-save-audit');
+  const valid=newRun('nested-save-audit');assert.equal(store.save(valid).ok,true);
+  const original=[...storage.data];
+  const corruptions=[
+    s=>{s.maps[0]=null;},
+    s=>{s.maps[0].nodes[0]=null;},
+    s=>{s.inventory.items=[null];},
+    s=>{s.terrain.entries[0]=null;},
+    s=>{s.rewardQueue=[null];},
+    s=>{s.stats.history.push(s);}
+  ];
+  for(const corrupt of corruptions){
+    const invalid=cloneState(valid);corrupt(invalid);
+    assert.equal(store.save(invalid).ok,false);
+    assert.deepEqual([...storage.data],original,'No primary, backup or pending write');
+    assert.equal(store.load().ok,true);
+  }
+  const interrupted=cloneState(valid);interrupted.phase='battle';
+  interrupted.preBattle=cloneState(valid);interrupted.preBattle.maps[0]=null;
+  assert.equal(store.save(interrupted).ok,false);
+  assert.deepEqual([...storage.data],original);
+  const profile=store.loadProfile();profile.cycle=profile;
+  assert.equal(store.saveProfile(profile).ok,false);
+  assert.deepEqual([...storage.data],original);
+  assert.equal(store.save(valid).ok,true,'Valid writes still work after rejected inputs');
+});
+
+test('saved catalog references reject inherited properties and non-string IDs',()=>{
+  const states={run:newRun('catalog-save'),shop:service('shop','catalog-shop'),event:service('event','catalog-event'),reward:service('elite','catalog-reward')};
+  addItem(states.run,'clarity');finishBattle(states.reward,{won:true});
+  ensureShopStock(states.shop);
+  states.event.currentNode.eventData.relic=Object.keys(relics)[0];
+  states.event.currentNode.eventData.unitsByRole={melee:'phase_blade',ranged:'pulse_array',support:'memory_mechanic'};
+  for(const [kind,id]of [['item','clarity'],['relic',Object.keys(relics)[0]],['talent',Object.keys(talents)[0]]]){
+    states[kind]=cloneState(states.reward);states[kind].rewardQueue=[{kind,options:[id],reserves:[id]}];
+  }
+  const cases=[
+    ['run',s=>s.units[0],'type'],
+    ['run',s=>s.inventory.items[0],'type'],
+    ['shop',s=>s.currentNode.stock.units[0],'id'],
+    ['shop',s=>s.currentNode.stock.relics[0],'id'],
+    ['shop',s=>s.currentNode.stock.items[0],'id'],
+    ['event',s=>s.currentNode.eventData,'id'],
+    ['event',s=>s.currentNode.eventData,'unit'],
+    ['event',s=>s.currentNode.eventData,'relic'],
+    ['event',s=>s.currentNode.eventData.unitsByRole,'melee'],
+    ['run',s=>s.nexus[0],'messenger'],
+    ['reward',s=>s.rewardQueue[0].options,0],
+    ...['item','relic','talent'].flatMap(kind=>[[kind,s=>s.rewardQueue[0].options,0],[kind,s=>s.rewardQueue[0].reserves,0]])
+  ];
+  for(const [kind,entry,key]of cases){
+    const storage=new MemoryStorage(),store=createSaveStore(storage,'catalog-audit'),valid=cloneState(states[kind]);
+    assert.equal(store.save(valid).ok,true,`${kind}: valid fixture`);
+    const original=[...storage.data],realId=entry(valid)[key];
+    for(const invalidId of ['toString','constructor','__proto__',[realId]]){
+      const invalid=cloneState(valid);entry(invalid)[key]=invalidId;
+      assert.equal(store.save(invalid).ok,false,`${kind}.${key}: ${JSON.stringify(invalidId)}`);
+      assert.deepEqual([...storage.data],original);
+      assert.equal(store.load().ok,true);
+    }
+  }
+});
+
 test('complete catalog has stable IDs and finite effect values', () => {
   assert.deepEqual([Object.keys(towers).length, Object.keys(enemies).length, Object.keys(relics).length, Object.keys(talents).length, Object.keys(events).length], [12, 37, 102, 24, 36]);
   for (const t of Object.values(towers)) { assert.ok(t.footprint[0] >= 2 && t.footprint[1] >= 2); assert.deepEqual(Object.keys(t.branches), ['A', 'B']); assert.ok(t.range > 0); assert.equal(t.sprite_id, t.id); assert.ok(t.description.length > 5); for (const b of Object.values(t.branches)) assert.ok(b.description.length>8); }
@@ -325,6 +389,13 @@ test('checksums and nested schemas reject corrupt routes, units, rewards, profil
   const memory = new MemoryStorage(), store = createSaveStore(memory, 'schema'), original = service('elite', 'schema'); finishBattle(original, { won:true }); assert.equal(store.save(original).ok, true);
   const mutations = [
     s => { s.maps[0].nodes[0].next = [s.maps[0].nodes[0].id]; },
+    s => { s.maps[0].nodes[1].id = s.maps[0].nodes[0].id; },
+    s => { s.maps[0].nodes[0].next = ['missing-route-node']; },
+    s => { s.maps[0].nodes[0].next.push(s.maps[0].nodes[0].next[0]); },
+    s => { s.maps[0].nodes[0].floor = 17; },
+    s => { s.visited.push('missing-visited-node'); },
+    s => { s.currentNode.type = 'camp'; },
+    s => { s.currentNode.floor++; },
     s => { s.units[0].x = 40; s.units[0].z = 40; },
     s => { s.units[0].uid = s.units[1].uid; },
     s => { s.units[0].tier = 2; s.units[0].branch = 'C'; },

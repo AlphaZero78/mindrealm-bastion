@@ -39,6 +39,38 @@ test('basic shots, all elevation pairs and modified maximum range use the same s
   pin(e,28,10.5);const expected=solveAttack(s,u,e);assert.equal(expected.ok,true);stepBattle(s,.05);assert.ok(e.hp<e.maxHp,'far but preview-valid shot must fire');
 });
 
+test('target priorities preserve ties, live health and distance changes between steps',()=>{
+  for(const priority of ['near','far','hp']){
+    const s=fixture(),first=place(s,'pulse_array',10,10,{h:1}),second=place(s,'pulse_array',10,14,{h:1});
+    first.priority=second.priority=priority;
+    const [a,b]=battle(s,['static_drifter','static_drifter']);
+    pin(a,14,12);pin(b,14,12);first.cooldown=second.cooldown=0;
+    const shots=()=>s.battle.events.filter(e=>e.type==='shot'&&e.stage==='release');
+    stepBattle(s,.05);
+    assert.deepEqual(shots().map(e=>e.enemy),[a.id,priority==='hp'?b.id:a.id],`${priority}: stable ties and updated health`);
+    second.cooldown=1000;
+    for(const swapped of [false,true]){
+      pin(a,14,swapped?14:10,{hp:swapped?2000:1000});
+      pin(b,14,swapped?10:14,{hp:swapped?1000:2000});
+      first.cooldown=0;stepBattle(s,.05);
+      const near=swapped?a:b,far=swapped?b:a;
+      assert.equal(shots()[0]?.enemy,(priority==='far'?far:near).id,`${priority}: fresh priorities next step`);
+    }
+  }
+});
+
+test('later towers can target reinforcements split during the same action phase',()=>{
+  const s=fixture(),first=place(s,'pulse_array',10,10,{h:1}),second=place(s,'pulse_array',10,14,{h:1});
+  const [parent,other]=battle(s,['static_drifter','static_drifter']);
+  pin(parent,14,12,{hp:1,ability:'split',pressure:0});pin(other,15,9);
+  s.battle.reinforcementBudget=2;first.cooldown=second.cooldown=0;
+  stepBattle(s,.05);
+  const shots=s.battle.events.filter(e=>e.type==='shot'&&e.stage==='release');
+  assert.equal(shots[0].enemy,parent.id);
+  assert.equal(s.battle.reinforcements,2);
+  assert.ok(s.battle.enemies.some(e=>e.reinforcement&&e.id===shots[1]?.enemy));
+});
+
 test('all offensive tower branches apply their distinct combat effect',()=>{
   {
     const {s,u,e}=oneShot('phase_blade',{tier:2,branch:'A'});u.hp*=.3;const hp=u.hp;stepBattle(s,.05);assert.ok(u.hp>hp);
@@ -52,6 +84,23 @@ test('all offensive tower branches apply their distinct combat effect',()=>{
   }
   const aa=oneShot('pulse_array',{tier:2,branch:'B',enemy:'floating_noise'});const ground=solveAttack(aa.s,aa.u,{...aa.e,air:false}),air=solveAttack(aa.s,aa.u,aa.e);assert.ok(Math.abs(air.damage-(ground.damage+aa.e.armor)*1.8+aa.e.armor)<1e-8);
   const ex=oneShot('focus_rail',{tier:2,branch:'B'});const normal=solveAttack(ex.s,ex.u,ex.e);ex.e.hp=ex.e.maxHp*.2;assert.ok(solveAttack(ex.s,ex.u,ex.e).damage>normal.damage*1.5);
+});
+
+test('enemy victims keep stable distance ties and only enabled taunts outrank closer defenders',()=>{
+  for(const type of ['static_drifter','remote_hunter']){
+    const s=fixture(),first=place(s,'phase_blade',10,10),second=place(s,'phase_blade',13,10);
+    const [enemy]=battle(s,[type]);pin(enemy,12,10.5,{attack:20,cooldown:0});
+    first.cooldown=second.cooldown=1000;stepBattle(s,.05);
+    assert.equal(s.battle.events.find(e=>e.type==='hit'&&e.enemy===enemy.id)?.unit,first.uid,`${type}: stable distance tie`);
+  }
+  for(const disabled of [false,true]){
+    const s=fixture(),near=place(s,'phase_blade',10,10),taunt=place(s,'anchor_bulwark',14,10);
+    if(disabled)s.bandwidth=unitStats(s,near).bandwidth;
+    const [enemy]=battle(s,['remote_hunter']);pin(enemy,12,10.5,{attack:20,cooldown:0});
+    near.cooldown=taunt.cooldown=1000;stepBattle(s,.05);
+    assert.equal(s.battle.disabled.includes(taunt.uid),disabled);
+    assert.equal(s.battle.events.find(e=>e.type==='hit'&&e.enemy===enemy.id)?.unit,(disabled?near:taunt).uid);
+  }
 });
 
 test('support targets most missing health; both repair branches, haste, slow aura, shield and self repair work',()=>{
