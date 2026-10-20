@@ -28,7 +28,11 @@
 
 每位使者都有一幅与职责对应的 CG。望隙者调焦观测器，守诺人加固护板，续火医师修复便携火种，拾忆童子拼接记忆片；其余使者分别通过测绘、通信、监听、救援、校准、访谈、档案交接和出发前的准备展现其设定。枢纽左侧展示完整图片、身份与台词，右侧并列展示三份赠礼。赠礼与路线继续使用原有图标作为识别标记。
 
-原始 PNG 分别保存在 `assets/game/events/` 和 `assets/game/nexus/`。两组完整提示词、生成与编辑步骤、原始文件名、视觉检查和 SHA-256 位于 `development/assets/event_art/prompts.json` 与 `development/assets/nexus_art/prompts.json`。图片通过内置 ImageGen 制作，运行文件保留生成结果的原始字节。`web/view/nexus-art.js` 统一使者图片与场景说明，资源索引从该表收集所有枢纽 CG。
+运行 PNG 分别保存在 `game/assets/game/events/` 和 `game/assets/game/nexus/`。生成来源、提示词记录、原始文件名、视觉检查和 SHA-256 位于 `development/assets/event_art/prompts.json` 与 `development/assets/nexus_art/prompts.json`。`web/view/nexus-art.js` 统一使者图片与场景说明，资源索引从该表收集所有枢纽 CG。
+
+2026-10-20 按用户的 48 项最终选择替换了 31 幅 CG，保留 17 幅原图。新图中，16 幅来自 Codex 内置 ImageGen，15 幅来自 Cursor GenerateImage。全部图片保留原生尺寸；PNG 保留原始字节，JPEG 按相同 RGB 像素转存为 PNG。运行资源至少为 1280×720，继续使用原有路径。
+
+最终选择与替换前后的哈希见 `development/assets/cg-selection-2026-10-20.json`。Codex 记录对应调用的提示词；Cursor 记录保存的场景提示稿，并以 `promptScope: source-brief` 标明范围。Cursor 回执中的返工问题与尝试哈希单独保留，逐次补充提示词以回执实际记录为限。
 
 ## 新局随机种子
 

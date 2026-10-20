@@ -19,7 +19,7 @@ async page=>{
    },{base,id,half});
    await idle();await page.locator('.nexus-cg').evaluate(image=>image.decode());
    const art=await page.locator('.nexus-cg').evaluate(image=>({src:image.getAttribute('src'),alt:image.alt,width:image.naturalWidth,height:image.naturalHeight}));
-   if(art.src!==base+'assets/game/nexus/'+id+'.png'||art.width<1600||art.height<900||!art.alt)throw Error('Wrong or missing messenger CG: '+id);
+   if(art.src!==base+'assets/game/nexus/'+id+'.png'||art.width<1280||art.height<720||!art.alt)throw Error('Wrong or missing messenger CG: '+id);
    const before=await page.evaluate(()=>JSON.stringify(window.__mindrealm.getState()));
    for(const size of [{width:1920,height:1080},{width:1440,height:900},{width:960,height:540}])for(const scale of [1,1.25,1.5]){
     await page.setViewportSize(size);await page.evaluate(scale=>{const q=window.__mindrealm;q.getSettings().uiScale=scale;q.render();},scale);await idle();

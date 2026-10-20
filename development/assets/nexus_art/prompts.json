@@ -1,7 +1,7 @@
 {
   "generatedOn": "2026-10-05",
-  "styleRevision": "2026-10-narrative-photographic",
-  "note": "Natural photographic story scenes. Character actions and consequential props lead the composition; large structures are occasional distant context. Original generated PNG bytes are preserved. Dimensions are measured, and earlier event provenance is retained.",
+  "styleRevision": "2026-10-20-user-selected-cg",
+  "note": "Final 48-image user selection: 31 replacements and 17 retained originals. Native dimensions preserved. PNG sources retain original bytes; JPEG sources are converted to PNG with identical decoded RGB pixels. Exact Codex prompts and saved Cursor source briefs are recorded separately.",
   "assets": [
     {
       "messengerId": "archive_child",
@@ -67,31 +67,59 @@
       "messengerId": "crystal_cartographer",
       "act": 2,
       "path": "game/assets/game/nexus/crystal_cartographer.png",
-      "width": 1672,
-      "height": 941,
-      "bytes": 2481087,
-      "sha256": "2c72187e74dc5b7074d479e99be7ae85da0905e7506f004ae3f2439aad32ded9",
-      "generationMode": "built-in imagegen",
-      "styleRevision": "2026-10-narrative-photographic",
-      "finalGenerationFilename": "exec-603bc9f0-0a8c-4526-a206-9928ba731499.png",
-      "finalPrompt": "Use case: photorealistic-natural. Nexus messenger Crystal Cartographer from Mindrealm Bastion: she records the frequency of ridges and believes that changing where you stand changes the answer.\nPhotograph a real working surveyor in a near-future setting, not a symbolic portrait. A woman in her fifties with short graying hair, a weathered calm face and a practical sand-colored field jacket crouches beside a damaged service ridge. One hand holds a compact quartz-resonance survey probe against a metal foothold plate; the other carefully scores a small placement line using the probe's mechanical guide. She is testing where the plate can be shifted into a stable position. Her eyes follow the contact point with patient concentration, and her shoulders brace naturally against a light wind. A small folded physical relief map is strapped to her forearm, with no printed markings. The clear quartz element is a modest sensor component inside a worn metal tool, not a magic crystal or ornament.\nUse a 35mm medium-close location-film shot from beside the ledge, showing her face, hands, resonant probe and the adjustable footing together. Her torso and action fill about 60 percent of the scene and remain centered within the middle 80 percent. Keep the face and working hands in the upper and middle part of the frame. Frayed canvas cuffs, dusty gloves, a simple utility harness and small repairs in the field gear tell a long working life without exaggerated texture.\nThe immediate setting is a quiet patchwork ridge walkway with loose stone, a short concrete retaining edge and practical metal foothold modules. Far behind, a few muted industrial rooftops and a distant service bridge are barely visible through haze. The landscape supports her work; there is no monumental spectacle. Soft overcast daylight, natural earth and gray colors, slightly wind-reddened skin and ordinary exposure. The moment is about discovering a reliable place for someone else to stand. No bystander, no posing at the camera, no giant panoramic map or computer screen.\nThis is a full-image nexus illustration for a whole panel: no artificial empty UI column, keep all key human and tool details inside generous natural edge margins.\nPhotographic style: a naturally exposed 35mm or 50mm live-action near-future drama still. Soft practical diffuse light, moderate depth of field, normal dynamic range, gentle highlight roll-off, real skin and fabric wear with small imperfections. Let expressions, gestures and story objects carry the scene. Background architecture is supportive and softly rendered. No HDR, over-sharpening, crunchy texture, plastic skin, glossy game-render look, aggressive orange-and-teal grading, poster posing, giant face portraits, illustration, magic, robes or medieval hoods. No readable text, numerals, logos, graphic interface, watermark, border, black bars or collage. Believable hands, anatomy, tools and physical connections. Complete 16:9 landscape, at least 1600x900.",
+      "width": 1280,
+      "height": 720,
+      "bytes": 1010317,
+      "sha256": "d371d3ebe754fbb2e1c53ab22e50d4e94350fa185423aae5cd4c5f6cbafeb8de",
+      "generationMode": "Cursor GenerateImage",
+      "styleRevision": "2026-10-20-user-selected-cg",
+      "finalGenerationFilename": "G1_nexus_crystal_cartographer_attempt1.jpg",
+      "finalPrompt": "TEXT-ONLY ORIGINAL GENERATION. All reference_image_paths and other image-input fields MUST be [] or omitted. Generate a new image from this text. No prior image or failed attempt is an input; repairs also use a new text-to-image call.\nSTYLE: Full-bleed 16:9 cinematic photorealistic science-fiction story still. Human-scale future society under neural-frequency control; candid people, visible functional future clothing, precision composite machinery, photonic memory or field technology. Make the future design clear in costume, the central story object and background construction. Preserve believable optical light, moderate contrast, natural complexions and tactile materials. No text, labels, numbers, logos, UI overlays, borders, collages, fantasy magic, oversized monuments, glossy artificial faces, HDR or sharpening halos.\nANATOMY FIRST: Realistic shoulders, elbows, wrists and hands. Every visible hand belongs to a clearly traceable arm. Correct normal digit structure; occluded digits may remain hidden naturally. No extra or fused fingers, detached thumbs, duplicate hands, broken wrists, intersecting palms or prop shafts passing through skin. Keep the specified simple hand poses and leave physical space between people. Do not disguise a bad grip with blur, gloves or crop. Keep hands large enough to inspect. Equipment rests on real support or a credible single grip.\nSCENE CONTROL: Show the moment before an event decision or a messenger's ordinary work. Intact objects, unopened containers and unconnected sockets stay in that state. Respect the plot. Cast specifications below override generic gender pronouns in the visual notes. People are individuals in a shared future society, with everyday technical clothing rather than stereotyped ceremonial costumes.\nOUTPUT: Highest native 16:9 available; keep original bytes and actual size. No artificial upscaling.\n\nTITLE: 晶图师 / crystal_cartographer\nCAST: A Central Asian woman in her forties wearing a pale mineral-gray field suit.\nPLOT: 刻下山脊的频率。改变落脚之处，也改变答案。\nVISUAL SITUATION: 晶图师在山脊维修步道上用石英共振测绘探针标定可移动落脚板，臂上地图与专注目光交代她在寻找可靠部署位置。“刻下山脊的频率”具体化为测绘、校准地形与改善站位的野外作业。\n\nMANDATORY HAND STAGING: One hand holds a broad survey stylus grip; the other rests flat on the stable instrument stand. The map is a non-text volumetric surface projected from the mounted instrument, not a paper held by extra fingers.\n\nCOMPOSITION: Natural eye-level medium shot with faces and working hands clearly visible inside the central 80%. Show a human-scale workplace, complete heads and the signature device. Maintain physically plausible shoulder-to-elbow-to-wrist continuity. No empty interface panel and no portrait-card framing.",
+      "promptScope": "source-brief",
       "steps": [
         {
           "operation": "generate",
-          "revision": "2026-10-narrative-photographic",
-          "prompt": "Use case: photorealistic-natural. Nexus messenger Crystal Cartographer from Mindrealm Bastion: she records the frequency of ridges and believes that changing where you stand changes the answer.\nPhotograph a real working surveyor in a near-future setting, not a symbolic portrait. A woman in her fifties with short graying hair, a weathered calm face and a practical sand-colored field jacket crouches beside a damaged service ridge. One hand holds a compact quartz-resonance survey probe against a metal foothold plate; the other carefully scores a small placement line using the probe's mechanical guide. She is testing where the plate can be shifted into a stable position. Her eyes follow the contact point with patient concentration, and her shoulders brace naturally against a light wind. A small folded physical relief map is strapped to her forearm, with no printed markings. The clear quartz element is a modest sensor component inside a worn metal tool, not a magic crystal or ornament.\nUse a 35mm medium-close location-film shot from beside the ledge, showing her face, hands, resonant probe and the adjustable footing together. Her torso and action fill about 60 percent of the scene and remain centered within the middle 80 percent. Keep the face and working hands in the upper and middle part of the frame. Frayed canvas cuffs, dusty gloves, a simple utility harness and small repairs in the field gear tell a long working life without exaggerated texture.\nThe immediate setting is a quiet patchwork ridge walkway with loose stone, a short concrete retaining edge and practical metal foothold modules. Far behind, a few muted industrial rooftops and a distant service bridge are barely visible through haze. The landscape supports her work; there is no monumental spectacle. Soft overcast daylight, natural earth and gray colors, slightly wind-reddened skin and ordinary exposure. The moment is about discovering a reliable place for someone else to stand. No bystander, no posing at the camera, no giant panoramic map or computer screen.\nThis is a full-image nexus illustration for a whole panel: no artificial empty UI column, keep all key human and tool details inside generous natural edge margins.\nPhotographic style: a naturally exposed 35mm or 50mm live-action near-future drama still. Soft practical diffuse light, moderate depth of field, normal dynamic range, gentle highlight roll-off, real skin and fabric wear with small imperfections. Let expressions, gestures and story objects carry the scene. Background architecture is supportive and softly rendered. No HDR, over-sharpening, crunchy texture, plastic skin, glossy game-render look, aggressive orange-and-teal grading, poster posing, giant face portraits, illustration, magic, robes or medieval hoods. No readable text, numerals, logos, graphic interface, watermark, border, black bars or collage. Believable hands, anatomy, tools and physical connections. Complete 16:9 landscape, at least 1600x900.",
-          "outputFilename": "exec-603bc9f0-0a8c-4526-a206-9928ba731499.png",
-          "selected": true
+          "selected": true,
+          "prompt": "TEXT-ONLY ORIGINAL GENERATION. All reference_image_paths and other image-input fields MUST be [] or omitted. Generate a new image from this text. No prior image or failed attempt is an input; repairs also use a new text-to-image call.\nSTYLE: Full-bleed 16:9 cinematic photorealistic science-fiction story still. Human-scale future society under neural-frequency control; candid people, visible functional future clothing, precision composite machinery, photonic memory or field technology. Make the future design clear in costume, the central story object and background construction. Preserve believable optical light, moderate contrast, natural complexions and tactile materials. No text, labels, numbers, logos, UI overlays, borders, collages, fantasy magic, oversized monuments, glossy artificial faces, HDR or sharpening halos.\nANATOMY FIRST: Realistic shoulders, elbows, wrists and hands. Every visible hand belongs to a clearly traceable arm. Correct normal digit structure; occluded digits may remain hidden naturally. No extra or fused fingers, detached thumbs, duplicate hands, broken wrists, intersecting palms or prop shafts passing through skin. Keep the specified simple hand poses and leave physical space between people. Do not disguise a bad grip with blur, gloves or crop. Keep hands large enough to inspect. Equipment rests on real support or a credible single grip.\nSCENE CONTROL: Show the moment before an event decision or a messenger's ordinary work. Intact objects, unopened containers and unconnected sockets stay in that state. Respect the plot. Cast specifications below override generic gender pronouns in the visual notes. People are individuals in a shared future society, with everyday technical clothing rather than stereotyped ceremonial costumes.\nOUTPUT: Highest native 16:9 available; keep original bytes and actual size. No artificial upscaling.\n\nTITLE: 晶图师 / crystal_cartographer\nCAST: A Central Asian woman in her forties wearing a pale mineral-gray field suit.\nPLOT: 刻下山脊的频率。改变落脚之处，也改变答案。\nVISUAL SITUATION: 晶图师在山脊维修步道上用石英共振测绘探针标定可移动落脚板，臂上地图与专注目光交代她在寻找可靠部署位置。“刻下山脊的频率”具体化为测绘、校准地形与改善站位的野外作业。\n\nMANDATORY HAND STAGING: One hand holds a broad survey stylus grip; the other rests flat on the stable instrument stand. The map is a non-text volumetric surface projected from the mounted instrument, not a paper held by extra fingers.\n\nCOMPOSITION: Natural eye-level medium shot with faces and working hands clearly visible inside the central 80%. Show a human-scale workplace, complete heads and the signature device. Maintain physically plausible shoulder-to-elbow-to-wrist continuity. No empty interface panel and no portrait-card framing.",
+          "promptScope": "source-brief",
+          "outputFilename": "G1_nexus_crystal_cartographer_attempt1.jpg",
+          "sourceSha256": "da97bce45bd7673255de7052e9eb5355b9d17d0bcf0241f382d440edec8a8d2a",
+          "tool": "Cursor GenerateImage",
+          "referenceImages": []
         }
       ],
-      "briefZh": "晶图师在山脊维修步道上用石英共振测绘探针标定可移动落脚板，臂上地图与专注目光交代她在寻找可靠部署位置。“刻下山脊的频率”具体化为测绘、校准地形与改善站位的野外作业。",
-      "acceptanceZh": "人物专注的表情、探针与两只手的工作关系清楚，防护外套和风吹头发自然。晶体作为传感工具，未出现法术或摆拍姿态；山脊和远桥仅辅助环境。主体与工具位于整图中央范围，未见明显手部错误、水印或可读乱码。",
+      "briefZh": "晶图师沿山脊测量地形的频率，寻找可靠的落脚与部署位置。她相信改变站位也会改变答案，愿意用测绘经验帮助偏频者利用高低地势。",
+      "sceneBrief": "晶图师沿山脊测量地形的频率，寻找可靠的落脚与部署位置。她相信改变站位也会改变答案，愿意用测绘经验帮助偏频者利用高低地势。",
+      "acceptanceZh": "已查看整图。探针握持手的指节与拇指分界自然，另一手五指平放仪器上沿；投影和仪器支承独立。",
+      "sourceFormat": "JPEG",
+      "sourceSha256": "da97bce45bd7673255de7052e9eb5355b9d17d0bcf0241f382d440edec8a8d2a",
+      "nativeSize": [
+        1280,
+        720
+      ],
+      "conversion": "JPEG decoded to RGB PNG; identical pixels and native size",
+      "imageModelDisclosure": "Image model was not disclosed by the generation tool.",
+      "userSelection": {
+        "choice": "new",
+        "exportedAt": "2026-10-20T02:23:08.049Z",
+        "selectionSha256": "3bd59d2be3cd27e966998cb5d67344004ebeaa7bcfa3c2804818f01b39904e40"
+      },
+      "replacedSha256": "2c72187e74dc5b7074d479e99be7ae85da0905e7506f004ae3f2439aad32ded9",
       "coordinatorReview": {
         "visualReviewed": true,
-        "method": "original image preview",
-        "storyAndNaturalDetail": "accepted",
-        "sha256": "2c72187e74dc5b7074d479e99be7ae85da0905e7506f004ae3f2439aad32ded9"
-      }
+        "sha256": "da97bce45bd7673255de7052e9eb5355b9d17d0bcf0241f382d440edec8a8d2a",
+        "notes": "已查看整图。探针握持手的指节与拇指分界自然，另一手五指平放仪器上沿；投影和仪器支承独立。"
+      },
+      "conversationModel": "Grok 4.7 Medium",
+      "promptRecordNote": "Saved source brief; per-attempt prompt additions were not included in the generation receipts.",
+      "generationAttempts": [
+        {
+          "filename": "G1_nexus_crystal_cartographer_attempt1.jpg",
+          "sha256": "da97bce45bd7673255de7052e9eb5355b9d17d0bcf0241f382d440edec8a8d2a",
+          "selected": true,
+          "issues": []
+        }
+      ]
     },
     {
       "messengerId": "far_watcher",
@@ -99,29 +127,55 @@
       "path": "game/assets/game/nexus/far_watcher.png",
       "width": 1672,
       "height": 941,
-      "bytes": 2255273,
-      "sha256": "30fa4db747a59720899af2b0838a8158c54ffad840bf2cfef7afc9f712993b55",
+      "bytes": 2515173,
+      "sha256": "16e88ceaeb8b2b9df4910f6442ebdf33fa9053407ae0b305f86b42558a39c07f",
       "generationMode": "built-in imagegen",
-      "styleRevision": "2026-10-narrative-photographic",
-      "finalGenerationFilename": "exec-17a5154a-50f2-418f-9091-5a371b4acade.png",
-      "finalPrompt": "Use case: photorealistic-natural\nAsset type: one dedicated nexus-messenger CG, a candid near-future film still, full-bleed 16:9, native at least 1600x900.\nCharacter and duty: \"Far Watcher\", a real human guide who reads approaching danger from higher ground and helps others see farther. Show her actively surveying a route from a modest rooftop observation ledge. She is a woman in her late forties with sun-worn natural skin, short wind-tossed hair with a few gray strands and a faded civilian windbreaker. One eye follows a compact optical rangefinder mounted at eye level; her other eye remains partly visible in three-quarter profile, focused and patient. One hand turns a precision focus ring while the other steadies a three-prism lens assembly. A practical folding survey step and a simple safety tether support the work.\nStory: she has spotted a safer sightline and is carefully checking it before anyone moves. Her concentration and small adjustment communicate protective foresight, long-range vision and useful high ground. Keep the optical instrument clearly a real survey device with broad glass lenses, worn adjustment knobs and a restrained internal light. No gun or heroic combat action.\nCamera and composition: human eye-height 50mm medium shot, documentary intimacy. The messenger's face, upper body, working hands and optical instrument occupy the central 80 percent of the frame and about 55 to 65 percent of its height, with comfortable margins on both sides for a slight crop. A full narrative scene, not an icon, headshot or standing poster. Use the entire width naturally; no reserved right-side blank panel is needed. The high ledge, distant route and modest rooftops are secondary softly focused context.\nLook and light: real on-location film photography, soft morning daylight, normal contrast, subtle warm skin and muted sage cloth, gentle highlight rolloff, natural lens softness and restrained fine grain. Small believable wear on fingertips, stitching, metal and optical glass. The person is the clear subject; the background simply explains her vantage point.\nConstraints: no text, letters, numbers, readable markings, UI, captions, labels, logos, watermark, black borders or collage. No HDR, oversharpened edges, halo outlines, crunchy microtexture, glossy CGI skin, painting strokes, oversized megastructures, saturated neon, fantasy robes, halos, mystical third eye or posed poster stance.",
+      "styleRevision": "2026-10-20-user-selected-cg",
+      "finalGenerationFilename": "exec-517b8bd9-fb03-489d-82be-927b8aed9960.png",
+      "finalPrompt": "Use case: photorealistic-natural.\nAsset type: full-bleed cinematic science-fiction narrative CG for the game Mindrealm Bastion.\nGenerate one brand-new standalone 16:9 landscape image from text only. No reference images are supplied. The output must depict the specified scene and current story literally.\nStyle: high-end live-action science-fiction film still, photographed practical sets and physically credible VFX, natural skin texture, believable ages and expressions, optical depth and tangible material weight. Strong future engineering in the main equipment and setting. Real scene depth, varied environmental storytelling and motivated lighting. Avoid illustration, waxy or plastic skin, game-like low-detail renders, generic gray tabletop portraits and a huge empty wall.\nComposition: wide or medium-wide, coherent foreground, middle ground and background. Keep focal faces, hands and story mechanisms comfortably inside frame; leave naturally quieter areas through lighting and depth, without replacing the environment with a blank wall. Do not add UI panels, captions, labels, watermark, split panels or collage. Integrated instruments can carry nonverbal technical graphics.\nAnatomy and structure: each hand belongs to one continuous arm, normal five-digit anatomy with natural occlusion, simple relaxed poses and separated grips. No extra limbs, fused fingers, broken wrists, impossible supports or machinery passing through bodies. Every important device has clear mounting, weight and function. Keep all protagonists fictional and adult unless specifically stated.\n\nTITLE: 望隙者 / nexus_far_watcher\nCURRENT STORY: 在高处读懂来路。让视线先抵达危险。\nSTORY OPTIONS / CHARACTER ROLE: 远界之瞳: 远程在二级及以上高地时伤害 +35%；近战攻击 −15%。 | 透隙长镜: 直接攻击射程 +25%、远程忽略 6 点护甲；所有构造最大耐久 −15%。 | 浮阶印记: 地形改造费用 −70%、搬迁费用 −50%；敌人在距火种 12 格外死亡时压力 −30%。\nUSER FEEDBACK TO FIX: 都有结构性问题\nCAST: An adult North African male lookout in a weathered futuristic observation suit with precise optical equipment.\nSCENE: A high observation terrace above a vast stratified science-fiction city and defensive approach routes. The lookout uses one structurally plausible long-range optical scope: one straight main optical tube, one rear eyepiece, one front objective, a single supported gimbal and three clearly separated tripod legs planted on the terrace. His eye aligns naturally with the rear eyepiece, his head stays clear of the tube, one hand touches a side focus wheel and his other hand rests on a railing. A small secondary ranging sensor is firmly bolted parallel to the main tube with a visible bracket. The scope points out over distant aerial traffic and defensive ridges, where tiny approaching threats are faintly visible. Show real photographic anatomy and mechanical joins; avoid stacked conflicting eyepieces, floating lenses, doubled hands, twisted wrists or impossible tripod intersections.\nREQUIRED VISIBLE ANCHORS: single mechanically coherent scope; eye aligned with rear eyepiece; clear gimbal and planted tripod legs; high terrain with distant approach route.",
+      "promptScope": "exact",
       "steps": [
         {
           "operation": "generate",
-          "revision": "2026-10-narrative-photographic",
-          "prompt": "Use case: photorealistic-natural\nAsset type: one dedicated nexus-messenger CG, a candid near-future film still, full-bleed 16:9, native at least 1600x900.\nCharacter and duty: \"Far Watcher\", a real human guide who reads approaching danger from higher ground and helps others see farther. Show her actively surveying a route from a modest rooftop observation ledge. She is a woman in her late forties with sun-worn natural skin, short wind-tossed hair with a few gray strands and a faded civilian windbreaker. One eye follows a compact optical rangefinder mounted at eye level; her other eye remains partly visible in three-quarter profile, focused and patient. One hand turns a precision focus ring while the other steadies a three-prism lens assembly. A practical folding survey step and a simple safety tether support the work.\nStory: she has spotted a safer sightline and is carefully checking it before anyone moves. Her concentration and small adjustment communicate protective foresight, long-range vision and useful high ground. Keep the optical instrument clearly a real survey device with broad glass lenses, worn adjustment knobs and a restrained internal light. No gun or heroic combat action.\nCamera and composition: human eye-height 50mm medium shot, documentary intimacy. The messenger's face, upper body, working hands and optical instrument occupy the central 80 percent of the frame and about 55 to 65 percent of its height, with comfortable margins on both sides for a slight crop. A full narrative scene, not an icon, headshot or standing poster. Use the entire width naturally; no reserved right-side blank panel is needed. The high ledge, distant route and modest rooftops are secondary softly focused context.\nLook and light: real on-location film photography, soft morning daylight, normal contrast, subtle warm skin and muted sage cloth, gentle highlight rolloff, natural lens softness and restrained fine grain. Small believable wear on fingertips, stitching, metal and optical glass. The person is the clear subject; the background simply explains her vantage point.\nConstraints: no text, letters, numbers, readable markings, UI, captions, labels, logos, watermark, black borders or collage. No HDR, oversharpened edges, halo outlines, crunchy microtexture, glossy CGI skin, painting strokes, oversized megastructures, saturated neon, fantasy robes, halos, mystical third eye or posed poster stance.",
-          "outputFilename": "exec-17a5154a-50f2-418f-9091-5a371b4acade.png",
-          "selected": true
+          "selected": true,
+          "prompt": "Use case: photorealistic-natural.\nAsset type: full-bleed cinematic science-fiction narrative CG for the game Mindrealm Bastion.\nGenerate one brand-new standalone 16:9 landscape image from text only. No reference images are supplied. The output must depict the specified scene and current story literally.\nStyle: high-end live-action science-fiction film still, photographed practical sets and physically credible VFX, natural skin texture, believable ages and expressions, optical depth and tangible material weight. Strong future engineering in the main equipment and setting. Real scene depth, varied environmental storytelling and motivated lighting. Avoid illustration, waxy or plastic skin, game-like low-detail renders, generic gray tabletop portraits and a huge empty wall.\nComposition: wide or medium-wide, coherent foreground, middle ground and background. Keep focal faces, hands and story mechanisms comfortably inside frame; leave naturally quieter areas through lighting and depth, without replacing the environment with a blank wall. Do not add UI panels, captions, labels, watermark, split panels or collage. Integrated instruments can carry nonverbal technical graphics.\nAnatomy and structure: each hand belongs to one continuous arm, normal five-digit anatomy with natural occlusion, simple relaxed poses and separated grips. No extra limbs, fused fingers, broken wrists, impossible supports or machinery passing through bodies. Every important device has clear mounting, weight and function. Keep all protagonists fictional and adult unless specifically stated.\n\nTITLE: 望隙者 / nexus_far_watcher\nCURRENT STORY: 在高处读懂来路。让视线先抵达危险。\nSTORY OPTIONS / CHARACTER ROLE: 远界之瞳: 远程在二级及以上高地时伤害 +35%；近战攻击 −15%。 | 透隙长镜: 直接攻击射程 +25%、远程忽略 6 点护甲；所有构造最大耐久 −15%。 | 浮阶印记: 地形改造费用 −70%、搬迁费用 −50%；敌人在距火种 12 格外死亡时压力 −30%。\nUSER FEEDBACK TO FIX: 都有结构性问题\nCAST: An adult North African male lookout in a weathered futuristic observation suit with precise optical equipment.\nSCENE: A high observation terrace above a vast stratified science-fiction city and defensive approach routes. The lookout uses one structurally plausible long-range optical scope: one straight main optical tube, one rear eyepiece, one front objective, a single supported gimbal and three clearly separated tripod legs planted on the terrace. His eye aligns naturally with the rear eyepiece, his head stays clear of the tube, one hand touches a side focus wheel and his other hand rests on a railing. A small secondary ranging sensor is firmly bolted parallel to the main tube with a visible bracket. The scope points out over distant aerial traffic and defensive ridges, where tiny approaching threats are faintly visible. Show real photographic anatomy and mechanical joins; avoid stacked conflicting eyepieces, floating lenses, doubled hands, twisted wrists or impossible tripod intersections.\nREQUIRED VISIBLE ANCHORS: single mechanically coherent scope; eye aligned with rear eyepiece; clear gimbal and planted tripod legs; high terrain with distant approach route.",
+          "promptScope": "exact",
+          "outputFilename": "exec-517b8bd9-fb03-489d-82be-927b8aed9960.png",
+          "sourceSha256": "16e88ceaeb8b2b9df4910f6442ebdf33fa9053407ae0b305f86b42558a39c07f",
+          "tool": "image_gen.imagegen",
+          "referenceImages": []
         }
       ],
-      "briefZh": "望隙者在屋顶观测点贴近光学目镜，一手细调焦环，一手稳住三镜组件，认真核对后来者将走的路线。 通过真实的远距观测、高处视线和便携支架对应“在高处读懂来路”与射程、高地和地形相关赠礼；使者作为有工作职责的人出现。",
-      "acceptanceZh": "已 view_image。脸、调焦手与多镜光学器件位于中央80%区域，动作连贯，关键物件有轻裁切余量；自然晨光、普通皮肤与磨旧防风衣，未见畸形、文字、水印或图标/海报站姿。",
+      "briefZh": "望隙者在高处观察远方，先于同行者看清危险的来路。他以耐心的观测、射程和视线经验，为尚未抵达的威胁留下准备时间。",
+      "sceneBrief": "A high observation terrace above a vast stratified science-fiction city and defensive approach routes. The lookout uses one structurally plausible long-range optical scope: one straight main optical tube, one rear eyepiece, one front objective, a single supported gimbal and three clearly separated tripod legs planted on the terrace. His eye aligns naturally with the rear eyepiece, his head stays clear of the tube, one hand touches a side focus wheel and his other hand rests on a railing. A small secondary ranging sensor is firmly bolted parallel to the main tube with a visible bracket. The scope points out over distant aerial traffic and defensive ridges, where tiny approaching threats are faintly visible. Show real photographic anatomy and mechanical joins; avoid stacked conflicting eyepieces, floating lenses, doubled hands, twisted wrists or impossible tripod intersections.",
+      "acceptanceZh": "已查看生成结果：眼睛对准后目镜，单主镜筒与辅助传感器各有明确支架，云台、中央支柱及三条支腿关系可辨；调焦与扶栏两手正常。",
+      "sourceFormat": "PNG",
+      "sourceSha256": "16e88ceaeb8b2b9df4910f6442ebdf33fa9053407ae0b305f86b42558a39c07f",
+      "nativeSize": [
+        1672,
+        941
+      ],
+      "conversion": "original PNG bytes",
+      "imageModelDisclosure": "Image model was not disclosed by the generation tool.",
+      "userSelection": {
+        "choice": "codex",
+        "exportedAt": "2026-10-20T02:23:08.049Z",
+        "selectionSha256": "3bd59d2be3cd27e966998cb5d67344004ebeaa7bcfa3c2804818f01b39904e40"
+      },
+      "replacedSha256": "30fa4db747a59720899af2b0838a8158c54ffad840bf2cfef7afc9f712993b55",
       "coordinatorReview": {
         "visualReviewed": true,
-        "method": "original image preview",
-        "storyAndNaturalDetail": "accepted",
-        "sha256": "30fa4db747a59720899af2b0838a8158c54ffad840bf2cfef7afc9f712993b55"
-      }
+        "sha256": "16e88ceaeb8b2b9df4910f6442ebdf33fa9053407ae0b305f86b42558a39c07f",
+        "notes": "已查看生成结果：眼睛对准后目镜，单主镜筒与辅助传感器各有明确支架，云台、中央支柱及三条支腿关系可辨；调焦与扶栏两手正常。"
+      },
+      "generationAttempts": [
+        {
+          "filename": "nexus_far_watcher_attempt1.png",
+          "sha256": "16e88ceaeb8b2b9df4910f6442ebdf33fa9053407ae0b305f86b42558a39c07f",
+          "selected": true,
+          "issues": []
+        }
+      ]
     },
     {
       "messengerId": "foreign_voice",
@@ -129,59 +183,119 @@
       "path": "game/assets/game/nexus/foreign_voice.png",
       "width": 1672,
       "height": 941,
-      "bytes": 2105357,
-      "sha256": "464f847ecbe920a5643a55a8d5de39f6483cc068ee1598d31473e5b123f09498",
+      "bytes": 2602395,
+      "sha256": "e1205ad78dc0f943bf652db4bc1308b13b777870cbcfefc7a0b415ab889f2d63",
       "generationMode": "built-in imagegen",
-      "styleRevision": "2026-10-narrative-photographic",
-      "finalGenerationFilename": "exec-636b8c2b-d518-4e15-b87f-2e0b034b61ba.png",
-      "finalPrompt": "Use case: photorealistic-natural\nAsset: narrative messenger CG, Foreign Voice / 异声旅人, keeper of voices that remain different.\nCreate a candid photographic 35 mm film still, 16:9, native 2048x1152 requested and at least 1600x900. Natural exposure, soft fine detail, normal contrast and believable depth of field. Depict a person actively making room for another person to speak, not an icon or posed group portrait.\n\nCharacter and action: a traveler in their thirties with short uneven hair, a worn pale-mint field jacket and a repaired shoulder bag stands in a modest transit shelter used as a neighborhood communication point. A discreet practical hearing earpiece rests behind one ear. They turn attentively toward a quiet young adult beside them and offer a separate small handheld microphone, waiting without rushing. In the other hand they hold a palm-sized three-channel audio distributor with distinct physical leads kept separate. An older person farther behind has paused to listen. The traveler's face shows curiosity and patient encouragement; the quieter person is just beginning to find the confidence to respond. Nobody faces the camera.\n\nConnection to the setting: the messenger believes that preserving differences leaves the world an exit. Their gifts support mixed roles working together, a few independent defenders, and many small first-tier voices. Express this through separate working channels and attention to the least-heard speaker, not through identical uniforms or a merged choir. The equipment has a few modest indicators but no readable controls or graphics.\n\nSetting: an ordinary sheltered passage with a bench, softly lit frosted windows, scuffed walls and a small radio bag. It feels like people meeting during a journey, intimate and useful. No huge communications tower, no grand stage. The main traveler is clearly the active facilitator.\n\nPhotography and composition: candid medium group framing with a 35 mm lens, soft morning light, faded mint and neutral clothing, real skin and fabric, subtle grain, natural f/4 depth of field. Keep the traveler's body, expression, extended microphone, distributor and the recipient's hands within the central 80 percent, important gestures around mid-chest height. Secondary listener softly recedes; outer edges are quiet for a side-panel crop. Asymmetric, caught mid-conversation, not arranged in a line.\n\nAvoid: written words, numerals, labels, UI, logos, watermarks, frame, collage; literal aliens, exotic costume, mystical eyes, medieval hoods or cloaks, tiny people, giant architecture, neon, HDR, sharpened edges, perfect plastic skin, CGI sheen, game-3D look, painterly or illustrated appearance.",
+      "styleRevision": "2026-10-20-user-selected-cg",
+      "finalGenerationFilename": "exec-c8b31ba6-1979-4f54-9819-2536cceb1dd7.png",
+      "finalPrompt": "Use case: photorealistic-natural.\nAsset type: full-bleed cinematic science-fiction narrative CG for the game Mindrealm Bastion.\nGenerate one brand-new standalone 16:9 landscape image from text only. No reference images are supplied. The output must depict the specified scene and current story literally.\nStyle: high-end live-action science-fiction film still, photographed practical sets and physically credible VFX, natural skin texture, believable ages and expressions, optical depth and tangible material weight. Strong future engineering in the main equipment and setting. Real scene depth, varied environmental storytelling and motivated lighting. Avoid illustration, waxy or plastic skin, game-like low-detail renders, generic gray tabletop portraits and a huge empty wall.\nComposition: wide or medium-wide, coherent foreground, middle ground and background. Keep focal faces, hands and story mechanisms comfortably inside frame; leave naturally quieter areas through lighting and depth, without replacing the environment with a blank wall. Do not add UI panels, captions, labels, watermark, split panels or collage. Integrated instruments can carry nonverbal technical graphics.\nAnatomy and structure: each hand belongs to one continuous arm, normal five-digit anatomy with natural occlusion, simple relaxed poses and separated grips. No extra limbs, fused fingers, broken wrists, impossible supports or machinery passing through bodies. Every important device has clear mounting, weight and function. Keep all protagonists fictional and adult unless specifically stated.\n\nTITLE: 异声旅人 / nexus_foreign_voice\nCURRENT STORY: 保留不相同的声音。把不同留在这里，世界就还有出口。\nSTORY OPTIONS / CHARACTER ROLE: 异声合奏: 启用的构造同时含近战、远程、支援时，全体攻击 +40%；固定有效带宽 +6，维修费用 +20%。 | 少数者席位: 部署且存活的构造不超过 8 个时，攻击 +65%、护甲 +8；超过后这两项加成消失。 | 万千细语: T1 构造攻击 +80%、最大耐久 +60%、带宽占用 −1（至少 1）；T2/T3 攻击 −20%。\nUSER FEEDBACK TO FIX: 没感受到倾听,也没有科幻感\nCAST: An adult Southeast Asian female traveler who listens, and an adult East African male speaker with a quiet vulnerable expression; distinct everyday technical clothing.\nSCENE: Inside an open-sided futuristic transit shelter during rain, the woman listener leans slightly toward the seated speaker, maintaining warm attentive eye contact, mouth closed and brows relaxed. She is clearly giving him time to speak. The man quietly talks with one modest open-hand gesture; his other hand rests on his own knee. Between them a small physical multichannel acoustic receiver sits on a fixed stand, displaying three distinct gently luminous waveform strands that remain independent rather than merging. Their hands stay separate and no microphone is being thrust at someone. Behind them, a few passengers wait beneath engineered acoustic panels, luminous transit routing strips and a view of passing suspended trains. Emotional listening and preserved distinct voices are equally visible; the future transit environment is detailed and believable.\nREQUIRED VISIBLE ANCHORS: listener clearly attentive and silent; other person speaking; independent waveform channels; advanced lived-in transit shelter.\n\nThe narrative and story options above are context only. Render no written words or text labels.\nCRITICAL ANATOMY REVISION: The male speaker keeps his non-gesturing hand fully inside his own jacket side pocket, with a clear continuous sleeve and pocket opening. His only visible hand makes a calm open-palm speaking gesture with exactly one thumb and four naturally separated fingers. Do not place his hand over his knee. Keep the woman's visible hand relaxed and clearly connected to her arm. Retain the attentive eye contact and clearly futuristic transit shelter. This is a fresh text-only image, with no reference inputs.",
+      "promptScope": "exact",
       "steps": [
         {
           "operation": "generate",
-          "revision": "2026-10-narrative-photographic",
-          "prompt": "Use case: photorealistic-natural\nAsset: narrative messenger CG, Foreign Voice / 异声旅人, keeper of voices that remain different.\nCreate a candid photographic 35 mm film still, 16:9, native 2048x1152 requested and at least 1600x900. Natural exposure, soft fine detail, normal contrast and believable depth of field. Depict a person actively making room for another person to speak, not an icon or posed group portrait.\n\nCharacter and action: a traveler in their thirties with short uneven hair, a worn pale-mint field jacket and a repaired shoulder bag stands in a modest transit shelter used as a neighborhood communication point. A discreet practical hearing earpiece rests behind one ear. They turn attentively toward a quiet young adult beside them and offer a separate small handheld microphone, waiting without rushing. In the other hand they hold a palm-sized three-channel audio distributor with distinct physical leads kept separate. An older person farther behind has paused to listen. The traveler's face shows curiosity and patient encouragement; the quieter person is just beginning to find the confidence to respond. Nobody faces the camera.\n\nConnection to the setting: the messenger believes that preserving differences leaves the world an exit. Their gifts support mixed roles working together, a few independent defenders, and many small first-tier voices. Express this through separate working channels and attention to the least-heard speaker, not through identical uniforms or a merged choir. The equipment has a few modest indicators but no readable controls or graphics.\n\nSetting: an ordinary sheltered passage with a bench, softly lit frosted windows, scuffed walls and a small radio bag. It feels like people meeting during a journey, intimate and useful. No huge communications tower, no grand stage. The main traveler is clearly the active facilitator.\n\nPhotography and composition: candid medium group framing with a 35 mm lens, soft morning light, faded mint and neutral clothing, real skin and fabric, subtle grain, natural f/4 depth of field. Keep the traveler's body, expression, extended microphone, distributor and the recipient's hands within the central 80 percent, important gestures around mid-chest height. Secondary listener softly recedes; outer edges are quiet for a side-panel crop. Asymmetric, caught mid-conversation, not arranged in a line.\n\nAvoid: written words, numerals, labels, UI, logos, watermarks, frame, collage; literal aliens, exotic costume, mystical eyes, medieval hoods or cloaks, tiny people, giant architecture, neon, HDR, sharpened edges, perfect plastic skin, CGI sheen, game-3D look, painterly or illustrated appearance.",
-          "outputFilename": "exec-636b8c2b-d518-4e15-b87f-2e0b034b61ba.png",
-          "selected": true
+          "selected": true,
+          "prompt": "Use case: photorealistic-natural.\nAsset type: full-bleed cinematic science-fiction narrative CG for the game Mindrealm Bastion.\nGenerate one brand-new standalone 16:9 landscape image from text only. No reference images are supplied. The output must depict the specified scene and current story literally.\nStyle: high-end live-action science-fiction film still, photographed practical sets and physically credible VFX, natural skin texture, believable ages and expressions, optical depth and tangible material weight. Strong future engineering in the main equipment and setting. Real scene depth, varied environmental storytelling and motivated lighting. Avoid illustration, waxy or plastic skin, game-like low-detail renders, generic gray tabletop portraits and a huge empty wall.\nComposition: wide or medium-wide, coherent foreground, middle ground and background. Keep focal faces, hands and story mechanisms comfortably inside frame; leave naturally quieter areas through lighting and depth, without replacing the environment with a blank wall. Do not add UI panels, captions, labels, watermark, split panels or collage. Integrated instruments can carry nonverbal technical graphics.\nAnatomy and structure: each hand belongs to one continuous arm, normal five-digit anatomy with natural occlusion, simple relaxed poses and separated grips. No extra limbs, fused fingers, broken wrists, impossible supports or machinery passing through bodies. Every important device has clear mounting, weight and function. Keep all protagonists fictional and adult unless specifically stated.\n\nTITLE: 异声旅人 / nexus_foreign_voice\nCURRENT STORY: 保留不相同的声音。把不同留在这里，世界就还有出口。\nSTORY OPTIONS / CHARACTER ROLE: 异声合奏: 启用的构造同时含近战、远程、支援时，全体攻击 +40%；固定有效带宽 +6，维修费用 +20%。 | 少数者席位: 部署且存活的构造不超过 8 个时，攻击 +65%、护甲 +8；超过后这两项加成消失。 | 万千细语: T1 构造攻击 +80%、最大耐久 +60%、带宽占用 −1（至少 1）；T2/T3 攻击 −20%。\nUSER FEEDBACK TO FIX: 没感受到倾听,也没有科幻感\nCAST: An adult Southeast Asian female traveler who listens, and an adult East African male speaker with a quiet vulnerable expression; distinct everyday technical clothing.\nSCENE: Inside an open-sided futuristic transit shelter during rain, the woman listener leans slightly toward the seated speaker, maintaining warm attentive eye contact, mouth closed and brows relaxed. She is clearly giving him time to speak. The man quietly talks with one modest open-hand gesture; his other hand rests on his own knee. Between them a small physical multichannel acoustic receiver sits on a fixed stand, displaying three distinct gently luminous waveform strands that remain independent rather than merging. Their hands stay separate and no microphone is being thrust at someone. Behind them, a few passengers wait beneath engineered acoustic panels, luminous transit routing strips and a view of passing suspended trains. Emotional listening and preserved distinct voices are equally visible; the future transit environment is detailed and believable.\nREQUIRED VISIBLE ANCHORS: listener clearly attentive and silent; other person speaking; independent waveform channels; advanced lived-in transit shelter.\n\nThe narrative and story options above are context only. Render no written words or text labels.\nCRITICAL ANATOMY REVISION: The male speaker keeps his non-gesturing hand fully inside his own jacket side pocket, with a clear continuous sleeve and pocket opening. His only visible hand makes a calm open-palm speaking gesture with exactly one thumb and four naturally separated fingers. Do not place his hand over his knee. Keep the woman's visible hand relaxed and clearly connected to her arm. Retain the attentive eye contact and clearly futuristic transit shelter. This is a fresh text-only image, with no reference inputs.",
+          "promptScope": "exact",
+          "outputFilename": "exec-c8b31ba6-1979-4f54-9819-2536cceb1dd7.png",
+          "sourceSha256": "e1205ad78dc0f943bf652db4bc1308b13b777870cbcfefc7a0b415ab889f2d63",
+          "tool": "image_gen.imagegen",
+          "referenceImages": []
         }
       ],
-      "briefZh": "依据异声旅人“保留不相同的声音”和让不同留下出口的信念，呈现其在普通交通避雨处耐心把独立麦克风递给安静的年轻人。手中保留三条分开的音频通道，年长同伴等待倾听，呼应混合职责协作、少数者席位和微小初阶声音获得支持的赠礼主题；浅薄荷色外套呼应源码色彩。",
-      "acceptanceZh": "已通过 view_image 检查：使者正在递麦克风、侧身倾听，接收者迟疑而逐渐开口，背景人物等待，构成明确职责行动；主体、手和分线器在中央80%。自然肤色、软窗光、普通衣物和交通设施，无摆拍、明显畸形、可读文字、水印或图标化造型。",
+      "briefZh": "异声旅人停下来倾听一个安静的声音，让不同的人保有各自的表达。他相信差异能为世界留下出口，珍惜那些微小而独立的回应。",
+      "sceneBrief": "Inside an open-sided futuristic transit shelter during rain, the woman listener leans slightly toward the seated speaker, maintaining warm attentive eye contact, mouth closed and brows relaxed. She is clearly giving him time to speak. The man quietly talks with one modest open-hand gesture; his other hand rests on his own knee. Between them a small physical multichannel acoustic receiver sits on a fixed stand, displaying three distinct gently luminous waveform strands that remain independent rather than merging. Their hands stay separate and no microphone is being thrust at someone. Behind them, a few passengers wait beneath engineered acoustic panels, luminous transit routing strips and a view of passing suspended trains. Emotional listening and preserved distinct voices are equally visible; the future transit environment is detailed and believable.",
+      "acceptanceZh": "已查看文字返工后的整图。倾听者闭口侧身关注说话者；说话手有独立拇指与四指，另一手自然收在外衣侧袋，修复了原版膝上指尖重叠疑点。三个独立波形和未来车站环境清楚。",
+      "sourceFormat": "PNG",
+      "sourceSha256": "e1205ad78dc0f943bf652db4bc1308b13b777870cbcfefc7a0b415ab889f2d63",
+      "nativeSize": [
+        1672,
+        941
+      ],
+      "conversion": "original PNG bytes",
+      "imageModelDisclosure": "Image model was not disclosed by the generation tool.",
+      "userSelection": {
+        "choice": "codex",
+        "exportedAt": "2026-10-20T02:23:08.049Z",
+        "selectionSha256": "3bd59d2be3cd27e966998cb5d67344004ebeaa7bcfa3c2804818f01b39904e40"
+      },
+      "replacedSha256": "464f847ecbe920a5643a55a8d5de39f6483cc068ee1598d31473e5b123f09498",
       "coordinatorReview": {
         "visualReviewed": true,
-        "method": "original image preview",
-        "storyAndNaturalDetail": "accepted",
-        "sha256": "464f847ecbe920a5643a55a8d5de39f6483cc068ee1598d31473e5b123f09498"
-      }
+        "sha256": "e1205ad78dc0f943bf652db4bc1308b13b777870cbcfefc7a0b415ab889f2d63",
+        "notes": "已查看文字返工后的整图。倾听者闭口侧身关注说话者；说话手有独立拇指与四指，另一手自然收在外衣侧袋，修复了原版膝上指尖重叠疑点。三个独立波形和未来车站环境清楚。"
+      },
+      "generationAttempts": [
+        {
+          "filename": "nexus_foreign_voice_attempt1.png",
+          "sha256": "3e592f8f18fdc3331ccb37bd42dc26bccf6f9e50f135d85aefd9e25bf09a4d52",
+          "selected": false,
+          "issues": "膝上手局部指尖重叠，指数量关系存在疑点。"
+        },
+        {
+          "filename": "nexus_foreign_voice_attempt2.png",
+          "sha256": "e1205ad78dc0f943bf652db4bc1308b13b777870cbcfefc7a0b415ab889f2d63",
+          "selected": true,
+          "issues": []
+        }
+      ]
     },
     {
       "messengerId": "gate_archivist",
       "act": 3,
       "path": "game/assets/game/nexus/gate_archivist.png",
-      "width": 1672,
-      "height": 941,
-      "bytes": 2073192,
-      "sha256": "165e96f6a88da28b1278fa037cef21e1ff2ce9a0aea8d6c571a5f2f3dfc7b076",
-      "generationMode": "built-in imagegen",
-      "styleRevision": "2026-10-narrative-photographic",
-      "finalGenerationFilename": "exec-ec22501e-47d9-412a-8743-7a9a0e91ce83.png",
-      "finalPrompt": "Use case: photorealistic-natural\nAsset: narrative messenger CG, Gate Archivist / 门内记述者, who checks the original intention at the end of the journey.\nCreate a candid photographic 50 mm film still, 16:9, native 2048x1152 requested and at least 1600x900. Natural light, soft realistic detail, ordinary contrast and credible depth of field. A character carrying out careful archival work, never a formal portrait.\n\nCharacter and action: a middle-aged male archivist with a short gray beard and simple reading glasses wears a muted lavender-gray work jacket over a plain linen shirt. He stands half-turned beside a narrow wheeled archive cart at the doorway of a small records room. On a raised clipboard he compares a traveler's scuffed entry token, recognizable by a physical notch, with its matching old archive carrier. At the same moment he begins to hand a neatly sealed thick archive folder back to the visitor with his other hand. His eyes move from the matching evidence toward the visitor with quiet recognition, as though acknowledging that their accumulated decisions already explain who they are. The visitor's receiving hands can enter from the side, but the archivist is the focal person.\n\nConnection to the setting: preserved mature-construct knowledge, spare frequency capacity and a place of recovery are themes of his gifts. The cart contains a protective case for a sophisticated construct memory module, a blank spare communication cartridge and practical folded archival envelopes. His responsibility is to verify and preserve the choices a person has carried this far, then return useful records and resources for the final step. Convey this without written quotes or visible text.\n\nThe room is ordinary and inhabited: a narrow doorway, old metal filing cupboards, a coat hook, a softly lit window and the little archive cart. No monumental gateway or vast library. Paper is blank from this angle or shows only indistinct nonlinguistic marks. Materials have modest realistic wear.\n\nPhotography: a natural unposed three-quarter medium shot from beside the cart, 50 mm lens, realistic f/4 focus on his face, comparing fingers and the folder handover, softly receding cabinets. Gentle afternoon light, neutral skin, pale lavender-gray cloth, restrained metal reflections and subtle grain. No high-contrast noir or over-sharp texture.\n\nComposition: the archivist's body, face, comparison token, clipboard and handover folder all remain inside the central 80 percent, key actions around chest height so a side-panel crop keeps them. The pose is asymmetric and actively engaged in the handover, not upright and frontal.\n\nAvoid: readable text, words, digits, labels, UI, logos, watermarks, borders, collage; medieval robes, ceremonial costume, literal supernatural eyes, fantasy archives, giant buildings, tiny people, neon, HDR halos, sharpened outlines, glossy CGI, game-3D rendering, illustration or painting.",
+      "width": 1280,
+      "height": 720,
+      "bytes": 763524,
+      "sha256": "433dc2e8b216cbf01b9d885656108c8219fa06e3e1f5062ada69602e83519b97",
+      "generationMode": "Cursor GenerateImage",
+      "styleRevision": "2026-10-20-user-selected-cg",
+      "finalGenerationFilename": "G2_nexus_gate_archivist_attempt1.jpg",
+      "finalPrompt": "TEXT-ONLY ORIGINAL GENERATION. All reference_image_paths and other image-input fields MUST be [] or omitted. Generate a new image from this text. No prior image or failed attempt is an input; repairs also use a new text-to-image call.\nSTYLE: Full-bleed 16:9 cinematic photorealistic science-fiction story still. Human-scale future society under neural-frequency control; candid people, visible functional future clothing, precision composite machinery, photonic memory or field technology. Make the future design clear in costume, the central story object and background construction. Preserve believable optical light, moderate contrast, natural complexions and tactile materials. No text, labels, numbers, logos, UI overlays, borders, collages, fantasy magic, oversized monuments, glossy artificial faces, HDR or sharpening halos.\nANATOMY FIRST: Realistic shoulders, elbows, wrists and hands. Every visible hand belongs to a clearly traceable arm. Correct normal digit structure; occluded digits may remain hidden naturally. No extra or fused fingers, detached thumbs, duplicate hands, broken wrists, intersecting palms or prop shafts passing through skin. Keep the specified simple hand poses and leave physical space between people. Do not disguise a bad grip with blur, gloves or crop. Keep hands large enough to inspect. Equipment rests on real support or a credible single grip.\nSCENE CONTROL: Show the moment before an event decision or a messenger's ordinary work. Intact objects, unopened containers and unconnected sockets stay in that state. Respect the plot. Cast specifications below override generic gender pronouns in the visual notes. People are individuals in a shared future society, with everyday technical clothing rather than stereotyped ceremonial costumes.\nOUTPUT: Highest native 16:9 available; keep original bytes and actual size. No artificial upscaling.\n\nTITLE: 门内记述者 / gate_archivist\nCAST: An older Southern European woman in her sixties in a lavender-gray archive service coat.\nPLOT: 在终点核对初心。你带来的选择，会替你作答。\nVISUAL SITUATION: 依据门内记述者“在终点核对初心”及“你带来的选择，会替你作答”，呈现其在档案室门口核对带缺口的旧凭证，同时把封存档案交回来访者。推车里的成熟构造记忆部件、空白频段载体和档案匣呼应传承、余量保护、恢复与运输类赠礼，淡紫灰工作服呼应源码色彩。\n\nMANDATORY HAND STAGING: The sealed archive case rests on a broad trolley. One hand rests flat on its lid while the other holds one broad old credential by a simple edge grip. The visitor waits with arms lowered; no shared passing grip.\n\nCOMPOSITION: Natural eye-level medium shot with faces and working hands clearly visible inside the central 80%. Show a human-scale workplace, complete heads and the signature device. Maintain physically plausible shoulder-to-elbow-to-wrist continuity. No empty interface panel and no portrait-card framing.",
+      "promptScope": "source-brief",
       "steps": [
         {
           "operation": "generate",
-          "revision": "2026-10-narrative-photographic",
-          "prompt": "Use case: photorealistic-natural\nAsset: narrative messenger CG, Gate Archivist / 门内记述者, who checks the original intention at the end of the journey.\nCreate a candid photographic 50 mm film still, 16:9, native 2048x1152 requested and at least 1600x900. Natural light, soft realistic detail, ordinary contrast and credible depth of field. A character carrying out careful archival work, never a formal portrait.\n\nCharacter and action: a middle-aged male archivist with a short gray beard and simple reading glasses wears a muted lavender-gray work jacket over a plain linen shirt. He stands half-turned beside a narrow wheeled archive cart at the doorway of a small records room. On a raised clipboard he compares a traveler's scuffed entry token, recognizable by a physical notch, with its matching old archive carrier. At the same moment he begins to hand a neatly sealed thick archive folder back to the visitor with his other hand. His eyes move from the matching evidence toward the visitor with quiet recognition, as though acknowledging that their accumulated decisions already explain who they are. The visitor's receiving hands can enter from the side, but the archivist is the focal person.\n\nConnection to the setting: preserved mature-construct knowledge, spare frequency capacity and a place of recovery are themes of his gifts. The cart contains a protective case for a sophisticated construct memory module, a blank spare communication cartridge and practical folded archival envelopes. His responsibility is to verify and preserve the choices a person has carried this far, then return useful records and resources for the final step. Convey this without written quotes or visible text.\n\nThe room is ordinary and inhabited: a narrow doorway, old metal filing cupboards, a coat hook, a softly lit window and the little archive cart. No monumental gateway or vast library. Paper is blank from this angle or shows only indistinct nonlinguistic marks. Materials have modest realistic wear.\n\nPhotography: a natural unposed three-quarter medium shot from beside the cart, 50 mm lens, realistic f/4 focus on his face, comparing fingers and the folder handover, softly receding cabinets. Gentle afternoon light, neutral skin, pale lavender-gray cloth, restrained metal reflections and subtle grain. No high-contrast noir or over-sharp texture.\n\nComposition: the archivist's body, face, comparison token, clipboard and handover folder all remain inside the central 80 percent, key actions around chest height so a side-panel crop keeps them. The pose is asymmetric and actively engaged in the handover, not upright and frontal.\n\nAvoid: readable text, words, digits, labels, UI, logos, watermarks, borders, collage; medieval robes, ceremonial costume, literal supernatural eyes, fantasy archives, giant buildings, tiny people, neon, HDR halos, sharpened outlines, glossy CGI, game-3D rendering, illustration or painting.",
-          "outputFilename": "exec-ec22501e-47d9-412a-8743-7a9a0e91ce83.png",
-          "selected": true
+          "selected": true,
+          "prompt": "TEXT-ONLY ORIGINAL GENERATION. All reference_image_paths and other image-input fields MUST be [] or omitted. Generate a new image from this text. No prior image or failed attempt is an input; repairs also use a new text-to-image call.\nSTYLE: Full-bleed 16:9 cinematic photorealistic science-fiction story still. Human-scale future society under neural-frequency control; candid people, visible functional future clothing, precision composite machinery, photonic memory or field technology. Make the future design clear in costume, the central story object and background construction. Preserve believable optical light, moderate contrast, natural complexions and tactile materials. No text, labels, numbers, logos, UI overlays, borders, collages, fantasy magic, oversized monuments, glossy artificial faces, HDR or sharpening halos.\nANATOMY FIRST: Realistic shoulders, elbows, wrists and hands. Every visible hand belongs to a clearly traceable arm. Correct normal digit structure; occluded digits may remain hidden naturally. No extra or fused fingers, detached thumbs, duplicate hands, broken wrists, intersecting palms or prop shafts passing through skin. Keep the specified simple hand poses and leave physical space between people. Do not disguise a bad grip with blur, gloves or crop. Keep hands large enough to inspect. Equipment rests on real support or a credible single grip.\nSCENE CONTROL: Show the moment before an event decision or a messenger's ordinary work. Intact objects, unopened containers and unconnected sockets stay in that state. Respect the plot. Cast specifications below override generic gender pronouns in the visual notes. People are individuals in a shared future society, with everyday technical clothing rather than stereotyped ceremonial costumes.\nOUTPUT: Highest native 16:9 available; keep original bytes and actual size. No artificial upscaling.\n\nTITLE: 门内记述者 / gate_archivist\nCAST: An older Southern European woman in her sixties in a lavender-gray archive service coat.\nPLOT: 在终点核对初心。你带来的选择，会替你作答。\nVISUAL SITUATION: 依据门内记述者“在终点核对初心”及“你带来的选择，会替你作答”，呈现其在档案室门口核对带缺口的旧凭证，同时把封存档案交回来访者。推车里的成熟构造记忆部件、空白频段载体和档案匣呼应传承、余量保护、恢复与运输类赠礼，淡紫灰工作服呼应源码色彩。\n\nMANDATORY HAND STAGING: The sealed archive case rests on a broad trolley. One hand rests flat on its lid while the other holds one broad old credential by a simple edge grip. The visitor waits with arms lowered; no shared passing grip.\n\nCOMPOSITION: Natural eye-level medium shot with faces and working hands clearly visible inside the central 80%. Show a human-scale workplace, complete heads and the signature device. Maintain physically plausible shoulder-to-elbow-to-wrist continuity. No empty interface panel and no portrait-card framing.",
+          "promptScope": "source-brief",
+          "outputFilename": "G2_nexus_gate_archivist_attempt1.jpg",
+          "sourceSha256": "28437df29505fdcced824aa85c70f240e269b24688033d147011a172d6c6c4fd",
+          "tool": "Cursor GenerateImage",
+          "referenceImages": []
         }
       ],
-      "briefZh": "依据门内记述者“在终点核对初心”及“你带来的选择，会替你作答”，呈现其在档案室门口核对带缺口的旧凭证，同时把封存档案交回来访者。推车里的成熟构造记忆部件、空白频段载体和档案匣呼应传承、余量保护、恢复与运输类赠礼，淡紫灰工作服呼应源码色彩。",
-      "acceptanceZh": "已通过 view_image 检查：使者一手持旧凭证，一手交接档案，眼神与接收者交流，职责行动明确且非正面摆拍；人物、凭证和主要交接动作在中央80%。普通档案室、柔和自然光、真实衣物与正常景深，未见明显畸形、可读文字、UI 或水印。",
+      "briefZh": "门内记述者守在档案室入口，核对来访者带回的凭证和一路作出的选择。抵达终点时，她让偏频者重新面对出发时的初心，并保留值得传承的记忆。",
+      "sceneBrief": "门内记述者守在档案室入口，核对来访者带回的凭证和一路作出的选择。抵达终点时，她让偏频者重新面对出发时的初心，并保留值得传承的记忆。",
+      "acceptanceZh": "已查看整图。捏持卡片的四指与背侧拇指关系合理，另一手五指清楚地落在箱顶，手腕连续。",
+      "sourceFormat": "JPEG",
+      "sourceSha256": "28437df29505fdcced824aa85c70f240e269b24688033d147011a172d6c6c4fd",
+      "nativeSize": [
+        1280,
+        720
+      ],
+      "conversion": "JPEG decoded to RGB PNG; identical pixels and native size",
+      "imageModelDisclosure": "Image model was not disclosed by the generation tool.",
+      "userSelection": {
+        "choice": "new",
+        "exportedAt": "2026-10-20T02:23:08.049Z",
+        "selectionSha256": "3bd59d2be3cd27e966998cb5d67344004ebeaa7bcfa3c2804818f01b39904e40"
+      },
+      "replacedSha256": "165e96f6a88da28b1278fa037cef21e1ff2ce9a0aea8d6c571a5f2f3dfc7b076",
       "coordinatorReview": {
         "visualReviewed": true,
-        "method": "original image preview",
-        "storyAndNaturalDetail": "accepted",
-        "sha256": "165e96f6a88da28b1278fa037cef21e1ff2ce9a0aea8d6c571a5f2f3dfc7b076"
-      }
+        "sha256": "28437df29505fdcced824aa85c70f240e269b24688033d147011a172d6c6c4fd",
+        "notes": "已查看整图。捏持卡片的四指与背侧拇指关系合理，另一手五指清楚地落在箱顶，手腕连续。"
+      },
+      "conversationModel": "Grok 4.7 Medium",
+      "promptRecordNote": "Saved source brief; per-attempt prompt additions were not included in the generation receipts.",
+      "generationAttempts": [
+        {
+          "filename": "G2_nexus_gate_archivist_attempt1.jpg",
+          "sha256": "28437df29505fdcced824aa85c70f240e269b24688033d147011a172d6c6c4fd",
+          "selected": true,
+          "issues": []
+        }
+      ]
     },
     {
       "messengerId": "oath_keeper",
@@ -189,29 +303,55 @@
       "path": "game/assets/game/nexus/oath_keeper.png",
       "width": 1672,
       "height": 941,
-      "bytes": 2429673,
-      "sha256": "69d3b9782488e9dee71c553888c7c8cc708fd7de34f656903304026bc6810578",
+      "bytes": 2766248,
+      "sha256": "ff0b14fd0e79594192ec6834c68100954e6929a3b1b158fc5f43c2ea194ca50e",
       "generationMode": "built-in imagegen",
-      "styleRevision": "2026-10-narrative-photographic",
-      "finalGenerationFilename": "exec-1d32ba8d-5dc5-48ba-9499-648e6b597d3a.png",
-      "finalPrompt": "Use case: photorealistic-natural\nAsset type: one dedicated nexus-messenger narrative CG, a candid near-future film still, full-bleed 16:9, native at least 1600x900.\nCharacter and duty: \"Oath Keeper\", a real human protector who makes room for the fragile and shares the weight of holding a defense. Show a sturdy adult man around forty-five, with a close-cropped head, a short beard and a calm attentive expression, kneeling inside the doorway of a small resistance shelter. He places his body between the open doorway and a fragile support construct while fastening a padded protective brace around its cracked metal housing. One hand steadies a scuffed portable barrier plate, the other carefully closes a broad mechanical clasp. He is looking at the unit to make sure he is not pinching its exposed service cable.\nStory: the important action is patient protection, physically taking the load so something more vulnerable can continue to work. The compact construct has a modest optical core, a damaged but repairable outer shell and a secure cushioned cradle. Two other maintained units rest softly out of focus behind it. The messenger wears a faded charcoal-blue reinforced work coat, ordinary work trousers and worn gloves, practical and human rather than ceremonial armor.\nCamera and composition: eye-height 35mm medium shot at the kneeling person's level, an observed moment rather than a pose. His face, working hands, brace, barrier and vulnerable construct fill the central 80 percent of the frame, around 55 to 65 percent image height, with enough edge room for slight cropping. Use the full width naturally; no right-side empty panel. Keep the shelter doorway and a folded blanket as secondary context. No fighting, weapon raising or injury to people.\nLook and lighting: soft cloudy daylight entering the doorway and quiet indoor fill, normal contrast, gently resolved skin, hair and cloth. Muted blue-gray fabric, worn neutral metal, a little warm color in the unit's optical core. Small genuine scuffs and stitching, moderate lens depth of field, restrained film grain. Compassion and steadiness conveyed through posture and attention.\nConstraints: no text, letters, numbers, symbols, UI, labels, logos, watermark, collage or black borders. No HDR, sharpening halos, exaggerated texture, glossy CGI, painting strokes, knight armor, fantasy crown, heroic poster stance, giant architecture or neon spectacle.",
+      "styleRevision": "2026-10-20-user-selected-cg",
+      "finalGenerationFilename": "exec-429fadd7-bb30-40d4-89ea-49234f0fe966.png",
+      "finalPrompt": "Use case: photorealistic-natural.\nAsset type: full-bleed cinematic science-fiction narrative CG for the game Mindrealm Bastion.\nGenerate one brand-new standalone 16:9 landscape image from text only. No reference images are supplied. The output must depict the specified scene and current story literally.\nStyle: high-end live-action science-fiction film still, photographed practical sets and physically credible VFX, natural skin texture, believable ages and expressions, optical depth and tangible material weight. Strong future engineering in the main equipment and setting. Real scene depth, varied environmental storytelling and motivated lighting. Avoid illustration, waxy or plastic skin, game-like low-detail renders, generic gray tabletop portraits and a huge empty wall.\nComposition: wide or medium-wide, coherent foreground, middle ground and background. Keep focal faces, hands and story mechanisms comfortably inside frame; leave naturally quieter areas through lighting and depth, without replacing the environment with a blank wall. Do not add UI panels, captions, labels, watermark, split panels or collage. Integrated instruments can carry nonverbal technical graphics.\nAnatomy and structure: each hand belongs to one continuous arm, normal five-digit anatomy with natural occlusion, simple relaxed poses and separated grips. No extra limbs, fused fingers, broken wrists, impossible supports or machinery passing through bodies. Every important device has clear mounting, weight and function. Keep all protagonists fictional and adult unless specifically stated.\n\nTITLE: 守诺人 / nexus_oath_keeper\nCURRENT STORY: 为脆弱留下位置。站在这里，本身就是一个回答。\nSTORY OPTIONS / CHARACTER ROLE: 不退誓碑: 近战最大耐久 +60%、受到攻击伤害 −15%；远程攻击 −15%。 | 回声荆冠: 启用中的近战反射所受伤害的 65%，忽略敌人护甲；维修费用 +25%。 | 哨卫契约: 最早部署的三个存活构造护甲 +10；每场开战时火种获得 18 点屏障。\nUSER FEEDBACK TO FIX: 图文无关\nCAST: An adult Black female guardian with a calm determined face, in battle-worn but realistically engineered protective armor.\nSCENE: At the open entrance of a damaged futuristic shelter, the guardian takes a firm grounded stance between an approaching external threat and a visibly fragile small support construct sheltered behind her. She braces a broad rectangular physical shield with one clear handle grip, its lower edge planted on the ground, while her other hand rests gently on the support construct’s armored upper casing. The little construct has damaged but intact delicate sensor fins and leans on a protective stand. A restrained transparent defensive field extends from the planted shield to the door frame, visibly catching scattered dust and sparks outside. Inside the shelter, a warm consciousness core remains safe in its cradle. The body placement must explain the promise: she has left a protected place for the vulnerable and is staying to bear the impact. Keep all hands, shield handles and support contacts physically credible.\nREQUIRED VISIBLE ANCHORS: guardian placed between threat and fragile construct; grounded shield and clear grip; fragile support construct visibly protected; shelter and safe core.",
+      "promptScope": "exact",
       "steps": [
         {
           "operation": "generate",
-          "revision": "2026-10-narrative-photographic",
-          "prompt": "Use case: photorealistic-natural\nAsset type: one dedicated nexus-messenger narrative CG, a candid near-future film still, full-bleed 16:9, native at least 1600x900.\nCharacter and duty: \"Oath Keeper\", a real human protector who makes room for the fragile and shares the weight of holding a defense. Show a sturdy adult man around forty-five, with a close-cropped head, a short beard and a calm attentive expression, kneeling inside the doorway of a small resistance shelter. He places his body between the open doorway and a fragile support construct while fastening a padded protective brace around its cracked metal housing. One hand steadies a scuffed portable barrier plate, the other carefully closes a broad mechanical clasp. He is looking at the unit to make sure he is not pinching its exposed service cable.\nStory: the important action is patient protection, physically taking the load so something more vulnerable can continue to work. The compact construct has a modest optical core, a damaged but repairable outer shell and a secure cushioned cradle. Two other maintained units rest softly out of focus behind it. The messenger wears a faded charcoal-blue reinforced work coat, ordinary work trousers and worn gloves, practical and human rather than ceremonial armor.\nCamera and composition: eye-height 35mm medium shot at the kneeling person's level, an observed moment rather than a pose. His face, working hands, brace, barrier and vulnerable construct fill the central 80 percent of the frame, around 55 to 65 percent image height, with enough edge room for slight cropping. Use the full width naturally; no right-side empty panel. Keep the shelter doorway and a folded blanket as secondary context. No fighting, weapon raising or injury to people.\nLook and lighting: soft cloudy daylight entering the doorway and quiet indoor fill, normal contrast, gently resolved skin, hair and cloth. Muted blue-gray fabric, worn neutral metal, a little warm color in the unit's optical core. Small genuine scuffs and stitching, moderate lens depth of field, restrained film grain. Compassion and steadiness conveyed through posture and attention.\nConstraints: no text, letters, numbers, symbols, UI, labels, logos, watermark, collage or black borders. No HDR, sharpening halos, exaggerated texture, glossy CGI, painting strokes, knight armor, fantasy crown, heroic poster stance, giant architecture or neon spectacle.",
-          "outputFilename": "exec-1d32ba8d-5dc5-48ba-9499-648e6b597d3a.png",
-          "selected": true
+          "selected": true,
+          "prompt": "Use case: photorealistic-natural.\nAsset type: full-bleed cinematic science-fiction narrative CG for the game Mindrealm Bastion.\nGenerate one brand-new standalone 16:9 landscape image from text only. No reference images are supplied. The output must depict the specified scene and current story literally.\nStyle: high-end live-action science-fiction film still, photographed practical sets and physically credible VFX, natural skin texture, believable ages and expressions, optical depth and tangible material weight. Strong future engineering in the main equipment and setting. Real scene depth, varied environmental storytelling and motivated lighting. Avoid illustration, waxy or plastic skin, game-like low-detail renders, generic gray tabletop portraits and a huge empty wall.\nComposition: wide or medium-wide, coherent foreground, middle ground and background. Keep focal faces, hands and story mechanisms comfortably inside frame; leave naturally quieter areas through lighting and depth, without replacing the environment with a blank wall. Do not add UI panels, captions, labels, watermark, split panels or collage. Integrated instruments can carry nonverbal technical graphics.\nAnatomy and structure: each hand belongs to one continuous arm, normal five-digit anatomy with natural occlusion, simple relaxed poses and separated grips. No extra limbs, fused fingers, broken wrists, impossible supports or machinery passing through bodies. Every important device has clear mounting, weight and function. Keep all protagonists fictional and adult unless specifically stated.\n\nTITLE: 守诺人 / nexus_oath_keeper\nCURRENT STORY: 为脆弱留下位置。站在这里，本身就是一个回答。\nSTORY OPTIONS / CHARACTER ROLE: 不退誓碑: 近战最大耐久 +60%、受到攻击伤害 −15%；远程攻击 −15%。 | 回声荆冠: 启用中的近战反射所受伤害的 65%，忽略敌人护甲；维修费用 +25%。 | 哨卫契约: 最早部署的三个存活构造护甲 +10；每场开战时火种获得 18 点屏障。\nUSER FEEDBACK TO FIX: 图文无关\nCAST: An adult Black female guardian with a calm determined face, in battle-worn but realistically engineered protective armor.\nSCENE: At the open entrance of a damaged futuristic shelter, the guardian takes a firm grounded stance between an approaching external threat and a visibly fragile small support construct sheltered behind her. She braces a broad rectangular physical shield with one clear handle grip, its lower edge planted on the ground, while her other hand rests gently on the support construct’s armored upper casing. The little construct has damaged but intact delicate sensor fins and leans on a protective stand. A restrained transparent defensive field extends from the planted shield to the door frame, visibly catching scattered dust and sparks outside. Inside the shelter, a warm consciousness core remains safe in its cradle. The body placement must explain the promise: she has left a protected place for the vulnerable and is staying to bear the impact. Keep all hands, shield handles and support contacts physically credible.\nREQUIRED VISIBLE ANCHORS: guardian placed between threat and fragile construct; grounded shield and clear grip; fragile support construct visibly protected; shelter and safe core.",
+          "promptScope": "exact",
+          "outputFilename": "exec-429fadd7-bb30-40d4-89ea-49234f0fe966.png",
+          "sourceSha256": "ff0b14fd0e79594192ec6834c68100954e6929a3b1b158fc5f43c2ea194ca50e",
+          "tool": "image_gen.imagegen",
+          "referenceImages": []
         }
       ],
-      "briefZh": "守诺人跪在庇护所门边，以身体挡住入口方向，一手撑住旧护板，一手轻扣脆弱构造的软垫束带，确认外露线缆没有被夹伤。 以承担重量、护住小型构造的现实动作体现“为脆弱留下位置”，对应近战承伤、优先部署护甲与屏障等守护赠礼。",
-      "acceptanceZh": "已 view_image。关键脸部、护板、束带和构造核心集中中央80%，人物并非海报站姿；动作、手套与机械搭接自然，柔和门口日光保留皮肤和磨损层次。未见文字、水印、明显畸形或战斗伤害。",
+      "briefZh": "守诺人在庇护所入口护住脆弱的构造，用自己的位置承受外来的压力。对她而言，留下来守护便是一份明确的承诺。",
+      "sceneBrief": "At the open entrance of a damaged futuristic shelter, the guardian takes a firm grounded stance between an approaching external threat and a visibly fragile small support construct sheltered behind her. She braces a broad rectangular physical shield with one clear handle grip, its lower edge planted on the ground, while her other hand rests gently on the support construct’s armored upper casing. The little construct has damaged but intact delicate sensor fins and leans on a protective stand. A restrained transparent defensive field extends from the planted shield to the door frame, visibly catching scattered dust and sparks outside. Inside the shelter, a warm consciousness core remains safe in its cradle. The body placement must explain the promise: she has left a protected place for the vulnerable and is staying to bear the impact. Keep all hands, shield handles and support contacts physically credible.",
+      "acceptanceZh": "已查看生成结果：守护者以落地盾和防御场站在威胁与脆弱支援构造之间，庇护所内火种受保护；握盾与扶构造的两手结构可读。",
+      "sourceFormat": "PNG",
+      "sourceSha256": "ff0b14fd0e79594192ec6834c68100954e6929a3b1b158fc5f43c2ea194ca50e",
+      "nativeSize": [
+        1672,
+        941
+      ],
+      "conversion": "original PNG bytes",
+      "imageModelDisclosure": "Image model was not disclosed by the generation tool.",
+      "userSelection": {
+        "choice": "codex",
+        "exportedAt": "2026-10-20T02:23:08.049Z",
+        "selectionSha256": "3bd59d2be3cd27e966998cb5d67344004ebeaa7bcfa3c2804818f01b39904e40"
+      },
+      "replacedSha256": "69d3b9782488e9dee71c553888c7c8cc708fd7de34f656903304026bc6810578",
       "coordinatorReview": {
         "visualReviewed": true,
-        "method": "original image preview",
-        "storyAndNaturalDetail": "accepted",
-        "sha256": "69d3b9782488e9dee71c553888c7c8cc708fd7de34f656903304026bc6810578"
-      }
+        "sha256": "ff0b14fd0e79594192ec6834c68100954e6929a3b1b158fc5f43c2ea194ca50e",
+        "notes": "已查看生成结果：守护者以落地盾和防御场站在威胁与脆弱支援构造之间，庇护所内火种受保护；握盾与扶构造的两手结构可读。"
+      },
+      "generationAttempts": [
+        {
+          "filename": "nexus_oath_keeper_attempt1.png",
+          "sha256": "ff0b14fd0e79594192ec6834c68100954e6929a3b1b158fc5f43c2ea194ca50e",
+          "selected": true,
+          "issues": []
+        }
+      ]
     },
     {
       "messengerId": "pulse_diver",
@@ -249,39 +389,55 @@
       "path": "game/assets/game/nexus/scarred_dawn.png",
       "width": 1672,
       "height": 941,
-      "bytes": 1987864,
-      "sha256": "e6fb2c59a65b84f53e92aa35b41797f361aca0d5edb872518ccb6a3562ed276b",
+      "bytes": 2630422,
+      "sha256": "2aec189e8563d30c981bd7c5f6303513fa2686910d4079ad0945dbefbc325798",
       "generationMode": "built-in imagegen",
-      "styleRevision": "2026-10-narrative-photographic",
-      "finalGenerationFilename": "exec-5f58fbe3-826b-4333-bbdc-0bba3d3931c6.png",
-      "finalPrompt": "Use case: precise-object-edit\nEdit target: the supplied Scarred Dawn photographic scene.\nMake only one small cleanup: remove the dark numeral or printed mark from the stainless-steel cup on the far-left bench, leaving a plain brushed-metal cup with natural reflections. Also ensure no legible writing or printed numerals remain on that cup. Keep the cup itself and its position.\nPreserve every other visible detail: the scarred woman and her opaque medical eye lens, her exact face and focused expression, both hands fastening the repaired forearm brace, her chest battery, repair bag, patched charcoal clothing, bench, lockers, blankets, dawn window light, natural exposure, soft photographic detail, original dimensions and composition. Do not beautify the face, change the pose, sharpen the image or add anything. No text, logo or watermark.",
+      "styleRevision": "2026-10-20-user-selected-cg",
+      "finalGenerationFilename": "exec-33dbe3b2-a4fa-4870-b69f-815d3d2d8107.png",
+      "finalPrompt": "Use case: photorealistic-natural.\nAsset type: full-bleed cinematic science-fiction narrative CG for the game Mindrealm Bastion.\nGenerate one brand-new standalone 16:9 landscape image from text only. No reference images are supplied. The output must depict the specified scene and current story literally.\nStyle: high-end live-action science-fiction film still, photographed practical sets and physically credible VFX, natural skin texture, believable ages and expressions, optical depth and tangible material weight. Strong future engineering in the main equipment and setting. Real scene depth, varied environmental storytelling and motivated lighting. Avoid illustration, waxy or plastic skin, game-like low-detail renders, generic gray tabletop portraits and a huge empty wall.\nComposition: wide or medium-wide, coherent foreground, middle ground and background. Keep focal faces, hands and story mechanisms comfortably inside frame; leave naturally quieter areas through lighting and depth, without replacing the environment with a blank wall. Do not add UI panels, captions, labels, watermark, split panels or collage. Integrated instruments can carry nonverbal technical graphics.\nAnatomy and structure: each hand belongs to one continuous arm, normal five-digit anatomy with natural occlusion, simple relaxed poses and separated grips. No extra limbs, fused fingers, broken wrists, impossible supports or machinery passing through bodies. Every important device has clear mounting, weight and function. Keep all protagonists fictional and adult unless specifically stated.\n\nTITLE: 残曦 / nexus_scarred_dawn\nCURRENT STORY: 替最后一线光作证。把伤痕带过去，它也属于你。\nSTORY OPTIONS / CHARACTER ROLE: 破晓誓约: 每场战斗中，每个近战构造首次受到普通敌人的致命攻击时保留 1 点耐久；近战攻击 +60%、受到的攻击伤害 −20%。 | 余烬再生: 每场首次将要损毁的启用构造保留 50% 最大耐久；所有构造最大耐久 +20%。 | 最后的电荷: 立即获得 220 专注；全体攻击 +35%、间隔缩短为原来的 1/1.2；最大精神稳定降低 25。\nUSER FEEDBACK TO FIX: 应该是受伤的凄美少女\nCAST: A beautiful young adult woman, explicitly age 22, of mixed East Asian and European heritage, with long dark hair and a fragile yet resolute expression.\nSCENE: At first light after a science-fiction battle, the wounded young woman sits on a low piece of fractured defensive architecture overlooking a devastated city. She wears practical damaged composite armor over fully covering clothing, with a clean bandage over one eye and a small healing cut on one cheek; a forearm is carefully wrapped, injury is restrained and non-graphic. Her exposed good eye holds both grief and determination, her face emotionally delicate and natural. One hand rests loosely on her own knee, the other supports a small dim amber last-charge power core safely in a shallow cradle on her lap, fingers relaxed and readable. Behind her, broken defense constructs retain faint lights amid smoke and a slender dawn beam. The mood is tragic, tender and quietly beautiful, with realistic film photography, natural skin and wind-touched hair. Convey carrying wounds forward and bearing witness to the last light, avoiding a fashion pose, fetishized injury or childlike proportions.\nREQUIRED VISIBLE ANCHORS: visibly young adult wounded woman; eye bandage and restrained healed injuries; tragic beautiful dawn mood; last-charge core; damaged futuristic battlefield.",
+      "promptScope": "exact",
       "steps": [
         {
           "operation": "generate",
-          "revision": "2026-10-narrative-photographic",
-          "prompt": "Use case: photorealistic-natural\nAsset: narrative messenger CG, Scarred Dawn / 残曦, witness for the last line of light.\nCreate a candid photographic 50 mm film still, 16:9, native 2048x1152 requested and at least 1600x900. Natural photographic exposure, soft detail, ordinary contrast and believable depth of field. A scarred person quietly preparing for the final action, not a heroic poster or posed character portrait.\n\nCharacter and action: a woman in her late forties with short practical hair, an old healed scar across one cheek and a discreet opaque medical lens over one eye sits leaning forward on a plain locker-room bench. She wears a patched charcoal field jacket over a faded copper-colored shirt. Her face is calm and resolved, focused on her hands rather than on the camera. She is tightening the strap of a previously repaired protective forearm brace, carefully checking the joint instead of hiding its scarred metal or the healed marks on her own skin. A compact sealed final-charge battery is clipped at upper-chest height; a small field repair pack rests beside her elbow. Show natural, believable fingers and the effort of fastening the strap. No fresh wound, blood or dramatic injury.\n\nConnection to the setting: her gifts help the front line survive a lethal impact, preserve a damaged construct and supply a final burst of energy at a cost. The visibly repaired guard, practical repair pack and last charge express survival, renewal and resolve. Her belief is that the scars belong to the person who carries them forward. The action should express acceptance and preparation rather than suffering or triumph.\n\nSetting and light: an ordinary refuge changing room with a scratched locker, a worn bench, a folded blanket and soft early-dawn light through a small window. Warm muted light brushes her cheek and the repaired brace while the rest of the room remains gently neutral. Human scale, no battle panorama or grand architecture, no giant machines. Natural cotton, canvas, modest metal wear, soft skin detail and subtle grain.\n\nComposition: candid three-quarter medium framing, 50 mm lens and realistic f/4 depth of field. Her body, scarred face, both fastening hands, brace, battery and repair pack stay within the central 80 percent. Keep the main hand action around chest height as she leans forward, so the side-panel crop retains it. The pose is asymmetric, engaged in a practical task, with softly quiet outer edges.\n\nAvoid: readable words or numerals, labels, UI, logos, watermark, frame, collage; graphic wounds, fantasy scars, glowing prosthetic eyes, ceremonial armor, medieval cloak, heroic weapon pose, tiny people, giant buildings, neon, HDR halos, sharpened edges, glossy plastic skin, game-3D rendering, painting or illustration.",
-          "outputFilename": "exec-ef10eab4-f454-43ae-aeb0-275fd28a6da2.png",
-          "selected": false
-        },
-        {
-          "operation": "edit",
-          "revision": "2026-10-narrative-photographic",
-          "prompt": "Use case: precise-object-edit\nEdit target: the supplied Scarred Dawn photographic scene.\nMake only one small cleanup: remove the dark numeral or printed mark from the stainless-steel cup on the far-left bench, leaving a plain brushed-metal cup with natural reflections. Also ensure no legible writing or printed numerals remain on that cup. Keep the cup itself and its position.\nPreserve every other visible detail: the scarred woman and her opaque medical eye lens, her exact face and focused expression, both hands fastening the repaired forearm brace, her chest battery, repair bag, patched charcoal clothing, bench, lockers, blankets, dawn window light, natural exposure, soft photographic detail, original dimensions and composition. Do not beautify the face, change the pose, sharpen the image or add anything. No text, logo or watermark.",
-          "outputFilename": "exec-5f58fbe3-826b-4333-bbdc-0bba3d3931c6.png",
           "selected": true,
-          "inputFilenames": [
-            "exec-ef10eab4-f454-43ae-aeb0-275fd28a6da2.png"
-          ]
+          "prompt": "Use case: photorealistic-natural.\nAsset type: full-bleed cinematic science-fiction narrative CG for the game Mindrealm Bastion.\nGenerate one brand-new standalone 16:9 landscape image from text only. No reference images are supplied. The output must depict the specified scene and current story literally.\nStyle: high-end live-action science-fiction film still, photographed practical sets and physically credible VFX, natural skin texture, believable ages and expressions, optical depth and tangible material weight. Strong future engineering in the main equipment and setting. Real scene depth, varied environmental storytelling and motivated lighting. Avoid illustration, waxy or plastic skin, game-like low-detail renders, generic gray tabletop portraits and a huge empty wall.\nComposition: wide or medium-wide, coherent foreground, middle ground and background. Keep focal faces, hands and story mechanisms comfortably inside frame; leave naturally quieter areas through lighting and depth, without replacing the environment with a blank wall. Do not add UI panels, captions, labels, watermark, split panels or collage. Integrated instruments can carry nonverbal technical graphics.\nAnatomy and structure: each hand belongs to one continuous arm, normal five-digit anatomy with natural occlusion, simple relaxed poses and separated grips. No extra limbs, fused fingers, broken wrists, impossible supports or machinery passing through bodies. Every important device has clear mounting, weight and function. Keep all protagonists fictional and adult unless specifically stated.\n\nTITLE: 残曦 / nexus_scarred_dawn\nCURRENT STORY: 替最后一线光作证。把伤痕带过去，它也属于你。\nSTORY OPTIONS / CHARACTER ROLE: 破晓誓约: 每场战斗中，每个近战构造首次受到普通敌人的致命攻击时保留 1 点耐久；近战攻击 +60%、受到的攻击伤害 −20%。 | 余烬再生: 每场首次将要损毁的启用构造保留 50% 最大耐久；所有构造最大耐久 +20%。 | 最后的电荷: 立即获得 220 专注；全体攻击 +35%、间隔缩短为原来的 1/1.2；最大精神稳定降低 25。\nUSER FEEDBACK TO FIX: 应该是受伤的凄美少女\nCAST: A beautiful young adult woman, explicitly age 22, of mixed East Asian and European heritage, with long dark hair and a fragile yet resolute expression.\nSCENE: At first light after a science-fiction battle, the wounded young woman sits on a low piece of fractured defensive architecture overlooking a devastated city. She wears practical damaged composite armor over fully covering clothing, with a clean bandage over one eye and a small healing cut on one cheek; a forearm is carefully wrapped, injury is restrained and non-graphic. Her exposed good eye holds both grief and determination, her face emotionally delicate and natural. One hand rests loosely on her own knee, the other supports a small dim amber last-charge power core safely in a shallow cradle on her lap, fingers relaxed and readable. Behind her, broken defense constructs retain faint lights amid smoke and a slender dawn beam. The mood is tragic, tender and quietly beautiful, with realistic film photography, natural skin and wind-touched hair. Convey carrying wounds forward and bearing witness to the last light, avoiding a fashion pose, fetishized injury or childlike proportions.\nREQUIRED VISIBLE ANCHORS: visibly young adult wounded woman; eye bandage and restrained healed injuries; tragic beautiful dawn mood; last-charge core; damaged futuristic battlefield.",
+          "promptScope": "exact",
+          "outputFilename": "exec-33dbe3b2-a4fa-4870-b69f-815d3d2d8107.png",
+          "sourceSha256": "2aec189e8563d30c981bd7c5f6303513fa2686910d4079ad0945dbefbc325798",
+          "tool": "image_gen.imagegen",
+          "referenceImages": []
         }
       ],
-      "briefZh": "依据残曦“替最后一线光作证”和“把伤痕带过去，它也属于你”，呈现带旧伤与单眼医用罩片的人在普通避难更衣室收紧修补护具。护具、修复包和胸前最后电池呼应近战撑过致命打击、构造再生与付出代价的最后电荷赠礼；她专注准备，接受伤痕而继续行动。",
-      "acceptanceZh": "已通过最终 view_image 检查：人物疤痕、单眼罩片、收紧护臂的双手、胸前电池与修复包清楚，主体动作在中央80%；自然晨光、普通衣物与柔和细节，未见血腥和英雄摆拍。第二次仅清除左侧金属杯数字，原有脸、动作、构图和光线保持；最终未见可读文字或水印。",
+      "briefZh": "残曦带着旧伤整理修补过的护具，准备继续走向尚存的一线光。她接受伤痕也是经历的一部分，愿意为防线最后的坚持提供支持。",
+      "sceneBrief": "At first light after a science-fiction battle, the wounded young woman sits on a low piece of fractured defensive architecture overlooking a devastated city. She wears practical damaged composite armor over fully covering clothing, with a clean bandage over one eye and a small healing cut on one cheek; a forearm is carefully wrapped, injury is restrained and non-graphic. Her exposed good eye holds both grief and determination, her face emotionally delicate and natural. One hand rests loosely on her own knee, the other supports a small dim amber last-charge power core safely in a shallow cradle on her lap, fingers relaxed and readable. Behind her, broken defense constructs retain faint lights amid smoke and a slender dawn beam. The mood is tragic, tender and quietly beautiful, with realistic film photography, natural skin and wind-touched hair. Convey carrying wounds forward and bearing witness to the last light, avoiding a fashion pose, fetishized injury or childlike proportions.",
+      "acceptanceZh": "已查看生成结果：年轻成年女性有眼部与前臂包扎、微小伤痕和悲伤而坚韧的神情，背景为破晓废墟；放松手及握核心手正常。",
+      "sourceFormat": "PNG",
+      "sourceSha256": "2aec189e8563d30c981bd7c5f6303513fa2686910d4079ad0945dbefbc325798",
+      "nativeSize": [
+        1672,
+        941
+      ],
+      "conversion": "original PNG bytes",
+      "imageModelDisclosure": "Image model was not disclosed by the generation tool.",
+      "userSelection": {
+        "choice": "codex",
+        "exportedAt": "2026-10-20T02:23:08.049Z",
+        "selectionSha256": "3bd59d2be3cd27e966998cb5d67344004ebeaa7bcfa3c2804818f01b39904e40"
+      },
+      "replacedSha256": "e6fb2c59a65b84f53e92aa35b41797f361aca0d5edb872518ccb6a3562ed276b",
       "coordinatorReview": {
         "visualReviewed": true,
-        "method": "original image preview",
-        "storyAndNaturalDetail": "accepted",
-        "sha256": "e6fb2c59a65b84f53e92aa35b41797f361aca0d5edb872518ccb6a3562ed276b"
-      }
+        "sha256": "2aec189e8563d30c981bd7c5f6303513fa2686910d4079ad0945dbefbc325798",
+        "notes": "已查看生成结果：年轻成年女性有眼部与前臂包扎、微小伤痕和悲伤而坚韧的神情，背景为破晓废墟；放松手及握核心手正常。"
+      },
+      "generationAttempts": [
+        {
+          "filename": "nexus_scarred_dawn_attempt1.png",
+          "sha256": "2aec189e8563d30c981bd7c5f6303513fa2686910d4079ad0945dbefbc325798",
+          "selected": true,
+          "issues": []
+        }
+      ]
     },
     {
       "messengerId": "seed_healer",
@@ -383,5 +539,6 @@
         "sha256": "6f628cfe84bdb25e91d3685a8675e471d21c4e916d9a058aaf91d9c893e48cff"
       }
     }
-  ]
+  ],
+  "updatedOn": "2026-10-20"
 }

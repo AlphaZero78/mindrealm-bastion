@@ -15,22 +15,22 @@ async sourcePage => {
   check(await page.evaluate(()=>window.__mindrealm===undefined),'production exposes no QA interface');
   const base=destination.pathname.endsWith('/')?destination.pathname:destination.pathname+'/';destination.pathname=base;
   const manifest=base==='/'?null:await page.evaluate(async base=>(await fetch(base+'site-manifest.json')).json(),base);
-  if(manifest)check(manifest.version==='0.1.5'&&manifest.basePath===base,'published version and subpath agree');
-  await page.screenshot({path:'v015-production-menu.png'});
+  if(manifest)check(manifest.version==='0.1.6'&&manifest.basePath===base,'published version and subpath agree');
+  await page.screenshot({path:'v016-production-menu.png'});
   await click('new');const seed1=await page.locator('#seed-input').inputValue();await page.locator('[data-random-seed]').click();const seed2=await page.locator('#seed-input').inputValue();
   check([seed1,seed2].every(x=>/^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{16}$/.test(x))&&seed1!==seed2,'mixed random seeds differ');
   await page.keyboard.press('Escape');await idle();check((await state())===null,'new-run cancellation leaves no run');
-  await click('new');await page.locator('#seed-input').fill('release-v015');await page.locator('.modal-footer .primary').click();await idle();
-  check((await state()).phase==='nexus','new game enters nexus');await page.screenshot({path:'v015-production-nexus.png'});
+  await click('new');await page.locator('#seed-input').fill('release-v016');await page.locator('.modal-footer .primary').click();await idle();
+  check((await state()).phase==='nexus','new game enters nexus');await page.screenshot({path:'v016-production-nexus.png'});
   await click('nexus-gift');await page.keyboard.press('Escape');await idle();check((await state()).phase==='nexus','gift cancellation preserves nexus');
   await click('nexus-gift');await page.locator('.modal-footer .primary').click();await idle();await page.locator('.map-node.available').first().click();await idle();
-  check((await state()).phase==='prep','route enters preparation');await page.screenshot({path:'v015-production-prep.png'});
-  await click('menu');await click('continue');check((await state()).seed==='release-v015','continue restores the isolated safe save');
+  check((await state()).phase==='prep','route enters preparation');await page.screenshot({path:'v016-production-prep.png'});
+  await click('menu');await click('continue');check((await state()).seed==='release-v016','continue restores the isolated safe save');
   await click('start');await page.locator('.modal-footer .primary').click();await idle();await page.locator('[data-action="pause"]').waitFor();
-  await page.waitForFunction(()=>[...document.querySelectorAll('canvas')].some(c=>c.width>0&&c.height>0));await click('pause');await page.screenshot({path:'v015-production-battle.png'});
+  await page.waitForFunction(()=>[...document.querySelectorAll('canvas')].some(c=>c.width>0&&c.height>0));await click('pause');await page.screenshot({path:'v016-production-battle.png'});
   await click('menu');await page.locator('.modal-footer .primary').click();await idle();await click('continue');check((await state()).phase==='prep','battle exit restores preparation');
-  const illustrations=await page.evaluate(async base=>{const {events}=await import(base+'web/core/content.js'),{NEXUS_ART}=await import(base+'web/view/nexus-art.js');const paths=[...Object.keys(events).map(id=>base+'assets/game/events/'+id+'.png'),...Object.values(NEXUS_ART).map(a=>a.path)];for(let i=0;i<paths.length;i+=4)await Promise.all(paths.slice(i,i+4).map(path=>new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>img.naturalWidth>=1600?resolve():reject(Error(path));img.onerror=()=>reject(Error(path));img.src=path;})));return paths.length;},base);
+  const illustrations=await page.evaluate(async base=>{const {events}=await import(base+'web/core/content.js'),{NEXUS_ART}=await import(base+'web/view/nexus-art.js');const paths=[...Object.keys(events).map(id=>base+'assets/game/events/'+id+'.png'),...Object.values(NEXUS_ART).map(a=>a.path)];for(let i=0;i<paths.length;i+=4)await Promise.all(paths.slice(i,i+4).map(path=>new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>img.naturalWidth>=1280&&img.naturalHeight>=720?resolve():reject(Error(path));img.onerror=()=>reject(Error(path));img.src=path;})));return paths.length;},base);
   check(illustrations===48,'48 narrative illustrations decode');check(errors.length===0&&requests.length===0,JSON.stringify({errors,requests}));
-  return {status:'PRODUCTION_BROWSER_OK',version:manifest?.version||'0.1.5',commit:manifest?.commit,checks,errors,requests};
+  return {status:'PRODUCTION_BROWSER_OK',version:manifest?.version||'0.1.6',commit:manifest?.commit,checks,errors,requests};
  }finally{await context.close();}
 }
