@@ -15,7 +15,7 @@
 | SRG774 / [Dark Sci-Fi Audio Pack](https://opengameart.org/content/dark-sci-fi-audio-pack) | CC0 1.0 | 菜单、路线、节点与结算音乐。许可见对应音频目录的 `LICENSE.txt` |
 | [Node.js v24.12.0](https://github.com/nodejs/node/tree/v24.12.0) 及其依赖作者 | MIT 及所含第三方许可 | Windows 便携版的本地服务器运行时。完整许可见 `runtime/LICENSE.txt` |
 
-36 幅事件插画与 12 幅精神使者插画由本项目通过 ImageGen 生成，内容依据游戏的故事、角色与选择设计。游戏标识、资源图标、面板和按钮由本项目绘制。
+36 幅事件插画与 12 幅精神使者插画依据游戏的故事、角色与选择设计。2026-10-20 的最终选图包含 33 幅 Codex 内置 ImageGen 作品（其中 17 幅沿用原图）和 15 幅 Cursor GenerateImage 作品。具体生图模型以工具披露为准。游戏标识、资源图标、面板和按钮由本项目绘制。
 
 CC0 与 CC BY 素材的原作者保留以上署名。各许可证全文随对应资源一并提供。
 
