@@ -1,0 +1,51 @@
+name: Build Windows release package
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing draft release tag matching package.json
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-release-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    runs-on: windows-2025
+    permissions:
+      contents: write
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24.12.0'
+          package-manager-cache: false
+      # Source validation is completed before dispatch. This job packages once.
+      - name: Build and publish the prepared draft
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = (Get-Content -LiteralPath package.json -Raw | ConvertFrom-Json).version
+          if ($env:RELEASE_TAG -ne "v$version") { throw 'Release tag must match the checked-out version.' }
+          $draft = gh release view $env:RELEASE_TAG --repo $env:GITHUB_REPOSITORY --json isDraft --jq .isDraft
+          if ($LASTEXITCODE -ne 0 -or $draft -ne 'true') { throw 'Prepare a draft release before dispatching this workflow.' }
+          $releaseRoot = Join-Path $env:RUNNER_TEMP 'mindrealm-release'
+          $env:MINDREALM_BUILD_DIR = Join-Path $releaseRoot 'Mindrealm-Bastion'
+          npm.cmd run build
+          if ($LASTEXITCODE -ne 0) { throw 'Windows build failed.' }
+          $zip = Join-Path $releaseRoot "Mindrealm-Bastion-$($env:RELEASE_TAG)-windows-x64.zip"
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File development/web-tools/package-windows.ps1 -ReleaseDirectory $env:MINDREALM_BUILD_DIR -OutputZip $zip
+          if ($LASTEXITCODE -ne 0) { throw 'Windows packaging failed.' }
+          gh release upload $env:RELEASE_TAG $zip "$zip.sha256" --repo $env:GITHUB_REPOSITORY
+          if ($LASTEXITCODE -ne 0) { throw 'Release asset upload failed; inspect existing assets before retrying.' }
+          gh release edit $env:RELEASE_TAG --draft=false --latest --repo $env:GITHUB_REPOSITORY
+          if ($LASTEXITCODE -ne 0) { throw 'Publishing the prepared draft failed.' }
