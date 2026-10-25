@@ -1,0 +1,44 @@
+{
+  "revision": 3,
+  "status": "signal_effect_removed_for_audio_revision_2",
+  "durationSeconds": 135,
+  "sampleRate": 48000,
+  "channels": 2,
+  "purpose": "A continuous, editable music bed and sparse game-world cues; final narration and location sound are added after picture editing.",
+  "music": [
+    {
+      "id": "calm",
+      "path": "game/assets/third_party/opengameart/singularity/singularity_calm.mp3",
+      "sourceOffset": 0,
+      "gainPoints": [[0, 0], [6, 0.20], [20, 0.20], [32, 0.12], [56, 0.14], [69, 0.28], [79, 0.26], [93, 0.18], [112, 0.13], [121, 0.12], [124, 0.22], [130, 0.15], [135, 0]],
+      "author": "vitalezzz",
+      "source": "https://opengameart.org/content/singularity-0",
+      "license": "CC0 1.0",
+      "licenseFile": "game/assets/third_party/opengameart/singularity/LICENSE.txt"
+    },
+    {
+      "id": "action",
+      "path": "game/assets/third_party/opengameart/singularity/singularity_action.mp3",
+      "sourceOffset": 0,
+      "gainPoints": [[0, 0], [76, 0], [83, 0.18], [93, 0.38], [110, 0.55], [121, 0.60], [123, 0], [135, 0]],
+      "author": "vitalezzz",
+      "source": "https://opengameart.org/content/singularity-0",
+      "license": "CC0 1.0",
+      "licenseFile": "game/assets/third_party/opengameart/singularity/LICENSE.txt"
+    }
+  ],
+  "effects": [
+    {"path": "game/assets/third_party/kenney/sci-fi-sounds/forceField_001.ogg", "at": 57, "gain": 0.15, "lowpass": 2600, "purpose": "off-frequency interruption"},
+    {"path": "game/assets/third_party/kenney/sci-fi-sounds/lowFrequency_explosion_000.ogg", "at": 79, "gain": 0.08, "lowpass": 1500, "purpose": "approaching hostile formation"},
+    {"path": "game/assets/third_party/kenney/sci-fi-sounds/impactMetal_002.ogg", "at": 93, "gain": 0.13, "lowpass": 2800, "purpose": "defense structure locks into place"},
+    {"path": "game/assets/third_party/kenney/sci-fi-sounds/explosionCrunch_003.ogg", "at": 122, "gain": 0.10, "lowpass": 1800, "purpose": "distant defense loss before the closing silence"}
+  ],
+  "effectProvenance": {
+    "author": "Kenney",
+    "source": "https://opengameart.org/content/sci-fi-sounds",
+    "license": "CC0 1.0",
+    "licenseFile": "game/assets/third_party/kenney/sci-fi-sounds/License.txt"
+  },
+  "mix": {"targetLufs": -23, "truePeakDb": -3, "loudnessRange": 16},
+  "reviewRequired": ["Listen to the complete music bed", "Align physical cues with actual picture", "Mix narration and generated location sound", "Verify the final film's emotional arc and intelligibility"]
+}

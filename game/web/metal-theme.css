@@ -1,0 +1,115 @@
+/* One flowing surface remains visible through the reading layers. */
+:root{--bg:#090d20;--panel:#141b39;--line:#8d9acc48;--muted:#bec8e3;--text:#f3f3fc;--mint:#a7d5ff;--coral:#ffb3d1;--gold:#f4d5a4;--blue:#a6ccff;--metal-ink:rgba(9,13,33,.48);--metal-card:rgba(16,22,49,.39);--metal-edge:rgba(178,193,238,.34)}
+body.has-metal-flow{background:#090d20}
+#metal-background{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;isolation:isolate;contain:strict;background:#101936}
+.metal-flow-canvas{display:block;width:100%;height:100%;opacity:.96;image-rendering:auto}
+#metal-background:after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(6,10,28,.25),rgba(7,10,27,.05) 48%,rgba(11,8,28,.12)),radial-gradient(ellipse at 50% 40%,transparent 24%,rgba(5,9,24,.22) 100%)}
+#metal-background[data-renderer=css]{background:radial-gradient(ellipse at 28% 12%,#46628b,#223760 32%,transparent 63%),radial-gradient(ellipse at 80% 80%,#673e70,#382d59 39%,#10182f 78%)}
+#metal-background[data-renderer=css]>.metal-flow-canvas{visibility:hidden}
+#metal-background[data-renderer=css]:before{content:'';position:absolute;inset:-25%;border-radius:45%;background:repeating-conic-gradient(from 18deg at 42% 52%,#08132e00 0deg,#637db64d 12deg,#bdd7ef88 17deg,#293c6570 23deg,#18213c00 40deg,#914f8159 61deg,#f6b6dd80 67deg,#1b183600 77deg);transform:rotate(-10deg) scale(1.06);animation:metal-fallback-flow 48s ease-in-out infinite alternate;will-change:transform}
+#metal-background[data-hidden=true]:before,#metal-background[data-motion=reduced]:before{animation-play-state:paused;will-change:auto}
+#metal-background[data-mode=battle]:before{animation-duration:70s;opacity:.75}
+@keyframes metal-fallback-flow{to{transform:rotate(12deg) scale(1.13) translate3d(2%,-2%,0)}}
+body.has-metal-flow #battlefield{z-index:1}
+body.has-metal-flow:not([data-screen=battle]) #battlefield{visibility:hidden;pointer-events:none}
+body.has-metal-flow #app{z-index:2}
+
+/* Reading surfaces have no independent background images or animated filters. */
+body.has-metal-flow :is(.menu,.map-screen,.node-screen,.content-screen,.event-screen,.app-shell,.run-hud,.act-passage,.overlay-screen){background:transparent}
+body.has-metal-flow .menu:before{background:linear-gradient(90deg,rgba(7,11,30,.62),rgba(8,11,31,.30) 37%,transparent 70%)}
+body.has-metal-flow .menu h1{color:#f2f3ff;text-shadow:0 2px 0 #535a85,0 10px 32px #060c28b0}
+body.has-metal-flow .menu :is(p,.menu-footer,.menu-signal p){color:#cad5ec;text-shadow:0 1px 6px #0b102c}
+body.has-metal-flow .menu-signal h2{color:#d3c7f1;text-shadow:0 2px 12px #11132d}
+body.has-metal-flow .signal-dot{background:#f5c6e5;box-shadow:0 0 14px #c0d6ff88}
+body.has-metal-flow :is(.topbar,.battle-sidebar,.battle-footer,.modal-head,.section-bar){background:rgba(10,15,37,.68);border-color:var(--metal-edge);box-shadow:inset 0 1px 0 #e5eaff10}
+body.has-metal-flow :is(.panel,.choice-card,.summary-number,.codex-entry,.help-card,.service-unit,.shop-product,.shop-service,.bag-unit,.bag-item,.bag-clues article,.nexus-gift,.messenger-panel){background:var(--metal-card);border-color:var(--metal-edge);box-shadow:inset 0 1px 0 #f1e7ff1a,0 8px 26px #03091c25}
+body.has-metal-flow .map-screen .map-scroll{background:rgba(10,17,39,.28);border-color:#bbc7ef45;box-shadow:inset 0 0 75px #070e2626}
+body.has-metal-flow :is(.panel p,.choice-card p,.codex-entry p,.help-card p,.modal-body p,.inspector p,.node-story p,.messenger-panel p,.messenger-panel small,.shop-product p,.unit-card .unit-meta){color:#d0d8ed}
+body.has-metal-flow :is(.panel-head,.modal-head,.section-bar,.battle-statusbar,.info-section,.enemy-behavior,.setting-row,.log-line){border-color:var(--metal-edge)}
+body.has-metal-flow :is(.summary-number b,.choice-card h3,.shop-product h3,.nexus-gift h3,.help-card h3,.section-title h2){color:#f5e1f3}
+body.has-metal-flow :is(.tag,.act-step,.history-list span,.intel){border-color:#b6c3e64a;background-color:rgba(17,24,52,.22)}
+body.has-metal-flow .tag.gold{color:#ffe0af;border-color:#ffd9a956}
+body.has-metal-flow .tag.coral{color:#ffb8d4;border-color:#e6a3c45c}
+body.has-metal-flow :is(.act-step.current,.act-step.active){background:#6b6d9d3d;border-color:#c7bbec77}
+body.has-metal-flow :is(.eyebrow,.menu .subtitle,.brand,.chapter-number){color:#bbd9ff}
+body.has-metal-flow .messenger-panel blockquote{color:#f3e9fa}
+
+/* Compact metal controls, filled sticker icons supplied by sticker-style.css. */
+body.has-metal-flow button{background:rgba(26,34,68,.53);border-color:#a6b7e15c;color:#edf3ff;box-shadow:inset 0 1px #edf3ff10}
+body.has-metal-flow button:hover{background:rgba(95,90,143,.57);border-color:#c8d8ffb0}
+body.has-metal-flow button:is(.active,.selected){background:rgba(84,95,151,.52);border-color:#bad5ff;box-shadow:inset 0 -2px #b7d4ff}
+body.has-metal-flow button.primary{background:linear-gradient(112deg,#b8d7ff,#d4cff2 51%,#edbfdf);border-color:#f0e6ff;color:#17213c;text-shadow:none;box-shadow:inset 0 1px #ffffffaa,inset 0 -2px #42537c35,0 5px 18px #7a80ca25}
+body.has-metal-flow button.primary:hover{background:linear-gradient(112deg,#d4e6ff,#eee5ff 51%,#f8d2e9);border-color:#fff2ff}
+body.has-metal-flow button.danger{color:#ffc2d9;border-color:#db9ab66b;background:#632d4d36}
+body.has-metal-flow button.ghost{background:rgba(11,18,42,.16)}
+body.has-metal-flow :is(input,select){background:#101934db;color:#f0f2ff;border-color:#9badcf77}
+body.has-metal-flow :is(input[type=checkbox],input[type=range]){accent-color:#c6c7f2}
+body.has-metal-flow :is(button,input,select,a):focus-visible{outline-color:#ffe0b6}
+body.has-metal-flow kbd{background:#202b4db0;border-color:#91a3c65c;color:#e0eaff}
+body.has-metal-flow .unit-card{background:rgba(26,34,66,.57);border-color:#9db4dc60;box-shadow:inset 0 1px #f2e9ff19}
+body.has-metal-flow .unit-card.selected{background:rgba(66,72,118,.64);border-color:#ccdcff;box-shadow:inset 0 0 0 1px #b6d3ff,0 0 16px #c6a8ef22}
+body.has-metal-flow :is(.unit-card.deployed,.bag-unit.is-deployed){background:#293d6557;border-color:#a1c1e67d}
+body.has-metal-flow :is(.unit-card.broken,.bag-unit.is-broken){border-color:#d891b2}
+body.has-metal-flow .bag-unit:has(input:checked){background:#7c5e8559;border-color:#ebbdde;box-shadow:inset 3px 0 #e8bddf}
+body.has-metal-flow :is(.bag-map-alert,.danger-line){background:#71354e9c;border-color:#f4a7cd73;color:#ffe0ee}
+body.has-metal-flow :is(.cost-line,.unit-effect-list .effect-changed){background:#7d6b5933;border-color:#d8bb8f7d;color:#ffdfae}
+body.has-metal-flow .route-tooltip{background:#121b3df5;border-color:#b9c8ed80;box-shadow:0 18px 45px #040a25a0}
+body.has-metal-flow .battle-footer{box-shadow:inset 0 1px #edf1ff10,0 -9px 24px #040b2429}
+body.has-metal-flow .placement-status{background:#172345d9;border-color:#9bbcf176;color:#d5e8ff}
+body.has-metal-flow .placement-status.invalid{background:#4c243bdc;border-color:#e9aac6;color:#ffe0ed}
+body.has-metal-flow :is(.tutorial,.terrain-draft,.encounter-summary,.threat-panel,.item-belt button,.item-empty,.upgrade-comparison,.camera-controls,.service-status,.upgrade-effects section,.upgrade-target){background:rgba(17,25,53,.72);border-color:#a1b5dc66}
+body.has-metal-flow :is(.upgrade-effects section+section,.upgrade-target.is-deployed){background:rgba(52,56,98,.52)}
+body.has-metal-flow .battle-caption .tag{background:#172341bd}
+body.has-metal-flow .active-item-status:not(:empty){background:#765d7a38}
+body.has-metal-flow .overload-banner{background:#64364ae0;color:#ffe0ed}
+body.has-metal-flow .battle-progress{background:#252f50}
+body.has-metal-flow .detail-rule{background:linear-gradient(90deg,#b7bedb66,transparent)}
+body.has-metal-flow .node-illustration{background:radial-gradient(ellipse,#9eb5dd24,transparent 68%)}
+body.has-metal-flow .bag-location{color:#c7dcff!important}
+body.has-metal-flow :is(.hpbar,.spirit-meter,.damage-bar){background:#1a2447}
+body.has-metal-flow .spirit-meter i{background:linear-gradient(90deg,#91caff,#e9b6de)}
+body.has-metal-flow .hpbar i{background:#a4c9f1}
+body.has-metal-flow .xp-meter{background:#322847}
+body.has-metal-flow .xp-meter::-webkit-progress-bar{background:#322847}
+body.has-metal-flow .xp-meter::-webkit-progress-value{background:linear-gradient(90deg,#a3b7f2,#e4b7ed)}
+body.has-metal-flow .xp-meter::-moz-progress-bar{background:#cfb8ec}
+
+/* Route tile colors remain semantic while their surfaces share the blue/pink metal. */
+body.has-metal-flow .map-node{background:#1c294e;border-color:#92a5cf73}
+body.has-metal-flow .map-node:before{background:linear-gradient(135deg,#687ea45c,#1a264868)}
+body.has-metal-flow .map-node.available{background:#69799b;border-color:#ffe6c4;filter:drop-shadow(0 0 5px #b9c9ed66)}
+body.has-metal-flow .map-node.available:before{background:linear-gradient(135deg,#6b86ab,#543f6c)}
+body.has-metal-flow .map-node.completed{background:#314775;border-color:#b6cfff;color:#c3d8ff}
+body.has-metal-flow .route-node-label{background:#111b36dc;color:#dde5f8}
+body.has-metal-flow .route-nexus{background:#2d3257c9;border-color:#c3b5dd72;color:#dfd2f5}
+body.has-metal-flow :is(.choice-card .choice-art,.nexus-gift-art){background:radial-gradient(ellipse,#c7bce91f,transparent 68%)}
+body.has-metal-flow .nexus-gift-art>.icon{background:#293758;border-color:#dcc5ed}
+
+/* Narrative images keep their own composition; blue/pink veils replace green ribbons. */
+body.has-metal-flow .event-shade{background:linear-gradient(0deg,#10162ee6,rgba(16,22,46,.45) 22%,transparent 53%),linear-gradient(90deg,#101a3047,transparent 24%,transparent 56%,#17102e59)}
+body.has-metal-flow .event-stage{--event-accent:#e2d4f3;--event-ink:#f2f2fa}
+body.has-metal-flow .event-title-ribbon{background:linear-gradient(90deg,#24365bdc,#4b3b6699 56%,#4d3b6d4d 79%,transparent)}
+body.has-metal-flow .event-title-ribbon:after{background:linear-gradient(90deg,#dfc7efa6,#b5ceee38 58%,transparent)}
+body.has-metal-flow :is(.event-choice,.event-outcome){background:linear-gradient(90deg,transparent,#101a36c7 6%,#151b3be3 36%,#151b3be0)}
+body.has-metal-flow .event-option-title{background:linear-gradient(90deg,transparent,#293d65b8 9%,#453357bb);color:#f7eef9}
+body.has-metal-flow .event-choice-button:hover,body.has-metal-flow .event-choice.is-armed .event-choice-button{background:#8f83bd24;box-shadow:inset 3px 0 #d0c6f0}
+body.has-metal-flow .event-confirmation{color:#f0ddf5;background:linear-gradient(90deg,transparent,#71527e47 16%,#71527e66)}
+body.has-metal-flow .event-continue{color:#f0e7fb;background:linear-gradient(90deg,transparent,#4c537eb3 15%,#75527bd0);border-color:#b7c1e14d}
+body.has-metal-flow :is(.event-choice-button .event-result,.event-outcome>.event-result){color:#e1e8f6}
+body.has-metal-flow .event-choice-cue{color:#ded2f4}
+body.has-metal-flow .event-choice-button{background:transparent;box-shadow:none}
+body.has-metal-flow .modal-backdrop{background:#080d265e;backdrop-filter:none}
+/* Shared frosted surface keeps every dialog readable above the moving scene. */
+body.has-metal-flow .modal.panel{background:rgba(19,26,51,.94);backdrop-filter:blur(18px) saturate(.7);-webkit-backdrop-filter:blur(18px) saturate(.7);border-color:#b8c7e79c;box-shadow:inset 0 1px #e4ecff24,0 24px 90px #030718b3}
+.map-screen .topbar{flex-wrap:nowrap}
+.map-screen .resources,.map-screen .resource{flex-shrink:0;white-space:nowrap}
+.map-screen .top-actions{align-items:center;flex:none}
+.map-screen .signal-trigger{display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;padding:10px 13px;font-size:12px;min-height:38px}
+.map-screen .signal-trigger .icon{width:22px;height:22px}
+@container(max-width:1250px){.map-screen .topbar .brand,.map-screen .top-actions .optional{display:none}.map-screen .topbar{padding:0 14px;gap:12px}.map-screen .resources{gap:16px}.map-screen .signal-trigger{padding:8px 10px;font-size:11px}}
+@container(max-width:900px){.map-screen .topbar{gap:10px;padding:0 10px}.map-screen .resources{gap:11px}.map-screen .resource{gap:6px}.map-screen .signal-trigger{padding:7px 8px;gap:5px}.map-screen .signal-trigger .icon{width:19px;height:19px}.map-screen .xp-meter{width:90px}}
+body.has-metal-flow #toast{background:#1b2a50ed;border-color:#c4d7ff;color:#f0f3ff}
+body.has-metal-flow #toast.error{background:#542b4cec;border-color:#eeb3d1;color:#ffe8f3}
+body.has-metal-flow .act-passage-shade{background:#111531b8}
+
+@media(prefers-reduced-motion:reduce){#metal-background:before{animation:none!important;will-change:auto}}

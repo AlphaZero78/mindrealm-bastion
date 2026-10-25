@@ -1,0 +1,282 @@
+{
+  "provider": "Existing cloud MiniMax-H3 environment with local editing",
+  "status": "complete_local_delivery",
+  "requestedDurationSeconds": 135,
+  "routeConfirmedByUser": "保留约 2 分 15 秒，使用现有云端模型生成镜头并在本地剪辑",
+  "cloudProject": "/home/scc/pb25331949/projects/minimax_h3",
+  "cloudJobIds": [
+    113651,
+    113793,
+    113862,
+    113903
+  ],
+  "activeCloudJobId": null,
+  "recoveredFailures": [
+    {
+      "jobId": 113793,
+      "phase": "sample",
+      "cause": "GPU-only adapter rollback copies exhausted VRAM at the first forward pass",
+      "recovery": "Runtime revision 2 commits the fixed adapter in its isolated process and releases rollback copies before sampling; existing conditioning bundles are reused",
+      "recoveryVerified": true,
+      "evidence": "Job 113862 completed all eight sampling steps for shot 01 and immediately began shot 02 with the same cached model"
+    }
+  ],
+  "sampleRequestId": "mindrealm_pv_r2_20261025_03",
+  "preparedSourceClips": 14,
+  "completedSourceClips": 14,
+  "sampledSourceClips": 14,
+  "briefRevision": 2,
+  "cloudPlanRevision": 6,
+  "cloudRuntimeRevision": 2,
+  "runtimeMemoryObservation": {
+    "jobId": 113862,
+    "adapterPatchedWeights": 208,
+    "rollbackBytesReleased": 40076574720,
+    "cudaAllocatedBytesAfterCommit": 40321476608,
+    "fullSampleCompletionPending": false
+  },
+  "narrationGenerated": true,
+  "titleCardRendered": true,
+  "acceleratorVerified": true,
+  "nextAction": "Completed revised film is ready for user viewing.",
+  "previousAttempt": {
+    "provider": "HeyGen Video Agent",
+    "sessionId": "7947fec4ba1b465ba34785b8a28632b6",
+    "editorUrl": "https://app.heygen.com/video-agent/7947fec4ba1b465ba34785b8a28632b6",
+    "status": "waiting_for_input",
+    "videoId": "3106b638da6340ddb0292576266449c7",
+    "accountPlan": "free",
+    "blueprintDurationSeconds": 60,
+    "maximumDurationSeconds": 60,
+    "limitSource": "https://community.heygen.com/en/public/resources/how-to-create-high-quality-videos-in-minutes-with-video-agent",
+    "stopConfirmed": true,
+    "submittedBriefRevision": 1
+  },
+  "actualDurationSeconds": 135,
+  "videoId": null,
+  "createdDate": "2026-10-25",
+  "timezone": "Asia/Shanghai",
+  "verified": {
+    "generationSubmitted": true,
+    "finishedVideoAvailable": true,
+    "worldviewFidelity": true,
+    "visualStyleAndMotion": true,
+    "audioAndCaptions": true,
+    "runtimeAndResolution": true
+  },
+  "finalVideoPath": "D:\\game_build_release\\心域防线_开场PV\\心域防线_世界观开场PV_沧桑男声版_135s.mp4",
+  "finalSha256": "f7de0ba5da5085ae3d5edce04d2531f97ade2f3432c292a66fc3bf47a6fd0d07",
+  "speechReviewJobIds": [
+    114119,
+    114121
+  ],
+  "completedAt": "2026-10-25T14:18:28.965365+00:00",
+  "reviewMethods": {
+    "picture": "Full 3240-frame decode; actual encoded end card and two-line subtitle inspection",
+    "audio": "AAC packet identity against the approved two-source mix; actual-film speech recognition with recorded limitations",
+    "humanListeningPerformed": false
+  },
+  "audioRevision": {
+    "revision": 3,
+    "status": "complete_local_delivery",
+    "voice": "F 沧桑微沙",
+    "provider": "Self-hosted Qwen3-TTS VoiceDesign + Base",
+    "selectedReferenceSha256": "3c1be6af6cc8e0979b083ec92d6b3dce6ab3e9efe3eaaf689e3c5b3060498c14",
+    "generationJobId": 114400,
+    "sourceTimingJobId": 114405,
+    "finalSpeechReviewJobIds": [
+      114423,
+      114433
+    ],
+    "sourceClipAudioIncluded": false,
+    "soundtrackInputs": [
+      "Selected F narration",
+      "Previously cleaned licensed score"
+    ],
+    "speechDuration": 87.512625,
+    "previousSpeechDuration": 75.455875,
+    "speechDurationIncreasePercent": 15.9785437515634,
+    "pitchRatio": 1.0,
+    "endCardCorrection": "Shared alphabetic baselines; SimSun 108 px title, 34 px tagline; Times New Roman 28 px subtitle",
+    "output": "D:\\game_build_release\\心域防线_开场PV\\心域防线_世界观开场PV_沧桑男声版_135s.mp4",
+    "sha256": "f7de0ba5da5085ae3d5edce04d2531f97ade2f3432c292a66fc3bf47a6fd0d07",
+    "bytes": 112805581,
+    "subtitles": "D:\\game_build_release\\心域防线_开场PV\\心域防线_世界观开场PV_沧桑男声版_135s.zh-CN.srt",
+    "narration": "D:\\game_build_release\\心域防线_开场PV\\心域防线_沧桑男声旁白_135s.wav",
+    "finalReview": "D:\\game_build_archive\\opening-pv-20261025\\audio-revision-r3\\final-review\\revision-verification.json",
+    "humanListeningPerformed": false,
+    "completedAtUtc": "2026-10-25T14:18:28.965365+00:00"
+  },
+  "pendingRevision": {
+    "revision": 3,
+    "status": "completed",
+    "reportedNoiseTimesSeconds": [
+      [
+        7,
+        9
+      ],
+      [
+        32,
+        33
+      ],
+      [
+        42,
+        42
+      ],
+      [
+        52,
+        52
+      ],
+      [
+        73,
+        73
+      ],
+      [
+        100,
+        100
+      ]
+    ],
+    "noiseScope": "User reports additional unlisted artifacts; inspect and replace the original generated audio across the full film.",
+    "requestedVoiceDirection": "Deeper male voice with slower pacing",
+    "endCardIssue": "Per-character top alignment makes glyph baselines inconsistent; the character 一 in the tagline visibly floats upward.",
+    "voiceAuditions": "D:\\game_build_release\\心域防线_开场PV\\声音试听_参考旁白\\试听说明.json",
+    "auditionScript": "城市曾在不同的声音里醒来。后来，记忆被修整，悲伤被归档。偏频者，黑暗正在逼近。守住最后一簇清醒。",
+    "auditionDurationEach": 15,
+    "choices": [
+      {
+        "id": "D",
+        "voice": "冷静纪实",
+        "provider": "Qwen3-TTS-12Hz-1.7B-VoiceDesign, self-hosted on user cloud GPU",
+        "seed": 2026102504,
+        "file": "D:\\game_build_release\\心域防线_开场PV\\声音试听_参考旁白\\D_冷静纪实_15秒.wav",
+        "nativeFile": "D:\\game_build_archive\\opening-pv-20261025\\voice-auditions-r4\\D-native.wav"
+      },
+      {
+        "id": "E",
+        "voice": "浑厚深沉",
+        "provider": "Qwen3-TTS-12Hz-1.7B-VoiceDesign, self-hosted on user cloud GPU",
+        "seed": 2026102505,
+        "file": "D:\\game_build_release\\心域防线_开场PV\\声音试听_参考旁白\\E_浑厚深沉_15秒.wav",
+        "nativeFile": "D:\\game_build_archive\\opening-pv-20261025\\voice-auditions-r4\\E-native.wav"
+      },
+      {
+        "id": "F",
+        "voice": "沧桑微沙",
+        "provider": "Qwen3-TTS-12Hz-1.7B-VoiceDesign, self-hosted on user cloud GPU",
+        "seed": 2026102506,
+        "file": "D:\\game_build_release\\心域防线_开场PV\\声音试听_参考旁白\\F_沧桑微沙_15秒.wav",
+        "nativeFile": "D:\\game_build_archive\\opening-pv-20261025\\voice-auditions-r4\\F-native.wav"
+      }
+    ],
+    "selectedVoice": {
+      "id": "F",
+      "voice": "沧桑微沙",
+      "provider": "Qwen3-TTS-12Hz-1.7B-VoiceDesign, self-hosted on user cloud GPU",
+      "seed": 2026102506,
+      "file": "D:\\game_build_release\\心域防线_开场PV\\声音试听_参考旁白\\F_沧桑微沙_15秒.wav",
+      "nativeFile": "D:\\game_build_archive\\opening-pv-20261025\\voice-auditions-r4\\F-native.wav"
+    },
+    "fullFilmEditingDeferredByUser": false,
+    "auditionHistory": [
+      {
+        "round": 1,
+        "status": "all_rejected_by_user",
+        "manifest": "D:\\game_build_release\\心域防线_开场PV\\声音试听\\试听说明.json",
+        "choices": [
+          {
+            "id": "A",
+            "voice": "Guoliang - Warm & Resonant",
+            "voiceId": "1ddd191b2454466e9527983c9dcb4c14",
+            "file": "D:\\game_build_release\\心域防线_开场PV\\声音试听\\A_Guoliang_15秒.wav"
+          },
+          {
+            "id": "B",
+            "voice": "James Gao",
+            "voiceId": "5700258d53664cecb4b21a8154856355",
+            "file": "D:\\game_build_release\\心域防线_开场PV\\声音试听\\B_James_Gao_15秒.wav"
+          },
+          {
+            "id": "C",
+            "voice": "Martin Li",
+            "voiceId": "735c507fdc844be3b1528dd33f7dfb2a",
+            "file": "D:\\game_build_release\\心域防线_开场PV\\声音试听\\C_Martin_Li_15秒.wav"
+          }
+        ]
+      }
+    ],
+    "referenceUrl": "https://www.bilibili.com/video/BV1Qv4y177sq",
+    "referenceRangeSeconds": [
+      0,
+      84
+    ],
+    "selectedByUser": "用沧桑版,继续推进pv制作",
+    "selectionConfirmedAtUtc": "2026-10-25T13:48:23.535488+00:00",
+    "sourceClipAudioPolicy": "Exclude every generated source clip audio track from the final mix; retain licensed instrumental score and selected narration.",
+    "completedAtUtc": "2026-10-25T14:18:28.965365+00:00",
+    "deliveredFile": "D:\\game_build_release\\心域防线_开场PV\\心域防线_世界观开场PV_沧桑男声版_135s.mp4",
+    "verification": "D:\\game_build_archive\\opening-pv-20261025\\audio-revision-r3\\final-review\\revision-verification.json"
+  },
+  "audioRevisionHistory": [
+    {
+      "revision": 2,
+      "objective": "使用专业的配音工具重制视频配音,改为沉重的男声,并去除19-25s的尖锐背景音",
+      "voiceProvider": "HeyGen Voice",
+      "engine": "orca",
+      "voice": "Guoliang - Warm & Resonant",
+      "voiceId": "1ddd191b2454466e9527983c9dcb4c14",
+      "requestId": "b226099eb5254cd3bea992a02a24b2d5",
+      "sourceSha256": "a1cef57a7e4f90b94867effaa22fdb120566db3d5e2b553e60f6bf4c59b79918",
+      "sourceDuration": 79.15102040816326,
+      "requestedBackgroundRepair": [
+        19,
+        25
+      ],
+      "removedEffect": "computerNoise_001.ogg",
+      "scorePlanRevision": 3,
+      "baselineVideo": "D:\\game_build_release\\心域防线_开场PV\\心域防线_世界观开场PV_135s.mp4",
+      "baselineSha256": "935a6ac1524581fcbb2b1da771334be8d62d0836d90ab8e7a3a216bb7babb4b1",
+      "outputTarget": "D:/game_build_release/心域防线_开场PV/心域防线_世界观开场PV_沉重男声版_135s.mp4",
+      "status": "complete_local_delivery",
+      "sourceNativeCodec": "mp3",
+      "sourceNativeSampleRate": 44100,
+      "refinedSourceSha256": "7d22918e0ee1d8c13873b395ead1f8e438b0d55d2426ec78915edc6f97a5a503",
+      "finalSha256": "ac93540ed0594d621db8c77e7eeacda5d0b4088ebca9937b47957e982a5b8dfe",
+      "finalBytes": 112629097,
+      "speechReviewJobIds": [
+        114173,
+        114176,
+        114187
+      ],
+      "finalReviewEvidence": "D:\\game_build_archive\\opening-pv-20261025\\audio-revision-r2\\final-review-refined\\film-validation.json",
+      "requirementsVerified": {
+        "professionalVoiceGenerated": true,
+        "heavyMaleVoiceSelectedAndPresent": true,
+        "sharpSignalRemovedFromRequestedWindow": true,
+        "captionTimingUpdated": true,
+        "completeFilmVerified": true
+      }
+    }
+  ],
+  "gameDelivery": {
+    "path": "game/assets/game/pv/opening-pv.mp4",
+    "bytes": 43256136,
+    "sha256": "e886a8df804ecf019d3aa4c78b91ca590b099ed80e8e09dcdb964a1a9448a4d6",
+    "sourceMasterSha256": "f7de0ba5da5085ae3d5edce04d2531f97ade2f3432c292a66fc3bf47a6fd0d07",
+    "media": {
+      "duration": 135.0,
+      "width": 1920,
+      "height": 1080,
+      "fps": 24.0,
+      "codec": "h264",
+      "audioCodec": "aac"
+    },
+    "encoding": {
+      "video": "H.264 CRF 23, 2400 kbit/s maximum, faststart",
+      "audio": "Original AAC packets copied unchanged"
+    },
+    "audioPayloadSha256": "526e385be9084dce01da493bf76548356e9a84224f9ab164541800eb8a0a3333",
+    "audioMatchesApprovedMaster": true,
+    "poster": "game/assets/game/pv/opening-pv-poster.jpg",
+    "worldwideDistributionPermission": "Additional permission confirmed by publisher on 2026-10-25"
+  }
+}

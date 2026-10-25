@@ -1,0 +1,152 @@
+{
+  "revision": 6,
+  "narrativeRevision": 2,
+  "status": "source_generation_complete",
+  "purpose": "135-second opening cinematic; source clips remain independently editable",
+  "generationProfile": {
+    "duration_seconds": 15.0,
+    "width": 1344,
+    "height": 768,
+    "fps": 24,
+    "native_frames": 362,
+    "steps": 8,
+    "sampler": "euler",
+    "scheduler": "simple",
+    "profileEvidence": "D:/training/workflows/ustc-cloud/cloud-sources-20261018/minimax_h3/config/dorm-test.json",
+    "resolutionTreatment": "Crop 1344x768 to 1344x756 and upscale to 1920x1080 during editing. Native footage remains 1344x768.",
+    "durationFromEdit": true,
+    "lora_name": "minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+    "shift_video": 6.0,
+    "shift_audio": 3.0,
+    "adapterSha256": "08cfe946033af7d27719b964b6e0a0e50c32138daabbd6ce4137e23df6bf9980",
+    "adapterSource": "https://huggingface.co/lightx2v/Minimax-h3-Turbo/blob/main/minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors"
+  },
+  "sharedDirection": "Original photorealistic science-fiction cinematic for Mindrealm Bastion. A tragic, oppressive near-future city ruled by enormous neural broadcast structures; citizens' individual memories are being erased. Physically believable people, weathered metal, rain, concrete, volumetric mist and mechanical motion. Steel blue, cold grey and muted violet dominate; remembered human warmth and the last lucid ember are restrained amber. Film lighting with visible detail in shadows, natural motion blur, subtle grain and controlled highlights. One continuous deliberate camera move per source clip, coherent physical actions, persistent objects. No generated text, subtitles, logos, interface graphics or spoken dialogue. Sound consists of believable location ambience and synchronized physical effects; music and narration will be added in editing. The ending leaves the conflict unresolved.",
+  "characterContinuity": "The survivor matches the completed memory shot: an anonymous adult woman with dark hair loosely drawn back and a few dark strands near her cheek, wearing a rain-worn charcoal utility coat with a broad raised collar. A simple dull metal neural interface sits behind the right ear. Her hands are ungloved; use hands, cropped partial profiles and back views. The keepsake is the same palm-sized circular brass medallion: an aged round golden disk with an uneven repaired seam and a faint radial engraving, held flat in an open palm. Keep the disk's size, circular outline and material stable through the memory, awakening and defense scenes.",
+  "promptStructureSource": "https://huggingface.co/MiniMaxAI/MiniMax-H3/blob/main/docs/VIDEO_PROMPT_WRITING_GUIDE_base_en.md",
+  "soundDirection": "Use the scene's specified location ambience and physical effects, with natural perspective, restrained volume and continuous environmental sound. People are silent; human presence is conveyed by breathing, footsteps and fabric movement. Music and off-screen Chinese narration are added separately during editing.",
+  "clips": [
+    {
+      "id": "01",
+      "seed": 2026102501,
+      "timelineStart": 0,
+      "timelineEnd": 9,
+      "sourceIn": 0.5,
+      "prompt": "Extreme close view of rain running down the scratched window of a modest old apartment before dawn. Slowly shift focus from droplets to a warm practical lamp and an adult human silhouette inside. Beyond the glass, dense weathered city blocks sit beneath a low grey sky. The camera makes a slow, controlled forward move. Rain continues naturally across the full shot; the warm lamp is the only intimate point of color. Quiet rain, distant city machinery and a soft interior room tone."
+    },
+    {
+      "id": "02",
+      "seed": 2026102502,
+      "timelineStart": 9,
+      "timelineEnd": 20,
+      "sourceIn": 0.5,
+      "prompt": "An intimate remembered moment in the apartment doorway. Close on two adult hands: one carefully places a repaired brass keepsake into the other open palm, then briefly closes the fingers around it. The person receiving it wears the dark charcoal utility coat. Warm window light reveals skin texture and the keepsake's imperfect seam. Camera drifts gently sideways while the hands remain anatomically stable and the object keeps the same shape. A door hinge, soft fabric movement and distant rain; a fragile feeling of a life now lost."
+    },
+    {
+      "id": "03",
+      "seed": 2026102503,
+      "timelineStart": 20,
+      "timelineEnd": 32,
+      "sourceIn": 0.5,
+      "prompt": "A colossal neural broadcast tower rises between dense inhabited buildings into storm clouds. Begin from a low street angle and crane upward to reveal several similar towers across the city. A broad, dim cold-blue light pulse sweeps slowly over rooftops, windows and wet surfaces in a physically coherent wave. Small vehicles and people establish the oppressive scale. Poured concrete, heavy steel braces and restrained luminous conduits look functional and weathered. Low structural resonance, rain and the distant synchronized hum of the towers."
+    },
+    {
+      "id": "04",
+      "seed": 2026102504,
+      "timelineStart": 32,
+      "timelineEnd": 45,
+      "sourceIn": 0.5,
+      "prompt": "Track sideways through a rain-dark commuter passage at adult chest height. Rows of adult citizens in ordinary muted work coats halt and turn their heads toward the same distant broadcast source. Small neural interfaces behind their ears glow with the same slow cold pulse. One tired adult begins to speak, hesitates and lowers their eyes as the others resume the identical walking rhythm. Keep foreground hands and faces plausible, with restrained natural expression. Footsteps align into one rhythm while human murmur fades beneath an electrical drone."
+    },
+    {
+      "id": "05",
+      "seed": 2026102505,
+      "timelineStart": 45,
+      "timelineEnd": 57,
+      "sourceIn": 0.5,
+      "prompt": "Inside a vast memory processing factory, the camera advances along a narrow service aisle between tall translucent storage columns. Fleeting warm, indistinct fragments of domestic life shimmer inside one column, then a cold scanning light passes down it and leaves clear empty glass. Repeat the action in the next column farther away to reveal industrial repetition. Heavy pistons and cables move slowly; condensation and reflections respond to the light. Avoid writing or symbols on any surface. Ventilation, restrained hydraulic movement and a low disappearing human-like murmur."
+    },
+    {
+      "id": "06",
+      "seed": 2026102506,
+      "timelineStart": 57,
+      "timelineEnd": 69,
+      "sourceIn": 0.5,
+      "prompt": "The anonymous adult in the dark rain-worn utility coat stands still as commuters move past in soft focus. Start close to the dull neural interface behind the right ear: its light briefly slips out of rhythm with the city's regular blue pulse. Slowly move past the partial profile to an open palm held at waist level. A tiny amber point begins to glow above the repaired brass keepsake. The hand trembles subtly and the person's breath becomes audible. Rain, one irregular electrical tick, quiet breathing; maintain one continuous physically coherent shot."
+    },
+    {
+      "id": "07",
+      "seed": 2026102507,
+      "timelineStart": 69,
+      "timelineEnd": 79,
+      "sourceIn": 0.5,
+      "prompt": "A small amber lucid ember hangs above the repaired brass keepsake in an adult's open palm. Its light flickers across wet skin, showing the same warm color as the remembered apartment. The camera slowly pulls back into a vast dark mental landscape with grounded industrial structures emerging from mist; the tiny ember remains a stable point in the composition. Its shape behaves like a small natural flame, leaning in the cold air and recovering. Soft fire crackle, wind and the last trace of a room ambience, with an emotionally fragile sense of scale."
+    },
+    {
+      "id": "08",
+      "seed": 2026102508,
+      "timelineStart": 79,
+      "timelineEnd": 93,
+      "sourceIn": 0.5,
+      "prompt": "Track at low height beside an approaching hostile machine formation moving through rain and dense city mist. Ground units have believable articulated legs, armored rollers and mechanical joints bearing their weight; restrained violet interference glows between worn metal plates. A few smaller flying machines glide above the formation. Their shapes remain stable and each motion has physical inertia. As the camera rises slightly, more ranks emerge from the fog until their number overwhelms the frame. Heavy steps, track rattle, layered motors and a distorted distant broadcast."
+    },
+    {
+      "id": "09",
+      "seed": 2026102509,
+      "timelineStart": 93,
+      "timelineEnd": 105,
+      "sourceIn": 0.5,
+      "prompt": "From behind the same adult survivor in the dark charcoal coat, follow a tense raised hand toward a modular defense platform. Heavy square ground sections rise one level on visible hydraulic supports, scattering dust and water. A close-defense barrier locks into the lower passage while a restrained blue-violet metal pulse turret unfolds on the higher platform. Mechanical panels hinge and lock with believable weight, never appearing from empty space. The amber ember remains protected behind the line. Grinding mechanisms, locking impacts and electrical charging under wind."
+    },
+    {
+      "id": "10",
+      "seed": 2026102510,
+      "timelineStart": 105,
+      "timelineEnd": 115.25,
+      "sourceIn": 0.5,
+      "prompt": "Move slowly along the battered defensive line toward the amber ember. A repair arm strains to raise a damaged metal construct while sparks spill to the wet ground. Distant defensive lamps go dark one after another under pressure; the few surviving lamps connect through thin amber-blue conduits. In the foreground an exhausted adult hand grips the repaired brass keepsake, then steadies against the metal barrier. The defense holds at a visible cost. Heavy strained servos, brief electrical failures, wind and a close breath; the flame's delicate crackle persists."
+    },
+    {
+      "id": "11a",
+      "seed": 2026102511,
+      "timelineStart": 115.25,
+      "timelineEnd": 117.25,
+      "sourceIn": 0.5,
+      "prompt": "A slow forward aerial move above the Noise Frontier: a broken approach road vanishes into sheets of rain beneath leaning broadcast pylons. Bands of low violet interference pass through the distant fog while scattered amber points hold along a narrow defensive path. Huge weathered structures suggest human civilization losing its coherence. Keep the rain, mist and camera in natural continuous motion. Howling wind, rain striking metal and distant machinery. Center a large circular pylon brace for a later match cut."
+    },
+    {
+      "id": "11b",
+      "seed": 2026102512,
+      "timelineStart": 117.25,
+      "timelineEnd": 118.75,
+      "sourceIn": 0.5,
+      "prompt": "Look down into a monumental circular shaft inside the Memory Factory. Translucent memory columns descend slowly on heavy industrial rails toward darkness, tiny warm fragments dimming as each crosses a cold scanning ring. A controlled camera move downward reveals the immense depth through fog and metal latticework. No readable text or screens. Hydraulic vibration, a chain mechanism and a muffled low-frequency pulse. Preserve the central circular composition for a match cut."
+    },
+    {
+      "id": "11c",
+      "seed": 2026102513,
+      "timelineStart": 118.75,
+      "timelineEnd": 128,
+      "sourceIn": 0.5,
+      "prompt": "The Control Core fills the sky: a gigantic dark ring of neural broadcast machinery suspended between immense supports above the ruined city. Move slowly forward from a distant overlook to reveal layers of rotating internal structures and synchronized cold lights. Tiny amber defensive lights lie far below, almost lost beneath its scale. Real metal, rain and structural weight; rotation is slow and mechanically supported. A vast bass resonance and wind, conveying the approaching weight of an unresolved enemy."
+    },
+    {
+      "id": "12",
+      "seed": 2026102514,
+      "timelineStart": 128,
+      "timelineEnd": 131,
+      "sourceIn": 0.5,
+      "prompt": "Close on the same exhausted adult survivor in the charcoal utility coat, mostly a partial profile and shoulder. They bend their body to shelter the tiny amber lucid ember from violent cold wind. The flame nearly disappears and recovers to a very small light. Slowly pull back to a rear view, revealing the fragile battered defense beneath the gigantic distant control ring and the approaching machines. No victory gesture; the person remains standing despite exhaustion. Wind, a strained breath and a fragile fire crackle, ending with the threat unresolved."
+    }
+  ],
+  "endCard": {
+    "timelineStart": 131,
+    "timelineEnd": 135,
+    "text": [
+      "心域防线",
+      "MINDREALM BASTION",
+      "守住最后一簇清醒"
+    ],
+    "treatment": "Editor text layers on near-black, stable type, restrained metallic reflection; unresolved music tail"
+  }
+}

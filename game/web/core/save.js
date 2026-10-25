@@ -175,13 +175,6 @@ export function settleProfile(profile, state) {
   return result;
 }
 
-export function unlockArchive(profile, id) {
-  if (!enemies[id] || enemies[id].kind !== 'boss') return { ok: false, reason: '未知档案。' };
-  if (profile.unlockedArchives.includes(id)) return { ok: false, reason: '已经解锁。' };
-  if (profile.fragments < 30) return { ok: false, reason: "需要 30 记忆碎片。" };
-  profile.fragments -= 30; profile.unlockedArchives.push(id); return { ok: true };
-}
-
 export function unlockContent(profile, id) {
   const pack = contentUnlocks.find(pack => pack.id === id);
   if (!validProfile(profile) || !pack) return { ok: false, reason: '未知构筑档案。' };

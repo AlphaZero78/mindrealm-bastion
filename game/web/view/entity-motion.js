@@ -9,7 +9,7 @@ const abilityDeadlines={jam:'jamUntil',corrode_resistance:'corrosionUntil',press
  * This class never writes to a run, draws randomness or advances the simulation. */
 export class EntityMotion {
  constructor(){this.reset();}
- reset(){this.clock=0;this.state=null;this.battle=null;this.tracks=new Map();this.deaths=[];this.serial=0;}
+ reset(){this.clock=0;this.state=null;this.battle=null;this.tracks=new Map();this.deaths=[];}
  update(state,events=[],wallTime=0,interpolation=1){
   const battle=state?.battle||null,nextClock=battle?Math.max(0,(battle.time||0)-(1-interpolation)*.05)*1000:wallTime;
   if(this.state!==state||this.battle!==battle||nextClock<this.clock){this.reset();this.state=state;this.battle=battle;}

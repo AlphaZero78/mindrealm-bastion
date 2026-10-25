@@ -1,0 +1,19 @@
+/* Solid local SVG stickers keep their existing icon-sized layout boxes. */
+.sticker-icon{overflow:visible;flex:none;vertical-align:middle;isolation:isolate}
+.sticker-icon .sticker-object,.sticker-icon .sticker-badge{transform-box:view-box}
+.sticker-inline{width:24px!important;height:24px!important;margin-inline-end:.35em;vertical-align:middle}
+.sticker-large{width:72px;height:72px;max-width:100%;max-height:100%}
+.choice-art>.sticker-icon,.codex-art>.sticker-icon{width:64px;height:64px}
+.nexus-gift-art>.sticker-icon{position:static!important;inset:auto!important;width:72px!important;height:72px!important;max-width:100%;max-height:100%;transform:none!important;opacity:1!important;filter:none!important}
+.nexus-gift-art{display:flex;align-items:center;justify-content:center}
+.item-sticker{width:40px;height:40px;max-width:100%;max-height:100%}
+.item-belt .item-sticker{width:32px;height:32px}
+.shop-product-heading>.item-sticker{width:38px;height:38px}
+.item-entry .item-sticker,.inventory-item .item-sticker{width:42px;height:42px}
+.item-reward .item-sticker,.item-reward-card .item-sticker{width:72px;height:72px}
+.resource>.sticker-icon,.resource>span>.sticker-icon{width:28px;height:28px}
+.route-symbol>.sticker-icon{display:block;width:100%;height:100%}
+.route-nexus>.sticker-icon{width:26px;height:26px}
+.map-node .route-sticker{width:39px;height:39px;flex:none}
+.map-legend .route-sticker{width:21px;height:21px;flex:none}
+@media(max-width:1050px){.sticker-inline{width:21px!important;height:21px!important}.resource>.sticker-icon,.resource>span>.sticker-icon{width:24px;height:24px}.nexus-gift-art>.sticker-icon{width:58px!important;height:58px!important}.map-node .route-sticker{width:33px;height:33px}}

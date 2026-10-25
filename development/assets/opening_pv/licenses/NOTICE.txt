@@ -1,0 +1,38 @@
+Mindrealm Bastion opening cinematic
+
+Images and original scene sound were generated with the user's existing
+MiniMax-H3 deployment. Refer to MiniMax-H3-LICENSE.txt for the model's terms,
+including its territorial restrictions on output use and distribution.
+Revision 3 excludes all generated scene sound from the delivered soundtrack.
+
+MiniMax H3 is licensed under the MiniMax H3 Community License Agreement,
+Copyright © 2026 MiniMax. All Rights Reserved.
+
+Current Mandarin narration uses the user-selected original synthetic voice F,
+created with Qwen3-TTS-12Hz-1.7B-VoiceDesign and extended with the Base model.
+Models: https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign
+        https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-Base
+Code: https://github.com/QwenLM/Qwen3-TTS
+Qwen3-TTS is licensed under Apache-2.0. The reference is the original synthetic
+audition selected by the user, not a recording of a film performer.
+
+The retained second narration version used HeyGen Voice (Orca), public catalog voice
+Guoliang - Warm & Resonant, voice ID 1ddd191b2454466e9527983c9dcb4c14.
+Generation request: b226099eb5254cd3bea992a02a24b2d5, speed 0.82.
+The recording was generated through the user's connected HeyGen workspace.
+HeyGen's service terms apply to this narration. The original recording and
+word timings are retained locally with the editable production materials.
+The previous Kokoro narration is preserved only as the earlier production version.
+
+Music: Singularity by vitalezzz, CC0 1.0.
+Source: https://opengameart.org/content/singularity-0
+Physical sound accents: Sci-Fi Sounds by Kenney, CC0 1.0.
+Source: https://opengameart.org/content/sci-fi-sounds
+The original music and sound licenses remain with the game's source assets.
+
+Typography is rendered with the installed SimSun and Times New Roman fonts.
+Font files are not included in the film delivery.
+
+The script, shot planning, editing and title composition are original project work.
+Public presentation should clearly disclose the AI-generated imagery as required
+by the retained model license. This production step performs local delivery.
