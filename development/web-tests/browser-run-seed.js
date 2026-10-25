@@ -12,6 +12,8 @@ async page=>{
  const fingerprint=()=>page.evaluate(()=>{const {runId,battle,preBattle,...state}=window.__mindrealm.getState();return JSON.stringify(state);});
  const original=await current(),defaults=[];
  await open();defaults.push(await readSeed());
+ const material=await page.locator('.modal').evaluate(el=>{const style=getComputedStyle(el),alpha=Number(style.backgroundColor.match(/rgba\([^)]*,\s*([\d.]+)\)/)?.[1]??1);return{alpha,frosted:!CSS.supports('backdrop-filter','blur(1px)')||style.backdropFilter.includes('blur(')};});
+ if(material.alpha<.9||!material.frosted)throw Error('Dialog reading surface is too transparent or missing its supported frost effect');
  if(!(await page.locator('.difficulty-preview-info').innerText()).includes('标准难度'))throw Error('Standard difficulty explanation is empty');
  await page.locator('.modal-body details summary').click();
  const preview=page.locator('[data-pressure-preview="10"]');await preview.scrollIntoViewIfNeeded();const previewBefore=await preview.boundingBox();await preview.hover();
@@ -27,8 +29,9 @@ async page=>{
  await open();const reopened=await readSeed();if(!valid(reopened)||defaults.includes(reopened))throw Error('Reopening reused a date or seed');
  for(const viewport of [{width:1440,height:900},{width:960,height:540}]){
   await page.setViewportSize(viewport);await page.screenshot({path:`narrative-seed-dialog-${viewport.width}.png`});
-  const fit=await page.locator('.seed-entry').evaluate(el=>{const r=el.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&[...el.children].every(x=>x.scrollWidth<=x.clientWidth+1);});
-  if(!fit)throw Error('Seed input clips at '+viewport.width);
+  await page.locator('#seed-input').focus();
+  const fit=await page.locator('.seed-entry').evaluate(el=>{const r=el.getBoundingClientRect(),label=el.previousElementSibling.getBoundingClientRect(),help=el.nextElementSibling.getBoundingClientRect(),input=el.querySelector('input').getBoundingClientRect(),button=el.querySelector('button').getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&[...el.children].every(x=>x.scrollWidth<=x.clientWidth+1)&&input.right+6<=button.left&&r.top-label.bottom>=7&&help.top-r.bottom>=7;});
+  if(!fit)throw Error('Seed controls or their focus outline overlap at '+viewport.width);
  }
  await click('.modal-footer .primary');if((await page.evaluate(()=>window.__mindrealm.getState().seed))!==reopened)throw Error('Confirmation changed the displayed seed');
  await click('[data-action="menu"]');await click('[data-action="continue"]');if((await page.evaluate(()=>window.__mindrealm.getState().seed))!==reopened)throw Error('Continue regenerated a seed');

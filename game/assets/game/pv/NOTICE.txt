@@ -1,0 +1,28 @@
+Mindrealm Bastion / 心域防线 — Opening PV
+Duration: 135 seconds. Original game-world script and editing by this project.
+
+The moving images are AI-generated with MiniMax H3. The synthetic Mandarin
+narrator was designed with Qwen3-TTS and selected by the publisher.
+The original generated scene audio has been replaced with this narration and
+the retained licensed instrumental score. This is an edited, recompressed film.
+
+MiniMax H3 is licensed under the MiniMax H3 Community License Agreement,
+Copyright © 2026 MiniMax. All Rights Reserved.
+Source: https://huggingface.co/MiniMaxAI/MiniMax-H3
+Public model license: MiniMax-H3-LICENSE.txt
+The publisher has confirmed additional permission covering worldwide
+distribution of this film, including the territories excluded by the public
+model license. No model weights are included in this game.
+
+Qwen3-TTS: https://github.com/QwenLM/Qwen3-TTS
+License: Apache-2.0. See Qwen3-TTS-Apache-2.0.txt.
+The voice reference is an original synthetic audition created for this project.
+
+Music: Singularity by vitalezzz, CC0 1.0.
+https://opengameart.org/content/singularity-0
+Sound accents: Sci-Fi Sounds by Kenney, CC0 1.0.
+https://opengameart.org/content/sci-fi-sounds
+Their full licenses are retained with the game's corresponding audio assets.
+
+Title typography: SimSun and Times New Roman, rendered into the video image.
+The font software is not distributed with the film.

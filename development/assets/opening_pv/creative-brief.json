@@ -1,0 +1,45 @@
+{
+  "title": "心域防线：最后的清醒信号",
+  "workingEnglishTitle": "Mindrealm Bastion — The Last Clear Signal",
+  "purpose": "世界观开场影片，结尾承接玩家开始远征",
+  "targetDurationSeconds": 135,
+  "targetAspectRatio": "16:9",
+  "targetResolution": "1920x1080",
+  "targetFrameRate": 24,
+  "language": "zh-CN",
+  "revision": 2,
+  "userTonePreference": "更悲壮、更压迫的末世感",
+  "voice": "成熟、低沉、克制的普通话旁白，画外音；使用获得许可的现成声音",
+  "emotionalArc": ["生活的余温", "秩序的承诺", "选择被抹去", "微小的偏差", "以沉重代价守住将熄的火种"],
+  "visualDirection": {
+    "medium": "写实科幻电影影像，可信的人体、建筑、材质和摄影；景物、人物、烟雾和机械具有真实运动",
+    "palette": "钢蓝、冷灰、黯紫与银色金属；醒觉火种和私人记忆使用克制的暖金色",
+    "camera": "开场缓慢推进，微距与宏大城市全景交替；危机阶段加快切换，最后回归稳定长镜头",
+    "humanPresence": "普通居民和匿名偏频者。以背影、冻僵的手、疲惫眼神和急促呼吸承载情绪，保持同一深色实用外套与简洁神经接口的连续性。最后的抵抗带有损失与牺牲，人物在黑暗压近时继续站在火种之前",
+    "ending": "防线的微小光点逐个黯淡，风雨几乎压灭火种，幸存者留在原位。摄影机拉远，显出防线与巨大控制结构悬殊的尺度；片名出现在未决的低音上，使命交给玩家",
+    "worldMotifs": ["覆盖城市的同频信号塔", "修复与抹除记忆的工业装置", "噪声凝成的机械敌群", "阶梯高地与模块化心智构造", "手中与防线中心的醒觉火种"],
+    "textTreatment": "中文字幕在后期作为独立文字层排版，白色或淡暖灰、清楚的安全边距。片尾中文标题与英文副标题也是文字层",
+    "endCard": ["心域防线", "MINDREALM BASTION", "守住最后一簇清醒"]
+  },
+  "canon": {
+    "sources": ["development/AGENTS.md：世界观与玩家身份", "game/web/core/content.js：bossArchives", "development/docs/GAMEPLAY.md：三幕与心智构造"],
+    "facts": [
+      "统治者以精神控制抹杀个体意志。",
+      "记忆工厂曾修复创伤，后来将修复定义为遗忘。",
+      "噪声、异常信号和失控情绪形成敌人，侵蚀醒觉火种。",
+      "玩家是能调整精神频率的偏频者，通过心智构造与地形建立防线。",
+      "远征经过噪声边境、记忆工厂和统御核心。",
+      "片尾停在反抗开始，保留玩家亲自改变城市未来的空间。"
+    ]
+  },
+  "referenceUse": "借鉴开场片的情绪铺陈、个人视角与宏观世界交替、意象复现和最后交接玩家使命；参考作品用于研究，不进入成片素材。",
+  "references": [
+    {"title": "Civilization VI Launch Trailer", "publisher": "Sid Meier's Civilization / 2K", "url": "https://www.youtube.com/watch?v=5KdE0p2joJw"},
+    {"title": "Frostpunk 2 Official Game Intro Cinematic", "publisher": "11 bit studios", "url": "https://www.youtube.com/watch?v=Ly2T14H8gdM"},
+    {"title": "Frostpunk 2 Intro Cinematic — official production context", "publisher": "11 bit studios", "url": "https://11bitstudios.com/pl/frostpunk-2-intro-cinematic/"},
+    {"title": "Frostpunk Release Cinematic — creator description", "publisher": "Deep Blue", "url": "https://vimeo.com/267025773"}
+  ],
+  "soundDirection": "从雨声、呼吸和稀疏低音开始，过渡到同一频率的机械脉冲，再加入小调弦乐、低铜管与沉重工业鼓。危机高点后突然抽空鼓声，结尾只留下风、呼吸与悬而未决的低音。旁白带有压住悲伤的疲惫感，火种的声音微弱但仍可辨。使用原创生成或明确许可的音乐与音效。",
+  "deliveryIntent": ["完整、可直接播放的开场 PV", "可编辑视频工程", "本地旁白、分镜和来源记录"],
+  "status": "production_brief"
+}

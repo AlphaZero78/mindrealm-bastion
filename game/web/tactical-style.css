@@ -27,3 +27,93 @@
 @container(max-width:690px){.run-hud .topbar{height:auto;min-height:92px;display:flex;flex-wrap:wrap;padding:9px 12px;gap:8px}.topbar .brand{display:none}.topbar .resources{width:100%;justify-content:space-between}.topbar .top-actions{margin-left:auto}.resource .value{font-size:16px}}
 @media(max-height:650px){.act-passage-content{padding:15px}.act-passage-emblem>.icon{width:32px;height:32px;margin:10px 0}.act-passage-route{padding:10px 0;margin:9px 0}.act-passage-content h2{font-size:30px;margin-bottom:10px}.act-passage-actions{margin-top:4px}}
 @media(prefers-reduced-motion:reduce){.act-passage-art,.act-passage-shade,.act-passage-content{animation:none}.xp-meter::-webkit-progress-value{transition:none}}
+
+/* Compact battle dock: one command row, fixed feedback, and one shallow drawer. */
+.battle-screen .battle-footer.battle-dock{min-height:0;padding:6px 14px;border-radius:16px 16px 0 0;flex:none}
+.dock-toolbar,.dock-navigation,.dock-tabs,.warehouse-filters,.dock-insights,.battle-controls{display:flex;align-items:center}
+.dock-toolbar{justify-content:space-between;gap:12px;min-height:34px}
+.dock-navigation{gap:9px;min-width:0}
+.dock-tabs{gap:5px}
+.battle-dock .dock-toolbar .btn{min-height:34px;height:34px;padding:6px 10px;font-size:11px;gap:6px;white-space:nowrap}
+.battle-dock .dock-toolbar .icon{width:19px;height:19px}
+.battle-dock .dock-toggle{width:32px;min-width:32px;padding:5px!important}
+.dock-toggle .icon{transform:rotate(90deg)}
+.battle-screen[data-footer-collapsed=true] .dock-toggle .icon{transform:rotate(-90deg)}
+.warehouse-filters{gap:4px;padding-left:9px;border-left:1px solid var(--line)}
+.battle-dock .warehouse-filters .btn{padding:5px 8px;font-size:10px;min-height:28px;height:28px}
+.dock-insights{gap:4px}
+.dock-insights .icon-btn{width:32px;height:32px}
+.battle-controls{gap:9px;flex:none}
+.battle-clock{font:11px ui-monospace,monospace;color:var(--muted);min-width:43px;white-space:nowrap}
+.battle-dock .speed-controls{gap:3px;margin:0;padding:2px;border:1px solid var(--line);border-radius:12px}
+.battle-dock .speed-controls button{width:30px;min-width:30px;height:28px;padding:3px;font-size:11px;border-radius:8px}
+.battle-dock #placement-status{height:28px;min-height:28px;margin:3px 0 0;padding:0;border:0}
+.battle-dock .placement-status{height:28px;min-height:28px;padding:0 8px;font-size:11px;line-height:14px;gap:7px;border-radius:8px}
+.battle-dock .placement-status .range-legend{font-size:10px}
+.battle-dock .footer-drawer{margin-top:4px;min-width:0}
+.battle-dock .warehouse-row{width:100%;max-width:none;min-height:60px;height:60px;gap:7px;padding:0 0 2px;overflow-x:auto;overflow-y:hidden;scrollbar-color:#a1b5dc66 transparent}
+.battle-dock .unit-card{flex:0 0 166px;min-width:166px;max-width:166px;height:52px;gap:6px;padding:5px 9px;border-radius:10px}
+.battle-dock .unit-card .sprite{width:36px;height:36px;flex:none}
+.battle-dock .unit-card>div{min-width:0;flex:1}
+.battle-dock .unit-card .card-name{font-size:11px;line-height:15px;padding-right:14px;white-space:nowrap}
+.battle-dock .unit-card small{font-size:10px;line-height:13px;margin-top:2px}
+.battle-dock .unit-card .tier{top:4px;right:6px;font-size:8px}
+.battle-dock .unit-card .deployed-mark{right:6px;bottom:4px;font-size:8px}
+.battle-dock .unit-card .hpbar{height:3px;margin:3px 0 0;width:calc(100% - 25px)}
+.battle-dock .warehouse-row .empty{padding:14px 9px;font-size:11px}
+.battle-dock .terrain-toolbar{display:grid;grid-template-columns:auto auto minmax(0,1fr);max-width:none;gap:5px 12px;align-items:center;padding:2px 0 0;min-height:60px}
+.terrain-toolset{display:flex;gap:5px}
+.battle-dock .terrain-tool{flex-direction:row;gap:5px;padding:6px 9px;height:32px;font-size:11px;white-space:nowrap}
+.battle-dock .terrain-tool .icon{width:18px;height:18px}
+.battle-dock .terrain-brush{flex-direction:row;align-items:center;gap:10px;margin:0}
+.battle-dock .terrain-brush label{gap:5px;white-space:nowrap;font-size:10px}
+.battle-dock .terrain-brush select{height:30px;padding:4px 5px;font-size:11px}
+.battle-dock .terrain-batch-actions{flex:none;min-width:0;flex-wrap:nowrap;justify-content:flex-end;gap:5px}
+.battle-dock .terrain-batch-actions .btn{min-height:32px;height:32px;padding:6px 9px;font-size:11px;white-space:nowrap;gap:5px}
+.battle-dock .terrain-note{grid-column:1/-1;color:var(--muted);font-size:10px;line-height:14px;white-space:nowrap}
+.battle-sidebar #placement-status{min-height:0;margin:0;padding:0;border:0;flex:none}
+.battle-sidebar .placement-status{padding:8px 10px;font-size:11px;line-height:1.6}
+.battle-sidebar .placement-status .range-legend{display:none}
+.battle-sidebar .overload-banner{margin:0;font-size:11px;line-height:1.6;overflow-wrap:anywhere}
+@container(max-width:1250px){.battle-dock .placement-status .range-legend{display:none}.dock-navigation{gap:6px}.battle-dock .dock-toolbar .btn{padding-inline:8px}.warehouse-filters{padding-left:6px}.battle-dock .terrain-toolbar{column-gap:8px}}
+@container(max-width:950px){.battle-screen .battle-footer.battle-dock{padding:5px 10px}.dock-navigation{gap:5px}.battle-dock .warehouse-filters .btn{padding-inline:6px}.battle-controls{gap:6px}.battle-dock .terrain-tool{padding-inline:7px}.battle-dock .terrain-brush{gap:7px}.battle-dock .terrain-batch-actions .btn{padding-inline:7px}}
+
+/* Enemy intelligence is grouped by its actual entrance, with local model portraits. */
+.battle-sidebar .threat-panel.enemy-intel{padding:9px;margin-top:3px;min-width:0;border-radius:12px}
+.enemy-intel>summary{position:sticky;top:0;z-index:2;min-height:35px;gap:8px;align-items:center;color:var(--text);background:rgba(17,25,53,.96);border-radius:8px}
+.threat-panel.enemy-intel>summary:after{content:none}
+.enemy-intel>summary::-webkit-details-marker{display:none}
+.intel-summary-label{display:flex;flex-direction:column;gap:4px;min-width:0}
+.intel-summary-label strong{font-size:12px;letter-spacing:.04em}
+.intel-summary-label #hud-enemies{font-size:10px;line-height:1.4;color:var(--muted)}
+.threat-toggle-cue{display:inline-flex;align-items:center;justify-content:center;gap:5px;flex:none;padding:6px 8px;border:1px solid #c4d6ff8c;border-radius:9px;background:#8294c238;color:#edf3ff;font-size:11px;line-height:1.3}
+.threat-toggle-cue>.icon{width:16px;height:16px;transform:rotate(90deg)}
+.enemy-intel[open]>summary .threat-toggle-cue>.icon{transform:rotate(-90deg)}
+.enemy-intel:not([open]) .threat-open-label,.enemy-intel[open] .threat-closed-label{display:none}
+.enemy-intel>summary:hover .threat-toggle-cue{background:#8ba3d263;border-color:#e2eaff}
+.enemy-intel>summary:focus-visible{outline:2px solid #ffdfae;outline-offset:4px;border-radius:6px}
+.entrance-list{display:flex;flex-direction:column;gap:14px;padding-top:10px}
+.entry-intel{min-width:0}
+.entry-intel-heading{display:flex;align-items:center;justify-content:space-between;gap:7px;padding:0 2px 7px;border-bottom:1px solid var(--line);margin-bottom:7px}
+.entry-intel-heading h3{font-size:12px;line-height:1.4;margin:0;letter-spacing:0;color:#d8e6ff;white-space:nowrap}
+.entry-intel-heading>span{font-size:9px;line-height:1.4;color:var(--muted);text-align:right}
+.entry-enemies{display:flex;flex-direction:column;gap:6px}
+.enemy-intel .entry-enemy{display:grid;grid-template-columns:44px minmax(0,1fr);gap:7px;align-items:center;width:100%;padding:7px 6px;text-align:left;border:1px solid #93a8d13b;border-radius:10px;background:rgba(29,39,73,.46);color:var(--text)}
+.enemy-intel .entry-enemy:hover{background:rgba(79,82,132,.6);border-color:#c4d6ffa6}
+.entry-enemy .threat-portrait{width:44px;height:52px;display:block;border-radius:8px;background:radial-gradient(ellipse,#a7c9ef24,transparent 72%);flex:none}
+.entry-enemy-copy{display:flex;flex-direction:column;gap:4px;min-width:0}
+.entry-enemy-heading{display:flex;align-items:baseline;justify-content:space-between;gap:5px}
+.entry-enemy-heading strong{font-size:11px;line-height:1.45;overflow-wrap:anywhere}
+.entry-enemy-heading>b{font:10px ui-monospace,monospace;color:#cfdbf4;white-space:nowrap}
+.enemy-traits{display:flex;flex-wrap:wrap;gap:4px}
+.enemy-trait{padding:1px 5px;border-radius:5px;font-size:9px;line-height:1.4;border:1px solid transparent}
+.enemy-trait.ground{color:#c5ddff;background:#324c7459;border-color:#8ab6ef4f}
+.enemy-trait.air{color:#e8d2ff;background:#6b4f8552;border-color:#cba8ef70}
+.enemy-trait.siege{color:#ffe0af;background:#79522e66;border-color:#e5ba7f75}
+.enemy-trait.rank{color:#ffc9dc;background:#7e3d5a54;border-color:#e4a3bf66}
+.enemy-feature{font-size:10px;line-height:1.55;color:#ced8ec;overflow-wrap:anywhere}
+.enemy-intel .encounter-details{min-height:31px;padding:6px 8px;font-size:10px;gap:7px;margin-top:11px}
+.enemy-intel .encounter-details .icon{width:15px;height:15px}
+.entry-empty{display:block;color:var(--muted);font-size:10px;line-height:1.6;padding:5px}
+.battle-caption .encounter-alert{margin:0;padding:8px 10px;font-size:11px;line-height:1.6;color:#ffe0af;background:#74582f40;border:1px solid #d8bb8f7d;border-radius:8px}
+.encounter-alert[hidden]{display:none}

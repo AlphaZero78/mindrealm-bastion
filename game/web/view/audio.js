@@ -61,7 +61,8 @@ export class AudioDirector{
     this.pending.set(name,promise);try{return await promise;}catch(error){this.reportError(`声音素材加载失败（${name}）：${error.message}`);throw error;}finally{this.pending.delete(name);}
   }
   target(gain,value,timeConstant=.1){const now=this.context.currentTime;if(gain.cancelAndHoldAtTime)gain.cancelAndHoldAtTime(now);else{gain.cancelScheduledValues(now);gain.setValueAtTime(gain.value,now);}gain.setTargetAtTime(value,now,timeConstant);}
-  setVolumes(values={}){for(const key of ['master','music','sfx','ui'])if(Number.isFinite(values[key]))this.volumes[key]=clamp(values[key]);if(!this.context)return;for(const key of ['master','music','sfx','ui'])this.target(this[key].gain,this.volumes[key]*(key==='music'?.72:1),.04);}
+  setVolumes(values={}){for(const key of ['master','music','sfx','ui'])if(Number.isFinite(values[key]))this.volumes[key]=clamp(values[key]);if(!this.context)return;for(const key of ['master','music','sfx','ui'])this.target(this[key].gain,key==='master'&&this.mediaFocus?0:this.volumes[key]*(key==='music'?.72:1),.04);}
+  setMediaFocus(active){this.mediaFocus=!!active;if(this.context)this.target(this.master.gain,this.mediaFocus?0:this.volumes.master,.04);}
   setScene(scene){const value=normalizeScene(scene);if(this.scene===value)return;this.scene=value;this.generation++;if(value!=='boss'&&value!=='battle'){this.boss=false;this.targetDanger=0;}if(this.context)this.applyScene().catch(()=>{});}
   update({danger=0,boss=false,paused=false}={}){this.targetDanger=clamp(danger);this.boss=!!boss;this.paused=!!paused;}
   makeTrack(name,buffer,when,loop=true){

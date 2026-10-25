@@ -4,7 +4,8 @@ import assert from 'node:assert/strict';
 import {  generateMap, generateTerrain, availableNodes, enterNode, nodeAction, finishBattle, chooseReward, addXP, cloneState, eventPreview, getSummary, servicePrice, continueAct } from '../../game/web/core/state.js';
 import { towers, enemies, relics, talents, legacyEvents as events, effects, contentUnlocks, contentPool, hashSeed, pressureLevels } from '../../game/web/core/content.js';
 import { unitStats, repairCost, upgradeCost } from '../../game/web/core/rules.js';
-import { createSaveStore, settleProfile, unlockArchive, unlockContent } from '../../game/web/core/save.js';
+import { createSaveStore, settleProfile, unlockContent } from '../../game/web/core/save.js';
+import { codexScreen } from '../../game/web/screens.js';
 import { CURRENT_DIFFICULTY_REVISION, difficultyProfile } from '../../game/web/core/difficulty.js';
 import {ensureShopStock} from '../../game/web/core/state.js';
 import {inventoryStatus,addItem} from '../../game/web/core/inventory.js';
@@ -199,9 +200,16 @@ test('save restores the entire pre-battle snapshot and verifies envelope, schema
 });
 
 test('meta progression settles once and unlocks pressure and archives without modifying opening stats', () => {
-  const store = createSaveStore(new MemoryStorage()), s = service('boss', 'meta', 2); store.save(s); finishBattle(s, { won: true }); let p = settleProfile(store.loadProfile(), s);
-  assert.equal(p.wins, 1); assert.equal(p.unlockedPressure, 1); assert.ok(p.fragments > 0); assert.deepEqual(settleProfile(p, s), p); assert.equal(store.saveProfile(p).ok, true); assert.deepEqual(store.loadProfile(), p);
-  const locked = Object.values(enemies).find(e => e.kind === 'boss' && !p.unlockedArchives.includes(e.id)); assert.equal(unlockArchive(p, locked.id).ok, true); assert.equal(unlockArchive(p, locked.id).ok, false);
+  const store = createSaveStore(new MemoryStorage()), s = service('boss', 'meta', 2), boss = enemies[s.currentNode.boss || s.maps[s.act].boss];
+  const profile = store.loadProfile();profile.fragments=30;
+  assert.ok(!codexScreen(profile,'archives').includes(boss.name),'undefeated boss archive stays hidden');
+  assert.equal(store.save(s).ok,true);assert.equal(finishBattle(s, { won: true }).ok,true);
+  const p = settleProfile(profile, s);
+  assert.equal(p.wins, 1); assert.equal(p.unlockedPressure, 1); assert.equal(p.fragments,profile.fragments+getSummary(s).fragments);
+  assert.ok(p.discoveries.archives.includes(boss.id));assert.ok(p.unlockedArchives.includes(boss.id),'v2 archive metadata remains compatible');
+  assert.equal(store.saveProfile(p).ok, true);const loaded=store.loadProfile();assert.deepEqual(loaded,p);
+  assert.ok(codexScreen(loaded,'archives').includes(boss.name),'defeated boss archive is visible after reload');
+  assert.deepEqual(settleProfile(loaded,s),loaded,'repeat settlement preserves fragments and discoveries');
   const next = newRun('fresh', p.unlockedPressure); assert.deepEqual([next.spirit, next.focus, next.bandwidth], [100, 99, 20]);
   assert.equal(store.saveSettings({ music: .1, uiScale: 1.5 }).ok, true); assert.equal(store.loadSettings().music, .1); assert.equal(store.saveSettings({ music: 2 }).ok, false);
 });

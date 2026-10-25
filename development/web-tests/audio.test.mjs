@@ -36,6 +36,15 @@ function harness(){
 }
 function deferred(){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};}
 
+test('video focus silences game audio without changing or losing volume preferences',()=>{
+ const audio=harness();try{
+  audio.setVolumes({master:.65,music:.3,sfx:.4,ui:.2});audio.setMediaFocus(true);near(audio.master.gain.value,0);
+  audio.setVolumes({music:.9});near(audio.master.gain.value,0);near(audio.volumes.master,.65);
+  audio.setMediaFocus(false);near(audio.master.gain.value,.65);near(audio.volumes.music,.9);
+  audio.setVolumes({master:0});audio.setMediaFocus(true);audio.setMediaFocus(false);near(audio.master.gain.value,0);
+ }finally{audio.dispose();}
+});
+
 test('click and deployment use distinct short tonal sections with a zero-ended envelope on the UI bus',async()=>{
   const records={};
   for(const name of ['click','deploy','hover']){

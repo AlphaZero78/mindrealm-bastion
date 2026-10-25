@@ -1,0 +1,202 @@
+{
+  "status": "all_source_clips_collected_and_reviewed",
+  "clips": {
+    "03": {
+      "requestId": "mindrealm_pv_r2_20261025_03",
+      "file": "mindrealm_pv_r2_20261025_03.mp4",
+      "sha256": "13c7ea0099994ec10ebdef9a3297a8aac349df6c01d457590f8ef83aaf0aa8ba",
+      "bytes": 14113947,
+      "duration": 15.0,
+      "width": 1344,
+      "height": 768,
+      "fps": 24.0,
+      "cloudJobId": "113651",
+      "editSourceIn": 3.0,
+      "creativeReviewed": true,
+      "reviewNotes": "Reviewed five frames from the actual clip: coherent upward camera movement, realistic rain-wet city surfaces, monumental broadcast tower and blue scanning light. Final film playback review remains pending."
+    },
+    "01": {
+      "requestId": "mindrealm_pv_r4_20261025_01",
+      "file": "mindrealm_pv_r4_20261025_01.mp4",
+      "sha256": "a70f7bb465c2028d00f066d031a694b54ae6f4088a54e8592444d16eec307d03",
+      "bytes": 3191521,
+      "duration": 10.0,
+      "width": 1344,
+      "height": 768,
+      "fps": 24,
+      "cloudJobId": "113862",
+      "creativeReviewed": true,
+      "reviewNotes": "Reviewed five frames of the actual 10-second clip: rain droplets rack into focus on an inhabited apartment facade and a continuous sideways city reveal; warm lamps, cool architecture and distant towers fit the opening."
+    },
+    "02": {
+      "requestId": "mindrealm_pv_r4_20261025_02",
+      "file": "mindrealm_pv_r4_20261025_02.mp4",
+      "sha256": "9fa03c1698b1a81aa9c40cb6a38d2cc7a4e3cc74c685a1fe71553b2f097809e6",
+      "bytes": 5962464,
+      "duration": 12.0,
+      "width": 1344,
+      "height": 768,
+      "fps": 24,
+      "cloudJobId": "113862",
+      "creativeReviewed": true,
+      "reviewNotes": "Reviewed five frames of the actual 12-second clip: two adults exchange a circular brass medallion; visible hands and the round object stay coherent, with warm window light and the recipient in a dark utility coat. The late partial profile establishes dark hair and an adult woman for subsequent shots."
+    },
+    "04": {
+      "requestId": "mindrealm_pv_r6_20261025_04",
+      "file": "mindrealm_pv_r6_20261025_04.mp4",
+      "sha256": "e8289e0ac78216c4f64b523ac9b87280f54546641e50056992b49354d4b4ea36",
+      "bytes": 8838155,
+      "duration": 14.0,
+      "width": 1344,
+      "height": 768,
+      "fps": 24,
+      "cloudJobId": "113903",
+      "creativeReviewed": true,
+      "reviewNotes": "Five actual source frames reviewed: coherent lateral commuter movement, plausible foreground faces, stable ear interfaces and cold rain-city continuity; no overlay watermark observed."
+    },
+    "05": {
+      "requestId": "mindrealm_pv_r6_20261025_05",
+      "file": "mindrealm_pv_r6_20261025_05.mp4",
+      "sha256": "5f3921800de055deac096e2dd547a4642ec7a46612ddf051bb9f5ee9822d7b00",
+      "bytes": 10667218,
+      "duration": 13.0,
+      "width": 1344,
+      "height": 768,
+      "fps": 24,
+      "cloudJobId": "113903",
+      "creativeReviewed": true,
+      "reviewNotes": "Five actual source frames reviewed: industrial memory columns hold warm domestic fragments that disappear under cold scanning rings; coherent forward camera movement and detailed mist."
+    },
+    "06": {
+      "requestId": "mindrealm_pv_r6_20261025_06",
+      "file": "mindrealm_pv_r6_20261025_06.mp4",
+      "sha256": "b5b565b317415de6c477dc00fdf023c9e9652c510ac56da6ffc4b213840bb9f6",
+      "bytes": 6848247,
+      "duration": 13.0,
+      "width": 1344,
+      "height": 768,
+      "fps": 24,
+      "cloudJobId": "113903",
+      "creativeReviewed": true,
+      "reviewNotes": "Five actual source frames reviewed: the dark-haired woman, broad charcoal collar, rear-ear interface and circular brass medallion remain coherent; the camera moves from the interface to a plausible open hand and small amber light."
+    },
+    "07": {
+      "requestId": "mindrealm_pv_r6_20261025_07",
+      "file": "mindrealm_pv_r6_20261025_07.mp4",
+      "sha256": "7e18a746637a135f49bb6ba07ba8f1ac0da0107a98618c663dcfe3e609b235d5",
+      "bytes": 5342223,
+      "duration": 11.0,
+      "width": 1344,
+      "height": 768,
+      "fps": 24,
+      "cloudJobId": "113903",
+      "creativeReviewed": true,
+      "reviewNotes": "Five actual source frames reviewed: the woman and charcoal coat lead into a close view of the stable round brass medallion and small flame; coherent hand anatomy and rain detail. The delivered camera pushes into the palm rather than revealing a wider mental landscape, and the editorial shot description reflects this actual result."
+    },
+    "08": {
+      "requestId": "mindrealm_pv_r6_20261025_08",
+      "file": "mindrealm_pv_r6_20261025_08.mp4",
+      "sha256": "6fd85526eb4dd2162f1443d21bba5370aea210c67aacadaa6fe68872fa818fe4",
+      "bytes": 11591878,
+      "duration": 15.0,
+      "width": 1344,
+      "height": 768,
+      "fps": 24,
+      "cloudJobId": "113903",
+      "creativeReviewed": true,
+      "reviewNotes": "Five actual source frames reviewed: stable violet-lit ground machines and smaller airborne units move through a wet city; the rising camera reveals a larger formation with coherent scale and mechanical shapes."
+    },
+    "09": {
+      "requestId": "mindrealm_pv_r6_20261025_09",
+      "file": "mindrealm_pv_r6_20261025_09.mp4",
+      "sha256": "07842d6f351eb2bb2db6c7d0b6b07354966aae3ef39ef085603dd80b2c01be9b",
+      "bytes": 6402562,
+      "duration": 13.0,
+      "width": 1344,
+      "height": 768,
+      "fps": 24,
+      "cloudJobId": "113903",
+      "creativeReviewed": true,
+      "reviewNotes": "Five actual source frames reviewed: the woman and round medallion anchor a coherent mechanical sequence; ground platforms rise, a lower barrier locks into place, and a violet pulse turret unfolds on the high platform. The source visibly connects the world introduction to the defense mechanics."
+    },
+    "10": {
+      "requestId": "mindrealm_pv_r6_20261025_10",
+      "file": "mindrealm_pv_r6_20261025_10.mp4",
+      "sha256": "3a9d394d63410705bf1ebb72e1de7f9bae2e856e980056f2f14e67a72f15842d",
+      "bytes": 6843906,
+      "duration": 12.0,
+      "width": 1344,
+      "height": 768,
+      "fps": 24,
+      "cloudJobId": "113903",
+      "creativeReviewed": true,
+      "reviewNotes": "Five actual source frames reviewed: a battered rain-soaked defense surrounds an amber central fire; the camera reveals the same dark-haired woman with the round medallion in the foreground. Stable large-scale machinery and a restrained exhausted expression support the costly defense beat."
+    },
+    "11a": {
+      "requestId": "mindrealm_pv_r6_20261025_11a",
+      "file": "mindrealm_pv_r6_20261025_11a.mp4",
+      "sha256": "c4da214dda7e93c77a33fca8db10bea0fbf928f56ac27543d4081d98da7aa2cc",
+      "bytes": 5236038,
+      "duration": 5.0,
+      "width": 1344,
+      "height": 768,
+      "fps": 24,
+      "cloudJobId": "113903",
+      "creativeReviewed": true,
+      "reviewNotes": "Five actual source frames reviewed: coherent forward aerial travel through rain over a broken city corridor, leaning broadcast pylons, amber lights and moving violet interference bands."
+    },
+    "11b": {
+      "requestId": "mindrealm_pv_r6_20261025_11b",
+      "file": "mindrealm_pv_r6_20261025_11b.mp4",
+      "sha256": "f1075fecfe386d5ecb2f4e9944905fa3ef4830976230c0ebcc86f71c7c8bc79e",
+      "bytes": 6502965,
+      "duration": 5.0,
+      "width": 1344,
+      "height": 768,
+      "fps": 24,
+      "cloudJobId": "113903",
+      "creativeReviewed": true,
+      "reviewNotes": "Five actual source frames reviewed: coherent downward motion through a large circular industrial shaft with descending memory columns, warm fragments and cold rings. The later source section gives a clearer centered opening for the cut into the Control Core.",
+      "editSourceIn": 2.5
+    },
+    "11c": {
+      "requestId": "mindrealm_pv_r6_20261025_11c",
+      "file": "mindrealm_pv_r6_20261025_11c.mp4",
+      "sha256": "e3c27f0e805fa0dd424cdcde4f9ab096d3e5f9082f078e32123063f2af478ad9",
+      "bytes": 5769336,
+      "duration": 11.0,
+      "width": 1344,
+      "height": 768,
+      "fps": 24,
+      "cloudJobId": "113903",
+      "creativeReviewed": true,
+      "reviewNotes": "Five actual source frames reviewed: an immense supported control structure dominates a rain-soaked city; slow camera travel reveals small human silhouettes beneath rotating inner rings. Coherent large-scale geometry and cold lighting create the intended oppressive scale."
+    },
+    "12": {
+      "requestId": "mindrealm_pv_r6_20261025_12",
+      "file": "mindrealm_pv_r6_20261025_12.mp4",
+      "sha256": "34b78d8e5bec9016983494760e5860413e0938b35ed327b8fa4ea04dc79f2bdc",
+      "bytes": 3251594,
+      "duration": 5.0,
+      "width": 1344,
+      "height": 768,
+      "fps": 24,
+      "cloudJobId": "113903",
+      "creativeReviewed": true,
+      "reviewNotes": "Five actual source frames reviewed: two plausible hands shelter the cracked round medallion as a small amber flame recovers. The final edit selects source seconds 0-3 for the intimate hand/shoulder ending, excluding the later wide angle and its different distant ring orientation.",
+      "editSourceIn": 0.0
+    }
+  },
+  "editOverrides": {
+    "04": {
+      "sourceClip": "05",
+      "sourceIn": 0.0,
+      "reason": "Align memory-erasure imagery with the memory-erasure narration."
+    },
+    "05": {
+      "sourceClip": "04",
+      "sourceIn": 1.0,
+      "reason": "Align the synchronized commuters with the narration about increasingly orderly streets."
+    }
+  }
+}

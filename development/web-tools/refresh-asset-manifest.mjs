@@ -7,6 +7,7 @@ import { AUDIO_FILES } from '../../game/web/view/audio.js';
 import { ENTITY_ART } from '../../game/web/view/entity-art.js';
 import { MODEL_PORTRAITS } from '../../game/web/view/model-portraits.js';
 import { NEXUS_ART } from '../../game/web/view/nexus-art.js';
+import { PV_ASSETS } from '../../game/web/pv-player.js';
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const manifestPath = 'development/assets/ASSET_MANIFEST.sha256';
@@ -58,6 +59,7 @@ export async function runtimeAssetPaths(root = projectRoot) {
     ...Object.values(ENTITY_ART).map(art => art.animationPath.slice(1)),
     ...Object.values(ENTITY_ART).filter(art => art.deathPath).map(art => art.deathPath.slice(1)),
     ...Object.values(AUDIO_FILES).map(path => path.replace(/^\//, '')),
+    ...Object.values(PV_ASSETS).map(path => path.slice(1)),
     ...cssAssets,
     ...Object.values(messengers).map(m=>`assets/third_party/game-icons/${m.art}.svg`),
     ...Object.keys(events).map(id=>`assets/game/events/${id}.png`),

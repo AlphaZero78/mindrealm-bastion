@@ -1,5 +1,5 @@
 async page=>{
- const location=new URL(page.url());if(!['127.0.0.1','localhost'].includes(location.hostname)||location.port==='4173')throw Error('Use a dedicated local QA server');const origin=location.origin;
+ const location=new URL(page.url());if(!['127.0.0.1','localhost'].includes(location.hostname)||location.port==='4173')throw Error('Use a dedicated local QA server');const origin=location.origin,scope=location.searchParams.get('qaScope')==='support'?'support':'full';
  const checks=[],errors=[],requests=[];page.setDefaultTimeout(12000);
  page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)requests.push(`${r.status()} ${r.url()}`);});
  const check=(ok,name)=>{if(!ok)throw Error(name);checks.push(name);};
@@ -7,9 +7,12 @@ async page=>{
  const click=async action=>{await idle();await page.locator(`[data-action="${action}"]`).first().click();await idle();};
  const shot=async name=>{await page.waitForFunction(()=>!document.querySelector('#modal-root').getAnimations({subtree:true}).some(a=>a.playState==='running'));return page.screenshot({path:`mindrealm-experience-qa/${name}.png`});};
  const point=cell=>page.evaluate(c=>{const f=window.__mindrealm.field,r=f.canvas.getBoundingClientRect(),p=f.project(c.x+.5,c.z+.5,f.heightAt(c.x,c.z));return{x:r.x+p.x,y:r.y+p.y};},cell);
- await page.goto(`${origin}/?qa=1`);await page.waitForFunction(()=>window.__mindrealm);
+ await page.goto(`${origin}/?qa=1${scope==='support'?'&qaScope=support':''}`);await page.waitForFunction(()=>window.__mindrealm);
  await page.setViewportSize({width:1440,height:900});
  await page.evaluate(()=>window.__mindrealm.newRun('experience-acceptance'));await idle();
+ await click('nexus-gift');await page.getByRole('button',{name:'接纳并进入本幕',exact:true}).click();await idle();
+ check(await page.evaluate(()=>window.__mindrealm.getState().phase)==='map','confirmed nexus gift opens the route');
+ if(scope==='full'){
  check(await page.locator('.map-side:not(.left)').count()===0,'route has no right sidebar');
  await page.locator('.map-node.available').first().hover();
  check(await page.locator('#route-tooltip').isVisible()&&/风险.*收益.*连接/s.test(await page.locator('#route-tooltip').textContent()),'hover tooltip contains risks rewards connections');await shot('route-tooltip');
@@ -20,15 +23,27 @@ async page=>{
  const camera=await page.evaluate(()=>({...window.__mindrealm.field.camera})),area=await page.locator('#battlefield').boundingBox();
  await page.mouse.move(area.x+area.width/2,area.y+area.height/2);await page.mouse.down();await page.mouse.move(area.x+area.width/2+90,area.y+area.height/2+30,{steps:12});await page.mouse.up();
  check(await page.evaluate(c=>{const f=window.__mindrealm.field;return Math.hypot(f.camera.x-c.x,f.camera.z-c.z)>2;},camera),'left drag pans battlefield');
- const setup=async()=>{await page.evaluate(async()=>{const q=window.__mindrealm,Run=await import('/web/core/state.js'),R=await import('/web/core/rules.js');const s=Run.newRun('interaction-fixture');Run.enterNode(s,Run.availableNodes(s)[0].id);for(const c of s.terrain.cells){c.h=0;c.ramp=-1;}s.terrain.revision++;s.units=[];s.bandwidth=40;s.focus=500;
+ }
+ // This UI fixture retains revision 2 terrain prices and upgrade availability.
+ const setup=async()=>{await page.evaluate(async()=>{const q=window.__mindrealm,Run=await import('/web/core/state.js'),R=await import('/web/core/rules.js'),{unblessedRun}=await import('/development/web-tests/helpers/unblessed-run.mjs');const s=unblessedRun('interaction-fixture');s.difficultyRevision=2;Run.enterNode(s,Run.availableNodes(s)[0].id);for(const c of s.terrain.cells){c.h=0;c.ramp=-1;}s.terrain.revision++;s.units=[];s.bandwidth=40;s.focus=500;
   const repair=Run.addUnit(s,'memory_mechanic'),near=Run.addUnit(s,'boundary_riveter'),far=Run.addUnit(s,'phase_blade'),rail=Run.addUnit(s,'focus_rail');R.deploy(s,repair.uid,18,18);R.deploy(s,near.uid,21,18);R.deploy(s,far.uid,6,6);
   for(let z=13;z<16;z++)for(let x=18;x<20;x++)R.cellAt(s,x,z).h=1;
-  q.loadState(s);q.field.camera.x=20;q.field.camera.z=19;q.field.zoomLevel=1.5;q.field.updateScale();q.field.dirty=true;window.fixtureIds={repair:repair.uid,near:near.uid,rail:rail.uid};});await idle();await click('tab-units');if(await page.locator('#footer-drawer').isHidden())await click('toggle-footer');};
+  q.loadState(s);q.field.camera.x=20;q.field.camera.z=19;q.field.zoomLevel=1.5;q.field.updateScale();q.field.dirty=true;window.fixtureIds={repair:repair.uid,near:near.uid,far:far.uid,rail:rail.uid};});await idle();await click('tab-units');if(await page.locator('#footer-drawer').isHidden())await click('toggle-footer');};
  await setup();
  await page.locator('[data-action="warehouse-tab"][data-tab="all"]').click();
  const ids=await page.evaluate(()=>window.fixtureIds);
  await page.locator(`[data-action="select-unit"][data-uid="${ids.repair}"]`).click();
- check(await page.evaluate(()=>{const q=window.__mindrealm;q.field.render(performance.now());return q.field.range.length>50&&q.field.support.affected.some(u=>u.uid===window.fixtureIds.near);}), 'support area and affected ally highlights are rendered');await shot('support-range');
+ check(await page.evaluate(()=>{
+  const field=window.__mindrealm.field,outlined=[],drawOutline=field.drawUnitOutline;
+  field.drawUnitOutline=function(unit,...args){outlined.push(unit.uid);return drawOutline.call(this,unit,...args);};
+  try{field.render(performance.now());}finally{field.drawUnitOutline=drawOutline;}
+  const aura=field.rangeAuras.find(a=>a.id==='repair');
+  return aura?.cells.length>50&&aura.edges.length>0&&outlined.includes(window.fixtureIds.near)&&!outlined.includes(window.fixtureIds.far);
+ }), 'repair aura and only its nearby ally highlight are rendered');await shot('support-range');
+ if(scope==='support'){
+  check(!errors.length,'no runtime errors');check(!requests.length,'no failed resource requests');
+  return {status:'EXPERIENCE_SUPPORT_OK',scope,checks,errors,requests,screenshot:'mindrealm-experience-qa/support-range.png'};
+ }
  await page.locator(`[data-action="select-unit"][data-uid="${ids.rail}"]`).click();await page.keyboard.press('r');
  check(await page.evaluate(()=>window.__mindrealm.getContext().deployRotation===1),'R rotates warehouse placement');
  let p=await point({x:18,z:13});await page.mouse.move(p.x,p.y);await page.mouse.click(p.x,p.y);
@@ -58,5 +73,5 @@ async page=>{
   await shot(`support-${size.width}`);await click('tab-terrain');await shot(`terrain-${size.width}`);
  }
  check(!errors.length,'no runtime errors');check(!requests.length,'no failed resource requests');
- return {status:'EXPERIENCE_BROWSER_OK',checks,errors,requests};
+ return {status:'EXPERIENCE_BROWSER_OK',scope,checks,errors,requests};
 }

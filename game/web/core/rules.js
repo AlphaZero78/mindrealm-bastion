@@ -130,15 +130,6 @@ export function auraCoverage(state,source,aura,{preview=false}={}){
   const targets=active&&aura.target==='ally'?state.units.filter(u=>u.hp>0&&auraCovers(state,source,u,aura)):[];
   return {active,global:aura.target==='global',range:aura.radius,targets,affected:targets.filter(u=>aura.id==='repair'||!disabled.includes(u.uid))};
 }
-export function supportCoverage(state,source,{preview=false}={}) {
-  const stats=unitStats(state,source),disabled=bandwidthState(state).disabled;
-  const active=source.hp>0&&onField(source)&&(preview||!disabled.includes(source.uid));
-  const global=['bandwidth_plus','resistance_plus'].includes(stats.ability);
-  const targets=active?state.units.filter(u=>onField(u)&&u.hp>0&&u.uid!==source.uid&&supportInRange(state,source,u)):[];
-  const m=ruleEffects(state),localBuff=stats.ability==='haste_aura'||!!(m.support_armor||m.support_rate);
-  const affected=targets.filter(u=>stats.ability==='repair'||localBuff&&!disabled.includes(u.uid));
-  return {active,global,range:stats.range,targets,affected};
-}
 const failure = reason => ({ok:false,reason});
 const canManage = s => ['prep','node'].includes(s.phase);
 const getUnit = (s,id) => typeof id==='object'?id:s.units.find(u=>u.uid===id);

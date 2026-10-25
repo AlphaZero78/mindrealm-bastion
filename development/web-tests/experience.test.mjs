@@ -50,12 +50,14 @@ test('terrain price crosses a tier inside a brush; discounts and cancellation us
  R.applyTerrainBatch(s,[command]);assert.equal(s.terrainEdits,28);R.undoTerrain(s);assert.equal(s.terrainEdits,19);assert.equal(s.focus,999);
 });
 
-test('support uses the same center distance for coverage and actual repair, includes rotated targets',()=>{
+test('repair aura coverage matches actual healing, includes rotated targets and stops with its source',()=>{
  const s=fixture(),repair=place(s,'memory_mechanic',8,8),near=place(s,'boundary_riveter',11,8),far=place(s,'anchor_bulwark',30,8);near.rotation=1;near.hp-=30;far.hp-=30;
- const c=R.supportCoverage(s,repair);assert.equal(c.active,true);assert.ok(c.affected.some(u=>u.uid===near.uid));assert.ok(!c.affected.some(u=>u.uid===far.uid));
+ const aura=R.unitAuras(s,repair).find(a=>a.id==='repair');assert.ok(aura);
+ const coverage=()=>R.auraCoverage(s,repair,aura),c=coverage();assert.equal(c.active,true);assert.deepEqual(c.affected.map(u=>u.uid),[near.uid]);
  const old=near.hp,farHp=far.hp;battle(s);tick(s,.1);assert.ok(near.hp>old);assert.equal(far.hp,farHp);
- repair.hp=0;assert.deepEqual(R.supportCoverage(s,repair).affected,[]);
- repair.hp=R.unitStats(s,repair).maxHp;s.bandwidth=0;assert.equal(R.supportCoverage(s,repair).active,false);
+ repair.hp=0;assert.deepEqual(coverage().affected,[]);
+ repair.hp=R.unitStats(s,repair).maxHp;s.bandwidth=0;assert.equal(coverage().active,false);assert.deepEqual(coverage().affected,[]);
+ const damaged=near.hp;repair.cooldown=0;tick(s,.1);assert.equal(near.hp,damaged,'overloaded repair source cannot heal');
 });
 
 test('workshop lists deployed units first and current/next effects have no unrelated level multipliers',()=>{

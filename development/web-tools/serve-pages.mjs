@@ -4,11 +4,12 @@ import {dirname, isAbsolute, relative, resolve, sep, extname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parseArgs} from 'node:util';
 import {normalizeBasePath} from './build-pages.mjs';
+import {sendStaticFile} from '../../game/launcher/server.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const types = {'.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8',
   '.css':'text/css; charset=utf-8', '.json':'application/json', '.svg':'image/svg+xml',
-  '.png':'image/png', '.jpg':'image/jpeg', '.mp3':'audio/mpeg', '.ogg':'audio/ogg',
+  '.png':'image/png', '.jpg':'image/jpeg', '.mp3':'audio/mpeg', '.ogg':'audio/ogg', '.mp4':'video/mp4',
   '.ttf':'font/ttf', '.txt':'text/plain; charset=utf-8', '.glb':'model/gltf-binary'};
 
 export function createPagesPreview({directory, basePath}) {
@@ -27,10 +28,7 @@ export function createPagesPreview({directory, basePath}) {
       if (!rel || isAbsolute(rel) || rel === '..' || rel.startsWith('..' + sep) || !(await stat(file)).isFile()) {
         res.writeHead(404); res.end(); return;
       }
-      const bytes = await readFile(file);
-      res.writeHead(200, {'Content-Type': types[extname(file)] || 'application/octet-stream',
-        'Content-Length': bytes.length, 'Cache-Control': 'no-store'});
-      res.end(req.method === 'HEAD' ? undefined : bytes);
+      sendStaticFile(req,res,file,await stat(file),{'Content-Type':types[extname(file)]||'application/octet-stream','Cache-Control':'no-store'});
     } catch {res.writeHead(404); res.end();}
   });
 }

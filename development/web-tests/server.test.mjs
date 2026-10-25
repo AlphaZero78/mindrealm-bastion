@@ -37,3 +37,14 @@ test('production ignores legacy QA options and never serves developer files',asy
  const {request}=await fixture(t,true);assert.equal((await request('/development/web-tests/helpers/fixture.mjs')).status,404);
  assert.equal((await request('/development/web-tests/helpers/..%2f..%2f..%2fprivate.txt')).status,404);
 });
+
+test('embedded video supports seeking, suffix ranges and safe invalid-range responses',async t=>{
+ const {root,request}=await fixture(t);await writeFile(join(root,'assets/film.mp4'),'0123456789');
+ const part=await request('/assets/film.mp4',{headers:{Range:'bytes=2-5'}});
+ assert.equal(part.status,206);assert.equal(part.body,'2345');assert.equal(part.headers['content-type'],'video/mp4');assert.equal(part.headers['content-range'],'bytes 2-5/10');assert.equal(part.headers['accept-ranges'],'bytes');assert.equal(part.headers['content-length'],'4');
+ assert.equal((await request('/assets/film.mp4',{headers:{Range:'bytes=-3'}})).body,'789');
+ assert.equal((await request('/assets/film.mp4',{headers:{Range:'bytes=8-'}})).body,'89');
+ for(const range of ['bytes=20-','bytes=5-2','bytes=-0','bytes=one-two']){const response=await request('/assets/film.mp4',{headers:{Range:range}});assert.equal(response.status,416,range);assert.equal(response.headers['content-range'],'bytes */10');}
+ const changed=await request('/assets/film.mp4',{headers:{Range:'bytes=2-5','If-Range':'"outdated"'}});assert.equal(changed.status,200);assert.equal(changed.body,'0123456789');
+ const head=await request('/assets/film.mp4',{method:'HEAD',headers:{Range:'bytes=2-5'}});assert.equal(head.status,200);assert.equal(head.body,'');assert.equal(head.headers['content-length'],'10');
+});

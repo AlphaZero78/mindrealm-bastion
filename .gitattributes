@@ -8,3 +8,8 @@ game/assets/third_party/three/three.bundle.js -whitespace
 game/licenses/kenney-*.txt -text -whitespace
 game/assets/game/models/models.json -text whitespace=cr-at-eol
 game/licenses/** -text
+
+# Embedded film files and upstream license copies retain their recorded bytes.
+game/assets/game/pv/** -text
+game/assets/game/pv/*LICENSE.txt -whitespace
+development/assets/opening_pv/licenses/** -text -whitespace

@@ -11,6 +11,8 @@ const required=['web/index.html','web/app.js','web/screens.js','web/style.css','
 required.push('web/core/unit-details.js','web/view/display-settings.js','web/view/transitions.js','web/view/dialog-transitions.js','web/core/difficulty.js','web/view/entity-art.js','web/view/entity-motion.js',...Object.values(ENTITY_ART).map(art=>art.animationPath.slice(1)));
 required.push('web/inventory-view.js','web/core/inventory.js','web/core/item-content.js','web/core/extra-events.js','web/core/nexus-content.js','web/nexus-view.js');
 required.push('web/core/event-redesign.js','web/core/tower-progression.js','web/service-style.css');
+required.push('web/core/tutorial.js','web/tutorial-view.js','web/tutorial-style.css','web/view/sticker-icons.js','web/sticker-style.css','web/view/metal-flow.js','web/metal-theme.css');
+required.push('web/encounter-view.js');
 required.push('web/core/event-stories.js','web/event-view.js','web/event-style.css','web/view/entity-renderer.js','web/view/model-reflection.js','web/view/model-portraits.js','web/view/nexus-art.js','web/run-seed.js',...(await runtimeAssetPaths(root)).map(file=>file.slice(5)));
 for(const file of new Set(required)){const path=resolve(root,'game',file);if(!(await stat(path)).isFile()||!(await stat(path)).size)throw Error(`Missing or empty resource: ${file}`);}
 const licenses=['assets/third_party/game-icons/LICENSE.txt','assets/third_party/opengameart/singularity/LICENSE.txt','assets/third_party/opengameart/dark-sci-fi-audio/LICENSE.txt','assets/third_party/kenney/sci-fi-sounds/License.txt','development/assets/model_sources/kenney/space-kit/License.txt','development/assets/model_sources/kenney/modular-space-kit/License.txt','development/assets/model_sources/kenney/tower-defense-kit/License.txt'];

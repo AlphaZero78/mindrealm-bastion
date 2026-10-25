@@ -4,6 +4,12 @@
 
 ## 当前验证入口
 
+教程、贴纸图标和金属流动背景的实现与验收见[教程与界面更新](TUTORIAL_VISUAL_REFRESH.md)。相关浏览器脚本使用独立内存存档；正式存储隔离检查另用全新浏览器上下文。
+
+紧凑战斗操作栏由 `screens.js` 的 `battleFooter` 和 `tactical-style.css` 管理。仓库筛选并入工具行，构造卡片横向排列；收起后将操作反馈移到左栏，底部保留开战、暂停、倍速和工具入口。`browser-battle-dock.js` 检查三种窗口与三档缩放、原生拖放、地形事务、取消和战斗控制。教程继续由 `browser-tutorial.js` 验证；布局变化时同步更新引导光点，普通帧仍按 80 ms 节流。
+
+左栏敌方情报由 `encounter-view.js` 按真实到达队列分入口计数，复用敌人模型肖像。陆地、飞行和攻城标记来自实际移动与能力字段；简略特性用于快速辨识，完整数值继续由敌人详情提供。原生折叠控件显示“收起／展开”，状态保存在界面上下文中。`encounter-view.test.mjs` 覆盖全部敌人、旧入口数据和分组数量；`browser-encounter-sidebar.js` 检查图片加载、不同窗口下的阅读、详情点击、折叠保持和战斗提示。
+
 使用独立开发服务运行 `browser-tactical-flow.js`、`browser-event-confirmation.js` 与 `helpers/revision-five-browser.mjs`。正式页面使用 `browser-pages.js` 的全新浏览器上下文。旧版 `browser-flow.js`、`browser-release.js`、`browser-portable-entity.js`、`browser-final-ui.js`、`browser-art-build-smoke.js` 与 `browser-model-hero.js` 已被现行流程覆盖并移入回收站；历史文档中的结果保留。
 
 ## 环境与启动
@@ -66,7 +72,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\development\web-tests\
 | `game/web/core/nexus-content.js`、`game/web/nexus-view.js` | 三幕的 12 位精神使者、72 件专属赠礼与枢纽房间视图 |
 | `game/web/view/nexus-art.js` | 12 位精神使者的独立 CG 路径与场景说明，供枢纽视图和资源打包共同使用 |
 | `game/web/core/extra-events.js`、`event-balance.js` | 三选事件与按幕风险、收益；沿用同一节点事务 |
-| `game/web/core/unit-details.js`、`tower-text.js` | 构造当前累计效果和简明目录文本 |
+| `game/web/core/unit-details.js`、`content.js` | 构造当前累计效果与目录文案；简明文案直接保存在构造定义中 |
 | `game/web/core/event-stories.js`、`game/web/event-view.js`、`game/web/event-style.css` | 事件故事、分支发展、CG 路径和场景布局；实际得失仍来自 `state.js` 的节点事务 |
 | `game/web/inventory-view.js` | 背包、道具、事件选材和商店的中文视图 |
 | `game/web/core/save.js` | 可注入存储、版本与结构检查、战前快照、备份恢复 |
@@ -86,6 +92,12 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\development\web-tests\
 | `development/docs/` | 长期玩法、开发与第三方资源说明 |
 
 预览和实战必须调用 `rules.js` 的同一规则。模拟帧可复用规则缓存，但地形破坏、单位状态或效果发生变化时必须失效。核心模块不得直接访问 DOM 或玩家存档。日志、截图、浏览器配置、下载压缩包、测试报告和发布产物均写到仓库外；不要恢复旧版引擎工程或历史构建产物。
+
+事件正文统一由 `eventStory` 按存档修订选择；事件目录保存标识、标题与交换规则。战斗奖励由 `combatFocusReward` 计算。支援预览使用 `unitAuras` 与 `auraCoverage`，友军高亮和维修结算沿用相同的范围规则。结算页只生成一次摘要，并直接组合各个面板。
+
+旧事件选择、旧难度规则、档案存档字段与图集回退均有实际消费者，继续保留。世界档案通过击败首领、结算发现记录和保存档案揭示。2026-10-21 的精简移除了未接入玩法的付费档案接口、重复文案覆盖、废弃短简介和无读取者的展示状态。
+
+这轮精简通过 279 项测试、资源核验和 20 种结算 HTML 对照。同种子完整远征的最终状态与 24 场战斗记录逐项一致；浏览器完成三幕 48 节点，并检查支援高亮、部署预览、返回导航和两种窗口尺寸。记录位于仓库外的 `D:/game_build_archive/simplification-20261021`。
 
 实体模型的配方、GLB 导出、肖像生成、连续动画和当前性能证据见[模型与动作](ENTITY_MODELS_AND_ANIMATION.md)。修改战斗事件时须保留原有规则结果，演出只能消费实体身份、目标、朝向、技能倒计时和模拟时钟。
 
