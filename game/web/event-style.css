@@ -34,3 +34,5 @@
 .event-stage.is-outcome{--event-accent:#d3e6c7}
 @media(max-width:1000px){.event-stage{--event-inset:4cqw}.event-story-wrap{width:64%;bottom:5%;height:48%}.event-title-ribbon{min-height:42px;padding-top:8px;padding-bottom:8px}.event-prose{padding-top:10px}.event-options-wrap{width:34%;top:8%;bottom:5%}.event-options{gap:12px}.event-location{top:3%;font-size:10px}.event-option-title{padding-top:11px;padding-bottom:11px}}
 @media(prefers-reduced-motion:reduce){.event-choice-button{transition:none}}
+
+.event-decline{align-self:flex-end;margin-right:8%;padding:10px 16px;border:1px solid #9bbab266;background:#10272dc9;color:#d5e4de;font:14px/1.5 'Noto Serif SC',SimSun,serif}

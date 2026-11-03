@@ -1,3 +1,4 @@
+import {revealOldEvent} from './helpers/revealed-event.mjs';
 import {unblessedRun} from './helpers/unblessed-run.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -89,7 +90,7 @@ test('shops persist discounted stock, tiered offers, item replacement, limited s
 });
 test('targeted events show and consume the chosen inventory unit or item; unaffordable choices stay unchanged',()=>{
  for(const id of ['scrap_bridge','silent_exchange']){
-  const s=Run.newRun(id);addItem(s,'clarity');addItem(s,'stasis');s.act=events[id].act-1;const node=s.maps[s.act].nodes.find(n=>n.floor===1);node.type='event';node.event=id;s.nextNodes=[node.id];Run.enterNode(s,node.id);
+  const s=Run.newRun(id);s.resistance=5;addItem(s,'clarity');addItem(s,'stasis');s.act=events[id].act-1;const node=s.maps[s.act].nodes.find(n=>n.floor===1);node.type='event';node.event=id;s.nextNodes=[node.id];Run.enterNode(s,node.id);
   const payload=id==='scrap_bridge'?{index:0,uid:s.units[2].uid}:{index:0,itemUid:s.inventory.items[1].uid};
   const before=clone(s),preview=Run.eventPreview(s,0,payload);assert.equal(preview.canChoose,true);assert.deepEqual(s,before);
   inert(s,()=>Run.nodeAction(s,'event',{...payload,uid:'missing',itemUid:'missing'}));assert.equal(Run.nodeAction(s,'event',payload).ok,true);
@@ -103,16 +104,16 @@ test('depth and fusion gates slow v3 growth while revision 2 keeps its exact pro
  Run.addXP(s,800+1200+1600);assert.equal(s.depth,5);assert.equal(upgradeRequirement(s,u).ok,true);assert.equal(Rules.upgrade(s,u.uid,'A').ok,true);
  const old=Run.newRun('old');old.difficultyRevision=2;Run.addXP(old,200);assert.equal(old.depth,2);assert.equal(xpRequirement(old),325);assert.deepEqual(killRewardScale(old),{xp:1,focus:1});
 });
-test('every event keeps a survivable exit when storage is empty, expansions are full and focus is exhausted',()=>{
+test('empty inventory and exhausted resources reveal a battle instead of an unusable event',()=>{
  for(const event of Object.values(events)){
   const s=Run.newRun(`event-exit-${event.id}`);s.act=event.act-1;s.units=[];s.inventory.items=[];s.inventory.capacity=20;s.inventory.itemCapacity=4;s.focus=0;s.spirit=1;
   const node=s.maps[s.act].nodes.find(n=>n.floor===1);node.type='event';node.event=event.id;s.nextNodes=[node.id];assert.equal(Run.enterNode(s,node.id).ok,true);
-  const choices=event.choices.map((_,i)=>({i,p:Run.eventPreview(s,i)})),exit=choices.find(({p})=>p.canChoose&&(p.effects.spirit||0)+s.spirit>0);
-  assert.ok(exit,`${event.id} must keep a survivable choice`);assert.equal(Run.nodeAction(s,'event',{index:exit.i}).ok,true);assert.notEqual(s.phase,'lost');
+  assert.equal(s.currentNode.type,'battle');assert.equal(s.phase,'prep');assert.equal(Run.eventPreview(s,0),null);assert.equal(s.focus,0);assert.equal(s.spirit,1);
  }
 });
+
 test('event tier-two previews match the actual depth-gated compensation',()=>{
- const s=service('event');s.difficultyRevision=4;s.currentNode.eventData.id='identity_checkpoint';s.depth=1;const p=Run.eventPreview(s,1),focus=s.focus;
+ const s=service('event');s.difficultyRevision=4;s.currentNode.event='identity_checkpoint';revealOldEvent(s,s.currentNode,0);s.depth=1;const p=Run.eventPreview(s,1),focus=s.focus;
  assert.match(p.details.join(' '),/T1.*40/);assert.equal(Run.nodeAction(s,'event',{index:1}).ok,true);assert.equal(s.units.at(-1).tier,1);assert.equal(s.focus,focus+40);
 });
 test('new standard enemies grow across acts without adding population; current economy and XP previews agree',()=>{

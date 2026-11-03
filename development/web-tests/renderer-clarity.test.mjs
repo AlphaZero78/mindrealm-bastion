@@ -36,16 +36,47 @@ test('visible and hatched blocked regions share the combat verdict, including te
   }finally{qa.restore();}
 });
 
-test('preview ghost and boundaries render above entities without pointer text, including frozen confirmation',()=>{
+test('placement ghost and selection frame render above entities without pointer text, including frozen confirmation',()=>{
   const qa=setup();try{const {field,state,canvas}=qa,unit=state.units[0],other=state.units[1];other.x=18;other.z=18;const origin={x:18,z:14},order=[];field.setInteractive(true);field.hover=origin;field.setSelection({unit,previewOrigin:{...origin},preview:Rules.placement(state,unit,origin.x,origin.z)});
     for(const name of ['drawRangeFill','drawSelection']){const original=field[name].bind(field);field[name]=(...args)=>{order.push(name);return original(...args);};}const drawUnit=field.drawUnit.bind(field);field.drawUnit=(u,time,ghost)=>{order.push(ghost?'ghost':'entity');return drawUnit(u,time,ghost);};field.setInteractive(false);field.render(100);
     assert.ok(order.indexOf('drawRangeFill')<order.indexOf('entity'));assert.ok(order.indexOf('entity')<order.indexOf('drawSelection'));assert.ok(order.indexOf('drawSelection')<order.indexOf('ghost'));assert.deepEqual(field.previewOrigin(),origin);assert.equal(field.hover,null);const text=canvas.ctx.calls.filter(c=>c.method==='fillText').map(c=>c.args[0]);assert.ok(!text.some(value=>/H\d|18,14|专注|休眠|醒觉火种/.test(value)));assert.ok(field.entityBoxes.length>=2,'labels can avoid both deployed entities and the ghost');
   }finally{qa.restore();}
 });
 
+test('range surfaces retain combat cells and refresh after camera, preview and resolution changes',()=>{
+  const qa=setup();try{const {field,state,canvas}=qa,unit=state.units.find(u=>u.type==='pulse_array');unit.x=10;unit.z=10;
+    const serialized=JSON.stringify(state);field.setSelection({selectedUid:unit.uid});field.buildTerrain();
+    const contexts=[],drawEdges=field.drawRangeEdges.bind(field);field.drawRangeEdges=(edges,color,dashed,ctx)=>{contexts.push(ctx);return drawEdges(edges,color,dashed,ctx);};
+    field.drawRangeFill();assert.ok(contexts.length&&contexts.every(ctx=>ctx!==canvas.ctx),'range boundaries are composited below units');
+    const first=field.rangeLayerState,cells=field.range.map(c=>({...c}));field.drawRangeFill();assert.equal(field.rangeLayerState,first,'steady frames reuse the layer');
+    field.rotate(.5);field.buildTerrain();field.drawRangeFill();assert.notEqual(field.rangeLayerState,first);assert.deepEqual(field.range,cells,'camera rotation preserves attack verdicts');
+    const rotated=field.rangeLayerState;field.setResolution('1920x1080');field.buildTerrain();field.drawRangeFill();assert.notEqual(field.rangeLayerState,rotated);assert.equal(field.rangeLayer.width,canvas.width);
+    const preview={ok:true,cells:[{x:12,z:10,after:{...state.terrain.cells[10*41+12],h:3}}]};field.setSelection({selectedUid:unit.uid,terrainTool:'raise',preview});field.drawRangeFill();
+    assert.equal(field.rangeHeight({x:12,z:10}),3);assert.equal(JSON.stringify(state),serialized,'hypothetical terrain leaves the run intact');
+    field.setSelection({});canvas.ctx.calls.length=0;field.drawRangeFill();assert.equal(canvas.ctx.calls.filter(c=>c.method==='drawImage').length,0,'cancel removes the complete range overlay');
+  }finally{qa.restore();}
+});
+
 test('compact world annotations avoid the unit silhouette and stay inside the viewport',()=>{
   const qa=setup();try{const {field,canvas}=qa;field.entityBoxes=[{left:470,right:650,top:150,bottom:300}];field.worldLabels=[{text:'火种',anchor:{x:560,y:210},color:'#79dfc1',dx:0,dy:1},{text:'▲ 北 16',anchor:{x:25,y:20},color:'#f18478',dx:-1,dy:-1}];field.drawWorldLabels();const labels=canvas.ctx.calls.filter(c=>c.method==='fillText');assert.equal(labels.length,2);for(const label of labels){const [text,x,y]=label.args,width=text.length*12+8;assert.ok(x-width/2>=0&&x+width/2<=1116&&y-9>=0&&y+9<=427);assert.ok(x+width/2<=465||x-width/2>=655||y+9<=145||y-9>=305);}
   }finally{qa.restore();}
+});
+
+test('terrain preview changes visible faces and model depth without changing the run; cancel restores both',()=>{
+ const qa=setup();try{const {field,state}=qa;for(const c of state.terrain.cells){c.h=0;c.ramp=-1;}const original=JSON.stringify(state);
+ const preview=Rules.previewTerrain(state,{tool:'raise',brush:'single',x:12,z:12});assert.equal(preview.ok,true);field.setSelection({terrainTool:'raise',preview});
+ const seen=[];field.realtime={prepareState(){},begin(camera,terrain){seen.push(terrain.cells[12*41+12].h);},add(){return false;},flush(){return false;},destroy(){}};
+ field.render(100);assert.equal(seen.at(-1),1);assert.equal(field.tiles.find(t=>t.x===12&&t.z===12).h,1);assert.equal(field.pickingTiles.find(t=>t.x===12&&t.z===12).h,0);
+ assert.equal(JSON.stringify(state),original);field.setSelection({});field.render(200);assert.equal(seen.at(-1),0);assert.equal(field.tiles.find(t=>t.x===12&&t.z===12).h,0);assert.equal(JSON.stringify(state),original);
+ }finally{qa.restore();}
+});
+
+test('cliff sides reject picking through the face and fallback placement ghosts use the entity mask',()=>{
+ const qa=setup();try{const {field,state}=qa;for(const c of state.terrain.cells)c.h=0;for(let z=19;z<22;z++)for(let x=18;x<22;x++)state.terrain.cells[z*41+x].h=3;
+ field.camera.yaw=0;field.buildTerrain();let rejected=0;
+ for(const t of field.tiles)for(const side of t.sides){field.pointer={x:side.p.reduce((sum,p)=>sum+p.x,0)/4,y:side.p.reduce((sum,p)=>sum+p.y,0)/4};field.updateHover();if(!field.hover)rejected++;}assert.ok(rejected);
+ const unit={...state.units[0],x:18,z:17},draw=field.drawOccluded.bind(field);let masks=0;field.drawOccluded=(...args)=>{masks++;return draw(...args);};field.drawEntityItem({kind:'unit',value:unit,ghost:true});assert.equal(masks,1);assert.ok(field.entityFrames.some(f=>f.uid===unit.uid||f.key===`unit:${unit.uid}`));
+ }finally{qa.restore();}
 });
 test('boss frequency shock keeps its radius and locked targets readable with reduced motion and clears at release',()=>{
  const qa=setup();try{const {field,state,canvas}=qa;state.pressureLevel=10;state.phase='battle';const target=state.units[0];target.x=18;target.z=19;state.battle={time:10.8,enemies:[{id:'boss-test',kind:'boss',hp:100,surgeWarningUntil:12,surgeOrigin:{x:20,z:17,h:0},surgeTargets:[target.uid]}]};field.setSelection({reducedMotion:true});field.worldLabels=[];field.drawSurgeTelegraphs();

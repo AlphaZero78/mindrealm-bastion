@@ -76,11 +76,12 @@ function validRun(state) {
   if (node?.type === 'treasure' && !idsIn(node.options, relics)) return false;
   if(state.eventClues!==undefined&&!idsIn(state.eventClues,eventClues))return false;
   if ((node?.type === 'event'||node?.eventEncounter||node?.eventData!==undefined) && (!record(node.eventData) || !idIn(node.eventData.id,events) || !idIn(node.eventData.unit,towers) || node.eventData.relic !== null && !idIn(node.eventData.relic,relics) || !distinct(node.eventData.targets))) return false;
+  if(node?.eventData?.designVersion!==undefined&&![0,1,2].includes(node.eventData.designVersion))return false;
   if(node?.eventData?.rolls!==undefined&&(!Array.isArray(node.eventData.rolls)||node.eventData.rolls.length!==eventFor(state,node.eventData.id).choices.length||!node.eventData.rolls.every(value=>finite(value)&&value>=0&&value<1)))return false;
   if(node?.eventData?.unitsByRole!==undefined&&(!record(node.eventData.unitsByRole)||!['melee','ranged','support'].every(role=>idIn(node.eventData.unitsByRole[role],towers)&&towers[node.eventData.unitsByRole[role]].role===role)))return false;
   if ((node?.type === 'event'||node?.eventEncounter) && node.eventData.outcome !== undefined) {
     const outcome=node.eventData.outcome;
-    if(!record(outcome)||!Number.isInteger(outcome.index)||!eventFor(state,node.eventData.id).choices[outcome.index]||typeof outcome.label!=='string'||outcome.label.length>240||!Array.isArray(outcome.details)||outcome.details.length>30||!outcome.details.every(text=>typeof text==='string'&&text.length<800))return false;
+    if(!record(outcome)||!Number.isInteger(outcome.index)||!(outcome.declined===true&&node.eventData.designVersion===2&&outcome.index===-1||outcome.declined===undefined&&eventFor(state,node.eventData.id).choices[outcome.index])||typeof outcome.label!=='string'||outcome.label.length>240||!Array.isArray(outcome.details)||outcome.details.length>30||!outcome.details.every(text=>typeof text==='string'&&text.length<800))return false;
     if(outcome.title!==undefined&&(typeof outcome.title!=='string'||outcome.title.length>100)||outcome.text!==undefined&&(typeof outcome.text!=='string'||outcome.text.length>2000)||outcome.followup!==undefined&&outcome.followup!=='elite')return false;
   }
   for (const reward of state.rewardQueue) {

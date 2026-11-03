@@ -3,8 +3,8 @@
 const choice=(label,title,text,effects={},extra={})=>({label,title,text,effects,...extra});
 export const eventClues=Object.freeze({
  relay_key:{name:'中继通行码',description:'关闭的商店：收藏品；控制密钥：永久带宽 +3。'},
- courier_seal:{name:'信使凭证',description:'记忆税站：收藏品；最后补给站：45 专注与两瓶道具。'},
- archive_index:{name:'档案索引',description:'大众记忆库：两次升阶；禁用档案：收藏品与首领情报。'},
+ courier_seal:{name:'信使凭证',description:'记忆税站：道具槽与退税专注；最后补给站：45 专注与两瓶道具。'},
+ archive_index:{name:'档案索引',description:'大众记忆库：永久升阶折扣；禁用档案：支援范围与永久抗性。'},
  strike_pact:{name:'工友约定',description:'最后工坊：两次免费升阶。'}
 });
 export const revisedEventIntros={

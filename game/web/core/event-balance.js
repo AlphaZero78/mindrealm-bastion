@@ -11,7 +11,7 @@ export const eventModifierInfo=Object.freeze({
 /** Preserve old run amounts; current runs receive larger, explicit exchanges. */
 export function eventChoice(state,event,index){
  event=event&&eventFor(state,event.id);const choice=event?.choices[index];if(!choice)return null;
- if((state.difficultyRevision||1)>=5)return {...choice,effects:{...choice.effects}};
+ if(state.currentNode?.eventData?.designVersion===2||(state.difficultyRevision||1)>=5)return {...choice,effects:{...choice.effects}};
  const effects={...choice.effects},modern=(state.difficultyRevision||1)>=4;
  if(modern){
   const act=event.act-1,risk=1.5+act*.15,reward=1.6+act*.2;

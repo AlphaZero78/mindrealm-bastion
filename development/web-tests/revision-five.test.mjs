@@ -1,10 +1,11 @@
+import {revealOldEvent} from './helpers/revealed-event.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as Run from '../../game/web/core/state.js';
 import * as R from '../../game/web/core/rules.js';
-import {events,eventFor,towers,legacyEvents} from '../../game/web/core/content.js';
+import {previousEvents as events,eventFor,towers,legacyEvents} from '../../game/web/core/content.js';
 import {eventClues} from '../../game/web/core/event-redesign.js';
-import {eventStories} from '../../game/web/core/event-stories.js';
+import {previousEventStories as eventStories} from '../../game/web/core/event-stories.js';
 import {tierThree} from '../../game/web/core/tower-progression.js';
 import {unitEffectLines} from '../../game/web/core/unit-details.js';
 import {killRewardScale,combatFocusReward} from '../../game/web/core/difficulty.js';
@@ -21,7 +22,7 @@ const current=seed=>{const s=fixture(seed,{revision:5});s.depth=6;s.bandwidth=10
 function eventState(id,{prepared=true,revision=5}={}){
  const s=Run.newRun(`r5:${id}`);s.difficultyRevision=revision;s.nexus.forEach(n=>n.skipped=true);s.phase='map';s.act=events[id].act-1;
  if(prepared){s.depth=6;s.focus=1000;s.resistance=20;s.spirit=70;s.bandwidth=30;s.eventClues=Object.keys(eventClues);Run.addUnit(s,'memory_mechanic');Run.addUnit(s,'frequency_choir');for(const [i,u]of s.units.entries()){if(i<3){u.tier=2;u.branch='A';}u.hp=R.unitStats(s,u).maxHp*.6;}addItem(s,'clarity');addItem(s,'stasis');}
- const node=s.maps[s.act].nodes.find(n=>n.floor===1);Object.assign(node,{type:'event',event:id});s.nextNodes=[node.id];assert.equal(Run.enterNode(s,node.id).ok,true);return s;
+ const node=s.maps[s.act].nodes.find(n=>n.floor===1);Object.assign(node,{type:'event',event:id});revealOldEvent(s,node);s.nextNodes=[node.id];assert.equal(Run.enterNode(s,node.id).ok,true);return s;
 }
 
 test('revision five economy prices every edit cumulatively and keeps earlier rules intact',()=>{
