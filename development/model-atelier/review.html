@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10191d">
+  <meta name="description" content="心域防线全量原创实体图鉴：怪物、首领阶段、防御建筑及分支外观与动作。">
+  <title>全量构造图鉴 · 心域防线</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 3 36 20 20 37 4 20Z' fill='%23101b1e' stroke='%2384dbc5' stroke-width='2'/%3E%3Cpath d='m20 11 9 9-9 9-9-9Z' fill='%2384dbc5'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./review.css">
+</head>
+<body class="review-page">
+  <div class="app-shell review-shell">
+    <header class="topbar">
+      <a class="brand" href="./index.html" aria-label="返回心域防线原创模型库">
+        <svg class="brand-mark" viewBox="0 0 42 42" fill="none" aria-hidden="true"><path d="M21 3 38 21 21 39 4 21Z"/><path d="m21 10 11 11-11 11-11-11Z"/><path d="M21 3v7m0 22v7M4 21h6m22 0h6"/></svg>
+        <span>心域防线<small>CONSTRUCT ATELIER</small></span>
+      </a>
+      <div class="breadcrumb" aria-label="当前位置"><span>原创构造</span><b>/</b><strong>全量构造图鉴</strong></div>
+      <div class="top-actions"><a class="about-button" href="./index.html">模型库</a><a class="about-button" href="./combat.html">实战演算</a></div>
+    </header>
+    <main class="review-main">
+      <section class="review-intro">
+        <div><p class="eyebrow">FULL ENTITY LIBRARY</p><h1>构造与失控信号</h1><p>按制作组复核几何、装配、材质与动作。点击任一外观进入三维检视。</p></div>
+        <div class="review-stats"><strong id="variant-count">—</strong><span>个可检视外观</span></div>
+      </section>
+      <section class="review-controls" aria-label="图鉴筛选">
+        <label>制作组<select id="group-filter"><option value="">全部制作组</option></select></label>
+        <label>类型<select id="kind-filter"><option value="">全部类型</option><option value="monster">怪物</option><option value="building">建筑</option></select></label>
+        <label>外观<select id="variant-filter"><option value="">全部外观</option><option value="base">基础</option><option value="phase1">首领Ⅰ</option><option value="phase2">首领Ⅱ</option><option value="phase3">首领Ⅲ</option><option value="T1">T1</option><option value="T2A">T2A</option><option value="T2B">T2B</option><option value="T3A">T3A</option><option value="T3B">T3B</option></select></label>
+        <label class="search-label">检索<input id="search-input" type="search" placeholder="名称或实体 ID" autocomplete="off"></label>
+        <span class="review-status" id="review-status" role="status">正在读取模型清单…</span>
+      </section>
+      <section class="review-grid" id="review-grid" aria-label="模型外观列表"></section>
+    </main>
+    <footer class="statusbar"><span>原创模型 · 真实 GLB 渲染 · 全量复核</span><span class="engine-status"><i></i><span id="engine-status">LOCAL / LOADING</span></span></footer>
+  </div>
+
+  <dialog class="detail-dialog" id="detail-dialog">
+    <div class="dialog-heading">
+      <div><p class="eyebrow" id="detail-code">ENTITY</p><h2 id="detail-title">模型</h2><p id="detail-mechanism"></p></div>
+      <button type="button" id="close-detail" aria-label="关闭模型检视"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
+    </div>
+    <div class="detail-body">
+      <div class="detail-viewer" id="detail-viewer" aria-label="单模型三维检视"></div>
+      <aside class="detail-controls">
+        <label>动作<select id="action-select"></select></label>
+        <button class="control-button" type="button" id="play-toggle">暂停</button>
+        <label>播放速度<select id="speed-select"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label>
+        <label>时间轴<input id="action-time" type="range" min="0" max="1000" value="0" step="1"></label>
+        <button class="control-button secondary" type="button" id="wireframe-toggle" aria-pressed="false">切换线框</button>
+        <a class="control-button secondary" id="download-variant" href="#">下载当前 GLB</a>
+        <p class="detail-description" id="detail-description"></p>
+      </aside>
+    </div>
+  </dialog>
+  <script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/examples/jsm/"}}</script>
+  <script type="module" src="./src/full-preview.js"></script>
+</body>
+</html>

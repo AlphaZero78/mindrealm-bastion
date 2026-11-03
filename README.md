@@ -6,7 +6,7 @@
 
 v0.1.7 在主菜单加入“游戏 PV”，内置 135 秒沧桑男声版世界观影片。点击后加载视频，支持暂停、拖动进度和全屏；退出后恢复菜单音乐。固定地图的引导教程、彩色贴纸图标和蓝粉金属流动背景也随本版发布，详见 [v0.1.7 更新](development/docs/RELEASE_V017.md)和[教程与界面更新](development/docs/TUTORIAL_VISUAL_REFRESH.md)。
 
-12 种构造具有各自的五种阶级／分支外观，37 种敌人包含六名首领的三阶段形态。敌人具有独立的机械结构、关节和死亡动作；成对曲面部件采用真实镜像，建筑支承与升级模块经过装配修整。实时金属模型具有连续步行、滚轮、悬浮、攻击和施法动作，暂停与倍速同步；详见[模型与动作说明](development/docs/ENTITY_MODELS_AND_ANIMATION.md)。
+v0.1.8 发布完整原创模型：12 类构造、37 类敌人共 109 个外观，另有独立追踪无人机。模型具有配套关节动作、平滑转向、活动连接校正和同源肖像图集。本版同时修复菜单切换闪现战场、地形遮挡阴影与底座底色的问题。制作源保存在 `development/model-atelier/`，详见 [v0.1.8 更新](development/docs/RELEASE_V018.md)和[模型与动作说明](development/docs/ENTITY_MODELS_AND_ANIMATION.md)。
 
 当前源码包含 36 幅事件 CG、12 幅精神使者 CG 和 108 个事件选择及对应的故事发展。画面采用自然摄影质感，以人物表情、动作和选择物件讲述遭遇。v0.1.6 按最终审核选择更新了 31 幅 CG，保留 17 幅原图，详见 [v0.1.6 更新](development/docs/RELEASE_V016.md)。事件按“阅读故事、确认选择、查看发展、继续前进”推进，枢纽同时展示使者场景和三份赠礼，详见[叙事与画面说明](development/docs/EVENT_PRESENTATION.md)。三入口战场、南侧火种、地形框选、追踪无人机、72 件枢纽赠礼与手动幕间推进见[战术规则更新](development/docs/TACTICAL_UPDATE.md)。此前的文案审校、战斗性能优化和存档校验修复见 [v0.1.5 更新](development/docs/RELEASE_V015.md)。
 
@@ -20,7 +20,7 @@ v0.1.7 在主菜单加入“游戏 PV”，内置 135 秒沧桑男声版世界�
 
 ### 下载 Windows 版
 
-打开 [v0.1.7 发布页](https://github.com/AlphaZero78/mindrealm-bastion/releases/tag/v0.1.7)，下载 `Mindrealm-Bastion-v0.1.7-windows-x64.zip`。右键选择“全部解压”，打开解压后的文件夹，再双击 **`启动游戏.exe`**。游戏会自动在默认浏览器打开。
+打开 [v0.1.8 发布页](https://github.com/AlphaZero78/mindrealm-bastion/releases/tag/v0.1.8)，下载 `Mindrealm-Bastion-v0.1.8-windows-x64.zip`。右键选择“全部解压”，打开解压后的文件夹，再双击 **`启动游戏.exe`**。游戏会自动在默认浏览器打开。
 
 便携包适用于 Windows 10/11 x64，内置 Node.js 运行时、音乐、字体和素材，解压后即可离线游玩。请将入口与 `game/` 文件夹一起保留。GitHub 自动生成的 `Source code` 压缩包用于源码开发；玩家使用上述 Windows ZIP。
 
@@ -93,4 +93,4 @@ WASD／右键拖动平移；使用地形框选时，左键拖动选区，右键�
 
 正式启动使用 `npm start`。开发验证使用 `npm run dev`，在 `http://127.0.0.1:4191/?qa=1` 打开内存存档的独立开发服务。正式服务与在线版均不提供调试接口；URL 查询参数不会开启开发模式。
 
-[玩法](development/docs/GAMEPLAY.md) · [v0.1.7 更新](development/docs/RELEASE_V017.md) · [开发与验证](development/docs/DEVELOPMENT.md) · [资源授权](game/licenses/THIRD_PARTY_ASSETS.md)
+[玩法](development/docs/GAMEPLAY.md) · [v0.1.8 更新](development/docs/RELEASE_V018.md) · [开发与验证](development/docs/DEVELOPMENT.md) · [资源授权](game/licenses/THIRD_PARTY_ASSETS.md)

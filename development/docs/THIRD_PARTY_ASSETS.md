@@ -5,10 +5,10 @@
 | 作者 / 来源 | 许可 | 用途与保留位置 |
 | --- | --- | --- |
 | Lorc / [Game-icons.net](https://game-icons.net/) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) | 路线节点、道具瓶及 12 位精神使者的 SVG；`game/assets/third_party/game-icons`，保留作者、逐项来源和 `LICENSE.txt`。原图完整保存，界面以 CSS 蒙版着色 |
-| Kenney [Space Kit](https://kenney.nl/assets/space-kit)、[Modular Space Kit](https://kenney.nl/assets/modular-space-kit)、[Tower Defense Kit](https://kenney.nl/assets/tower-defense-kit) | CC0 1.0 | 49 类构造、敌人与首领的机械零件来源；运行 GLB 位于 `game/assets/game/models`，原始 GLB 与三套许可位于 `development/assets/model_sources/kenney` |
-| Sergej Majboroda / Poly Haven [Studio Small 09](https://polyhaven.com/a/studio_small_09) | [CC0 1.0](https://polyhaven.com/license) | 金属环境反射；原始 1K HDR 位于 `development/assets/lighting`，预先过滤的运行纹理位于 `game/assets/game/lighting` |
-| Rob Tuytel / Poly Haven [Blue Metal Plate](https://polyhaven.com/a/blue_metal_plate) | [CC0 1.0](https://polyhaven.com/license) | 原始 1K 颜色、法线与粗糙度纹理，提供机械表面磨损；位于 `game/assets/third_party/polyhaven`，同目录保留许可与来源 |
-| [Three.js](https://github.com/mrdoob/three.js/tree/r186) 作者 | MIT | 0.186.1 本地渲染库、GLTFLoader 和制作时使用的 HDRLoader；`game/assets/third_party/three` 保留模块包与 `LICENSE.txt` |
+| Kenney [Space Kit](https://kenney.nl/assets/space-kit)、[Modular Space Kit](https://kenney.nl/assets/modular-space-kit)、[Tower Defense Kit](https://kenney.nl/assets/tower-defense-kit) | CC0 1.0 | 历史模型的机械零件来源；原始 GLB 与三套许可继续保留于 `development/assets/model_sources/kenney` |
+| Sergej Majboroda / Poly Haven [Studio Small 09](https://polyhaven.com/a/studio_small_09) | [CC0 1.0](https://polyhaven.com/license) | 历史环境反射来源；原始 1K HDR 保留于 `development/assets/lighting`，旧运行纹理已归档 |
+| Rob Tuytel / Poly Haven [Blue Metal Plate](https://polyhaven.com/a/blue_metal_plate) | [CC0 1.0](https://polyhaven.com/license) | 历史机械表面纹理，运行副本已归档；`game/assets/third_party/polyhaven` 保留许可与来源 |
+| [Three.js](https://github.com/mrdoob/three.js/tree/r186) 作者 | MIT | 0.186.1 本地渲染库、GLTFLoader、骨架克隆、几何合并和 RoomEnvironment；`game/assets/third_party/three` 保留模块包与 `LICENSE.txt` |
 | Kenney [Sci-Fi Sounds](https://opengameart.org/content/sci-fi-sounds) | CC0 1.0 | 武器、部署、护盾、错误和爆炸反馈；`game/assets/third_party/kenney/sci-fi-sounds` |
 | TakWolf 与上游字体作者 [缝合像素字体](https://github.com/TakWolf/fusion-pixel-font) | SIL OFL 1.1 | 简体中文10px字体；`game/assets/third_party/fusion-pixel-font`，含`OFL.txt` |
 | vitalezzz [Singularity](https://opengameart.org/content/singularity-0) | CC0 1.0 | 同步calm/action双层音乐；`game/assets/third_party/opengameart/singularity`，含`LICENSE.txt` |
@@ -17,7 +17,9 @@
 
 Node许可取自[官方v24.12.0 LICENSE](https://raw.githubusercontent.com/nodejs/node/v24.12.0/LICENSE)，2026-09-05核验，SHA-256为`537308465103a306d0e3eecf42632b4ff1b48aaaec044e9fc10a78c81fd00b34`。运行时版本改变时必须同时更新许可证。
 
-49 类实体由 Kenney GLB 零件重新组合，包含 60 个塔阶级／分支外观、31 个普通／精英外观和 18 个首领阶段外观。制作脚本为 49 个零件增加倒角、加权法线、UV 和两级几何。运行时直接加载 GLB，界面使用同一模型导出的 256 像素肖像。原始零件、组装配方与许可保留供继续制作，详细流程见[模型和动作](ENTITY_MODELS_AND_ANIMATION.md)。旧像素图集用于回退及源资产检查，正常运行采用实时模型。
+当前 49 类实体采用项目原创几何和关节动作，包含 60 个建筑外观、31 个普通或精英外观和 18 个首领阶段。每个外观使用完整 GLB，另有独立追踪无人机。运行时的程序化材质与环境反射使用本地 Three.js；肖像、静态、动作和死亡图集从相同模型生成。制作源位于 `development/model-atelier`，流程见[模型和动作](ENTITY_MODELS_AND_ANIMATION.md)。
+
+Three.js 0.186.1 保留完整 MIT 许可。本地 `three.module.js` 对 PMREM 的 GGX 采样作了等价化简：固定 `V=(0,0,1)` 时，半球法线的高度直接计算为 `sqrt(1-Xi.x)`。这避免了三角函数平方相减引起的 ANGLE 编译警告。制作工具与游戏使用相同修改。
 
 36 幅事件 CG 和 12 幅精神使者 CG 由本项目通过内置 ImageGen 生成。内容依据《心域防线》的事件故事、使者职责、台词和赠礼。2026-10-05 的重绘以人物动作、表情及关键物件讲述选择前的情境，采用自然光、柔和细节和可信景深；科幻装置与少量远处巨构共同交代世界设定。
 

@@ -1,0 +1,18 @@
+{
+  "intent": {
+    "enemy-rig.test.mjs": "Replace legacy authoring parts and named wheel/ankle assumptions with real enemy GLB clips, tracks, geometry, independent clones, absolute sampling, terminal poses and measured contact baselines. Does not claim exact wheel rolling or support-foot no-slip validation.",
+    "model-reflection.test.mjs": "Exercise reflection on original GLB geometry and audit every tower variant without Kenney source geometry or side-part name assumptions.",
+    "pages.test.mjs": "Resolve all 109 nested format 2 GLB sources relative to the hosted models.json URL while preserving export guards and license coverage.",
+    "runtime-boundary.test.mjs": "Check relative imports across shipping application and local Three modules, plus nested whole-entity sources and legacy HDR exclusion.",
+    "realtime-assets.test.mjs": "Validate embedded format 2 GLBs and seven clips, preserve existing asset checks, and require runtime PMREM generation from the local RoomEnvironment.",
+    "whole-entity-test-helpers.mjs": "Shared real GLTFLoader, entity-assets, SkeletonUtils-based instantiation and createEntityMixer test utilities. Resolved from the QA package working directory."
+  },
+  "files": {
+    "enemy-rig.test.mjs": "development/web-tests/enemy-rig.test.mjs",
+    "model-reflection.test.mjs": "development/web-tests/model-reflection.test.mjs",
+    "pages.test.mjs": "development/web-tests/pages.test.mjs",
+    "runtime-boundary.test.mjs": "development/web-tests/runtime-boundary.test.mjs",
+    "realtime-assets.test.mjs": "development/web-tests/realtime-assets.test.mjs",
+    "whole-entity-test-helpers.mjs": "development/web-tests/whole-entity-test-helpers.mjs"
+  }
+}

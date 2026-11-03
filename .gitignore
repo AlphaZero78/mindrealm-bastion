@@ -1,5 +1,7 @@
 node_modules/
 runtime/
+!development/model-atelier/src/runtime/
+!development/model-atelier/src/runtime/**
 .godot/
 *.import
 .playwright-cli/

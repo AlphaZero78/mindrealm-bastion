@@ -1,5 +1,7 @@
 # Web 规则与整局验证
 
+当前完整 GLB 的验证入口为 `browser-whole-entity-catalog.js`、`browser-whole-entity-gameplay.js`、`browser-enemy-fallback.js` 和 `browser-model-performance.js`。前三项分别覆盖全外观、实际交互与图形回退；性能脚本等待升级及阶段模型加载后再采样。制作页的弹道和图鉴使用 `browser-model-atelier.js`。本轮结果见[模型与动作说明](../docs/ENTITY_MODELS_AND_ANIMATION.md)。
+
 从项目根目录运行：
 
 ```powershell

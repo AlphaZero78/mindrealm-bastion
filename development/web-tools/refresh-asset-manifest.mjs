@@ -51,6 +51,13 @@ async function walk(root, folder) {
 export async function runtimeAssetPaths(root = projectRoot) {
   const css = await readFile(inside(root, 'game/web/style.css'), 'utf8');
   const models=JSON.parse(await readFile(inside(root,'game/assets/game/models/models.json'),'utf8'));
+  if(models.format!==2||!models.entities||Array.isArray(models.entities))throw Error('Whole entity assets require the format 2 model manifest');
+  const modelAssets=[];
+  for(const [id,definition]of Object.entries(models.entities))for(const [variant,entry]of Object.entries(definition.variants||{})){
+    if(entry.source!==`models/${id}/${variant}.glb`)throw Error(`Invalid whole entity source: ${id}/${variant}`);
+    modelAssets.push(`assets/game/${entry.source}`);
+  }
+  const threeAssets=(await walk(root,'game/assets/third_party/three')).map(file=>file.slice(5));
   const cssAssets = [...css.matchAll(/url\(\s*['"]?(\/assets\/[^)'"\s]+)['"]?\s*\)/g)]
     .map(match => match[1].slice(1));
   return [...new Set([
@@ -65,10 +72,9 @@ export async function runtimeAssetPaths(root = projectRoot) {
     ...Object.keys(events).map(id=>`assets/game/events/${id}.png`),
     ...Object.values(NEXUS_ART).map(art=>art.path.slice(1)),
     ...Object.values(MODEL_PORTRAITS).map(art=>art.path.slice(1)),
-    ...Object.values(models.sources).map(model=>model.path.slice(1)),
-    'assets/game/models/models.json','assets/game/lighting/studio_small_09_pmrem.bin',
-    'assets/third_party/three/three.bundle.js',
-    ...['nor_gl.png','rough.jpg','diff.jpg'].map(name=>`assets/third_party/polyhaven/blue_metal_plate_${name}`),
+    ...modelAssets,
+    ...threeAssets,
+    'assets/game/models/models.json','assets/game/models/tracking_drone/base.glb',
   ])].map(file=>'game/'+file).sort(order);
 }
 

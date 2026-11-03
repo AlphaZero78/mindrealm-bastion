@@ -1,0 +1,44 @@
+async page => {
+  const url = new URL(page.url());
+  if (!['127.0.0.1', 'localhost'].includes(url.hostname) || url.port === '4173' || url.pathname !== '/combat.html') throw Error('Open the local atelier combat.html');
+  const issues = [], checks = [], onError = e => issues.push(e.message), onConsole = m => {
+    if (['warning', 'error'].includes(m.type())) issues.push(m.text());
+  };
+  page.on('pageerror', onError); page.on('console', onConsole);
+  const check = (name, ok, detail) => { checks.push({ name, ok: !!ok, detail }); if (!ok) throw Error(JSON.stringify(checks.at(-1))); };
+  const state = () => page.evaluate(() => window.combatLab.getState());
+  const steps = async count => { for (let i = 0; i < count; i++) await page.locator('#step-button').click(); };
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.waitForFunction(() => window.combatLab?.getState().ready);
+  await page.locator('#replay').click(); await page.locator('#play-toggle').click(); await page.locator('#auto-toggle').click();
+  await steps(12); const before = await state();
+  check('manual inspection pauses the preview', !before.playing && !before.auto && before.shots === 0, before);
+  await page.locator('#fire-mortar').click();
+  for (let i = 0; i < 12 && !(await state()).projectiles; i++) await steps(1);
+  const launched = await state();
+  check('mortar creates a visible high arc before damage', launched.projectiles === 1 && launched.hits === 0 && launched.projectileArcs[0].apex > 3 && launched.cameraDistance > 20, launched);
+  await steps(6);
+  const flight = await state();
+  check('projectile travels above the battlefield', flight.projectiles === 1 && flight.projectileArcs[0].height > 2, flight.projectileArcs);
+  await page.screenshot({ path: 'output/playwright/final-mortar-preview.jpg', type: 'jpeg', quality: 80 });
+  for (let i = 0; i < 20 && (await state()).projectiles; i++) await steps(1);
+  const impacted = await state();
+  const actor = (s, key) => s.actors.find(a => a.key === key);
+  check('impact applies primary damage, ground splash and slow', impacted.hits >= 2 && actor(impacted, 'runner').hp < actor(before, 'runner').hp && actor(impacted, 'training').hp < actor(before, 'training').hp && actor(impacted, 'runner').slow > 0 && actor(impacted, 'wing').hp === actor(before, 'wing').hp, impacted);
+  await page.locator('[data-actor="wing"]').click(); const initialYaw = (await state()).towers.find(t => t.id === 'focus_rail').yaw;
+  await page.locator('#fire-rail').click(); const aimed = (await state()).towers.find(t => t.id === 'focus_rail');
+  check('selecting a new rail target retains the current yaw', aimed.target === 'wing' && aimed.yaw === initialYaw && Math.abs(aimed.aimYaw - aimed.yaw) > .1, aimed);
+  await steps(1); const turned = (await state()).towers.find(t => t.id === 'focus_rail');
+  const turn = Math.abs(Math.atan2(Math.sin(turned.yaw - aimed.yaw), Math.cos(turned.yaw - aimed.yaw)));
+  check('rail turns continuously at its bounded speed', turn > 0 && turn <= .360001, { aimed, turned, turn });
+  await steps(9); const direct = await state();
+  check('rail shot hits the selected flying target', actor(direct, 'wing').hp < actor(impacted, 'wing').hp && direct.hits > impacted.hits, direct);
+  const events = await page.evaluate(() => window.combatLab.getEvents());
+  check('preview event log records both weapon impacts', JSON.stringify(events).includes('轨炮命中') && JSON.stringify(events).includes('溅射'), events);
+  await page.goto(url.origin + '/review.html'); await page.waitForFunction(() => window.fullReview?.ready);
+  const catalog = await page.evaluate(() => ({ count: window.fullReview.records.length, errors: window.fullReview.errors, cards: document.querySelectorAll('.entity-card').length }));
+  check('full HTML review exposes all 109 appearances', catalog.count === 109 && catalog.cards === 109 && catalog.errors.length === 0, catalog);
+  check('authoring pages have no runtime diagnostics', issues.length === 0, issues);
+  page.off('pageerror', onError); page.off('console', onConsole);
+  return { status: 'MODEL_ATELIER_PREVIEW_OK', checks, catalog, issues };
+}

@@ -2,8 +2,11 @@
 # Prevent Windows checkout from rewriting license/source line endings.
 game/assets/third_party/** -text
 development/assets/model_sources/** -text
+development/model-atelier/vendor/** -text -whitespace
 # Preserve upstream formatting inside the vendored GLSL shader strings.
 game/assets/third_party/three/three.bundle.js -whitespace
+game/assets/third_party/three/three.core.js -whitespace
+game/assets/third_party/three/addons/** -whitespace
 
 game/licenses/kenney-*.txt -text -whitespace
 game/assets/game/models/models.json -text whitespace=cr-at-eol
