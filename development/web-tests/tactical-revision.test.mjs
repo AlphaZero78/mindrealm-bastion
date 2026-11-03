@@ -1,3 +1,4 @@
+import {revealOldEvent} from './helpers/revealed-event.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as Run from '../../game/web/core/state.js';
@@ -18,7 +19,7 @@ const close=(a,b)=>assert.ok(Math.abs(a-b)<1e-7,`${a} != ${b}`);
 const inert=(s,action)=>{const before=Run.cloneState(s);assert.equal(action().ok,false);assert.deepEqual(s,before);};
 const store=()=>{const data=new Map();return createSaveStore({getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)},'tactical.isolated');};
 const pin=(e,x,z,extra={})=>Object.assign(e,{x,z,h:0,speed:0,attack:0,cooldown:1e6,abilityClock:1e6,hp:10000,maxHp:10000,...extra});
-const enterEvent=(id,revision=4)=>{const s=Run.newRun(`event-r4:${id}`);s.difficultyRevision=revision;s.nexus.forEach(room=>room.skipped=true);s.phase='map';s.act=events[id].act-1;s.maxSpirit=250;s.spirit=240;s.focus=1000;s.bandwidth=100;s.resistance=20;s.depth=6;addItem(s,'clarity');const node=s.maps[s.act].nodes.find(n=>n.floor===1);Object.assign(node,{type:'event',event:id});s.nextNodes=[node.id];assert.equal(Run.enterNode(s,node.id).ok,true);return s;};
+const enterEvent=(id,revision=4)=>{const s=Run.newRun(`event-r4:${id}`);s.difficultyRevision=revision;s.nexus.forEach(room=>room.skipped=true);s.phase='map';s.act=events[id].act-1;s.maxSpirit=250;s.spirit=240;s.focus=1000;s.bandwidth=100;s.resistance=20;s.depth=6;addItem(s,'clarity');const node=s.maps[s.act].nodes.find(n=>n.floor===1);Object.assign(node,{type:'event',event:id});revealOldEvent(s,node);s.nextNodes=[node.id];assert.equal(Run.enterNode(s,node.id).ok,true);return s;};
 
 test('deployed and destroyed constructs occupy bag slots; confirmation removes complete selections atomically',()=>{
  const s=fixture('bag-r4',{revision:4}),deployed=place(s,'anchor_bulwark',10,10),wreck=place(s,'resonance_guard',14,10,{hp:0});Run.addUnit(s,'pulse_array');

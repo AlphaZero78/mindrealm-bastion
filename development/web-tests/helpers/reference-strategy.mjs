@@ -4,7 +4,7 @@ import {unitStats,unitCenter,onField,placement,deploy,withdraw,repair,repairCost
 import {makeEncounter,startBattle,stepBattle,useItem,itemPreview} from '../../../game/web/core/battle.js';
 import {inventoryStatus,discardUnits} from '../../../game/web/core/inventory.js';
 import {upgradeRequirement} from '../../../game/web/core/difficulty.js';
-import {events} from '../../../game/web/core/content.js';
+import {eventFor} from '../../../game/web/core/content.js';
 
 const branchFor=u=>u.branch||(['pulse_array','focus_rail','phase_blade','bandwidth_relay','memory_mechanic','frequency_choir','resistance_beacon'].includes(u.type)?'A':'B');
 const roleValue={pulse_array:100,focus_rail:85,memory_mechanic:62,bandwidth_relay:110,phase_blade:50,frequency_choir:55,drone_loom:75,arc_mortar:70,resistance_beacon:25,anchor_bulwark:40,boundary_riveter:25,resonance_guard:25};
@@ -95,7 +95,7 @@ function referenceNode(state) {
   if(node.type==='event'){
     if(node.eventData.outcome)return nodeAction(state,'event-continue');
     const value=p=>!p?.canChoose?-Infinity:(p.effects.focus||0)+(p.effects.spirit||0)*(state.spirit<state.maxSpirit*.7?4:1)+(p.effects.bandwidth||0)*25+(p.effects.relic?80:0)+(p.effects.free_upgrade?80:0)+(p.effects.free_upgrades||0)*80+(p.effects.resistance||0)*5;
-    const choices=events[node.eventData.id].choices.map((_,index)=>({index,preview:eventPreview(state,index)})),result=nodeAction(state,'event',{index:choices.sort((a,b)=>value(b.preview)-value(a.preview))[0].index});return result.ok&&state.phase==='node'?nodeAction(state,'event-continue'):result;
+    const choices=eventFor(state,node.eventData.id).choices.map((_,index)=>({index,preview:eventPreview(state,index)})),best=choices.sort((a,b)=>value(b.preview)-value(a.preview))[0],decline=node.eventData.designVersion===2&&value(best.preview)<=0,result=nodeAction(state,decline?'event-decline':'event',{index:best.index});return result.ok&&state.phase==='node'?nodeAction(state,'event-continue'):result;
   }
   throw new Error(`Unhandled service ${node.type}`);
 }

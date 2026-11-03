@@ -1,3 +1,4 @@
+import {variedEventChoices,eventEdition} from './event-variety.js';
 // Stable content IDs and seeded randomness are shared by browser and simulation.
 import { difficultySummary } from './difficulty.js';
 import { extraEvents } from './extra-events.js';
@@ -1902,8 +1903,9 @@ export const enemies=Object.fromEntries([...data.enemies,...actEnemies].map(x=>[
 export const relics={...Object.fromEntries(data.relics.map(x=>[x.id,x])),...nexusRelics};
 export const talents=Object.fromEntries(data.talents.map(x=>[x.id,x]));
 export const legacyEvents=Object.fromEntries([...data.events,...extraEvents].map(x=>[x.id,x]));
-export const events=Object.fromEntries(Object.values(legacyEvents).map(event=>[event.id,{...event,choices:revisedEventChoices[event.id]}]));
-export const eventFor=(state,id)=>(state.difficultyRevision||1)>=5?events[id]:legacyEvents[id];
+export const previousEvents=Object.fromEntries(Object.values(legacyEvents).map(event=>[event.id,{...event,choices:revisedEventChoices[event.id]}]));
+export const events=Object.fromEntries(Object.values(legacyEvents).map(event=>[event.id,{...event,choices:variedEventChoices[event.id]}]));
+export const eventFor=(state,id)=>[legacyEvents,previousEvents,events][eventEdition(state,id)]?.[id];
 // Unlocks expand later runs only. The active run saves its exact pool so buying a
 // discovery between sessions cannot change an already generated route or offer.
 export const contentUnlocks = [

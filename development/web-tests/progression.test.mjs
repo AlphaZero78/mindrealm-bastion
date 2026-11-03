@@ -1,3 +1,4 @@
+import {revealOldEvent} from './helpers/revealed-event.mjs';
 import {unblessedRun as newRun} from './helpers/unblessed-run.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -20,7 +21,7 @@ test('malformed stat modifiers, unit metadata and terrain refunds cannot overwri
  for(const corrupt of corruptions){const invalid=cloneState(valid);corrupt(invalid);assert.equal(store.save(invalid).ok,false);assert.deepEqual([...storage.data],original);assert.equal(store.load().ok,true);}
  const old=cloneState(valid);delete old.modifiers;for(const u of old.units){delete u.order;delete u.everDeployed;}assert.equal(store.save(old).ok,true,'legacy optional metadata stays readable');assert.equal(store.load().ok,true);
 });
-const service = (type, seed = 'service', act = 0) => { const s = newRun(seed); s.difficultyRevision=2; s.act = act; const node = s.maps[act].nodes.find(n => n.type === type) || s.maps[act].nodes.find(n => n.floor === 1); node.type = type; s.nextNodes = [node.id]; assert.equal(enterNode(s, node.id).ok, true); return s; };
+const service = (type, seed = 'service', act = 0) => { const s = newRun(seed); s.difficultyRevision=2; s.act = act; const node = s.maps[act].nodes.find(n => n.type === type) || s.maps[act].nodes.find(n => n.floor === 1); node.type = type; if(type==='event')revealOldEvent(s,node); s.nextNodes = [node.id]; assert.equal(enterNode(s, node.id).ok, true); return s; };
 const drain = s => { let count = 0; while (s.phase === 'reward') { assert.ok(count++ < 60, '奖励队列必须有限'); assert.equal(chooseReward(s, s.rewardQueue[0].kind==='item'&&inventoryStatus(s).items.length>=inventoryStatus(s).itemCapacity?'skip':s.rewardQueue[0].options[0]).ok, true); } };
 
 test('malformed nested save structures return failure without throwing or touching storage',()=>{
@@ -166,7 +167,7 @@ test('shops have fixed three plus three shelves and permit multiple purchases wi
 test('all 36 events and every choice produce their advertised effects and deterministic targets', () => {
   for (const event of Object.values(events)) for (let index = 0; index < event.choices.length; index++) {
     const s = newRun(`event-${event.id}`); s.difficultyRevision=4; s.depth=5; s.act = event.act - 1;
-    const n = s.maps[s.act].nodes.find(n => n.floor === 1); n.type = 'event'; n.event = event.id; s.nextNodes = [n.id]; enterNode(s, n.id);
+    const n = s.maps[s.act].nodes.find(n => n.floor === 1); n.type = 'event'; n.event = event.id; revealOldEvent(s,n); s.nextNodes = [n.id]; enterNode(s, n.id);
     addItem(s,'clarity');s.focus = 500; s.spirit = 80; for (const u of s.units) u.hp *= .5;
     const before = cloneState(s), preview = eventPreview(s, index); assert.equal(preview.canChoose, true); assert.ok(preview.details.length);
     assert.equal(nodeAction(s, 'event', { index: 9 }).ok, false); assert.deepEqual(s, before);

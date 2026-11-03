@@ -380,6 +380,7 @@ async function dispatch(action,target){
  if(action==='treasure'){confirm('选择这件收藏品',`${contentIcon('relics',d.id,'sticker-large')}<p>${Catalog.relics[d.id].name}</p><p>${Catalog.relics[d.id].description}</p><small>带走后离开宝库。</small>`,()=>complete(Run.nodeAction(state,'treasure',{id:d.id})),'带走并离开');return;}
  if(action==='empty-treasure'){complete(Run.nodeAction(state,'treasure'));return;}
  if(action==='event-choice'){chooseEvent(Number(d.index));return;}
+ if(action==='event-decline'){complete(Run.nodeAction(state,'event-decline'));return;}
  if(action==='event-continue'){complete(Run.nodeAction(state,'event-continue'));return;}
  if(action==='act-continue'){complete(Run.continueAct(state));return;}
  if(action==='fullscreen'){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{toast('浏览器未允许全屏，可使用 F11。',true);}return;}

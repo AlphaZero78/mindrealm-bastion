@@ -4,11 +4,13 @@
 
 项目使用 JavaScript、Three.js、Canvas 和 Web Audio。游戏离线运行，战斗按固定时间步长计算；Windows 便携包内含本地运行时。
 
+v0.1.9 修正了地形改造预览、部署底框和地面路线的遮挡，并为事件加入单局去重、完整条件筛选与两项差异化选择。已揭示的旧事件保持原版结算，详见 [v0.1.9 更新](development/docs/RELEASE_V019.md)和[地形反馈与事件优化](development/docs/TERRAIN_EVENT_UPDATE.md)。
+
 v0.1.7 在主菜单加入“游戏 PV”，内置 135 秒沧桑男声版世界观影片。点击后加载视频，支持暂停、拖动进度和全屏；退出后恢复菜单音乐。固定地图的引导教程、彩色贴纸图标和蓝粉金属流动背景也随本版发布，详见 [v0.1.7 更新](development/docs/RELEASE_V017.md)和[教程与界面更新](development/docs/TUTORIAL_VISUAL_REFRESH.md)。
 
 v0.1.8 发布完整原创模型：12 类构造、37 类敌人共 109 个外观，另有独立追踪无人机。模型具有配套关节动作、平滑转向、活动连接校正和同源肖像图集。本版同时修复菜单切换闪现战场、地形遮挡阴影与底座底色的问题。制作源保存在 `development/model-atelier/`，详见 [v0.1.8 更新](development/docs/RELEASE_V018.md)和[模型与动作说明](development/docs/ENTITY_MODELS_AND_ANIMATION.md)。
 
-当前源码包含 36 幅事件 CG、12 幅精神使者 CG 和 108 个事件选择及对应的故事发展。画面采用自然摄影质感，以人物表情、动作和选择物件讲述遭遇。v0.1.6 按最终审核选择更新了 31 幅 CG，保留 17 幅原图，详见 [v0.1.6 更新](development/docs/RELEASE_V016.md)。事件按“阅读故事、确认选择、查看发展、继续前进”推进，枢纽同时展示使者场景和三份赠礼，详见[叙事与画面说明](development/docs/EVENT_PRESENTATION.md)。三入口战场、南侧火种、地形框选、追踪无人机、72 件枢纽赠礼与手动幕间推进见[战术规则更新](development/docs/TACTICAL_UPDATE.md)。此前的文案审校、战斗性能优化和存档校验修复见 [v0.1.5 更新](development/docs/RELEASE_V015.md)。
+当前源码包含 36 幅事件 CG、12 幅精神使者 CG 和 72 个主要事件选择及对应的故事发展。画面采用自然摄影质感，以人物表情、动作和选择物件讲述遭遇。v0.1.6 按最终审核选择更新了 31 幅 CG，保留 17 幅原图，详见 [v0.1.6 更新](development/docs/RELEASE_V016.md)。事件按“阅读故事、确认选择、查看发展、继续前进”推进，枢纽同时展示使者场景和三份赠礼，详见[叙事与画面说明](development/docs/EVENT_PRESENTATION.md)。三入口战场、南侧火种、地形框选、追踪无人机、72 件枢纽赠礼与手动幕间推进见[战术规则更新](development/docs/TACTICAL_UPDATE.md)。此前的文案审校、战斗性能优化和存档校验修复见 [v0.1.5 更新](development/docs/RELEASE_V015.md)。
 
 ## 启动
 
@@ -20,7 +22,7 @@ v0.1.8 发布完整原创模型：12 类构造、37 类敌人共 109 个外观�
 
 ### 下载 Windows 版
 
-打开 [v0.1.8 发布页](https://github.com/AlphaZero78/mindrealm-bastion/releases/tag/v0.1.8)，下载 `Mindrealm-Bastion-v0.1.8-windows-x64.zip`。右键选择“全部解压”，打开解压后的文件夹，再双击 **`启动游戏.exe`**。游戏会自动在默认浏览器打开。
+打开 [v0.1.9 发布页](https://github.com/AlphaZero78/mindrealm-bastion/releases/tag/v0.1.9)，下载 `Mindrealm-Bastion-v0.1.9-windows-x64.zip`。右键选择“全部解压”，打开解压后的文件夹，再双击 **`启动游戏.exe`**。游戏会自动在默认浏览器打开。
 
 便携包适用于 Windows 10/11 x64，内置 Node.js 运行时、音乐、字体和素材，解压后即可离线游玩。请将入口与 `game/` 文件夹一起保留。GitHub 自动生成的 `Source code` 压缩包用于源码开发；玩家使用上述 Windows ZIP。
 
@@ -81,7 +83,7 @@ npm run verify
 
 WASD／右键拖动平移；使用地形框选时，左键拖动选区，右键拖动视角；R 旋转非正方形构造；Q/E 连续旋转；滚轮缩放；F 聚焦火种；右键单击／Esc 取消。战斗中空格暂停，1/2/3 切换速度。设置提供四路音量、自动或 960×540 至 2560×1440 画面渲染分辨率、100%／125%／150% 界面缩放、减少动态效果及浏览器全屏。画面设置即时生效并保存，界面切换与确认弹窗带平滑淡入淡出。
 
-控制压力从 0 开始，通关后逐级解锁至 10。新局通过敌人生命、攻击、速度、护甲与高阶首领频震提高难度；同种子同节点的计划编队、数量、出场时间和击杀奖励不变，营地仍恢复 30%，服务不因压力加价。已有 Web v2 远征保留其原难度规则，新局采用规则修订 5：提高升阶和地形费用、减少战斗专注、增加高阶带宽占用，商店出售 6 件构造。同类光环取最强值，带宽中继限部署 1 座；24 条 T3 分支新增机制，36 个事件改为 108 个新选择。每级深度仍增加 3 带宽，T2 / T3 在深度 2 / 5 开放。当前数值、兼容范围与验收见[平衡与背包更新](development/docs/BALANCE_INVENTORY_UPDATE.md)。
+控制压力从 0 开始，通关后逐级解锁至 10。新局通过敌人生命、攻击、速度、护甲与高阶首领频震提高难度；同种子同节点的计划编队、数量、出场时间和击杀奖励不变，营地仍恢复 30%，服务不因压力加价。已有 Web v2 远征保留其原难度规则，新局采用规则修订 5：提高升阶和地形费用、减少战斗专注、增加高阶带宽占用，商店出售 6 件构造。同类光环取最强值，带宽中继限部署 1 座；24 条 T3 分支新增机制，36 个事件采用 72 个主要选择，并提供独立的保留资源离开操作。每级深度仍增加 3 带宽，T2 / T3 在深度 2 / 5 开放。当前数值、兼容范围与验收见[平衡与背包更新](development/docs/BALANCE_INVENTORY_UPDATE.md)。
 
 ## 项目结构
 
@@ -93,4 +95,4 @@ WASD／右键拖动平移；使用地形框选时，左键拖动选区，右键�
 
 正式启动使用 `npm start`。开发验证使用 `npm run dev`，在 `http://127.0.0.1:4191/?qa=1` 打开内存存档的独立开发服务。正式服务与在线版均不提供调试接口；URL 查询参数不会开启开发模式。
 
-[玩法](development/docs/GAMEPLAY.md) · [v0.1.8 更新](development/docs/RELEASE_V018.md) · [开发与验证](development/docs/DEVELOPMENT.md) · [资源授权](game/licenses/THIRD_PARTY_ASSETS.md)
+[玩法](development/docs/GAMEPLAY.md) · [v0.1.9 更新](development/docs/RELEASE_V019.md) · [开发与验证](development/docs/DEVELOPMENT.md) · [资源授权](game/licenses/THIRD_PARTY_ASSETS.md)

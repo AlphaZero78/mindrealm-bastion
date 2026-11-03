@@ -1,3 +1,4 @@
+import {variedEventChoices,variedEventIntros,eventEdition} from './event-variety.js';
 // Narrative presentation is keyed to the authoritative event and choice order.
 // Resource changes remain exclusively in content.js / state.js.
 import {revisedEventChoices,revisedEventIntros} from './event-redesign.js';
@@ -124,6 +125,7 @@ export const legacyEventStories={
   ['以药剂催化全体修复','修复沿着回声传递','你把选中的药剂注入炉边管路。催化后的修复频率逐一流经受损构造，它们随后回到仓库。每条新接缝都需要你在下一战前重新安排位置。'],
   ['封装熔炉的超频余热','最后一簇可用的火','你用耐热容器收集炉边稳定的余热，压成一瓶超频注射剂。熔炉慢慢暗下来，瓶中的脉冲仍然有力。它会陪你走向下一场战斗。'])
 };
-export const eventStories=Object.fromEntries(Object.entries(legacyEventStories).map(([id,story])=>[id,{intro:revisedEventIntros[id],choices:revisedEventChoices[id].map(({label,title,text})=>({label,title,text}))}]));
-export const eventStory=(state,id)=>(state.difficultyRevision||1)>=5?eventStories[id]:legacyEventStories[id];
+export const previousEventStories=Object.fromEntries(Object.entries(legacyEventStories).map(([id,story])=>[id,{intro:revisedEventIntros[id],choices:revisedEventChoices[id].map(({label,title,text})=>({label,title,text}))}]));
+export const eventStories=Object.fromEntries(Object.keys(variedEventChoices).map(id=>[id,{intro:variedEventIntros[id],choices:variedEventChoices[id].map(({label,title,text})=>({label,title,text}))}]));
+export const eventStory=(state,id)=>[legacyEventStories,previousEventStories,eventStories][eventEdition(state,id)]?.[id];
 export const eventArtPath=id=>`/assets/game/events/${id}.png`;

@@ -1,3 +1,4 @@
+import {revealOldEvent} from './helpers/revealed-event.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as Run from '../../game/web/core/state.js';
@@ -10,7 +11,7 @@ import {header,nodeScreen,rewardScreen,summaryScreen} from '../../game/web/scree
 class MemoryStorage{data=new Map();getItem(k){return this.data.get(k)??null;}setItem(k,v){this.data.set(k,String(v));}removeItem(k){this.data.delete(k);}}
 function encounter(id){
  const state=Run.newRun(`story:${id}`);state.difficultyRevision=4;Run.chooseNexus(state,state.nexus[0].options[0]);state.act=events[id].act-1;
- const node=state.maps[state.act].nodes.find(n=>n.floor===1);node.type='event';node.event=id;state.nextNodes=[node.id];Run.enterNode(state,node.id);
+ const node=state.maps[state.act].nodes.find(n=>n.floor===1);node.type='event';node.event=id;state.nextNodes=[node.id];revealOldEvent(state,node);Run.enterNode(state,node.id);
  state.depth=5;state.focus=500;state.spirit=80;for(const u of state.units)u.hp*=.6;addItem(state,'clarity');return state;
 }
 test('every event has scene prose and a distinct continuation for every real choice',()=>{
