@@ -86,7 +86,8 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\development\web-tests\
 | `game/launcher/` | 本机服务器与玩家启动入口 |
 | `development/web-tests/` | 规则、流程、存档和视图验证；参考与分区防守策略位于 `helpers/` |
 | `development/web-tools/` | 资源核验、完整模拟、音频检查与发布工具 |
-| `development/assets/model_sources/` | 原始 CC0 模型与许可证，派生的运行 GLB 位于 `game/assets/game/models` |
+| `development/model-atelier/` | 当前原创模型、动作、预览与制作工具；完整 GLB 位于 `game/assets/game/models/<id>/` |
+| `development/assets/model_sources/` | 历史 CC0 模型与许可证，保留用于来源追溯 |
 | `development/assets/event_art/` | 36 幅事件插画的最终提示词、生成记录、尺寸与哈希 |
 | `development/assets/nexus_art/` | 12 幅精神使者 CG 的最终提示词、生成记录、尺寸与哈希 |
 | `development/docs/` | 长期玩法、开发与第三方资源说明 |
@@ -185,7 +186,7 @@ QA 模式提供 `window.__mindrealm` 供浏览器验证设置独立场景。不�
 
 ## 画面与性能
 
-战场使用固定 55° 俯角的正交投影。12 种构造与 37 种敌人由 Three.js 实时绘制，采用两级几何、实例合批、预先过滤的环境反射和按需更新的阴影。地形投影和装饰缓存独立于模拟；连续转动镜头时暂时省略细网格装饰，停止后恢复。事件、路线等完整页面遮住战场时，停止持续绘制隐藏的模型。
+战场使用固定 55° 俯角的正交投影。12 种构造与 37 种敌人使用完整原创 GLB，由 Three.js 按材质合批绘制。运行时提供两级几何、场景生成的环境反射和按需更新的阴影。活动连杆在动作合成后校正连接，再应用接地约束。模型制作、安装与当前验收见[模型与动作](ENTITY_MODELS_AND_ANIMATION.md)。地形投影和装饰缓存独立于模拟；连续转动镜头时暂时省略细网格装饰，停止后恢复。事件、路线等完整页面遮住战场时，停止持续绘制隐藏的模型。
 
 `renderResolution` 以战场实际 CSS 宽高作为相机与拾取坐标，画布后备分辨率按设备 DPR 提高，DPR 上限为 1.5，并限制额外像素倍率带来的绘制面积。地形、实时模型与射界共用该分辨率，Canvas 和 WebGL 相机保持同一投影。界面肖像使用独立的 256 像素原图。
 

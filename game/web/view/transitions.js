@@ -11,9 +11,11 @@ function freezeStyle(window,source,target){
   for(const property of computed)target.style.setProperty(property,computed.getPropertyValue(property));
 }
 
-function decoration(element){
+function decoration(element,hideTree=true){
   element.inert=true;
-  element.setAttribute('aria-hidden','true');
+  // The snapshot root hides the complete subtree. Applying aria-hidden to
+  // native option nodes makes Chromium reject their accessibility tree.
+  if(hideTree)element.setAttribute('aria-hidden','true');
   element.style.pointerEvents='none';
   element.style.userSelect='none';
 }
@@ -63,7 +65,7 @@ export class ScreenTransitions{
       if('value' in original&&original.type!=='file')copy.value=original.value;
       if('checked' in original)copy.checked=original.checked;
       if('selectedIndex' in original)copy.selectedIndex=original.selectedIndex;
-      copy.style.animation='none';copy.style.transition='none';decoration(copy);
+      copy.style.animation='none';copy.style.transition='none';decoration(copy,index===0);
       if(original.scrollLeft||original.scrollTop)scroll.push([copy,original.scrollLeft,original.scrollTop]);
     }
     const rect=source.getBoundingClientRect(),zoom=Number.parseFloat(this.window.getComputedStyle(source).zoom)||1;
@@ -77,15 +79,17 @@ export class ScreenTransitions{
     let overlay,bitmap;
     try{
       overlay=this.document.createElement('div');overlay.setAttribute('data-screen-transition','outgoing');decoration(overlay);
-      Object.assign(overlay.style,{position:'fixed',inset:'0',width:'100vw',height:'100dvh',overflow:'hidden',zIndex:'80',isolation:'isolate',contain:'layout paint',background:this.window.getComputedStyle(this.document.body).backgroundColor,opacity:'1'});
-      const canvas=this.canvas,rect=canvas?.getBoundingClientRect();
-      if(canvas&&canvas.width>0&&canvas.height>0&&rect.width>0&&rect.height>0&&this.window.getComputedStyle(canvas).display!=='none'){
+      // The persistent page background stays underneath both screen layers.
+      Object.assign(overlay.style,{position:'fixed',inset:'0',width:'100vw',height:'100dvh',overflow:'hidden',zIndex:'80',isolation:'isolate',contain:'layout paint',background:'transparent',opacity:'1'});
+      const canvas=this.canvas,rect=canvas?.getBoundingClientRect(),canvasStyle=canvas&&this.window.getComputedStyle(canvas);
+      // Hidden canvases retain pixels; copying them would reveal an unseen scene.
+      if(canvas&&canvas.width>0&&canvas.height>0&&rect.width>0&&rect.height>0&&canvasStyle.display!=='none'&&canvasStyle.visibility==='visible'&&Number(canvasStyle.opacity)>0){
         bitmap=this.document.createElement('canvas');
         const factor=Math.min(1,Math.sqrt(this.maxSnapshotPixels/(canvas.width*canvas.height)));
         bitmap.width=Math.max(1,Math.floor(canvas.width*factor));bitmap.height=Math.max(1,Math.floor(canvas.height*factor));
         const context=bitmap.getContext('2d');if(!context)throw Error('Canvas snapshot unavailable');
         context.drawImage(canvas,0,0,bitmap.width,bitmap.height);
-        decoration(bitmap);Object.assign(bitmap.style,{position:'absolute',left:`${rect.left}px`,top:`${rect.top}px`,width:`${rect.width}px`,height:`${rect.height}px`,imageRendering:this.window.getComputedStyle(canvas).imageRendering,zIndex:'0'});overlay.append(bitmap);
+        decoration(bitmap);Object.assign(bitmap.style,{position:'absolute',left:`${rect.left}px`,top:`${rect.top}px`,width:`${rect.width}px`,height:`${rect.height}px`,imageRendering:canvasStyle.imageRendering,opacity:canvasStyle.opacity,zIndex:'0'});overlay.append(bitmap);
       }
       const layers=[this.cloneLayer(this.app)];
       if(this.modalRoot?.childElementCount)layers.push(this.cloneLayer(this.modalRoot,{viewport:true}));

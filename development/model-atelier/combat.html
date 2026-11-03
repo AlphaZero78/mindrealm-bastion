@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10191d">
+  <meta name="description" content="心域防线原创模型的实战动画：聚焦轨炮直射、弧光迫击炮抛物线溅射、抗性信标支援，以及怪物受击与消散。">
+  <title>防线接触测试 · 心域防线</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 3 36 20 20 37 4 20Z' fill='%23101b1e' stroke='%2384dbc5' stroke-width='2'/%3E%3Cpath d='m20 11 9 9-9 9-9-9Z' fill='%2384dbc5'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./combat.css">
+</head>
+<body class="combat-page">
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./index.html" aria-label="返回心域防线原创模型库">
+        <svg class="brand-mark" viewBox="0 0 42 42" fill="none" aria-hidden="true"><path d="M21 3 38 21 21 39 4 21Z"/><path d="m21 10 11 11-11 11-11-11Z"/><path d="M21 3v7m0 22v7M4 21h6m22 0h6"/></svg>
+        <span>心域防线<small>CONSTRUCT ATELIER</small></span>
+      </a>
+      <div class="breadcrumb" aria-label="当前位置"><span>原创构造</span><b>/</b><span>实战演算</span><b>/</b><strong>防线接触测试</strong></div>
+      <div class="top-actions">
+        <span class="local-badge"><i></i>LIVE FIRE / LOCAL</span>
+        <a class="about-button" href="./index.html"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m10 3 6 4v7l-6 3-6-3V7Zm0 7v7M4 7l6 3 6-3"/></svg>模型库</a>
+        <a class="about-button" href="#rule-notes"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 9v5m0-8v.2"/></svg>规则</a>
+      </div>
+    </header>
+
+    <main class="combat-workspace">
+      <section class="combat-stage panel" aria-label="建筑攻击怪物的三维动画预览">
+        <div class="viewport" id="combat-viewport"></div>
+        <div class="viewport-vignette" aria-hidden="true"></div>
+        <header class="battle-title">
+          <p class="eyebrow">LIVE FIRE / ENCOUNTER 01</p>
+          <h1>防线接触测试</h1>
+          <p>直射、抛物线与清醒意志的边界</p>
+        </header>
+        <div class="combat-toolbar" role="group" aria-label="战场操作">
+          <button id="auto-toggle" type="button" aria-pressed="true">自动交战</button>
+          <button id="replay" type="button">重新演算</button>
+          <button id="paths-toggle" type="button" aria-pressed="true">显示弹道</button>
+          <button id="camera-reset" type="button" aria-label="复位视角">复位</button>
+        </div>
+        <div class="battle-metrics" aria-label="战场状态">
+          <span>时钟 <b id="battle-time">00:00.0</b></span>
+          <span>精神 <b id="spirit-value">100</b></span>
+          <span>命中 <b id="hit-count">0</b></span>
+        </div>
+        <div id="actor-labels" aria-hidden="true"></div>
+        <div id="combat-floats" aria-hidden="true"></div>
+        <div class="stage-status"><i></i><span id="battle-state">正在部署构造</span><span class="stage-status-detail">齐射 <b id="shot-count">0</b> · <span id="projectile-count">0 枚弹体</span></span></div>
+        <div class="attack-dock" role="group" aria-label="建筑操作">
+          <button class="attack-button" id="fire-rail" type="button" disabled><span class="cooldown"></span><span class="attack-name">聚焦轨炮<small>直射 · 最高生命优先</small></span><span class="attack-time">—</span></button>
+          <button class="attack-button" id="fire-mortar" type="button" disabled><span class="cooldown"></span><span class="attack-name">弧光迫击炮<small>抛物线 · 2.3 格溅射</small></span><span class="attack-time">—</span></button>
+          <button class="attack-button support" id="beacon-toggle" type="button" aria-pressed="true"><span class="attack-name">抗性信标<small id="beacon-state">抗性 +3 · 持续生效</small></span><span class="attack-time">启停</span></button>
+        </div>
+        <div class="loading" id="combat-loading" role="status">
+          <div class="loading-orbit" aria-hidden="true"><i></i><i></i><b></b></div>
+          <p class="eyebrow">PREPARING ENCOUNTER</p>
+          <strong>正在建立防线</strong>
+          <span id="combat-load-text">装载本地模型与攻击机构…</span>
+        </div>
+        <div class="error-panel" id="combat-error" role="alert" hidden><strong>实战预览未能初始化</strong><p id="combat-error-text"></p><button id="combat-retry" type="button">重新加载</button></div>
+      </section>
+
+      <aside class="combat-sidebar panel" aria-label="交战控制与记录">
+        <section class="playback-section">
+          <div class="sidebar-heading"><h2>交战控制</h2><span class="count-badge">LIVE</span></div>
+          <div class="control-row"><button class="play-control" id="play-toggle" type="button">暂停</button><button class="step-control" id="step-button" type="button" disabled>步进 0.1 s</button></div>
+          <div class="speed-row"><span>播放速率</span><div class="speed-controls" id="speed-controls" role="group" aria-label="实战播放速率"><button type="button" data-speed="0.5" aria-pressed="false">0.5×</button><button type="button" data-speed="1" aria-pressed="true">1×</button><button type="button" data-speed="2" aria-pressed="false">2×</button></div></div>
+          <p class="control-hint">空格暂停 · 暂停后可步进 · R 复位视角</p>
+        </section>
+
+        <section class="targets-section sidebar-section">
+          <div class="sidebar-heading"><h2>目标与生命</h2><button class="text-button" id="clear-target" type="button">自动优先</button></div>
+          <p class="target-mode" id="target-mode">轨炮自动选择最高生命</p>
+          <div class="enemy-list" id="enemy-list"></div>
+          <p class="target-footnote">点击怪物或右侧卡片，为轨炮指定目标。迫击炮仅锁定地面单位。</p>
+        </section>
+
+        <section class="log-section sidebar-section">
+          <div class="sidebar-heading"><h2>战斗记录</h2><span class="log-label">命中 / 状态</span></div>
+          <ol class="battle-log" id="battle-log"></ol>
+        </section>
+
+        <section class="rules-section sidebar-section" id="rule-notes">
+          <div class="sidebar-heading"><h2>本次演算规则</h2><span class="log-label">T1 / 高台 2</span></div>
+          <div class="rule-note"><strong>聚焦轨炮</strong><p>基础攻击 78，高台伤害倍率 1.2，扣减目标护甲。金色直射、白色芯线，优先最高生命目标。</p></div>
+          <div class="rule-note"><strong>弧光迫击炮</strong><p>基础攻击 54，高台倍率 1.2。主目标全伤；附近地面目标承受 65% 溅射，缓速 1.2 秒至 60% 移速。</p></div>
+          <div class="rule-note"><strong>抗性信标</strong><p>持续提供全局抗性 +3，不进行攻击。死亡压力经距离衰减后，再扣除抗性。</p></div>
+          <p class="simulation-note">这是攻击表现演算，不是完整战斗模拟。怪物推进为演示速度；训练靶仅用于展示地面溅射。模型与动作使用本次原创 GLB。</p>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="statusbar"><span>建筑攻击怪物 · 弹道与受击表现预览</span><span class="engine-status"><i></i><span id="engine-status">LOCAL / LOADING</span></span></footer>
+  </div>
+  <script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/examples/jsm/"}}</script>
+  <script type="module" src="./src/combat.js"></script>
+</body>
+</html>

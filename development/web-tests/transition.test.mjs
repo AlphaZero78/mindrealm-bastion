@@ -35,7 +35,7 @@ class Element extends Events{
 }
 function harness(options={}){
   const document=new Events();document.hidden=false;document.draws=[];document.body=new Element(document,'body');document.createElement=tag=>new Element(document,tag);
-  const window=new Events();window.innerWidth=1280;window.innerHeight=720;window.media=new Events();window.media.matches=false;window.matchMedia=()=>window.media;window.getComputedStyle=node=>new Style({display:'block',zoom:'1',transform:'none',backgroundColor:'rgb(9,25,32)',...Object.fromEntries(node.style.values)});
+  const window=new Events();window.innerWidth=1280;window.innerHeight=720;window.media=new Events();window.media.matches=false;window.matchMedia=()=>window.media;window.getComputedStyle=node=>new Style({display:'block',visibility:'visible',opacity:'1',zoom:'1',transform:'none',backgroundColor:'rgb(9,25,32)',...Object.fromEntries(node.style.values)});
   window.timers=new Map();window.frames=new Map();let serial=0;window.setTimeout=(fn,delay)=>{const id=++serial;window.timers.set(id,{fn,delay});return id;};window.clearTimeout=id=>window.timers.delete(id);window.requestAnimationFrame=fn=>{const id=++serial;window.frames.set(id,fn);return id;};window.cancelAnimationFrame=id=>window.frames.delete(id);window.flushFrames=()=>{const frames=[...window.frames.values()];window.frames.clear();frames.forEach(fn=>fn());};window.flushTimers=()=>{const timers=[...window.timers.values()];window.timers.clear();timers.forEach(({fn})=>fn());};
   const app=document.createElement('div'),canvas=document.createElement('canvas'),modalRoot=document.createElement('div');app.setAttribute('id','app');canvas.setAttribute('id','battlefield');modalRoot.setAttribute('id','modal-root');document.body.append(canvas,app,modalRoot);
   const button=document.createElement('button');button.setAttribute('id','old-button');button.setAttribute('data-action','new');button.setAttribute('onclick','unwanted()');button.setAttribute('aria-label','new game');button.textContent='Old scene';app.append(button);
@@ -44,6 +44,36 @@ function harness(options={}){
   return {document,window,app,canvas,modalRoot,button,changes,transitions,overlays};
 }
 const flush=async()=>{await Promise.resolve();await Promise.resolve();await Promise.resolve();};
+
+test('navigation snapshots omit hidden battlefield pixels and keep the persistent background exposed',async()=>{
+  for(const style of [{visibility:'hidden'},{visibility:'collapse'},{display:'none'},{opacity:'0'}]){
+    const h=harness();try{
+      Object.assign(h.canvas.style,style);h.document.failCanvas=true;
+      const ticket=h.transitions.capture(),overlay=h.overlays()[0];
+      assert.ok(ticket,'a hidden canvas needs no snapshot context');
+      assert.equal(h.document.draws.length,0);
+      assert.equal(overlay.children.length,1,'only the outgoing UI is captured');
+      assert.equal(overlay.children[0].children[0].textContent,'Old scene');
+      assert.equal(overlay.style.background,'transparent');
+      Object.assign(h.canvas.style,{visibility:'visible',display:'block',opacity:'1'});
+      h.transitions.commit(ticket);h.transitions.finish();
+      assert.deepEqual(await ticket.finished,{status:'finished'});
+      assert.deepEqual(h.changes,[true,false]);
+      assert.equal(h.overlays().length,0);
+    }finally{h.transitions.dispose();}
+  }
+});
+
+test('visible battlefield snapshots retain their original opacity and viewport after navigation',()=>{
+  const h=harness();try{
+    h.canvas.style.opacity='.6';h.canvas.rect={left:320,top:48,width:960,height:600};
+    h.transitions.capture();const bitmap=h.overlays()[0].children[0];
+    h.canvas.style.visibility='hidden';h.canvas.rect={left:0,top:0,width:1280,height:720};
+    assert.equal(h.document.draws.length,1);assert.equal(bitmap.tagName,'CANVAS');
+    assert.equal(bitmap.style.opacity,'.6');assert.equal(bitmap.style.left,'320px');
+    assert.equal(bitmap.style.top,'48px');assert.equal(bitmap.style.width,'960px');assert.equal(bitmap.style.height,'600px');
+  }finally{h.transitions.dispose();}
+});
 
 test('outgoing placement layout keeps its captured CSS state while all action metadata is removed',()=>{
   for(const placing of ['true','false']){
@@ -71,10 +101,23 @@ test('capture preserves the old visual state, scroll and modal before synchronou
     assert.equal(h.transitions.active,true);assert.deepEqual(h.changes,[true]);assert.equal(h.document.draws.length,1);assert.equal(h.document.draws[0].args[0],h.canvas);assert.equal(overlay.style.zIndex,'80');
     assert.equal(clone.scrollTop,215);assert.equal(clone.scrollLeft,9);assert.equal(clone.style.zoom,'1.25');assert.equal(clone.style.width,'1024px');assert.equal(clone.children[1].value,'Changed value');assert.equal(clone.children[1].checked,true);assert.equal(oldModal.children[0].textContent,'Old confirmation');
     h.button.textContent='New scene';h.modalRoot.children=[];assert.equal(clone.children[0].textContent,'Old scene');
-    for(const node of [overlay,...overlay.querySelectorAll('*')]){assert.equal(node.inert,true);assert.equal(node.getAttribute('aria-hidden'),'true');assert.equal(node.style.pointerEvents,'none');assert.equal(node.hasAttribute('id'),false);assert.equal(node.hasAttribute('data-action'),false);assert.equal(node.hasAttribute('data-modal'),false);assert.equal(node.hasAttribute('onclick'),false);}
+    for(const node of [overlay,...overlay.querySelectorAll('*')]){assert.equal(node.inert,true);assert.equal(node.getAttribute('aria-hidden'),[overlay,...overlay.children].includes(node)?'true':null);assert.equal(node.style.pointerEvents,'none');assert.equal(node.hasAttribute('id'),false);assert.equal(node.hasAttribute('data-action'),false);assert.equal(node.hasAttribute('data-modal'),false);assert.equal(node.hasAttribute('onclick'),false);}
     const promise=h.transitions.commit(ticket);assert.equal(h.app.animations.length,1);assert.equal(h.canvas.animations.length,0,'live battlefield is never translated or scaled');assert.equal(h.button.textContent,'New scene');
     assert.equal(overlay.animations[0].options.duration,240);assert.match(h.app.animations[0].frames[0].transform,/translateY\(8px\)/);
     overlay.animations[0].resolve();h.app.animations[0].resolve();assert.deepEqual(await promise,{status:'finished'});assert.equal(h.overlays().length,0);assert.equal(h.document.draws[0].target.width,0);assert.deepEqual(h.changes,[true,false]);
+  }finally{h.transitions.dispose();}
+});
+
+test('select snapshots hide their parent tree while preserving native option selection',()=>{
+  const h=harness();try{
+    const select=h.document.createElement('select');select.selectedIndex=1;
+    for(const text of ['Nearest','Farthest']){const option=h.document.createElement('option');option.textContent=text;select.append(option);}
+    h.app.append(select);
+    const {clone}=h.transitions.cloneLayer(h.app),copy=clone.children[1];
+    assert.equal(clone.getAttribute('aria-hidden'),'true');assert.equal(clone.inert,true);
+    assert.equal(copy.selectedIndex,1);assert.equal(copy.inert,true);
+    for(const option of copy.children){assert.equal(option.getAttribute('aria-hidden'),null);assert.equal(option.inert,true);}
+    assert.equal(copy.children[1].textContent,'Farthest');
   }finally{h.transitions.dispose();}
 });
 

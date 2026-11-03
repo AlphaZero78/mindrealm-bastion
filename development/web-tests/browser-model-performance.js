@@ -15,7 +15,8 @@ async page=>{
    if(s.units.filter(u=>u.x!==null).length!==24)throw Error('Stress fixture requires 24 actually deployed T3 constructions');
    const enemyKinds=Object.keys(C.enemies);s.battle={time:12,enemies:[],drones:Array.from({length:96},(_,i)=>({id:`stress-drone-${i}`,x:8+i%12*2.2,z:11+Math.floor(i/12)*2.3,h:2.2,facing:i*.5,motion:{dx:0,dz:0,dh:0}})),disabled:[],itemBuffs:[],itemShield:0,nexusShield:0};
    for(let i=0;i<100;i++){const type=enemyKinds[i%enemyKinds.length],c=C.enemies[type];s.battle.enemies.push({...c,id:`probe${i}`,type,x:9+(i%10)*2.4,z:10+Math.floor(i/10)*2.2,h:0,hp:c.hp,maxHp:c.hp,phase:i%3,facing:0,motion:{dx:.01,dz:.015,distance:i*.2,dt:.05},lastActionAt:0,castUntil:0,shield:0});}
-   const q=window.__mindrealm;q.getSettings().tutorial=false;q.getSettings().uiScale=1;q.getSettings().reducedMotion=false;q.loadState(s);const state=q.getState(),field=q.field;field.frameBoard();field.changeZoom(1.18);field.render(performance.now());
+   const q=window.__mindrealm;q.getSettings().tutorial=false;q.getSettings().uiScale=1;q.getSettings().reducedMotion=false;q.loadState(s);const state=q.getState(),field=q.field;await field.realtime.prepareState(state);field.frameBoard();field.changeZoom(1.18);field.render(performance.now());
+   if(field.entityFrames.some(frame=>frame.renderMode!=='realtime-webgl')||field.realtime.frames.filter(frame=>frame.type==='tracking_drone').length!==96)throw Error('Stress fixture must render all models and independent drones');
    const sourceBefore=JSON.stringify(state);field.render(performance.now()+16);if(JSON.stringify(state)!==sourceBefore)throw Error('Renderer changed game state');
    let maxProjectionError=0;for(const yaw of [0,.4,Math.PI/2,Math.PI,5.9]){const camera={...field.camera,yaw};field.realtime.begin(camera,state.terrain,field.canvas.width,field.canvas.height);for(const [x,z,h]of[[3,4,0],[20,24,4],[38,36,2]]){const p=new T.Vector3(x,h*.95,z).project(field.realtime.camera),actual={x:(p.x+1)*camera.width/2,y:(1-p.y)*camera.height/2},expected=View.worldToScreen(x,z,h,camera);maxProjectionError=Math.max(maxProjectionError,Math.hypot(actual.x-expected.x,actual.y-expected.y));}}
    if(maxProjectionError>1e-7)throw Error('3D camera disagrees with picking '+maxProjectionError);
@@ -26,7 +27,7 @@ async page=>{
    const stats=values=>{const sorted=[...values].sort((a,b)=>a-b),at=p=>+sorted[Math.min(sorted.length-1,Math.floor(sorted.length*p))].toFixed(2);return {n:sorted.length,median:at(.5),p95:at(.95),max:at(1)};};
    const gl=field.realtime.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');return {viewport:[innerWidth,innerHeight],units:state.units.filter(u=>u.x!==null).length,enemies:100,drones:96,renderer:field.realtime.snapshot(),renderMs:stats(renderTimes),frameMs:stats(frameTimes),gpu:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),maxProjectionError,errors:field.errors};
   });
-  cases.push(result);await page.screenshot({path:`mindrealm-realtime-art/stress-${size.width}.png`});
+  cases.push(result);await page.screenshot({path:`output/playwright/final-stress-${size.width}.jpg`,type:'jpeg',quality:80});
  }
  if(issues.length)throw Error(JSON.stringify(issues));return {ok:true,cases,issues};
 }

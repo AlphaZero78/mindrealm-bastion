@@ -1,0 +1,25 @@
+{
+  "name": "mindrealm-original-model-atelier",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "心域防线全量原创模型、动作与游戏替换资产",
+  "engines": {
+    "node": ">=22.15.0"
+  },
+  "scripts": {
+    "build": "node scripts/build-models.mjs",
+    "build:entities": "node scripts/build-entity-pack.mjs",
+    "build:pack": "node scripts/package-release.mjs --runtime-only",
+    "art:generate": "node scripts/export-entity-art.mjs --all && node scripts/install-entity-art.mjs && node scripts/package-release.mjs --runtime-only",
+    "art:install": "node scripts/install-entity-art.mjs",
+    "test": "node scripts/validate-runtime.mjs --all-models && node scripts/validate-entity-art.mjs --root release/mindrealm-entity-pack/game",
+    "validate:grounding": "node scripts/validate-grounding.mjs",
+    "validate:refinement": "node scripts/validate-refinement.mjs && node scripts/validate-basic-connections.mjs && node scripts/validate-heavy-boss-connections.mjs --runtime && node scripts/validate-tower-connections.mjs",
+    "start": "node server.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.64.1",
+    "pngjs": "7.0.0"
+  }
+}

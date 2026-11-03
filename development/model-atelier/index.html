@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10191d">
+  <meta name="description" content="基于《心域防线》世界观的六项独立原创建模，包含三个怪物、三个心智构造与二十四套关节动作。">
+  <title>心域防线 · 原创构造观测台</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 3 36 20 20 37 4 20Z' fill='%23101b1e' stroke='%2384dbc5' stroke-width='2'/%3E%3Cpath d='m20 11 9 9-9 9-9-9Z' fill='%2384dbc5'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="心域防线原创构造观测台首页">
+        <svg class="brand-mark" viewBox="0 0 42 42" fill="none" aria-hidden="true"><path d="M21 3 38 21 21 39 4 21Z"/><path d="m21 10 11 11-11 11-11-11Z"/><path d="M21 3v7m0 22v7M4 21h6m22 0h6"/></svg>
+        <span>心域防线<small>CONSTRUCT ATELIER</small></span>
+      </a>
+      <div class="breadcrumb" aria-label="当前位置"><span>心智档案</span><b>/</b><span>独立原创</span><b>/</b><strong>构造观测台</strong></div>
+      <div class="top-actions">
+        <span class="local-badge"><i></i>LOCAL ASSETS</span>
+        <a class="about-button" href="./combat.html" title="建筑攻击怪物实战演算"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 10h14M13 6l4 4-4 4M7 4v3m0 6v3"/></svg>实战演算</a>
+        <button class="about-button" id="about-button" type="button"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7.2"/><path d="M10 9v5m0-8v.2"/></svg>使用说明</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="library-panel panel" aria-label="模型档案">
+        <div class="library-heading"><h2>实体档案</h2><span class="count-badge">06</span></div>
+        <p class="library-intro">从记忆、频率与清醒意志出发，重新构建六种实体。</p>
+        <div class="filter-group" role="group" aria-label="按实体类型筛选">
+          <button type="button" data-filter="all" aria-pressed="true">全部 <span>06</span></button>
+          <button type="button" data-filter="monster" aria-pressed="false">怪物 <span>03</span></button>
+          <button type="button" data-filter="building" aria-pressed="false">建筑 <span>03</span></button>
+        </div>
+        <div class="entity-list" id="entity-list"></div>
+        <div class="library-foot"><svg viewBox="0 0 26 26" fill="none" aria-hidden="true"><path d="m13 3 9 5v10l-9 5-9-5V8Z"/><path d="m4 8 9 5 9-5M13 13v10"/></svg><p>不沿用原模型及零件<br><span>ORIGINAL GEOMETRY ONLY</span></p></div>
+      </aside>
+
+      <section class="viewport-panel panel" aria-label="可交互三维模型预览">
+        <div class="viewport" id="viewport"></div>
+        <div class="viewport-vignette" aria-hidden="true"></div>
+        <header class="viewer-heading">
+          <div class="viewer-title-wrap">
+            <p class="eyebrow" id="view-kicker">ENSEMBLE / 06</p>
+            <h1 id="view-title">失控信号 × 心智构造</h1>
+            <p class="viewer-subtitle" id="view-subtitle">SIX ORIGINAL ENTITIES</p>
+          </div>
+          <div class="view-mode" role="group" aria-label="查看模式">
+            <button type="button" id="detail-view" aria-pressed="false"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="m9 2 6 3.5v7L9 16l-6-3.5v-7Z"/><path d="m3 5.5 6 3.4 6-3.4M9 9v7"/></svg>单件</button>
+            <button type="button" id="overview-view" aria-pressed="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="2" y="2" width="5" height="5"/><rect x="11" y="2" width="5" height="5"/><rect x="2" y="11" width="5" height="5"/><rect x="11" y="11" width="5" height="5"/></svg>阵容 <span>06</span></button>
+          </div>
+        </header>
+        <div class="viewer-tools" role="group" aria-label="场景工具">
+          <button type="button" id="reset-view" aria-label="复位视角" title="复位视角 (F)"><svg viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M4 8a7.5 7.5 0 1 1 .4 6M4 3v5h5"/><circle cx="11" cy="11" r="1.5"/></svg><span>复位</span></button>
+          <button type="button" id="toggle-grid" aria-label="切换地面网格" aria-pressed="true" title="地面网格 (G)"><svg viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="m11 3 9 5-9 5-9-5Zm-9 9 9 5 9-5M2 16l9 5 9-5"/></svg><span>网格</span></button>
+          <button type="button" id="toggle-wireframe" aria-label="切换模型线框" aria-pressed="false" title="模型线框 (W)"><svg viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="m11 2 8 4.5v9L11 20l-8-4.5v-9Z"/><path d="m3 6.5 8 4.6 8-4.6M11 11v9M11 2v9m-8 4.5 8-4.5 8 4.5"/></svg><span>线框</span></button>
+          <button type="button" id="toggle-rotate" aria-label="自动旋转视角" aria-pressed="false" title="自动旋转视角"><svg viewBox="0 0 22 22" fill="none" aria-hidden="true"><ellipse cx="11" cy="11" rx="9" ry="4.5" transform="rotate(-30 11 11)"/><path d="m15 3 3 .3-.5 3"/><circle cx="11" cy="11" r="2"/></svg><span>旋转</span></button>
+          <span class="tool-divider"></span>
+          <button type="button" id="snapshot" aria-label="保存模型画面" title="保存模型画面"><svg viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M3 7h4l1.5-3h5L15 7h4v12H3Z"/><circle cx="11" cy="12.5" r="3.5"/></svg><span>截图</span></button>
+        </div>
+        <div class="loading" id="loading" role="status">
+          <div class="loading-orbit" aria-hidden="true"><i></i><i></i><b></b></div>
+          <p class="eyebrow">INITIALIZING ATELIER</p>
+          <strong>正在唤醒心智构造</strong>
+          <span id="load-progress">准备本地模型…</span>
+          <div class="loading-track"><i id="load-bar"></i></div>
+        </div>
+        <div class="error-panel" id="error-panel" role="alert" hidden>
+          <strong>观测台未能完成初始化</strong><p id="error-message"></p><button type="button" id="retry">重新加载</button>
+        </div>
+        <div class="viewport-bottom">
+          <div class="scene-readout"><i></i><span id="scene-status">初始化渲染器</span></div>
+          <div class="mouse-hint"><span>拖动旋转</span><b>·</b><span>滚轮缩放</span><b>·</b><span>右键平移</span></div>
+          <div class="geometry-readout" id="geometry-stats">— / —</div>
+        </div>
+      </section>
+
+      <aside class="inspector-panel panel" aria-label="模型设计与动作控制">
+        <div class="inspector-scroll">
+          <section class="entity-summary">
+            <div class="summary-top"><span class="entity-code" id="entity-code">E–01</span><span class="entity-kind" id="entity-kind">失控信号</span></div>
+            <h2 id="entity-name">记忆赶工者</h2>
+            <p class="entity-role" id="entity-role">地面 / 高速突击</p>
+            <div class="entity-tags" id="entity-tags"></div>
+          </section>
+          <section class="lore-section inspector-section">
+            <h3><span>01</span>设计释义</h3>
+            <p id="entity-concept"></p>
+            <p class="design-note" id="entity-design"></p>
+          </section>
+          <section class="mechanism-section inspector-section">
+            <h3><span>02</span>机构与职责</h3>
+            <p id="entity-mechanism"></p>
+            <dl class="entity-specs">
+              <div><dt>档案来源</dt><dd id="entity-act"></dd></div>
+              <div><dt>材质语言</dt><dd id="entity-materials"></dd></div>
+              <div><dt>模型规格</dt><dd id="entity-geometry"></dd></div>
+            </dl>
+          </section>
+          <section class="animation-section inspector-section">
+            <div class="section-heading"><h3><span>03</span>动作观测</h3><span class="animation-scope" id="animation-scope">阵容同步</span></div>
+            <div class="action-list" id="action-list" role="group" aria-label="选择模型动作"></div>
+            <div class="current-action"><div><strong id="action-label">双足行进</strong><span id="action-english">LOCOMOTION</span></div><span id="action-loop">循环</span></div>
+            <p class="action-detail" id="action-detail"></p>
+            <div class="timeline-label"><span id="time-current">0.00 s</span><span id="time-duration">0.00 s</span></div>
+            <input class="timeline" id="timeline" type="range" min="0" max="1000" value="0" step="1" aria-label="动作时间轴" disabled>
+            <div class="playback-row">
+              <button class="restart-button" type="button" id="restart" aria-label="从头播放" title="从头播放"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 7a7 7 0 1 1 0 6M4 2v5h5"/></svg></button>
+              <button class="play-button" type="button" id="play-toggle"><svg id="play-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6 4v12M14 4v12"/></svg><span>暂停</span></button>
+              <button class="next-button" type="button" id="next-action">下一动作<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m7 4 6 6-6 6"/></svg></button>
+            </div>
+            <div class="speed-row"><span>播放速率</span><div class="speed-controls" id="speed-controls" role="group" aria-label="播放速率"><button type="button" data-speed="0.5" aria-pressed="false">0.5×</button><button type="button" data-speed="1" aria-pressed="true">1×</button><button type="button" data-speed="1.5" aria-pressed="false">1.5×</button><button type="button" data-speed="2" aria-pressed="false">2×</button></div></div>
+          </section>
+          <section class="asset-section">
+            <div><h3>独立模型文件</h3><p>GLB · 内嵌 4 段关节动作</p></div>
+            <a id="download-model" href="./models/memory_runner.glb" download="memory_runner.glb"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2v10m-4-4 4 4 4-4M3 13v4h14v-4"/></svg>下载 GLB</a>
+          </section>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="statusbar"><span>基于《心域防线》世界观的独立原创建模</span><span class="engine-status"><i></i><span id="engine-status">LOCAL / INITIALIZING</span></span></footer>
+  </div>
+
+  <dialog class="about-dialog" id="about-dialog">
+    <div class="dialog-heading"><span class="eyebrow">ATELIER FIELD GUIDE</span><button type="button" id="close-about" aria-label="关闭使用说明"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button></div>
+    <h2>在噪声中，保留自己的形状。</h2>
+    <p>本观测台依据《心域防线》的精神控制、偏频者与醒觉火种设定，重新设计三种怪物与三种建筑。所有几何和动作均为本次独立制作，没有复用现有模型、肖像或 Kenney 零件。</p>
+    <div class="guide-grid"><div><strong>观察模型</strong><p>左侧切换单体，顶部“阵容”查看全部六件。拖动旋转，滚轮缩放，右键平移。</p></div><div><strong>检查动作</strong><p>选择四套动作，拖动时间轴查看关键姿态。阵容模式下动作会同步到全部模型。</p></div><div><strong>带走模型</strong><p>每个 GLB 都包含 PBR 材质和四套关节动画，可导入支持 glTF 2.0 的 3D 工具。</p></div><div><strong>键盘快捷键</strong><p>空格播放／暂停，1–4 切换动作，F 复位视角，G 切换网格，W 切换线框。</p></div></div>
+    <div class="dialog-note"><span>离线说明</span><p>页面、Three.js、模型与材质均在当前文件夹内。请通过本地服务器打开，不要直接双击 HTML 使用 file:// 加载。</p></div>
+  </dialog>
+  <script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/examples/jsm/"}}</script>
+  <script type="module" src="./src/preview.js"></script>
+</body>
+</html>

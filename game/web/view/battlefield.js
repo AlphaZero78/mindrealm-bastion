@@ -35,7 +35,7 @@ export class Battlefield{
     canvas.tabIndex=0;canvas.setAttribute('aria-label',"战场。右键拖动或 WASD 平移，Q/E 旋转，滚轮缩放，F 回到火种，右键单击取消。");canvas.style.touchAction='none';canvas.style.imageRendering='auto';
     this.realtime=null;this.overlays=[];this.interpolation=1;this.deathImages=new Map();
     if(typeof HTMLCanvasElement!=='undefined'&&canvas instanceof HTMLCanvasElement){try{this.realtime=new EntityRenderer({onError:message=>this.reportError(message)});}catch(error){this.reportError(`图形加速初始化失败：${error.message}`);}}
-    if(!this.realtime)for(const id of [...TOWERS,...ENEMIES]){const art=ENTITY_ART[id],img=new Image();img.onload=()=>{if(img.naturalWidth!==art.cell*art.directions||img.naturalHeight!==art.cell*art.rows)this.reportError(`动作图集尺寸错误：${id}`);};img.onerror=()=>this.reportError(`动作素材加载失败：${id}`);img.src=art.animationPath;this.images.set(id,img);
+    for(const id of [...TOWERS,...ENEMIES]){const art=ENTITY_ART[id],img=new Image();img.onload=()=>{if(img.naturalWidth!==art.cell*art.directions||img.naturalHeight!==art.cell*art.rows)this.reportError(`动作图集尺寸错误：${id}`);};img.onerror=()=>this.reportError(`动作素材加载失败：${id}`);img.src=art.animationPath;this.images.set(id,img);
       if(art.deathPath){const dead=new Image();dead.onload=()=>{if(dead.naturalWidth!==art.cell*art.directions||dead.naturalHeight!==art.cell*art.deathRows*art.variants.length)this.reportError(`死亡图集尺寸错误：${id}`);};dead.onerror=()=>this.reportError(`死亡素材加载失败：${id}`);dead.src=art.deathPath;this.deathImages.set(id,dead);}
     }
     const bind=(target,type,fn,options)=>{target.addEventListener(type,fn,options);this.listeners.push(()=>target.removeEventListener(type,fn,options));};
@@ -163,8 +163,39 @@ export class Battlefield{
   entityGeometry(entity,enemy=false){const stats=enemy?null:this.stats(entity),fp=stats?.footprint||[1,1],center=enemy?entity:Rules.unitCenter(entity),motion=enemy&&entity.motion,blend=motion&&Math.hypot(motion.dx,motion.dz)<1?1-this.interpolation:0,x=center.x+.5-(motion?.dx||0)*blend,z=center.z+.5-(motion?.dz||0)*blend;let h=(enemy&&Number.isFinite(entity.h)?entity.h:this.heightAt(entity.x,entity.z));if(blend&&!entity.air)h+=(this.heightAt(entity.x-motion.dx,entity.z-motion.dz)-h)*blend;h+=enemy&&entity.air?1.3:0;return {x,z,h,fp,stats,depth:this.depth(x,z)};}
   modelSize(entity,g,enemy=false){const art=ENTITY_ART[entity.type],boss=entity.kind==='boss'||entity.boss,elite=entity.kind==='elite'||entity.elite,world=enemy?(boss?5.1:elite?3.4:2.65):Math.max(...g.fp)*1.05+1.25,minimum=enemy?(boss?38:elite?26:20):28,extent=enemy&&art?.minVisibleSpan?art.minVisibleSpan:Math.max(art?.bounds?.width||80,art?.bounds?.height||80);return Math.max(this.camera.scale*world*1.5,minimum*(art?.cell||80)/extent);}
   modelBox(p,size,art){const b=art?.bounds||{x:0,y:0,width:80,height:80},cell=art?.cell||80,baseline=art?.baseline||.72;return {left:p.x-size/2+b.x/cell*size,right:p.x-size/2+(b.x+b.width)/cell*size,top:p.y-size*baseline+b.y/cell*size,bottom:p.y-size*baseline+(b.y+b.height)/cell*size};}
+  drawGroundShadow(p,radiusX,radiusY,height,color,base=null){
+    let left=p.x-radiusX-2,right=p.x+radiusX+2,top=p.y-radiusY-2,bottom=p.y+radiusY+2;
+    for(const point of base?.points||[]){left=Math.min(left,point.x-2);right=Math.max(right,point.x+2);top=Math.min(top,point.y-2);bottom=Math.max(bottom,point.y+2);}
+    const x=Math.max(0,Math.floor(left)),y=Math.max(0,Math.floor(top)),w=Math.min(this.camera.width,Math.ceil(right))-x,h=Math.min(this.camera.height,Math.ceil(bottom))-y;
+    if(w<=0||h<=0)return;
+    const candidates=new Set();
+    for(let bx=Math.floor(x/48);bx<=Math.floor((x+w)/48);bx++)for(let by=Math.floor(y/48);by<=Math.floor((y+h)/48);by++)for(const tile of this.tileBuckets.get(`${bx}:${by}`)||[]){
+      if(tile.box.right>x&&tile.box.left<x+w&&tile.box.bottom>y&&tile.box.top<y+h)candidates.add(tile);
+    }
+    if(!candidates.size)return;
+    const draw=ctx=>{if(base)polygon(ctx,base.points,base.fill,base.stroke,base.width);ctx.fillStyle=color;ctx.beginPath();ctx.ellipse(p.x,p.y,radiusX,radiusY,0,0,TAU);ctx.fill();};
+    const tiles=[...candidates],inside=point=>point.x>=0&&point.z>=0&&point.x<=this.state.terrain.size&&point.z<=this.state.terrain.size;
+    if(tiles.every(tile=>Math.abs(tile.h-height)<1e-6&&!tile.sides.length)&&[[x,y],[x+w,y],[x,y+h],[x+w,y+h]].every(([sx,sy])=>inside(screenToGround(sx,sy,height,this.camera)))){draw(this.ctx);return;}
+    // Reproduce the terrain's visible faces in a small private receiver mask.
+    // This clips the contact shadow and footprint tint without repainting or
+    // erasing terrain and previously drawn entities on the main canvas.
+    tiles.sort((a,b)=>a.depth-b.depth||a.z-b.z||a.x-b.x);
+    const rx=this.canvas.width/this.camera.width,ry=this.canvas.height/this.camera.height,pw=Math.ceil(w*rx),ph=Math.ceil(h*ry);
+    if(!this.shadowLayer){this.shadowLayer=makeCanvas();this.shadowMask=makeCanvas();for(const surface of [this.shadowLayer,this.shadowMask])surface.width=surface.height=1;}
+    for(const surface of [this.shadowLayer,this.shadowMask]){if(surface.width<pw)surface.width=Math.ceil(pw/32)*32;if(surface.height<ph)surface.height=Math.ceil(ph/32)*32;}
+    const mask=this.shadowMask.getContext('2d'),paint=this.shadowLayer.getContext('2d');
+    for(const ctx of [mask,paint]){ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,pw,ph);ctx.save();ctx.setTransform(rx,0,0,ry,-x*rx,-y*ry);ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';}
+    for(const tile of tiles){
+      mask.globalCompositeOperation='destination-out';for(const side of tile.sides)polygon(mask,side.p,'#000',null);
+      mask.globalCompositeOperation=Math.abs(tile.h-height)<1e-6?'source-over':'destination-out';polygon(mask,tile.q,'#000',null);
+    }
+    mask.restore();
+    draw(paint);
+    paint.setTransform(1,0,0,1,0,0);paint.globalCompositeOperation='destination-in';paint.drawImage(this.shadowMask,0,0,pw,ph,0,0,pw,ph);paint.restore();
+    this.ctx.drawImage(this.shadowLayer,0,0,w*rx,h*ry,x,y,w,h);
+  }
   drawModel(type,pose,p,size,{opacity=1,wreck=false,geometry=null}={}){
-    if(this.realtime){if(geometry)this.realtime.add(type,pose,geometry,{opacity,wreck,reducedMotion:!!this.selection.reducedMotion});this.entityFrames.push({...pose,type,direction:directionFrame(Math.sin(pose.facing),Math.cos(pose.facing),this.camera.yaw),x:p.x,y:p.y,size,renderMode:'realtime-webgl'});return;}
+    if(this.realtime&&this.realtime.add(type,pose,geometry,{opacity,wreck,reducedMotion:!!this.selection.reducedMotion})){this.entityFrames.push({...pose,type,direction:directionFrame(Math.sin(pose.facing),Math.cos(pose.facing),this.camera.yaw),x:p.x,y:p.y,size,renderMode:'realtime-webgl'});return;}
     const art=ENTITY_ART[type],dead=pose.action==='death'&&art?.deathPath,img=(dead?this.deathImages:this.images).get(type);if(!art||!img?.complete||!img.naturalWidth){this.label('…',p.x,p.y-5,COLORS.mint,9);return;}
     const ctx=this.ctx,frame=directionFrame(Math.sin(pose.facing),Math.cos(pose.facing),this.camera.yaw,art.bearing),drawSize=size*(1-pose.spawn*.18),height=drawSize*(wreck&&!dead?.6:1),row=dead?pose.variantIndex*art.deathRows+Math.min(art.deathRows-1,Math.floor(pose.progress*art.deathRows)):pose.row,shake=pose.hit>0?Math.round(Math.sin(pose.hit*19)*pose.hit*1.5):0;
     const x=Math.round(p.x-drawSize/2)+shake,y=Math.round(p.y-height*art.baseline),width=Math.round(drawSize),h=Math.round(height);
@@ -173,12 +204,12 @@ export class Battlefield{
     ctx.restore();this.entityFrames.push({...pose,type,direction:frame,x:p.x,y:p.y,size:drawSize});
   }
   drawUnit(unit,time,ghost=false){if(unit.x==null||unit.z==null)return;const g=this.entityGeometry(unit),ctx=this.ctx,p=this.p(g.x,g.z,g.h),s=this.camera.scale,selected=this.selection.selectedUid===unit.uid,size=this.modelSize(unit,g),art=ENTITY_ART[unit.type],box=this.modelBox(p,size,art),pose=this.entityMotion.sample(unit,'unit',{reducedMotion:this.selection.reducedMotion,ghost,variants:art?.variants});if(ghost||this.state.phase==='prep'||unit.lastActionAt==null)pose.facing=(unit.rotation||0)*Math.PI/2;ctx.save();
-    polygon(ctx,this.quad(unit.x,unit.z,g.fp[0],g.fp[1],g.h+.06),selected?'#78d7ad55':'#193c3644',selected?COLORS.gold:'#8cbfa56b',selected?1:.6);ctx.fillStyle='#0b252666';ctx.beginPath();ctx.ellipse(p.x,p.y+1,s*Math.max(...g.fp)*.44,s*.32,0,0,TAU);ctx.fill();
+    this.drawGroundShadow({x:p.x,y:p.y+1},s*Math.max(...g.fp)*.44,s*.32,g.h,'#0b252666',{points:this.quad(unit.x,unit.z,g.fp[0],g.fp[1],g.h+.06),fill:selected?'#78d7ad55':'#193c3644',stroke:selected?COLORS.gold:'#8cbfa56b',width:selected?1:.6});
     this.drawModel(unit.type,pose,p,size,{opacity:ghost?.6:unit.hp<=0?.38:pose.action==='disabled'?.43:1,wreck:unit.hp<=0,geometry:g});
     ctx.restore();this.entityBoxes.push(box);if(!ghost){this.queueOverlay(()=>{if(unit.hp<g.stats.hp||selected||pose.action==='disabled')this.bar(p.x,box.bottom+3,Math.max(26,s*g.fp[0]),unit.hp/g.stats.hp,COLORS.mint);if(pose.action==='disabled')this.label('Ⅱ 停机',p.x,box.top-7,COLORS.gold,11);else if(unit.hp<=0)this.label('× 待维修',p.x,box.top-7,COLORS.coral,11);else if((unit.tier||1)>1){ctx.fillStyle=unit.branch==='B'?COLORS.ivory:COLORS.gold;for(let i=0;i<unit.tier-1;i++)ctx.fillRect(Math.round(p.x+(i-(unit.tier-2)/2)*5)-1,Math.round(box.top)-5,3,3);}});this.occlude(g,p,size);}
   }
   drawEnemy(enemy,time){if(enemy.hp<=0||enemy.dead)return;const g=this.entityGeometry(enemy,true),ctx=this.ctx,p=this.p(g.x,g.z,g.h),s=this.camera.scale,boss=enemy.kind==='boss'||enemy.boss,elite=enemy.kind==='elite'||enemy.elite,size=this.modelSize(enemy,g,true),art=ENTITY_ART[enemy.type],box=this.modelBox(p,size,art),pose=this.entityMotion.sample(enemy,'enemy',{reducedMotion:this.selection.reducedMotion,variants:art?.variants});
-    ctx.fillStyle='#16282580';ctx.beginPath();ctx.ellipse(p.x,p.y+s*.1,size*.23,size*.09,0,0,TAU);ctx.fill();this.drawModel(enemy.type,pose,p,size,{geometry:g});
+    const ground=this.heightAt(Math.floor(g.x),Math.floor(g.z)),shadow=this.p(g.x,g.z,ground);this.drawGroundShadow({x:shadow.x,y:shadow.y+s*.1},size*.23,size*.09,ground,'#16282580');this.drawModel(enemy.type,pose,p,size,{geometry:g});
     this.entityBoxes.push(box);this.queueOverlay(()=>{this.bar(p.x,box.top-6,Math.max(20,(box.right-box.left)*.8),enemy.hp/enemy.maxHp,COLORS.coral);if(boss)this.label(`◆ 首领 · ${['Ⅰ','Ⅱ','Ⅲ'][clamp(enemy.phase||0,0,2)]}`,p.x,box.top-17,COLORS.gold);if(enemy.pressureMarked){const x=box.left-4,y=box.top-4;polygon(ctx,[{x,y:y-3},{x:x+3,y},{x,y:y+3},{x:x-3,y}],COLORS.gold,'#10292c',.8);ctx.fillStyle='#10292c';ctx.fillRect(Math.round(x),Math.round(y)-1,1,2);if(!this.selection.reducedMotion&&Math.sin(time*.006)>0){ctx.strokeStyle=COLORS.gold;ctx.strokeRect(Math.round(x)-4,Math.round(y)-4,8,8);}if(this.hover&&Math.hypot(enemy.x-this.hover.x,enemy.z-this.hover.z)<1.2)this.label('! 高压力目标',p.x,box.top-17,COLORS.gold);}
     if(enemy.shield>0){ctx.strokeStyle='#d8c48d';ctx.beginPath();ctx.ellipse(p.x,p.y-size*.28,size*.37,size*.36,0,0,TAU);ctx.stroke();}if((Number.isFinite(enemy.castUntil)?enemy.castUntil:enemy.warningUntil)>(this.state.battle?.time??0)||enemy.telegraph||enemy.casting){const r=size*.52;ctx.setLineDash([2,2]);ctx.strokeStyle=COLORS.coral;ctx.beginPath();ctx.ellipse(p.x,p.y,r,r*.45,0,0,TAU);ctx.stroke();ctx.setLineDash([]);this.label('! 能力蓄力',p.x,box.top-(boss?31:17),COLORS.gold,9);}});this.occlude(g,p,size);
   }
@@ -260,12 +291,12 @@ export class Battlefield{
     Rules.beginRulesFrame(state);try{return this.renderFrame(time,events);}finally{Rules.endRulesFrame(state);}
   }
   renderFrame(time,events){const delta=clamp((time-this.lastTime)/1000,0,.05);this.lastTime=time;const moving=this.interactive&&cameraStep(this.camera,this.keys,delta);if(moving){this.dirty=true;this.updateHover();}if(this.fastTerrain!==moving){this.fastTerrain=moving;this.dirty=true;}const visualTime=this.selection.reducedMotion?0:time;this.drawBackground(visualTime);if(!this.state?.terrain)return;
-    this.realtime?.begin(this.camera,this.state.terrain,this.canvas.width,this.canvas.height);this.overlays=[];
+    this.realtime?.prepareState(this.state);this.realtime?.begin(this.camera,this.state.terrain,this.canvas.width,this.canvas.height);this.overlays=[];
     const rev=this.state.terrain.revision??this.state.terrainRevision;if(this.dirty||rev!==this.terrainRevision){this.buildTerrain();this.updateHover();}this.entityMotion.update(this.state,events,time,this.interpolation);this.entityFrames=[];this.consumeEvents(events,this.entityMotion.clock);this.worldLabels=[];this.entityBoxes=[];this.ctx.drawImage(this.cache,0,0,this.camera.width,this.camera.height);if(this.state.phase!=='battle'||this.selection.terrainTool)this.drawRoutes(visualTime);this.drawRangeFill();
     const core=Rules.coreOf(this.state),items=[{depth:this.depth(core.x+.5,core.z+.5),kind:'core'}];for(const e of Rules.entriesOf(this.state))items.push({depth:this.depth(e.x+.5,e.z+.5),kind:'entry',value:this.entryStatus(e)});for(const u of this.state.units||[])if(u.x!=null&&u.z!=null){const g=this.entityGeometry(u);items.push({depth:g.depth,kind:'unit',value:u});}for(const e of this.state.battle?.enemies||[])items.push({depth:this.depth(e.x+.5,e.z+.5),kind:'enemy',value:e});for(const death of this.entityMotion.deaths)items.push({depth:this.depth(death.entity.x+.5,death.entity.z+.5),kind:'death',value:death});items.sort((a,b)=>a.depth-b.depth);for(const item of items){if(item.kind==='core')this.drawCore(visualTime);else if(item.kind==='entry')this.drawEntry(item.value,visualTime);else this.drawEntityItem(item);}
     this.drawSelection();this.drawDrones();if(this.realtime?.flush())this.ctx.drawImage(this.realtime.canvas,0,0,this.camera.width,this.camera.height);for(const overlay of this.overlays)overlay();this.overlays=[];
     this.drawEffects(this.entityMotion.clock);this.drawSurgeTelegraphs();this.drawWorldLabels();this.drawCompass();if(this.realtime&&!this.realtime.ready&&!this.errors.length)this.label("正在载入精细模型……",this.camera.width/2,24,COLORS.mint,12);if(this.errors.length)this.label(this.errors[0],this.camera.width/2,20,COLORS.coral,12);
   }
-  destroy(){for(const remove of this.listeners)remove();this.observer.disconnect();this.keys.clear();this.effects=[];this.images.clear();this.entityMotion.reset();this.entityFrames=[];this.realtime?.destroy();}
+  destroy(){for(const remove of this.listeners)remove();this.observer.disconnect();this.keys.clear();this.effects=[];this.images.clear();this.entityMotion.reset();this.entityFrames=[];for(const surface of [this.shadowLayer,this.shadowMask])if(surface)surface.width=surface.height=0;this.realtime?.destroy();}
 }
 import {difficultyProfile} from '../core/difficulty.js';
